@@ -1,0 +1,66 @@
+{
+    "name": "type-task",
+    "version": "0.1.0",
+    "description": "development tools, generate gulp tasks, gulp task manager, run tasks in sequence via Promise. useful gulp task util: zipSequence, runSequence, runTaskSequence, toSequence, flattenSequence.",
+    "main": "./lib/index.js",
+    "typings": "./lib/index.d.ts",
+    "scripts": {
+        "gulp": "gulp",
+        "reinstall": "npm cache clean && npm install",
+        "test": "gulp start --test",
+        "prepublish": "gulp start --release",
+        "e2e": "protractor",
+        "e2e.live": "protractor --elementExplorer"
+    },
+    "keywords": [
+        "development",
+        "tool",
+        "gulp",
+        "promise",
+        "shell",
+        "command",
+        "generate",
+        "task manager",
+        "zipSequence",
+        "flattenSequence",
+        "runSequence",
+        "runTaskSequence",
+        "toSequence",
+        "typescript",
+        "metadata",
+        "node"
+    ],
+    "author": "houjun",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/zhouhoujun/development-core/issues"
+    },
+    "registry": "jspm",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/zhouhoujun/development-core.git"
+    },
+    "dependencies": {
+        "reflect-metadata": "^0.1.8",
+        "tsioc": "^0.6.9"
+    },
+    "devDependencies": {
+        "@types/chai": "^3.4.34",
+        "@types/gulp-mocha": "0.0.29",
+        "bluebird": "^3.4.1",
+        "chai": "^3.5.0",
+        "del": "^2.2.1",
+        "gulp-cached": "^1.1.0",
+        "gulp-mocha": "^3.0.1",
+        "gulp-sourcemaps": "^2.1.1",
+        "gulp-typescript": "^3.1.7",
+        "gulp-uglify": "^2.0.0",
+        "through2": "^2.0.1",
+        "ts-node": "^3.1.0",
+        "tslint": "^5.4.3",
+        "tslint-stylish": "^2.1.0",
+        "typescript": "^2.4.1",
+        "zone.js": "^0.8.12"
+    },
+    "homepage": "https://github.com/zhouhoujun/development-core#readme"
+}
