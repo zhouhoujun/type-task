@@ -1,64 +1,26 @@
-import *as _ from 'lodash';
-import { Gulp } from 'gulp';
-import *as gulp from 'gulp';
+
 import * as chalk from 'chalk';
 import { exec, execFile, ExecOptions, ExecFileOptions } from 'child_process';
 import * as minimist from 'minimist';
-import { generateTask } from './generateTask';
-import { toSequence, runSequence, addToSequence, zipSequence, flattenSequence, runTaskSequence } from './taskSequence';
 import { sortOrder } from './utils/sortOrder';
 import { matchCompare } from './utils/match';
-import { absoluteSrc, absolutePath } from './utils/absolute';
-import { findTasksInModule, findTaskDefineInModule, findTasksInDir, findTaskDefineInDir } from './findTasks';
-import { IPipeTask } from './PipeTask';
+
+import { IPipeTask } from './IPipeTask';
 import *as path from 'path';
 import *as fs from 'fs';
-import { ITaskConfig } from './TaskConfig';
 import { ITaskContext } from './ITaskContext';
 import { IAssertOption } from './IAssertOption';
 import { Builder } from './Builder';
 import { IAsserts } from './IAsserts';
 import { ITask, ITaskInfo } from './ITask';
 import { Src, TaskString, TaskSource, ZipTaskName, folderCallback, CtxType } from './types';
-import { Operation } from './Operation';
-import { IEnvOption } from './IEnvOption';
-import { Express } from './utils/Express';
-import { Mode } from './Mode';
-import { ITaskDecorator } from './ITaskDecorator';
+
 import { ITaskDefine } from './ITaskDefine';
 import { IDynamicTaskOption } from './IDynamicTaskOption';
 import { RunWay } from './RunWay';
-import { NodeSequence } from './NodeSequence';
 import { IAssertDist } from './IAssertDist';
+import { Injectable } from 'tsioc';
 const globby = require('globby');
-
-/**
- *binding Config, create task context.
- *
- *@export
- *@param {ITaskConfig} cfg
- *@param {ITaskContext} [parent]
- *@returns {ITaskContext}
- */
-export function bindingConfig(cfg: ITaskConfig, parent?: ITaskContext): ITaskContext {
-    return createContext(cfg, parent);
-}
-
-/**
- *create Task context.
- *
- *@export
- *@param {ITaskConfig | IAssertOption} cfg
- *@param {ITaskContext} [parent]
- *@returns {ITaskContext}
- */
-export function createContext(cfg: ITaskConfig | IAssertOption, parent?: ITaskContext): ITaskContext {
-    let opt: ITaskConfig = (cfg && cfg['option']) ? (cfg as ITaskConfig) : ({ option: cfg } as ITaskConfig);
-    if (opt.createContext) {
-        return opt.createContext(cfg, parent);
-    }
-    return parent ? parent.add(opt) : new TaskContext(opt);
-}
 
 const NULLBuilder = <Builder>{
     build<T extends IAsserts>(node: ITaskContext, option?: T): ITaskContext {
@@ -90,6 +52,7 @@ let packages = {};
  *@class TaskContext
  *@implements {ITaskContext}
  */
+@Injectable
 export class TaskContext implements ITaskContext {
     protected cfg: ITaskConfig;
     protected taskseq: ITask[] = [];

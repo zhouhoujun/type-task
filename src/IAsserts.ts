@@ -1,8 +1,4 @@
-import { TaskString, TaskSource, TaskOperation, Order } from './types';
-import { IAssertDist } from './IAssertDist';
-import { IPipeOption } from './IPipeOption';
-import { ICustomPipe } from './ICustomPipe';
-import { NodeSequence } from './NodeSequence';
+import { TaskString, TaskSource, Order } from './types';
 import { RunWay } from './RunWay';
 import { ITaskInfo } from './ITask';
 
@@ -13,15 +9,28 @@ import { ITaskInfo } from './ITask';
  * @interface IAsserts
  * @extends {IAssertDist}
  */
-export interface IAsserts extends IAssertDist, IPipeOption, ICustomPipe {
+export interface IAsserts {
 
     /**
-     * asser operation.
+     * assert name
      *
-     * @type {TaskOperation}
-     * @memberof IAsserts
+     * @type {TaskString}
+     * @memberof IOperate
      */
-    oper?: TaskOperation;
+    name?: TaskString;
+
+    /**
+     * the src file filter string. default 'src'.
+     *
+     * @type {TaskSource}
+     * @memberof IAssertDist
+     */
+    src?: TaskSource;
+
+    /**
+     * default output folder. if empty use parent setting, or ues 'dist'.
+     */
+    dist?: TaskString;
 
     /**
      * current assert order.
@@ -29,34 +38,10 @@ export interface IAsserts extends IAssertDist, IPipeOption, ICustomPipe {
     order?: Order;
 
     /**
-     * curr node run sequence with children context. default before children run.
-     *
-     * @type {NodeSequence}@memberof IAsserts
-     */
-    nodeSequence?: NodeSequence;
-
-    /**
-     * set default task name. if current context task has no name.
-     *
-     * @type {TaskString}
-     * @memberof IAsserts
-     */
-    defaultTaskName?: TaskString;
-
-    /**
      * task runway  in this context.  default sequence.
      *
      * @type {RunWay}@memberof IAsserts
      */
     runWay?: RunWay;
-    /**
-     * custom control how to match tasks.
-     *
-     * @param {ITaskInfo} task
-     * @param {ITaskInfo} match
-     * @returns {boolean}
-     *
-     * @memberof IAsserts
-     */
-    match?(task: ITaskInfo, match: ITaskInfo): boolean;
+
 }

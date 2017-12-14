@@ -1,12 +1,18 @@
 import { createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass } from 'tsioc';
 import { isString, isRegExp, isArray, isNumber } from 'util';
-import { IOperate } from '../IOperate';
-import { Src } from '../types';
-import { Operation } from '../index';
+import { Src, TaskString } from '../types';
 
-export interface TaskMetadata extends IOperate, ClassMetadata {
+
+export interface TaskMetadata extends ClassMetadata {
     /**
-     * type type.
+     * task name, default class name.
+     *
+     * @type {TaskString}
+     * @memberof IOperate
+     */
+    name?: string;
+    /**
+     * task type.
      *
      * @type {string}
      * @memberof TaskMetadata
@@ -22,7 +28,7 @@ export interface TaskMetadata extends IOperate, ClassMetadata {
 
 }
 export interface ITaskDecorator<T extends TaskMetadata> extends IClassDecorator<T> {
-    (oper?: Operation, taskName?: string, group?: Src, provide?: Registration<any> | string, alias?: string): ClassDecorator;
+    (taskName?: string, group?: Src, provide?: Registration<any> | string, alias?: string): ClassDecorator;
     (target: Function): void;
 }
 
@@ -37,21 +43,9 @@ export function createTaskDecorator<T extends TaskMetadata>(
                 adapter(args);
             }
             args.next<TaskMetadata>({
-                match: (arg) => isNumber(arg),
-                setMetadata: (metadata, arg) => {
-                    metadata.oper = arg;
-                }
-            });
-            args.next<TaskMetadata>({
                 match: (arg) => isString(arg),
                 setMetadata: (metadata, arg) => {
                     metadata.name = name;
-                }
-            });
-            args.next<TaskMetadata>({
-                match: (arg) => isString(arg) || isArray(arg),
-                setMetadata: (metadata, arg) => {
-                    metadata.group = arg;
                 }
             });
             args.next<TaskMetadata>({

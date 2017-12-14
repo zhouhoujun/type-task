@@ -1,4 +1,3 @@
-import { IOperate } from './IOperate';
 
 /**
  * transform interface.
@@ -7,7 +6,7 @@ import { IOperate } from './IOperate';
  * @interface ITransform
  * @extends {NodeJS.ReadWriteStream}
  */
-export interface ITransform extends IOperate, NodeJS.ReadWriteStream {
+export interface ITransform extends NodeJS.ReadWriteStream {
     /**
      * custom set ITransform after pipe out.
      *
@@ -27,17 +26,6 @@ export interface ITransform extends IOperate, NodeJS.ReadWriteStream {
      * @memberof ITransform
      */
     transformSourcePipe?(sourceStream: ITransform): ITransform;
-
-    // /**
-    //  * transform pipe
-    //  *
-    //  * @param {NodeJS.ReadWriteStream} stream
-    //  * @returns {ITransform}
-    //  *
-    //  * @memberof ITransform
-    //  */
-    // pipe(stream: NodeJS.ReadWriteStream): ITransform;
-
     /**
      * only typescript have this field
      */

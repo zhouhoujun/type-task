@@ -43,7 +43,6 @@ export interface ITask {
      * execute task works.
      *
      * @param {ITaskContext} context
-     * @param {Gulp} [gulp]
      * @returns {Promise<any>}
      *
      * @memberOf ITask

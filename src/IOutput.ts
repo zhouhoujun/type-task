@@ -8,6 +8,5 @@ import { ITransform } from './ITransform';
  * @extends {ITransform}
  */
 export interface IOutput extends ITransform {
-    // dts?: ITransform;
-    // js?: ITransform
+
 }
