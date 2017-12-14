@@ -1,7 +1,7 @@
 import { ITaskContext } from './ITaskContext';
 import { TaskString } from './types';
 import { ITransform } from './ITransform';
-import { IAssets } from './IAsserts';
+import { IAssets } from './IAssets';
 
 /**
  * pipe work

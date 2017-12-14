@@ -1,4 +1,4 @@
-import { PipeTaskImp } from './PipeTask';
+import { DefaultPipeTask } from './PipeTask';
 import { RunWay } from '../RunWay';
 import { ExecOptions } from 'child_process';
 import { ITask, ITaskInfo } from '../ITask';
@@ -17,7 +17,7 @@ import { isFunction } from 'tsioc';
  * @class DynamicPipeTask
  * @extends {PipeTask}
  */
-export class DynamicPipeTask extends PipeTaskImp {
+export class DynamicPipeTask extends DefaultPipeTask {
     constructor(private assets: IAssets) {
         super();
     }

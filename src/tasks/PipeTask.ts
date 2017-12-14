@@ -104,9 +104,6 @@ export class DefaultPipeTask implements IPipeTask {
         return pipes || [(stream) => stream.pipe(this.dest(ctx.getDist(dist)))]
     }
 
-    src(src: Src): TransformSource | Promise<TransformSource> {
-        return null;
-    }
     dest(dist: string): NodeJS.ReadWriteStream {
         return null;
     }
@@ -286,22 +283,22 @@ export class DefaultPipeTask implements IPipeTask {
      * @protected
      * @param {ITransform} source
      * @param {ITaskContext} context
-     * @param {IAssets} dist
+     * @param {IAssets} assets
      * @param {Gulp} gulp
      * @param {Pipe[]} [pipes]
      * @returns
      *
      * @memberOf PipeTask
      */
-    protected pipes2Promise(source: ITransform, ctx: ITaskContext, dist: IAssets, pipes?: Pipe[]) {
+    protected pipes2Promise(source: ITransform, ctx: ITaskContext, assets: IAssets, pipes?: Pipe[]) {
         let oper = this.getTransformOperate(source);
         if (!this.match(oper, name, ctx)) {
             return Promise.resolve(source);
         }
-        pipes = pipes || this.pipes(ctx, dist);
+        pipes = pipes || this.pipes(ctx, assets);
         return Promise.all(pipes.map((p: Pipe) => {
             if (isFunction(p)) {
-                return p(ctx, dist);
+                return p(ctx, assets);
             } else {
                 if (!this.match(p, name, ctx)) {
                     return null;
@@ -310,7 +307,7 @@ export class DefaultPipeTask implements IPipeTask {
                     if (!p.pipe) {
                         return null;
                     }
-                    return Promise.resolve(p.pipe(ctx, dist))
+                    return Promise.resolve(p.pipe(ctx, assets))
                         .then(trs => {
                             // trs.order = ctx.to(p.order)
                             this.setTransformOperate(trs, p);
@@ -348,23 +345,23 @@ export class DefaultPipeTask implements IPipeTask {
      * @protected
      * @param {ITransform} source
      * @param {ITaskContext} context
-     * @param {IAssets} dist
+     * @param {IAssets} assets
      * @param {OutputPipe[]} [outputs]
      * @returns
      *
      * @memberOf PipeTask
      */
-    protected output2Promise(source: ITransform, context: ITaskContext, dist: IAssets, outputs?: OutputPipe[]) {
+    protected output2Promise(source: ITransform, context: ITaskContext, assets: IAssets, outputs?: OutputPipe[]) {
         let oper = this.getTransformOperate(source);
-        outputs = outputs || this.output(context, dist);
+        outputs = outputs || this.output(context, assets);
         return Promise.all(outputs.map(output => {
             if (isFunction(output)) {
-                return output(source, context, dist);
+                return output(source, context, assets);
             } else {
                 if (!this.match(this.getTransformOperate(output), name, context, oper, true)) {
                     return null;
                 } else {
-                    return output.toTransform(source, context, dist);
+                    return output.toTransform(source, context, assets);
                 }
             }
         }))

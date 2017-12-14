@@ -3,8 +3,8 @@ import { IOrder } from './IOrder';
 import { ITaskContext } from './ITaskContext';
 import { ITransform } from './ITransform';
 import { IPipe } from './IPipe';
-import { IAssertDist } from './IAssertDist';
 import { IOutputPipe } from './IOutputPipe';
+import { IAssets } from './index';
 
 
 
@@ -60,11 +60,15 @@ export type AsyncTaskSource = TaskSource | ((ctx?: ITaskContext) => Promise<Src>
  */
 export type TransformSource = ITransform | ITransform[];
 
+/**
+ * Pipe
+ */
+export type Pipe = IPipe | ((ctx?: ITaskContext, assets?: IAssets) => ITransform | Promise<ITransform>);
 
-export type Pipe = IPipe | ((ctx?: ITaskContext, dist?: IAssertDist) => ITransform | Promise<ITransform>);
-
-
-export type OutputPipe = IOutputPipe | ((stream: ITransform, ctx?: ITaskContext, dist?: IAssertDist) => ITransform | Promise<ITransform>);
+/**
+ * output pipe
+ */
+export type OutputPipe = IOutputPipe | ((stream: ITransform, ctx?: ITaskContext, assets?: IAssets) => ITransform | Promise<ITransform>);
 
 
 export type folderCallback = (folder: string, folderName?: string, ctx?: ITaskContext) => string;

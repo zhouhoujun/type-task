@@ -1,7 +1,7 @@
 import { ITask } from './ITask';
 import { ITaskContext } from './ITaskContext';
 import { TransformSource, Pipe, OutputPipe } from './types';
-import { IAssets } from './IAsserts';
+import { IAssets } from './IAssets';
 
 
 /**

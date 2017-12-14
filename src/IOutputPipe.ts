@@ -1,7 +1,7 @@
 
 import { ITransform } from './ITransform';
 import { ITaskContext } from './ITaskContext';
-import { IAssets } from './IAsserts';
+import { IAssets } from './IAssets';
 
 /**
  * output pipe

@@ -1,5 +1,5 @@
 import { IAssets } from './IAssets';
-import { ITaskInfo, ITask } from './ITask';
+import { ITask } from './ITask';
 import { Src, TaskString, TaskSource, ZipTaskName, folderCallback, CtxType } from './types';
 import { ExecOptions, ExecFileOptions } from 'child_process';
 import { IComponent, Express, Mode } from 'tsioc';
@@ -86,34 +86,31 @@ export interface ITaskContext extends IComponent {
      * join src to absolute path src with context dist root.
      *
      * @param {Src} src
-     * @param {ITaskInfo} [task]
      * @returns {Src}
      *
      * @memberof ITaskContext
      */
-    toDistSrc(src: Src, task?: ITaskInfo): Src;
+    toDistSrc(src: Src): Src;
 
     /**
      * join pathstr to absolute path src with dist root.
      *
      * @param {string} pathstr
-     * @param {ITaskInfo} [task]
      * @returns {string}
      *
      * @memberof ITaskContext
      */
-    toDistPath(pathstr: string, task?: ITaskInfo): string;
+    toDistPath(pathstr: string): string;
 
     /**
      * get context dist folders
      *
      * @param {folderCallback} [express]
-     * @param {ITaskInfo} [task]
      * @returns {string[]}
      *
      * @memberof ITaskContext
      */
-    getDistFolders(express?: folderCallback, task?: ITaskInfo): string[];
+    getDistFolders(express?: folderCallback): string[];
 
     /**
      * parse to T type;
