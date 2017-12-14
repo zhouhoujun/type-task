@@ -1,10 +1,9 @@
-import { IAssertOption } from '../IAssertOption';
+
 import { RunWay } from '../RunWay';
 import { ExecOptions } from 'child_process';
 import { ITask, ITaskInfo } from '../ITask';
 import { AsyncTaskSource, AsyncSrc } from '../types';
 import { ITaskContext } from '../ITaskContext';
-import { IDynamicTaskOption } from '../IDynamicTaskOption';
 
 /**
  * custom dynamic task.

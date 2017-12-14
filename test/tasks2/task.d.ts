@@ -1,6 +1,6 @@
 /// <reference types="gulp" />
 import { Gulp } from 'gulp';
-import { IPipe, PipeTask, IAssertDist, IDynamicTaskOption, IAsserts, IEnvOption, ITaskContext, ITaskDefine, ITask, ITaskInfo, TaskResult, IDynamicTasks } from '../../src';
+import { IPipe, PipeTask, IAssertDist, IDynamicTaskOption, IAssets, IEnvOption, ITaskContext, ITaskDefine, ITask, ITaskInfo, TaskResult, IDynamicTasks } from '../../src';
 export declare class TestTaskGA implements ITask {
     private info;
     getInfo(): ITaskInfo;
@@ -40,7 +40,7 @@ export declare class TestDynamicTask implements IDynamicTasks {
 }
 export declare class TaskDefine implements ITaskDefine {
     fags: string;
-    loadConfig(option: IAsserts, env: IEnvOption): ITaskContext;
+    loadConfig(option: IAssets, env: IEnvOption): ITaskContext;
 }
 export declare class TestTaskB implements ITask {
     private info;

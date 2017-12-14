@@ -1,7 +1,7 @@
 import 'mocha';
 import { expect, assert } from 'chai';
 
-import { IOrder, IDynamicTaskOption, IAsserts, Operation, ITask, Src, IEnvOption, RunWay } from '../src';
+import { IOrder, IDynamicTaskOption, IAssets, Operation, ITask, Src, IEnvOption, RunWay } from '../src';
 import { generateTask, } from '../src/generateTask';
 import { toSequence, addToSequence, flattenSequence, zipSequence } from '../src/taskSequence';
 import { createContext } from '../src/TaskContext';
@@ -23,10 +23,10 @@ import * as gulp from 'gulp';
 describe('generateTask', () => {
 
     let tasks: IDynamicTaskOption[];
-    let registerTask: ((tks: ITask[], env: IEnvOption, option?: IAsserts) => Src[]);
+    let registerTask: ((tks: ITask[], env: IEnvOption, option?: IAssets) => Src[]);
 
     beforeEach(() => {
-        registerTask = (tks, env, option?: IAsserts) => {
+        registerTask = (tks, env, option?: IAssets) => {
             let config = createContext({
                 env: env,
                 option: _.extend({ src: 'src', dist: 'lib' }, option || {})
@@ -310,10 +310,10 @@ describe('generateTask', () => {
 
 describe('addToSequence', () => {
 
-    let registerTask: ((tks: ITask[], env: IEnvOption, option?: IAsserts) => Src[]);
+    let registerTask: ((tks: ITask[], env: IEnvOption, option?: IAssets) => Src[]);
 
     beforeEach(() => {
-        registerTask = (tks, env, option?: IAsserts) => {
+        registerTask = (tks, env, option?: IAssets) => {
             let config = createContext({
                 env: env,
                 option: _.extend({ src: 'src', dist: 'lib' }, option || {})

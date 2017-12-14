@@ -1,6 +1,6 @@
 
 
-export * from './IAsserts';
+export * from './IAssets';
 
 export * from './IOrder';
 export * from './IOutput';

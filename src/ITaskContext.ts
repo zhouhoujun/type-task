@@ -1,8 +1,6 @@
-import { IAsserts } from './IAsserts';
-import { IAssertOption } from './IAssertOption';
+import { IAssets } from './IAssets';
 import { ITaskInfo, ITask } from './ITask';
 import { Src, TaskString, TaskSource, ZipTaskName, folderCallback, CtxType } from './types';
-import { IDynamicTaskOption } from './IDynamicTaskOption';
 import { ExecOptions, ExecFileOptions } from 'child_process';
 import { IComponent, Express, Mode } from 'tsioc';
 
@@ -16,11 +14,11 @@ import { IComponent, Express, Mode } from 'tsioc';
 export interface ITaskContext extends IComponent {
 
     /**
-     * task option setting.
+     * get Assets
      *
-     * @type {IAsserts}@memberof ITaskContext
+     * @type {IAssets}@memberof ITaskContext
      */
-    option: IAsserts;
+    getAssets(): IAssets;
 
 
     /**

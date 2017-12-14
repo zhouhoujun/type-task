@@ -1,25 +1,25 @@
 import { ITask, ITaskInfo } from '../ITask';
 import { ITaskContext } from '../ITaskContext';
-import { IAssertDist } from '../IAssertDist';
+import { IAssets } from '../IAssets';
 import { TransformSource, Pipe, Src, OutputPipe, TaskResult } from '../types';
 import { RunWay } from '../RunWay';
-import { IPipeOption } from '../IPipeOption';
 import { ITransform } from '../ITransform';
 import { IPipe } from '../IPipe';
-import { ICustomPipe } from '../ICustomPipe';
-import { isFunction } from 'tsioc';
+import { isFunction, Singleton } from 'tsioc';
 import { isString, isArray, isUndefined } from 'util';
 import { IPipeTask } from '../IPipeTask';
 import { sortOrder, pick } from '../utils';
+import { PipeTask } from '../index';
 
 /**
- * Task base class.
+ *  Pipe Task class.
  *
  * @export
  * @class Task
  * @implements {ITask}
  */
-export abstract class PipeTask implements IPipeTask {
+@PipeTask
+export class DefaultPipeTask implements IPipeTask {
     /**
      * run mutil source stream way. default parallel.
      *
@@ -35,20 +35,12 @@ export abstract class PipeTask implements IPipeTask {
      * source streams.
      *
      * @param {ITaskContext} context
-     * @param {IAssertDist} option
+     * @param {IAssets} option
      * @returns {(TransformSource | Promise<TransformSource>)}
      *
      * @memberOf PipeTask
      */
-    source(ctx: ITaskContext, dist: IAssertDist): TransformSource | Promise<TransformSource> {
-        let option = ctx.option;
-        if (option.source) {
-            return isFunction(option.source) ? option.source(ctx, dist) : option.source;
-        }
-        let loader = <IPipeOption>option['loader'];
-        if (loader && option.source) {
-            return isFunction(loader.source) ? loader.source(ctx, dist) : loader.source;
-        }
+    source(ctx: ITaskContext, dist: IAssets): TransformSource | Promise<TransformSource> {
         return this.src(ctx.getSrc());
     }
 
@@ -58,12 +50,12 @@ export abstract class PipeTask implements IPipeTask {
      * task pipe works.
      *
      * @param {ITaskContext} context
-     * @param {IAssertDist} dist
+     * @param {IAssets} dist
      * @returns {Pipe[]}
      *
      * @memberOf PipeTask
      */
-    pipes(ctx: ITaskContext, dist: IAssertDist): Pipe[] {
+    pipes(ctx: ITaskContext, dist: IAssets): Pipe[] {
         let option = ctx.option;
         let pipes: Pipe[] = null;
         let loader = <IPipeOption>option['loader'];
@@ -84,12 +76,12 @@ export abstract class PipeTask implements IPipeTask {
      * output pipes.
      *
      * @param {ITaskContext} context
-     * @param {IAssertDist} dist
+     * @param {IAssets} dist
      * @returns {OutputPipe[]}
      *
      * @memberOf PipeTask
      */
-    output(ctx: ITaskContext, dist: IAssertDist): OutputPipe[] {
+    output(ctx: ITaskContext, dist: IAssets): OutputPipe[] {
         let option = ctx.option;
         let pipes: OutputPipe[] = null;
         let loader = <IPipeOption>option['loader'];
@@ -125,12 +117,12 @@ export abstract class PipeTask implements IPipeTask {
      * @protected
      * @param {ITransform} source
      * @param {ITaskContext} ctx
-     * @param {IAssertDist} dist
+     * @param {IAssets} dist
      * @returns
      *
      * @memberOf PipeTask
      */
-    protected customPipe(source: ITransform, ctx: ITaskContext, dist: IAssertDist): ITransform | Promise<ITransform> {
+    protected customPipe(source: ITransform, ctx: ITaskContext, dist: IAssets): ITransform | Promise<ITransform> {
         let cfgopt = ctx.option;
         let loader = <IPipeOption>cfgopt['loader'];
         let prsrc: Promise<ITransform>;
@@ -163,13 +155,13 @@ export abstract class PipeTask implements IPipeTask {
      * get option.
      *
      * @protected
-     * @param {ITaskContext} context
-     * @returns {IAssertDist}
+     * @param {ITaskContext} ctx
+     * @returns {IAssets}
      *
      * @memberOf PipeTask
      */
-    protected getOption(context: ITaskContext): IAssertDist {
-        return context.option;
+    protected getOption(ctx: ITaskContext): IAssets {
+        return ctx.getAssets();
     }
 
     /**
@@ -225,12 +217,12 @@ export abstract class PipeTask implements IPipeTask {
      * @param {ITransform} source
      * @param {ICustomPipe} opt
      * @param {ITaskContext} context
-     * @param {IAssertDist} dist
+     * @param {IAssets} dist
      * @returns
      *
      * @memberOf PipeTask
      */
-    protected cpipe2Promise(source: ITransform, opt: ICustomPipe, context: ITaskContext, dist: IAssertDist) {
+    protected cpipe2Promise(source: ITransform, opt: ICustomPipe, context: ITaskContext, dist: IAssets) {
         return new Promise<ITransform>((resolve, reject) => {
             let ps = opt.pipe(source, context, dist, (err) => {
                 if (err) {
@@ -294,14 +286,14 @@ export abstract class PipeTask implements IPipeTask {
      * @protected
      * @param {ITransform} source
      * @param {ITaskContext} context
-     * @param {IAssertDist} dist
+     * @param {IAssets} dist
      * @param {Gulp} gulp
      * @param {Pipe[]} [pipes]
      * @returns
      *
      * @memberOf PipeTask
      */
-    protected pipes2Promise(source: ITransform, ctx: ITaskContext, dist: IAssertDist, pipes?: Pipe[]) {
+    protected pipes2Promise(source: ITransform, ctx: ITaskContext, dist: IAssets, pipes?: Pipe[]) {
         let oper = this.getTransformOperate(source);
         if (!this.match(oper, name, ctx)) {
             return Promise.resolve(source);
@@ -356,13 +348,13 @@ export abstract class PipeTask implements IPipeTask {
      * @protected
      * @param {ITransform} source
      * @param {ITaskContext} context
-     * @param {IAssertDist} dist
+     * @param {IAssets} dist
      * @param {OutputPipe[]} [outputs]
      * @returns
      *
      * @memberOf PipeTask
      */
-    protected output2Promise(source: ITransform, context: ITaskContext, dist: IAssertDist, outputs?: OutputPipe[]) {
+    protected output2Promise(source: ITransform, context: ITaskContext, dist: IAssets, outputs?: OutputPipe[]) {
         let oper = this.getTransformOperate(source);
         outputs = outputs || this.output(context, dist);
         return Promise.all(outputs.map(output => {
@@ -403,14 +395,14 @@ export abstract class PipeTask implements IPipeTask {
      * @protected
      * @param {ITransform} source
      * @param {ITaskContext} ctx
-     * @param {IAssertDist} option
+     * @param {IAssets} option
      * @param {Pipe[]} [pipes]
      * @param {OutputPipe[]} [output]
      * @returns
      *
      * @memberOf PipeTask
      */
-    protected working(source: ITransform, ctx: ITaskContext, option: IAssertDist, pipes?: Pipe[], output?: OutputPipe[]) {
+    protected working(source: ITransform, ctx: ITaskContext, option: IAssets, pipes?: Pipe[], output?: OutputPipe[]) {
         return Promise.resolve(source)
             .then(psrc => this.customPipe(psrc, ctx, option))
             .then(psrc => this.pipes2Promise(psrc, ctx, option, pipes))

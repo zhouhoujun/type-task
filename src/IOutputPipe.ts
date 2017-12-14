@@ -1,22 +1,24 @@
 
 import { ITransform } from './ITransform';
 import { ITaskContext } from './ITaskContext';
+import { IAssets } from './IAsserts';
+
 /**
  * output pipe
  *
  * @export
  * @interface IOutputPipe
  */
-export interface IOutputPipe extends IOperate {
+export interface IOutputPipe {
     /**
      * output pipes
      *
      * @param {ITransform} stream
      * @param {ITaskContext} context
-     * @param {IAssertDist} [dist]
+     * @param {IAssertDist} [assets]
      * @returns {(ITransform | Promise<ITransform>)}
      *
      * @memberof IOutputPipe
      */
-    toTransform?(stream: ITransform, context: ITaskContext, dist?: IAssertDist): ITransform | Promise<ITransform>;
+    toTransform?(stream: ITransform, context: ITaskContext, assets?: IAssets): ITransform | Promise<ITransform>;
 }

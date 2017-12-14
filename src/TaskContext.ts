@@ -11,7 +11,7 @@ import *as fs from 'fs';
 import { ITaskContext } from './ITaskContext';
 import { IAssertOption } from './IAssertOption';
 import { Builder } from './Builder';
-import { IAsserts } from './IAsserts';
+import { IAssets } from './IAsserts';
 import { ITask, ITaskInfo } from './ITask';
 import { Src, TaskString, TaskSource, ZipTaskName, folderCallback, CtxType } from './types';
 
@@ -23,7 +23,7 @@ import { Injectable } from 'tsioc';
 const globby = require('globby');
 
 const NULLBuilder = <Builder>{
-    build<T extends IAsserts>(node: ITaskContext, option?: T): ITaskContext {
+    build<T extends IAssets>(node: ITaskContext, option?: T): ITaskContext {
         return node;
     },
 
@@ -61,7 +61,7 @@ export class TaskContext implements ITaskContext {
     protected children: ITaskContext[] = [];
 
     oper: Operation;
-    option: IAsserts;
+    option: IAssets;
     env: IEnvOption;
     globals: any;
     parent: ITaskContext;
@@ -732,7 +732,7 @@ export class TaskContext implements ITaskContext {
 
                 })
                 .then(srcs => {
-                    let opt = this.option as IAsserts;
+                    let opt = this.option as IAssets;
                     let tseq = srcs.tseq;
                     let ordertask = sortOrder(srcs.subtasks, ctx => ctx.option.order, this);
 

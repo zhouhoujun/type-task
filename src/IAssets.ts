@@ -9,7 +9,7 @@ import { ITaskInfo } from './ITask';
  * @interface IAsserts
  * @extends {IAssertDist}
  */
-export interface IAsserts {
+export interface IAssets {
 
     /**
      * assert name

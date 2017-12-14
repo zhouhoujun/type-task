@@ -1,7 +1,7 @@
 import { ITask } from './ITask';
 import { ITaskContext } from './ITaskContext';
-import { IAssertDist } from './IAssertDist';
 import { TransformSource, Pipe, OutputPipe } from './types';
+import { IAssets } from './IAsserts';
 
 
 /**
@@ -16,23 +16,23 @@ export interface IPipeTask extends ITask {
      * gulp src stream.
      *
      * @param {ITaskContext} context
-     * @param {IAssertDist} dist
+     * @param {IAssets} assets
      * @param {Gulp} gulp
      * @returns {(TransformSource | Promise<TransformSource>)}
      *
      * @memberOf IPipeTask
      */
-    source(context: ITaskContext, dist: IAssertDist): TransformSource | Promise<TransformSource>;
+    source(context: ITaskContext, assets: IAssets): TransformSource | Promise<TransformSource>;
     /**
      * task pipe works.
      *
      * @param {ITaskContext} context
-     * @param {IAssertDist} dist
+     * @param {IAssets} assets
      * @returns {Pipe[]}
      *
      * @memberOf IPipeTask
      */
-    pipes(context: ITaskContext, dist: IAssertDist): Pipe[];
+    pipes(context: ITaskContext, assets: IAssets): Pipe[];
 
     /**
      * output pipes.
@@ -42,7 +42,7 @@ export interface IPipeTask extends ITask {
      *
      * @memberOf IPipeTask
      */
-    output(context: ITaskContext, dist: IAssertDist): OutputPipe[];
+    output(context: ITaskContext, assets: IAssets): OutputPipe[];
     /**
      * execute task works.
      *
