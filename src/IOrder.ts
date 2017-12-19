@@ -1,6 +1,12 @@
 
 import { RunWay } from './RunWay';
 
+/**
+ * order
+ *
+ * @export
+ * @interface IOrder
+ */
 export interface IOrder {
     /**
      * the value to sort sequence.

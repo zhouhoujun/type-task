@@ -2,7 +2,6 @@ import { folderCallback, Src } from './types';
 
 export interface IEnvironment {
 
-
     /**
      * get development root.
      *
@@ -11,6 +10,7 @@ export interface IEnvironment {
      * @memberof ITaskContext
      */
     getRootPath(): string;
+
     /**
      * get root folders.
      *

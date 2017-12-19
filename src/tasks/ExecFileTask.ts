@@ -27,16 +27,16 @@ export class ExecFileTask implements ITask {
         return Promise.resolve(files)
             .then(files => {
                 if (isString(files)) {
-                    return ctx.execFile(files, option.args, option.execFileOptions, option.allowError !== false);
+                    return this.helper.execFile(files, option.args, option.execFileOptions, option.allowError !== false);
                 } else if (isArray(files)) {
                     if (option.fileRunWay === RunWay.sequence) {
                         let pip = Promise.resolve();
-                        _.each(files, file => {
-                            pip = pip.then(() => ctx.execFile(file, option.args, option.execFileOptions, option.allowError !== false));
+                        files.forEach(file => {
+                            pip = pip.then(() => this.helper.execFile(file, option.args, option.execFileOptions, option.allowError !== false));
                         });
                         return pip;
                     } else {
-                        return Promise.all(_.map(files, file => ctx.execFile(file, option.args, option.execFileOptions, option.allowError !== false)));
+                        return Promise.all(files.map(file => this.helper.execFile(file, option.args, option.execFileOptions, option.allowError !== false)));
                     }
                 } else {
                     return Promise.reject('exec file task config error');

@@ -1,6 +1,6 @@
 import { Src, TaskResult } from './types';
 import { ITaskContext } from './ITaskContext';
-import { TaskMetadata } from './decorators';
+import { TaskMetadata } from './core';
 
 
 /**
@@ -19,7 +19,7 @@ export interface ITask {
      *
      * @memberOf ITask
      */
-    execute?(context: ITaskContext): Promise<any>;
+    execute(context: ITaskContext): Promise<any>;
 
 }
 

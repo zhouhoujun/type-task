@@ -1,7 +1,6 @@
 import { IAssets } from './IAssets';
 import { ITask } from './ITask';
-import { Src, TaskString, TaskSource, ZipTaskName, folderCallback, CtxType } from './types';
-import { ExecOptions, ExecFileOptions } from 'child_process';
+import { Src } from './types';
 import { IComponent, Express, Mode } from 'tsioc';
 
 

@@ -1,11 +1,9 @@
-
-import { IAssertOption } from '../IAssertOption';
 import { RunWay } from '../RunWay';
 import { ExecOptions } from 'child_process';
-import { ITask, ITaskInfo } from '../ITask';
+import { ITask } from '../ITask';
 import { AsyncTaskSource, AsyncSrc } from '../types';
 import { ITaskContext } from '../ITaskContext';
-import { Task } from '../decorators/Task';
+import { Task } from '../core';
 import { isString, isArray } from 'util';
 import { ShellHelper } from './ShellHelper';
 
@@ -60,19 +58,18 @@ export class ShellTask implements ITask {
         return Promise.resolve(cmd)
             .then(cmds => {
                 if (isString(cmds)) {
-                    return ctx.execShell(cmds, option.execOptions, option.allowError !== false);
+                    return this.helper.execShell(cmds, option.execOptions, option.allowError !== false);
                 } else if (isArray(cmds)) {
                     if (option.shellRunWay === RunWay.sequence) {
                         let pip = Promise.resolve();
                         cmds.forEach(cmd => {
-                            pip = pip.then(() => ctx.execShell(cmd, option.execOptions));
+                            pip = pip.then(() => this.helper.execShell(cmd, option.execOptions));
                         });
                         return pip;
                     } else {
-                        return Promise.all(cmds.map(cmd => ctx.execShell(cmd, option.execOptions, option.allowError !== false)));
+                        return Promise.all(cmds.map(cmd => this.helper.execShell(cmd, option.execOptions, option.allowError !== false)));
                     }
                 } else {
-
                     return Promise.reject('shell task config error');
                 }
             });
