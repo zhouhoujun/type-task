@@ -1,39 +1,12 @@
-import * as _ from 'lodash';
-import { IAssertOption } from '../IAssertOption';
+
 import { RunWay } from '../RunWay';
 import { ExecOptions, ExecFileOptions } from 'child_process';
-import { ITask, ITaskInfo } from '../ITask';
+import { ITask } from '../ITask';
 import { AsyncTaskSource, AsyncSrc } from '../types';
 import { ITaskContext } from '../ITaskContext';
-import { Task } from '../decorators/Task';
+import { Task } from '../core';
 import { isString, isArray } from 'util';
-
-
-
-export interface IExecFileOption extends IAssertOption {
-    /**
-     * the file exec run way. default parallel.
-     *
-     * @type {RunWay}
-     * @memberof IExecFileOption
-     */
-    fileRunWay?: RunWay;
-
-    args?: string[];
-    /**
-     * exec file options.
-     *
-     * @type {ExecFileOptions}
-     * @memberof IExecFileOption
-     */
-    execFileOptions?: ExecFileOptions;
-
-    /**
-     * all child process has error.
-     */
-    allowError?: boolean;
-
-}
+import { ShellHelper } from './ShellHelper';
 
 
 /**
@@ -44,7 +17,7 @@ export interface IExecFileOption extends IAssertOption {
  */
 @Task
 export class ExecFileTask implements ITask {
-    constructor(protected info: ITaskInfo, protected files: AsyncTaskSource) {
+    constructor(private helper: ShellHelper) {
 
     }
 

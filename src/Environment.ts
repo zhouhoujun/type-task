@@ -1,21 +1,19 @@
-import { TaskString } from './types';
+import { TaskString, folderCallback } from './types';
+import { readdirSync, lstatSync } from 'fs';
+import { join } from 'path';
+import { toAbsolutePath, Singleton } from 'tsioc';
 
-
+@Singleton
 export class Environment {
+    root: string;
+    packageFile = 'package.json';
+
+    constructor() {
+
+    }
+
     getRootPath() {
-        let root: string;
-        if (this.env && this.env.root) {
-            root = this.env.root
-        } else {
-            this.each(c => {
-                if (c.env && c.env.root) {
-                    root = this.env.root;
-                    return false;
-                }
-                return true;
-            }, Mode.route);
-        }
-        return root;
+        return this.root;
     }
 
     getRootFolders(express?: folderCallback): string[] {
@@ -23,14 +21,14 @@ export class Environment {
     }
 
     getFolders(pathstr: string, express?: folderCallback): string[] {
-        let dir = fs.readdirSync(pathstr);
+        let dir = readdirSync(pathstr);
         let folders = [];
-        _.each(dir, (d: string) => {
-            let sf = path.join(pathstr, d);
-            let f = fs.lstatSync(sf);
+        dir.forEach(d => {
+            let sf = join(pathstr, d);
+            let f = lstatSync(sf);
             if (f.isDirectory()) {
                 if (express) {
-                    let fl = express(sf, d, this);
+                    let fl = express(sf, d);
                     if (fl) {
                         folders.push(fl);
                     }
@@ -42,53 +40,28 @@ export class Environment {
         return folders;
     }
 
-    getDistFolders(express?: folderCallback, task?: ITaskInfo): string[] {
-        return this.getFolders(this.getDist(task), express);
-    }
-
-    toRootSrc(src: Src): Src {
-        return absoluteSrc(this.getRootPath(), src);
-    }
-
     toRootPath(pathstr: string): string {
-        return absolutePath(this.getRootPath(), pathstr);
+        return toAbsolutePath(this.getRootPath(), pathstr);
     }
 
-    toDistSrc(src: Src, task?: ITaskInfo): Src {
-        return absoluteSrc(this.getDist(task), src);
-    }
-
-    toDistPath(pathstr: string, task?: ITaskInfo): string {
-        return absolutePath(this.getDist(task), pathstr);
-    }
-
-    to<T>(val: CtxType<T>): T {
-        return isFunction(val) ? val(this) : val;
-    }
-
-    toSrc(source: TaskSource): Src {
-        return taskSourceVal(source, this);
-    }
-
-    toStr(name: TaskString): string {
-        return taskStringVal(name, this);
-    }
-
-    toUrl(basePath: string, toPath?: string): string {
-        return (toPath ? path.relative(basePath, toPath) : basePath).replace(/\\/g, '/'); // .replace(/^\//g, '');
-    }
-
-    getPackage(filename?: TaskString): any {
-        filename = filename || this.cfg.packageFile;
-        let name = this.toRootPath(this.toStr(filename) || 'package.json');
-        if (!packages[name]) {
-            packages[name] = require(name);
+    private _package: any;
+    getPackage(): any {
+        let filename = this.toRootPath(this.packageFile);
+        if (!this._package) {
+            this._package = require(filename);
         }
-        return packages[name]
+        return this._package
     }
 
-    getNpmModuleVersion(name: string, packageFile?: string): string {
-        let packageCfg = this.getPackage(packageFile);
+    getPackageVersion(): string {
+        let packageCfg = this.getPackage();
+        if (!packageCfg) {
+            return '';
+        }
+        return packageCfg.version || '';
+    }
+    getModuleVersion(name: string, dependencies = false): string {
+        let packageCfg = this.getPackage();
         if (!packageCfg) {
             return '';
         }
@@ -96,14 +69,11 @@ export class Environment {
         if (packageCfg.dependencies) {
             version = packageCfg.dependencies[name]
         }
-        if (!version && packageCfg.devDependencies) {
+        if (!dependencies && !version && packageCfg.devDependencies) {
             version = packageCfg.devDependencies[name]
         }
 
         return version || '';
 
-    }
-    hasNpmModule(name: string, packageFile?: string): boolean {
-        return this.getNpmModuleVersion(name, packageFile) !== '';
     }
 }

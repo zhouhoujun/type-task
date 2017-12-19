@@ -32,45 +32,7 @@ export interface ITaskContext extends IComponent {
      *
      * @memberof ITaskContext
      */
-    map<T>(express: Express<ITaskContext, T>, mode?: Mode, filter?: Express<ITaskContext, boolean>): T[]
-
-
-    /**
-     * get Src of current state.   default implement in bindingConfig.
-     *
-     * @param {boolean} [relative] get relative path or absolute path.
-     * @returns {Src}
-     *
-     * @memberof ITaskContext
-     */
-    getSrc(relative?: boolean): Src;
-
-    /**
-     * get dist of current state.  default implement in bindingConfig.
-     *
-     * @param {boolean} [relative] get relative path or absolute path.
-     * @returns {string}
-     *
-     * @memberof ITaskContext
-     */
-    getDist(relative?: boolean): string;
-
-    /**
-     * add task for this context.
-     *
-     * @param {...ITask[]} task
-     * @memberof ITaskContext
-     */
-    addTask(...task: ITask[]): void;
-
-    /**
-     * remove task
-     *
-     * @param {ITask} task
-     * @returns {(ITask[] | Promise<ITask[]>)}
-     * @memberof ITaskContext
-     */
-    removeTask(task: ITask): ITask[] | Promise<ITask[]>;
+    map<T>(express: Express<ITaskContext, T>, mode?: Mode, filter?: Express<ITaskContext, boolean>): T[];
 
     /**
      * run task in this context.
@@ -80,66 +42,5 @@ export interface ITaskContext extends IComponent {
      * @memberof IContext
      */
     run(): Promise<any>;
-
-
-    /**
-     * join src to absolute path src with context dist root.
-     *
-     * @param {Src} src
-     * @returns {Src}
-     *
-     * @memberof ITaskContext
-     */
-    toDistSrc(src: Src): Src;
-
-    /**
-     * join pathstr to absolute path src with dist root.
-     *
-     * @param {string} pathstr
-     * @returns {string}
-     *
-     * @memberof ITaskContext
-     */
-    toDistPath(pathstr: string): string;
-
-    /**
-     * get context dist folders
-     *
-     * @param {folderCallback} [express]
-     * @returns {string[]}
-     *
-     * @memberof ITaskContext
-     */
-    getDistFolders(express?: folderCallback): string[];
-
-    /**
-     * parse to T type;
-     *
-     * @template T
-     * @param {CtxType<T>} val
-     * @returns {T}
-     *
-     * @memberof ITaskContext
-     */
-    to<T>(val: CtxType<T>): T;
-    /**
-     * to src
-     *
-     * @param {any} TaskSource
-     * @returns {Src}
-     *
-     * @memberof ITaskContext
-     */
-    toSrc(source: TaskSource): Src;
-
-    /**
-     * to string.
-     *
-     * @param {TaskString} name
-     * @returns {string}
-     *
-     * @memberof ITaskContext
-     */
-    toStr(name: TaskString): string;
 
 }

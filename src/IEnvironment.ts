@@ -1,5 +1,4 @@
 import { folderCallback, Src } from './types';
-import { ITaskInfo } from './ITask';
 
 export interface IEnvironment {
 
@@ -32,15 +31,6 @@ export interface IEnvironment {
      */
     getFolders(pathstr: string, express?: folderCallback): string[];
 
-    /**
-     * join src to absolute path src with root( env.root ).
-     *
-     * @param {Src} src
-     * @returns {Src}
-     *
-     * @memberof ITaskContext
-     */
-    toRootSrc(src: Src): Src
 
     /**
      * join pathstr to absolute path src with root( env.root ).
@@ -51,4 +41,32 @@ export interface IEnvironment {
      * @memberof ITaskContext
      */
     toRootPath(pathstr: string): string;
+
+    /**
+     * get project package.json.
+     *
+     * @returns {*}
+     * @memberof IEnvironment
+     */
+    getPackage(): any;
+
+
+    /**
+     * get package version.
+     *
+     * @returns {string}
+     * @memberof IEnvironment
+     */
+    getPackageVersion(): string;
+
+    /**
+     * get module version. the module dependencies or devDependencies.
+     * defualt only dependencies module.
+     *
+     * @param {string} name
+     * @param {boolean} [dependencies]
+     * @returns {string}
+     * @memberof IEnvironment
+     */
+    getModuleVersion(name: string, dependencies?: boolean): string
 }

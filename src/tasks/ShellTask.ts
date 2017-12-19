@@ -7,6 +7,7 @@ import { AsyncTaskSource, AsyncSrc } from '../types';
 import { ITaskContext } from '../ITaskContext';
 import { Task } from '../decorators/Task';
 import { isString, isArray } from 'util';
+import { ShellHelper } from './ShellHelper';
 
 
 
@@ -49,15 +50,8 @@ export interface IShellOption extends IAssertOption {
  */
 @Task
 export class ShellTask implements ITask {
-    constructor(protected info: ITaskInfo, protected cmd: AsyncTaskSource) {
+    constructor(private helper: ShellHelper) {
 
-    }
-
-    /**
-     * get task info.
-     */
-    public getInfo(): ITaskInfo {
-        return this.info;
     }
 
     execute(ctx: ITaskContext): Promise<any> {

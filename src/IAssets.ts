@@ -1,6 +1,5 @@
 import { TaskString, TaskSource, Order } from './types';
 import { RunWay } from './RunWay';
-import { ITaskInfo } from './ITask';
 
 /**
  * IAsserts to be dealt with.
