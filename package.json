@@ -42,7 +42,7 @@
     },
     "dependencies": {
         "reflect-metadata": "^0.1.8",
-        "tsioc": "^0.6.9"
+        "tsioc": "^0.6.19"
     },
     "devDependencies": {
         "@types/chai": "^3.4.34",
