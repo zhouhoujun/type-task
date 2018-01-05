@@ -1,4 +1,5 @@
-import { TaskMetadata, createTaskDecorator, ITaskDecorator } from './Task';
+import { createTaskDecorator, ITaskDecorator } from './Task';
+import { TaskMetadata } from '../metadatas/index';
 
 export interface PipeTaskMetadata extends TaskMetadata {
 

@@ -8,38 +8,6 @@ import { isString, isArray } from 'util';
 import { ShellHelper } from './ShellHelper';
 
 
-
-/**
- * shell option.
- *
- * @export
- * @interface IShellOption
- * @extends {IAssertOption}
- */
-export interface IShellOption extends IAssertOption {
-    /**
-     * the shell command run way. default parallel.
-     *
-     * @type {RunWay}
-     * @memberof IShellOption
-     */
-    shellRunWay?: RunWay;
-
-    /**
-     * exec options.
-     *
-     * @type {ExecOptions}
-     * @memberof IShellOption
-     */
-    execOptions?: ExecOptions;
-
-    /**
-     * all child process has error.
-     */
-    allowError?: boolean;
-
-}
-
 /**
  * Shell Task
  *
@@ -48,14 +16,12 @@ export interface IShellOption extends IAssertOption {
  */
 @Task
 export class ShellTask implements ITask {
-    constructor(private helper: ShellHelper) {
+    constructor(private helper: ShellHelper, private coommand: string | string[], private options?: ExecOptions , private runWay?: RunWay) {
 
     }
 
     execute(ctx: ITaskContext): Promise<any> {
-        let option = ctx.option as IShellOption;
-        let cmd = ctx.to<AsyncSrc>(this.cmd);
-        return Promise.resolve(cmd)
+        return Promise.resolve(this.coommand)
             .then(cmds => {
                 if (isString(cmds)) {
                     return this.helper.execShell(cmds, option.execOptions, option.allowError !== false);

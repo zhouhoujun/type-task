@@ -19,15 +19,6 @@ export type Order = number | IOrder | ((total: number, ctx?: ITaskContext) => nu
  */
 export type ZipTaskName = (name: string, runWay?: RunWay, ctx?: ITaskContext) => string
 
-/**
- * src
- */
-export type Src = string | string[];
-
-/**
- * async source.
- */
-export type AsyncSrc = Src | Promise<Src>;
 
 /**
  * context type

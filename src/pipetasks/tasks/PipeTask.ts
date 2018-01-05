@@ -1,14 +1,14 @@
-import { ITask, ITaskInfo } from '../ITask';
+import { ITask } from '../ITask';
 import { ITaskContext } from '../ITaskContext';
 import { IAssets } from '../IAssets';
-import { TransformSource, Pipe, Src, OutputPipe, TaskResult } from '../types';
+import { TransformSource, Pipe, OutputPipe, TaskResult } from '../types';
 import { RunWay } from '../RunWay';
 import { ITransform } from '../ITransform';
 import { IPipe } from '../IPipe';
 import { isFunction, Singleton } from 'tsioc';
 import { isString, isArray, isUndefined } from 'util';
 import { IPipeTask } from '../IPipeTask';
-import { sortOrder, pick } from '../utils';
+import { sortOrder, pick, Src } from '../../utils';
 import { PipeTask } from '../index';
 
 /**
