@@ -1,4 +1,5 @@
-import { folderCallback, Src } from './types';
+import { Src } from './utils/index';
+import { Express } from 'tsioc';
 
 export interface IEnvironment {
 
@@ -14,23 +15,22 @@ export interface IEnvironment {
     /**
      * get root folders.
      *
-     * @param {folderCallback} [express]
+     * @param { Express<string, boolean>} [express]
      * @returns {string[]}
      *
      * @memberof ITaskContext
      */
-    getRootFolders(express?: folderCallback): string[];
+    getRootFolders(express?: Express<string, boolean>): string[];
     /**
      * get folders in path.
      *
      * @param {string} pathstr
-     * @param {folderCallback} [express]
+     * @param { Express<string, boolean>} [express]
      * @returns {string[]}
      *
      * @memberof ITaskContext
      */
-    getFolders(pathstr: string, express?: folderCallback): string[];
-
+    getFolders(pathstr: string, express?: Express<string, boolean>): string[];
 
     /**
      * join pathstr to absolute path src with root( env.root ).
@@ -68,5 +68,5 @@ export interface IEnvironment {
      * @returns {string}
      * @memberof IEnvironment
      */
-    getModuleVersion(name: string, dependencies?: boolean): string
+    getModuleVersion(name: string, dependencies?: boolean): string;
 }

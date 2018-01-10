@@ -1,6 +1,13 @@
 import { ClassMetadata } from 'tsioc';
-import { Src } from '../../types';
+import { Src } from '../../utils/index';
 
+/**
+ * task metadata.
+ *
+ * @export
+ * @interface TaskMetadata
+ * @extends {ClassMetadata}
+ */
 export interface TaskMetadata extends ClassMetadata {
     /**
      * task name, default class name.

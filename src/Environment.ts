@@ -1,8 +1,13 @@
-import { TaskString, folderCallback } from './types';
+import { toAbsolutePath, Singleton, Express, Express2 } from 'tsioc';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
-import { toAbsolutePath, Singleton } from 'tsioc';
 
+/**
+ * Enviroment.
+ *
+ * @export
+ * @class Environment
+ */
 @Singleton
 export class Environment {
     root: string;
@@ -12,15 +17,21 @@ export class Environment {
 
     }
 
+    /**
+     * get path.
+     *
+     * @returns
+     * @memberof Environment
+     */
     getRootPath() {
         return this.root;
     }
 
-    getRootFolders(express?: folderCallback): string[] {
+    getRootFolders(express?: Express2<string, string, boolean>): string[] {
         return this.getFolders(this.getRootPath(), express);
     }
 
-    getFolders(pathstr: string, express?: folderCallback): string[] {
+    getFolders(pathstr: string, express?: Express2<string, string, boolean>): string[] {
         let dir = readdirSync(pathstr);
         let folders = [];
         dir.forEach(d => {
