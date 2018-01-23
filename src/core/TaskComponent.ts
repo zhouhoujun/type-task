@@ -1,5 +1,6 @@
-import { IComponent, Token } from 'tsioc';
+import { GComponent, Token } from 'tsioc';
 import { TaskContext } from './TaskContext';
+import { ITask } from './ITask';
 
 
 /**
@@ -7,26 +8,8 @@ import { TaskContext } from './TaskContext';
  *
  * @export
  * @interface TaskComponent
- * @extends {IComponent}
+ * @extends {GComponent<TaskComponent>}
  */
-export interface TaskComponent extends IComponent {
+export interface TaskComponent extends GComponent<TaskComponent>, ITask {
 
-    addTask(...task: (TaskComponent | Token<any>)[]);
-
-    /**
-     * get run context.
-     *
-     * @returns {TaskContext}
-     * @memberof TaskComponent
-     */
-    getContext(): TaskContext;
-
-    /**
-     * run task.
-     *
-     * @param {TaskContext} context
-     * @returns {Promise<any>}
-     * @memberof TaskComponent
-     */
-    run(taskname?: string): Promise<any>;
 }
