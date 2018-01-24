@@ -1,5 +1,6 @@
 import { Token, IContainer, ContainerBuilder, symbols, AsyncLoadOptions } from 'tsioc';
 import { Src } from './utils/index';
+import { ITask } from './core/index';
 
 
 /**
@@ -40,7 +41,18 @@ export class TaskManager {
     }
 
     run(task: Token<any>) {
-
+        return this.container.resolve<ITask>(task).run();
     }
+
+    // run(taskname?: string): Promise<any> {
+    //     if (taskname) {
+    //         return this.find(task => task.name === taskname).run();
+    //     } else {
+    //         this.each(task => {
+    //             task.run()
+    //         })
+    //         return null;
+    //     }
+    // }
 }
 

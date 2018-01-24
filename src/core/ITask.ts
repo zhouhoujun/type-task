@@ -21,11 +21,10 @@ export interface ITask {
     /**
      * run task.
      *
-     * @param {TaskContext} context
      * @returns {Promise<any>}
      * @memberof ITask
      */
-    run(taskname?: string): Promise<any>;
+    run(): Promise<any>;
 
 }
 
