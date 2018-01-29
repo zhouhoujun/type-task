@@ -2,7 +2,14 @@ import { GComponent, GComposite } from 'tsioc';
 import { TaskComponent } from './TaskComponent';
 import { TaskContext } from './TaskContext';
 
-
+/**
+ * task composite.
+ *
+ * @export
+ * @class TaskComposite
+ * @extends {GComposite<TaskComponent>}
+ * @implements {TaskComponent}
+ */
 export class TaskComposite extends GComposite<TaskComponent> implements TaskComponent {
 
     constructor(taskName: string) {

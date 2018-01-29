@@ -1,4 +1,4 @@
-import { GComponent, Token } from 'tsioc';
+import { GComponent, Token, ComponentLifecycle } from 'tsioc';
 import { TaskContext } from './TaskContext';
 import { ITask } from './ITask';
 
@@ -10,7 +10,7 @@ import { ITask } from './ITask';
  * @interface TaskComponent
  * @extends {GComponent<TaskComponent>}
  */
-export interface TaskComponent extends GComponent<TaskComponent>, ITask {
+export interface TaskComponent extends GComponent<TaskComponent>, ITask, ComponentLifecycle {
     /**
      * run task
      *

@@ -1,6 +1,7 @@
 import { Token, IContainer, ContainerBuilder, symbols, AsyncLoadOptions } from 'tsioc';
 import { Src } from './utils/index';
 import { ITask } from './core/index';
+import { registerTaskDecorators } from './index';
 
 
 /**
@@ -16,14 +17,14 @@ export class TaskManager {
      * @type {IContainer}
      * @memberof TaskManager
      */
-    container: IContainer;
+    private container: IContainer;
     /**
      * container builder
      *
      * @type {ContainerBuilder}
      * @memberof TaskManager
      */
-    builder: ContainerBuilder;
+    private builder: ContainerBuilder;
 
     constructor(private root: string, container?: IContainer) {
 
@@ -36,6 +37,14 @@ export class TaskManager {
         }
     }
 
+    getContainer() {
+        return this.container;
+    }
+
+    registerDefaults(container: IContainer) {
+        registerTaskDecorators(container);
+    }
+
     loadTask(options: AsyncLoadOptions) {
         this.builder.loadModule(this.container, options)
     }
@@ -43,16 +52,5 @@ export class TaskManager {
     run(task: Token<any>) {
         return this.container.resolve<ITask>(task).run();
     }
-
-    // run(taskname?: string): Promise<any> {
-    //     if (taskname) {
-    //         return this.find(task => task.name === taskname).run();
-    //     } else {
-    //         this.each(task => {
-    //             task.run()
-    //         })
-    //         return null;
-    //     }
-    // }
 }
 

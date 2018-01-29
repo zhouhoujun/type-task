@@ -1,4 +1,5 @@
 import { TaskContext } from './TaskContext';
+import { ComponentLifecycle } from 'tsioc';
 
 
 
@@ -8,7 +9,7 @@ import { TaskContext } from './TaskContext';
  * @export
  * @interface ITask
  */
-export interface ITask {
+export interface ITask extends ComponentLifecycle {
 
     /**
      * get run context.
