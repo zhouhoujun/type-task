@@ -1,8 +1,6 @@
-import { Token, IContainer, ContainerBuilder, symbols, AsyncLoadOptions } from 'tsioc';
-import { Src } from './utils/index';
-import { ITask } from './core/index';
-import { registerTaskDecorators } from './index';
-
+import { Token, IContainer, ContainerBuilder, symbols, AsyncLoadOptions, Type } from 'tsioc';
+import { Src, taskSymbols } from './utils/index';
+import { ITask, TaskComposite, registerTaskDecorators } from './core/index';
 
 /**
  * task manager.
@@ -10,47 +8,38 @@ import { registerTaskDecorators } from './index';
  * @export
  * @class TaskManager
  */
-export class TaskManager {
-    /**
-     * container
-     *
-     * @type {IContainer}
-     * @memberof TaskManager
-     */
-    private container: IContainer;
-    /**
-     * container builder
-     *
-     * @type {ContainerBuilder}
-     * @memberof TaskManager
-     */
-    private builder: ContainerBuilder;
+export class TaskManager extends TaskComposite {
 
     constructor(private root: string, container?: IContainer) {
+        super(root);
 
         if (!container) {
-            this.builder = new ContainerBuilder();
-            this.container = this.builder.create();
+            let builder = new ContainerBuilder();
+            this.container = builder.create();
         } else {
             this.container = container;
-            this.builder = container.get<ContainerBuilder>(symbols.IContainerBuilder);
         }
     }
 
+    private hasRegisterExt = false;
     getContainer() {
+        if (!this.hasRegisterExt) {
+            this.registerExt(this.container);
+            this.hasRegisterExt = true;
+        }
         return this.container;
     }
 
-    registerDefaults(container: IContainer) {
+    run(task: Token<any>): Promise<any> {
+        return this.loadModules(this.getContainer())
+            .then(container => {
+                return container.resolve<ITask>(task).run();
+            });
+    }
+
+    protected registerExt(container: IContainer) {
         registerTaskDecorators(container);
-    }
-
-    loadTask(options: AsyncLoadOptions) {
-        this.builder.loadModule(this.container, options)
-    }
-
-    run(task: Token<any>) {
-        return this.container.resolve<ITask>(task).run();
+        container.registerSingleton(taskSymbols.TaskManager, this);
     }
 }
 
