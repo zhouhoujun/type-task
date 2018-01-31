@@ -1,14 +1,16 @@
+import { IContainer } from 'tsioc';
+
 
 
 /**
- * src
+ * source
  */
 export type Src = string | string[];
 
 /**
- * async source.
+ * task source.
  */
-export type AsyncSrc = Src | Promise<Src>;
+export type TaskSrc = Src | ((container?: IContainer) => Src);
 
 
 export interface NodeCabllback {

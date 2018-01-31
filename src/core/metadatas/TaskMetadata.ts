@@ -23,12 +23,5 @@ export interface TaskMetadata extends ClassMetadata {
      * @memberof TaskMetadata
      */
     taskType?: string;
-    /**
-     * assert tasks. assert group name or extends name.
-     *
-     * @type {Src}
-     * @memberof ITaskInfo
-     */
-    group?: Src;
 
 }

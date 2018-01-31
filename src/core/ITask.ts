@@ -20,14 +20,6 @@ export interface ITask extends ComponentLifecycle {
     name: string;
 
     /**
-     * get run context.
-     *
-     * @returns {TaskContext}
-     * @memberof ITask
-     */
-    getContext(): TaskContext;
-
-    /**
      * run task.
      *
      * @returns {Promise<any>}

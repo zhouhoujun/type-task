@@ -28,10 +28,6 @@ export class TaskComposite extends GComposite<TaskComponent> implements TaskComp
         return this;
     }
 
-    getContext(): ITaskContext {
-        return null;
-    }
-
     run(taskname?: string): Promise<any> {
         return this.loadModules(this.container)
             .then(() => {

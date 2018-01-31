@@ -1,7 +1,8 @@
 import { ExecOptions, ExecFileOptions, execFile } from 'child_process';
 import { RunWay, Task, TaskComposite, ITask, ITaskContext } from '../core/index';
-import { isString, isArray } from 'tsioc';
+import { isString, isArray, isFunction } from 'tsioc';
 import { existsSync } from 'fs';
+import { TaskSrc } from '../utils/index';
 
 
 /**
@@ -12,13 +13,12 @@ import { existsSync } from 'fs';
  */
 @Task('ExecFile')
 export class ExecFileTask extends TaskComposite {
-    constructor(taskName?: string) {
+    constructor(private files: TaskSrc, taskName?: string) {
         super(taskName);
     }
 
     protected execute(): Promise<any> {
-        let option = ctx.option as IExecFileOption;
-        let files = ctx.to<AsyncSrc>(this.files);
+        let files = isFunction(this.files) ? this.files(this.container) : this.files;
         return Promise.resolve(files)
             .then(files => {
                 if (isString(files)) {

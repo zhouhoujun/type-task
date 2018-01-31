@@ -6,7 +6,7 @@ import { TaskMetadata } from '../metadatas';
 
 
 export interface ITaskDecorator<T extends TaskMetadata> extends IClassDecorator<T> {
-    (taskName?: string, group?: Src, provide?: Registration<any> | string, alias?: string): ClassDecorator;
+    (taskName?: string, provide?: Registration<any> | string, alias?: string): ClassDecorator;
     (target: Function): void;
 }
 
@@ -24,12 +24,6 @@ export function createTaskDecorator<T extends TaskMetadata>(
                 match: (arg) => isString(arg),
                 setMetadata: (metadata, arg) => {
                     metadata.name = name;
-                }
-            });
-            args.next<TaskMetadata>({
-                match: (arg) => isString(arg) || isArray(arg),
-                setMetadata: (metadata, arg) => {
-                    metadata.group = arg;
                 }
             });
         },
