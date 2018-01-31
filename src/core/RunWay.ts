@@ -8,9 +8,9 @@ export enum RunWay {
     /**
      * run mutil source stream by sequence.
      */
-    sequence = 1,
+    sequence = 'sequence',
     /**
      * run mutil source stream by parallel.
      */
-    parallel = 2
+    parallel = 'parallel'
 }

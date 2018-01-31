@@ -1,6 +1,6 @@
-import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject } from 'tsioc';
+import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode } from 'tsioc';
 import { TaskComponent } from './TaskComponent';
-import { TaskContext } from './TaskContext';
+import { ITaskContext } from './ITaskContext';
 
 /**
  * task composite.
@@ -28,7 +28,7 @@ export class TaskComposite extends GComposite<TaskComponent> implements TaskComp
         return this;
     }
 
-    getContext(): TaskContext {
+    getContext(): ITaskContext {
         return null;
     }
 
@@ -38,10 +38,13 @@ export class TaskComposite extends GComposite<TaskComponent> implements TaskComp
                 if (taskname) {
                     return this.find(task => task.name === taskname).run();
                 } else {
+                    let executePromise = this.execute();
                     this.each(task => {
-                        task.run()
-                    })
-                    return null;
+                        executePromise = executePromise.then(() => {
+                            return task.run()
+                        });
+                    }, Mode.children)
+                    return executePromise;
                 }
             });
     }
@@ -66,5 +69,10 @@ export class TaskComposite extends GComposite<TaskComponent> implements TaskComp
         } else {
             return Promise.resolve(container);
         }
+    }
+
+
+    protected execute(): Promise<any> {
+        return Promise.resolve();
     }
 }

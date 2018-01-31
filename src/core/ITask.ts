@@ -12,6 +12,14 @@ import { ComponentLifecycle } from 'tsioc';
 export interface ITask extends ComponentLifecycle {
 
     /**
+     * task name.
+     *
+     * @type {string}
+     * @memberof ITask
+     */
+    name: string;
+
+    /**
      * get run context.
      *
      * @returns {TaskContext}

@@ -1,8 +1,11 @@
-import { IContainer, symbols, LifeScope, CoreActions } from 'tsioc';
+import { IContainer, symbols, LifeScope, CoreActions, DecoratorType } from 'tsioc';
 import { Task } from './decorators/index';
+import { InitTaskAction } from './actions/InitTaskAction';
 
 
+export * from './RunWay';
 export * from './ITask';
+export * from './ITaskContext';
 export * from './TaskComponent';
 export * from './TaskComposite';
 export * from './TaskContext';
@@ -10,8 +13,14 @@ export * from './TaskContext';
 export * from './decorators/index';
 export * from './metadatas/index';
 
-
+/**
+ * register task decorators.
+ *
+ * @export
+ * @param {IContainer} container
+ */
 export function registerTaskDecorators(container: IContainer) {
-    let liefscope = container.resolve<LifeScope>(symbols.LifeScope);
-    liefscope.registerDecorator(Task, CoreActions.bindProvider, CoreActions.componentBeforeInit, CoreActions.componentInit);
+    let lifeScope = container.getLifeScope();
+    lifeScope.addAction(new InitTaskAction(), DecoratorType.Class, CoreActions.afterConstructor);
+    lifeScope.registerDecorator(Task, CoreActions.bindProvider, 'InitTaskAction', CoreActions.componentCache, CoreActions.componentBeforeInit, CoreActions.componentInit);
 }
