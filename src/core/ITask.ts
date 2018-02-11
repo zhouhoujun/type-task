@@ -1,5 +1,6 @@
-import { TaskContext } from './TaskContext';
+import { IContext } from './IContext';
 import { ComponentLifecycle } from 'tsioc';
+import { IEnvironment } from '../IEnvironment';
 
 
 
@@ -18,6 +19,14 @@ export interface ITask extends ComponentLifecycle {
      * @memberof ITask
      */
     name: string;
+
+    /**
+     * task enviroment.
+     *
+     * @type {IEnvironment}
+     * @memberof ITask
+     */
+    enviroment: IEnvironment;
 
     /**
      * run task.

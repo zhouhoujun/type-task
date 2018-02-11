@@ -9,6 +9,17 @@ export const TaskElement = Symbol('TaskElement');
 export const TaskManager = Symbol('TaskManager');
 
 /**
- * ITaskContext
+ * ExecFile
  */
-export const ITaskContext = Symbol('ITaskContext');
+export const ExecFile = Symbol('ExecFile');
+
+/**
+ * ExecShell
+ */
+export const ExecShell = Symbol('ExecShell');
+
+
+/**
+ * PipeTask
+ */
+export const PipeTask = Symbol('PipeTask');

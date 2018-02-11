@@ -1,6 +1,7 @@
-import { toAbsolutePath, Singleton, Express, Express2 } from 'tsioc';
+import { toAbsolutePath, Singleton, Express, Express2, Inject, symbols, IContainer } from 'tsioc';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
+import { IEnvironment } from './IEnvironment';
 
 /**
  * Enviroment.
@@ -8,10 +9,13 @@ import { join } from 'path';
  * @export
  * @class Environment
  */
-@Singleton
-export class Environment {
+@Singleton()
+export class Environment implements IEnvironment {
     root: string;
     packageFile = 'package.json';
+
+    @Inject(symbols.IContainer)
+    public container: IContainer;
 
     constructor() {
 

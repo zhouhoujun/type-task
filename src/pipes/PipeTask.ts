@@ -1,15 +1,6 @@
-import { ITask } from '../ITask';
-import { ITaskContext } from '../ITaskContext';
-import { IAssets } from '../IAssets';
-import { TransformSource, Pipe, OutputPipe, TaskResult } from '../types';
-import { RunWay } from '../RunWay';
-import { ITransform } from '../ITransform';
-import { IPipe } from '../IPipe';
-import { isFunction, Singleton } from 'tsioc';
-import { isString, isArray, isUndefined } from 'util';
-import { IPipeTask } from '../IPipeTask';
-import { sortOrder, pick, Src } from '../../utils';
-import { PipeTask } from '../index';
+import { ExecOptions, ExecFileOptions, execFile } from 'child_process';
+import { RunWay, PipeTask, TaskComposite, ITask } from '../core/index';
+import { isString, isArray } from 'tsioc';
 
 /**
  *  Pipe Task class.
@@ -18,17 +9,11 @@ import { PipeTask } from '../index';
  * @class Task
  * @implements {ITask}
  */
-@PipeTask
-export class DefaultPipeTask implements IPipeTask {
-    /**
-     * run mutil source stream way. default parallel.
-     *
-     * @memberOf PipeTask
-     */
-    public runWay = RunWay.parallel;
+@PipeTask('Pipe')
+export class ComponsitePipeTask extends TaskComposite {
 
-
-    constructor() {
+    constructor(name?: string) {
+        super(name);
     }
 
     /**

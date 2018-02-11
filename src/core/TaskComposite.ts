@@ -1,6 +1,7 @@
 import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode } from 'tsioc';
 import { TaskComponent } from './TaskComponent';
-import { ITaskContext } from './ITaskContext';
+import { Environment } from '../Environment';
+import { IContext } from './IContext';
 
 /**
  * task composite.
@@ -10,15 +11,19 @@ import { ITaskContext } from './ITaskContext';
  * @extends {GComposite<TaskComponent>}
  * @implements {TaskComponent}
  */
-export class TaskComposite extends GComposite<TaskComponent> implements TaskComponent {
-
-    @Inject(symbols.IContainer)
-    protected container: IContainer;
+export abstract class TaskComposite extends GComposite<TaskComponent> implements TaskComponent {
 
     protected registerModules: Type<any>[];
     protected useModules: AsyncLoadOptions[];
-    constructor(taskName: string) {
-        super(taskName)
+
+    /**
+     * task run enviroment.
+     */
+    @Inject()
+    enviroment: Environment;
+
+    constructor(name: string) {
+        super(name);
         this.useModules = [];
     }
 
@@ -28,11 +33,11 @@ export class TaskComposite extends GComposite<TaskComponent> implements TaskComp
         return this;
     }
 
-    run(taskname?: string): Promise<any> {
-        return this.loadModules(this.container)
+    run(name?: string): Promise<any> {
+        return this.loadModules(this.enviroment.container)
             .then(() => {
-                if (taskname) {
-                    return this.find(task => task.name === taskname).run();
+                if (name) {
+                    return this.find(task => task.name === name).run();
                 } else {
                     let executePromise = this.execute();
                     this.each(task => {
@@ -67,8 +72,50 @@ export class TaskComposite extends GComposite<TaskComponent> implements TaskComp
         }
     }
 
+    /**
+     * filter task to run.
+     *
+     * @param {Type<any>[]} tasks
+     * @returns {Type<any>[]}
+     * @memberof TaskComposite
+     */
+    abstract filterTask(tasks: Type<any>[]): Type<any>[];
 
+
+    /**
+     * sort task run order.
+     *
+     * @param {Type<any>[]} tasks
+     * @returns {Type<any>[]}
+     * @memberof TaskComposite
+     */
+    abstract orderTask(tasks: Type<any>[]): Type<any>[];
+
+
+    /**
+     * get execution data.
+     *
+     * @param {Type<any>} task
+     * @returns {*}
+     * @memberof TaskComposite
+     */
+    abstract getExecData(task: Type<any>): any;
+
+    /**
+     * execute tasks
+     *
+     * @protected
+     * @returns {Promise<any>}
+     * @memberof TaskComposite
+     */
     protected execute(): Promise<any> {
-        return Promise.resolve();
+        let exec = Promise.resolve();
+        this.orderTask(this.filterTask(this.registerModules))
+            .forEach(task => {
+                exec = exec.then(() => {
+                    return this.enviroment.container.invoke<any>(task, 'run', { execData: this.getExecData(task) });
+                });
+            })
+        return exec;
     }
 }

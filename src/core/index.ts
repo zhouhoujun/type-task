@@ -2,10 +2,8 @@ import { IContainer, symbols, LifeScope, CoreActions, DecoratorType } from 'tsio
 import { Task } from './decorators/index';
 import { InitTaskAction } from './actions/InitTaskAction';
 
-
-export * from './RunWay';
 export * from './ITask';
-export * from './ITaskContext';
+export * from './IContext';
 export * from './TaskComponent';
 export * from './TaskComposite';
 export * from './TaskContext';

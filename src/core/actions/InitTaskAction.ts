@@ -4,7 +4,13 @@ import { ITask } from '../ITask';
 import { TaskMetadata } from '../metadatas/index';
 
 
-
+/**
+ * init task action data.
+ *
+ * @export
+ * @interface InitTaskActionData
+ * @extends {ActionData<AdviceMetadata>}
+ */
 export interface InitTaskActionData extends ActionData<AdviceMetadata> {
 
 }

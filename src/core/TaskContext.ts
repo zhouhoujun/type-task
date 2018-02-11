@@ -1,24 +1,31 @@
-import { ITaskContext } from './ITaskContext';
-import { Inject, symbols, IContainer, Singleton } from 'tsioc';
-import { taskSymbols } from '../index';
+import { TaskComposite } from './TaskComposite';
+import { IContext } from './IContext';
+import { Task } from './decorators/index';
+
 
 /**
- * task context.
+ * run tasks with context.
  *
  * @export
  * @class TaskContext
+ * @extends {TaskComposite}
  */
+@Task()
+export class TaskContext extends TaskComposite {
 
-@Singleton(taskSymbols.ITaskContext)
-export class TaskContext implements ITaskContext {
+    constructor(public context: IContext) {
+        super(context.name);
+    }
 
-    @Inject(symbols.IContainer)
-    container: IContainer;
-
-    constructor() {
-
+    onInit() {
+        if (this.context.loader) {
+            this.use(this.context.loader);
+        }
     }
 
 
-
+    protected execute(): Promise<any> {
+        this.context
+        return Promise.resolve();
+    }
 }

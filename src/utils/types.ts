@@ -12,7 +12,12 @@ export type Src = string | string[];
  */
 export type TaskSrc = Src | ((container?: IContainer) => Src);
 
-
+/**
+ * node callback
+ *
+ * @export
+ * @interface NodeCabllback
+ */
 export interface NodeCabllback {
     (err: Error, data?: any): Promise<any> | void
 }

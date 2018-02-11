@@ -1,5 +1,5 @@
 import { ExecOptions, ExecFileOptions, execFile, exec } from 'child_process';
-import { RunWay, Task, TaskComposite, ITask, ITaskContext } from '../core/index';
+import { Task, TaskComposite, ITask, IContext } from '../core/index';
 import { isString, isArray } from 'tsioc';
 
 /**

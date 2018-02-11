@@ -10,6 +10,8 @@ import { ITask, TaskComposite, registerTaskDecorators } from './core/index';
  */
 export class TaskManager extends TaskComposite {
 
+    container: IContainer
+
     constructor(private root: string, container?: IContainer) {
         super(root);
 
