@@ -1,6 +1,7 @@
 import { Token, IContainer, ContainerBuilder, symbols, AsyncLoadOptions, Type } from 'tsioc';
 import { Src, taskSymbols } from './utils/index';
 import { ITask, TaskComposite, registerTaskDecorators } from './core/index';
+import { TaskComponent } from './index';
 
 /**
  * task manager.
@@ -8,7 +9,7 @@ import { ITask, TaskComposite, registerTaskDecorators } from './core/index';
  * @export
  * @class TaskManager
  */
-export class TaskManager extends TaskComposite {
+export class TaskManager extends TaskComposite<TaskComponent> {
 
     container: IContainer
 

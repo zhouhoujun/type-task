@@ -2,7 +2,7 @@ import { TaskComposite } from './TaskComposite';
 import { IContext } from './IContext';
 import { Task } from './decorators/index';
 import { ITaskContext } from './ITaskContext';
-import { Mode } from 'tsioc';
+import { Mode, Type, Provider, Providers } from 'tsioc';
 
 
 /**
@@ -31,24 +31,17 @@ export class TaskContext extends TaskComposite<ITaskContext> implements ITaskCon
         }
     }
 
-    /**
-     * execute tasks
-     *
-     * @protected
-     * @returns {Promise<any>}
-     * @memberof TaskComposite
-     */
-    protected execute(): Promise<any> {
-        let exec = Promise.resolve();
+    protected getRunTasks(): Type<any>[] {
         let context = this.getContext();
-
-        context.sort(context.filter(this.registerModules))
-            .forEach(task => {
-                exec = exec.then(() => {
-                    return this.enviroment.container.invoke<any>(task, 'run', { context: context });
-                });
-            });
-
-        return exec;
+        return context.sort(context.filter(this.registerModules))
     }
+
+    getTaskProvider(type: Type<any>): Providers[] {
+        let context = this.getContext();
+        if (context.getExecData) {
+            return context.getExecData(type) || [];
+        }
+        return [];
+    }
+
 }

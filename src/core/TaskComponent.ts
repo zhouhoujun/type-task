@@ -1,5 +1,5 @@
 import { ITask } from './ITask';
-import { GComponent, Token, ComponentLifecycle, AsyncLoadOptions, Type } from 'tsioc';
+import { GComponent, Token, ComponentLifecycle, AsyncLoadOptions, Type, Provider, Providers } from 'tsioc';
 
 /**
  * Task Component.
@@ -27,4 +27,13 @@ export interface TaskComponent extends GComponent<TaskComponent>, ITask, Compone
      * @memberof TaskComponent
      */
     run(name?: string): Promise<any>;
+
+    /**
+     * get task provider.
+     * 
+     * @param {Type<any>} type 
+     * @returns {Providers[]} 
+     * @memberof TaskComponent
+     */
+    getTaskProvider(type: Type<any>): Providers[];
 }

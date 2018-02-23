@@ -1,6 +1,7 @@
 import { ExecOptions, ExecFileOptions, execFile, exec } from 'child_process';
-import { Task, TaskComposite, ITask, IContext } from '../core/index';
+import { Task, TaskElement, ITask, IContext } from '../core/index';
 import { isString, isArray } from 'tsioc';
+import { RunWay } from '../pipes/index';
 
 /**
  * Shell Task
@@ -9,26 +10,25 @@ import { isString, isArray } from 'tsioc';
  * @implements {ITask}
  */
 @Task('ExecShell')
-export class ExecShellTask extends TaskComposite {
-    constructor(taskName?: string) {
-        super(taskName);
+export class ExecShellTask extends TaskElement {
+    constructor(name: string, private cmds: string | string[], private options?: ExecOptions, private allowError = true, private shellRunWay = RunWay.sequence) {
+        super(name);
     }
 
     protected execute(): Promise<any> {
-        let ctx = this.getContext();
-        return Promise.resolve(ctx.cmds)
+        return Promise.resolve(this.cmds)
             .then(cmds => {
                 if (isString(cmds)) {
-                    return this.execShell(cmds, option.execOptions, option.allowError !== false);
+                    return this.execShell(cmds, this.options, this.allowError !== false);
                 } else if (isArray(cmds)) {
-                    if (option.shellRunWay === RunWay.sequence) {
+                    if (this.shellRunWay === RunWay.sequence) {
                         let pip = Promise.resolve();
                         cmds.forEach(cmd => {
-                            pip = pip.then(() => this.execShell(cmd, option.execOptions));
+                            pip = pip.then(() => this.execShell(cmd, this.options));
                         });
                         return pip;
                     } else {
-                        return Promise.all(cmds.map(cmd => this.execShell(cmd, option.execOptions, option.allowError !== false)));
+                        return Promise.all(cmds.map(cmd => this.execShell(cmd, this.options, this.allowError !== false)));
                     }
                 } else {
                     return Promise.reject('shell task config error');

@@ -3,7 +3,8 @@ import { Task, TaskComposite, ITask, IContext } from '../core/index';
 import { isString, isArray, isFunction } from 'tsioc';
 import { existsSync } from 'fs';
 import { TaskSrc } from '../utils/index';
-import { TaskContext } from '../core/index';
+import { TaskContext, TaskElement } from '../core/index';
+import { RunWay } from '../pipes/index';
 
 
 /**
@@ -13,8 +14,8 @@ import { TaskContext } from '../core/index';
  * @implements {ITask}
  */
 @Task('ExecFile')
-export class ExecFileTask extends TaskContext {
-    constructor(private files: TaskSrc, name?: string) {
+export class ExecFileTask extends TaskElement  {
+    constructor(name: string, private files: string, private args?: string[], private options?: ExecFileOptions, private allowError = true, private fileRunWay= RunWay.sequence) {
         super(name);
     }
 
@@ -23,16 +24,16 @@ export class ExecFileTask extends TaskContext {
         return Promise.resolve(files)
             .then(files => {
                 if (isString(files)) {
-                    return this.execFile(files, option.args, option.execFileOptions, option.allowError !== false);
+                    return this.execFile(files, this.args, this.options, this.allowError !== false);
                 } else if (isArray(files)) {
-                    if (option.fileRunWay === RunWay.sequence) {
+                    if (this.fileRunWay === RunWay.sequence) {
                         let pip = Promise.resolve();
                         files.forEach(file => {
-                            pip = pip.then(() => this.execFile(file, option.args, option.execFileOptions, option.allowError !== false));
+                            pip = pip.then(() => this.execFile(file, this.args, this.options, this.allowError !== false));
                         });
                         return pip;
                     } else {
-                        return Promise.all(files.map(file => this.execFile(file, option.args, option.execFileOptions, option.allowError !== false)));
+                        return Promise.all(files.map(file => this.execFile(file, this.args, this.options, this.allowError !== false)));
                     }
                 } else {
                     return Promise.reject('exec file task config error');

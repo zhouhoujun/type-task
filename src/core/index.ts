@@ -7,6 +7,7 @@ export * from './IContext';
 export * from './TaskComponent';
 export * from './TaskComposite';
 export * from './TaskContext';
+export * from './TaskElement';
 
 export * from './decorators/index';
 export * from './metadatas/index';

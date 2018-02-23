@@ -1,7 +1,8 @@
-import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode } from 'tsioc';
+import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, Provider, Providers } from 'tsioc';
 import { TaskComponent } from './TaskComponent';
 import { Environment } from '../Environment';
 import { IContext } from './IContext';
+import { ITask } from './ITask';
 
 /**
  * task composite.
@@ -11,7 +12,7 @@ import { IContext } from './IContext';
  * @extends {GComposite<TaskComponent>}
  * @implements {TaskComponent}
  */
-export abstract class TaskComposite<T extends TaskComponent> extends GComposite<T> implements TaskComponent {
+export class TaskComposite<T extends TaskComponent> extends GComposite<T> implements TaskComponent {
 
     protected registerModules: Type<any>[];
     protected useModules: AsyncLoadOptions[];
@@ -22,7 +23,7 @@ export abstract class TaskComposite<T extends TaskComponent> extends GComposite<
     @Inject()
     enviroment: Environment;
 
-    constructor(name: string, public context?: IContext) {
+    constructor(name: string) {
         super(name);
         this.useModules = [];
     }
@@ -72,7 +73,14 @@ export abstract class TaskComposite<T extends TaskComponent> extends GComposite<
         }
     }
 
-   
+
+    protected getRunTasks(): Type<any>[] {
+        return this.registerModules;
+    }
+
+    getTaskProvider(type: Type<any>): Providers[] {
+        return [];
+    }
 
     /**
      * execute tasks
@@ -81,5 +89,19 @@ export abstract class TaskComposite<T extends TaskComponent> extends GComposite<
      * @returns {Promise<any>}
      * @memberof TaskComposite
      */
-    protected abstract execute(): Promise<any>;
+    protected execute(): Promise<any> {
+        let exec = Promise.resolve();
+
+        this.getRunTasks()
+            .forEach(task => {
+                exec = exec.then(() => {
+                    let providers = this.getTaskProvider(task);
+                    providers.unshift({ context: context });
+                    let instance = this.enviroment.container.resolve<ITask>(task, ...providers);
+                    return instance.run();
+                });
+            });
+
+        return exec;
+    }
 }
