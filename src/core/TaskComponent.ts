@@ -20,40 +20,11 @@ export interface TaskComponent extends GComponent<TaskComponent>, ITask, Compone
     use(modules: AsyncLoadOptions): this;
 
     /**
-     * filter task to run.
-     *
-     * @param {Type<any>[]} tasks
-     * @returns {Type<any>[]}
-     * @memberof TaskComponent
-     */
-    filterTask(tasks: Type<any>[]): Type<any>[];
-
-
-    /**
-     * sort task run order.
-     *
-     * @param {Type<any>[]} tasks
-     * @returns {Type<any>[]}
-     * @memberof TaskComponent
-     */
-    orderTask(tasks: Type<any>[]): Type<any>[];
-
-
-    /**
-     * get execution data.
-     *
-     * @param {Type<any>} task
-     * @returns {*}
-     * @memberof TaskComponent
-     */
-    getExecData(task: Type<any>): any;
-
-    /**
      * run task
      *
-     * @param {string} [taskname]
+     * @param {string} [name]
      * @returns {Promise<any>}
      * @memberof TaskComponent
      */
-    run(taskname?: string): Promise<any>;
+    run(name?: string): Promise<any>;
 }

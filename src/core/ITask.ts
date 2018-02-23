@@ -1,6 +1,7 @@
 import { IContext } from './IContext';
 import { ComponentLifecycle } from 'tsioc';
 import { IEnvironment } from '../IEnvironment';
+import { ExecData } from './ExecData';
 
 
 
@@ -30,8 +31,8 @@ export interface ITask extends ComponentLifecycle {
 
     /**
      * run task.
-     *
-     * @returns {Promise<any>}
+     * 
+     * @returns {Promise<any>} 
      * @memberof ITask
      */
     run(): Promise<any>;
