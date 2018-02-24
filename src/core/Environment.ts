@@ -1,7 +1,9 @@
 import { toAbsolutePath, Singleton, Express, Express2, Inject, symbols, IContainer } from 'tsioc';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
-import { IEnvironment } from './IEnvironment';
+import { IEnvironment } from '../IEnvironment';
+import { taskSymbols } from '../utils/index';
+import { ITaskContainer } from '../ITaskContainer';
 
 /**
  * Enviroment.
@@ -9,16 +11,19 @@ import { IEnvironment } from './IEnvironment';
  * @export
  * @class Environment
  */
-@Singleton()
+@Singleton(taskSymbols.IEnvironment)
 export class Environment implements IEnvironment {
-    root: string;
     packageFile = 'package.json';
 
-    @Inject(symbols.IContainer)
-    public container: IContainer;
+    @Inject(taskSymbols.TaskContainer)
+    public taskContainer: ITaskContainer;
 
     constructor() {
 
+    }
+
+    get container(): IContainer {
+        return this.taskContainer.container;
     }
 
     /**
@@ -28,7 +33,7 @@ export class Environment implements IEnvironment {
      * @memberof Environment
      */
     getRootPath() {
-        return this.root;
+        return this.taskContainer.rootPath;
     }
 
     getRootFolders(express?: Express2<string, string, boolean>): string[] {

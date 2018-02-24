@@ -2,7 +2,7 @@ import { TaskComposite } from './TaskComposite';
 import { IContext } from './IContext';
 import { Task } from './decorators/index';
 import { ITaskContext } from './ITaskContext';
-import { Mode, Type, Provider, Providers } from 'tsioc';
+import { Mode, Type, Provider, Providers, Component } from 'tsioc';
 
 
 /**
@@ -12,10 +12,11 @@ import { Mode, Type, Provider, Providers } from 'tsioc';
  * @class TaskContext
  * @extends {TaskComposite}
  */
+@Component
 export class TaskContext extends TaskComposite<ITaskContext> implements ITaskContext {
 
-    constructor(public context?: IContext) {
-        super(context ? context.name : '');
+    constructor(name: string, public context?: IContext) {
+        super(name);
     }
 
     getContext<T extends IContext>(): T {
@@ -32,16 +33,18 @@ export class TaskContext extends TaskComposite<ITaskContext> implements ITaskCon
     }
 
     protected getRunTasks(): Type<any>[] {
+        let tasks = super.getRunTasks();
         let context = this.getContext();
-        return context.sort(context.filter(this.registerModules))
+        return context.sort(context.filter(tasks));
     }
 
     getTaskProvider(type: Type<any>): Providers[] {
         let context = this.getContext();
+        let providers: Providers[] = [{ context: context }];
         if (context.getExecData) {
-            return context.getExecData(type) || [];
+            providers.push(context.getExecData(type));
         }
-        return [];
+        return providers;
     }
 
 }

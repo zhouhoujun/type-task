@@ -5,10 +5,9 @@ import { IContext } from './IContext';
 
 export interface ITaskContext extends TaskComponent {
 
-    
     /**
      * context
-     * 
+     *
      * @type {IContext}
      * @memberof TaskComponent
      */
@@ -16,9 +15,9 @@ export interface ITaskContext extends TaskComponent {
 
     /**
      * get context.
-     * 
-     * @template T 
-     * @returns {T} 
+     *
+     * @template T
+     * @returns {T}
      * @memberof ITaskContext
      */
     getContext<T extends IContext>(): T;

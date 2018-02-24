@@ -31,8 +31,8 @@ export interface ITask extends ComponentLifecycle {
 
     /**
      * run task.
-     * 
-     * @returns {Promise<any>} 
+     *
+     * @returns {Promise<any>}
      * @memberof ITask
      */
     run(): Promise<any>;

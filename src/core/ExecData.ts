@@ -1,7 +1,7 @@
 
 /**
  * task execute data.
- * 
+ *
  * @export
  * @interface ExecData
  */

@@ -30,9 +30,9 @@ export interface TaskComponent extends GComponent<TaskComponent>, ITask, Compone
 
     /**
      * get task provider.
-     * 
-     * @param {Type<any>} type 
-     * @returns {Providers[]} 
+     *
+     * @param {Type<any>} type
+     * @returns {Providers[]}
      * @memberof TaskComponent
      */
     getTaskProvider(type: Type<any>): Providers[];

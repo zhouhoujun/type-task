@@ -1,8 +1,9 @@
-import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, Provider, Providers } from 'tsioc';
+import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, Provider, Providers, hasOwnClassMetadata } from 'tsioc';
 import { TaskComponent } from './TaskComponent';
-import { Environment } from '../Environment';
+import { Environment } from './Environment';
 import { IContext } from './IContext';
 import { ITask } from './ITask';
+import { Task } from './decorators/index';
 
 /**
  * task composite.
@@ -73,13 +74,12 @@ export class TaskComposite<T extends TaskComponent> extends GComposite<T> implem
         }
     }
 
-
-    protected getRunTasks(): Type<any>[] {
-        return this.registerModules;
-    }
-
     getTaskProvider(type: Type<any>): Providers[] {
         return [];
+    }
+
+    protected getRunTasks(): Type<any>[] {
+        return this.registerModules.filter(ty => hasOwnClassMetadata(Task, ty));
     }
 
     /**
@@ -96,7 +96,6 @@ export class TaskComposite<T extends TaskComponent> extends GComposite<T> implem
             .forEach(task => {
                 exec = exec.then(() => {
                     let providers = this.getTaskProvider(task);
-                    providers.unshift({ context: context });
                     let instance = this.enviroment.container.resolve<ITask>(task, ...providers);
                     return instance.run();
                 });

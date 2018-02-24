@@ -1,12 +1,12 @@
 
 /**
- * TaskElement.
+ * IEnvironment.
  */
-export const TaskElement = Symbol('TaskElement');
+export const IEnvironment = Symbol('IEnvironment');
 /**
- * TaskManager
+ * TaskContainer
  */
-export const TaskManager = Symbol('TaskManager');
+export const TaskContainer = Symbol('TaskContainer');
 
 /**
  * ExecFile

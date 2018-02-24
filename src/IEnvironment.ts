@@ -1,7 +1,24 @@
 import { Src } from './utils/index';
-import { Express } from 'tsioc';
+import { Express, IContainer } from 'tsioc';
+import { ITaskContainer } from './ITaskContainer';
 
 export interface IEnvironment {
+
+    /**
+     * ioc container.
+     *
+     * @type {IContainer}
+     * @memberof IEnvironment
+     */
+    container: IContainer;
+
+    /**
+     * task container.
+     *
+     * @type {ITaskContainer}
+     * @memberof IEnvironment
+     */
+    taskContainer: ITaskContainer;
 
     /**
      * get development root.

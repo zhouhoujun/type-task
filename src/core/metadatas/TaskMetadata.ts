@@ -23,5 +23,4 @@ export interface TaskMetadata extends ClassMetadata {
      * @memberof TaskMetadata
      */
     taskType?: string;
-
 }

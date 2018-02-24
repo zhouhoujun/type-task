@@ -23,7 +23,7 @@ export function createTaskDecorator<T extends TaskMetadata>(
             args.next<TaskMetadata>({
                 match: (arg) => isString(arg),
                 setMetadata: (metadata, arg) => {
-                    metadata.name = name;
+                    metadata.name = arg;
                 }
             });
         },
@@ -33,7 +33,7 @@ export function createTaskDecorator<T extends TaskMetadata>(
             }
 
             if (!metadata.name && isClass(metadata.type)) {
-                metadata.name = metadata.type.name;
+                metadata.name = metadata.type.classAnnations ? metadata.type.classAnnations.name : metadata.type.name;
             }
             metadata.taskType = taskType;
             metadata.singleton = true;
