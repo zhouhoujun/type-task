@@ -1,4 +1,3 @@
-import { ITaskContext } from './ITaskContext';
 import { TaskString } from './types';
 import { ITransform } from './ITransform';
 import { IAssets } from './IAssets';
