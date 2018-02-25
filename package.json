@@ -56,7 +56,7 @@
         "gulp-typescript": "^3.1.7",
         "gulp-uglify": "^2.0.0",
         "through2": "^2.0.1",
-        "ts-node": "^5.0.0",
+        "ts-node": "^3.3.0",
         "tslint": "^5.4.3",
         "tslint-stylish": "^2.1.0",
         "typescript": "^2.7.2",
