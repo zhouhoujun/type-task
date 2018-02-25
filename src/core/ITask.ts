@@ -1,7 +1,6 @@
 import { IContext } from './IContext';
 import { ComponentLifecycle } from 'tsioc';
 import { IEnvironment } from '../IEnvironment';
-import { ExecData } from './ExecData';
 
 
 

@@ -9,8 +9,12 @@ class SimpleTask extends AbstractTask implements ITask {
     }
 
     run(): Promise<any> {
-        console.log('simple task:', this.name);
-        return Promise.resolve('simple task');
+        console.log('before simple task:', this.name);
+        return Promise.resolve('simple task')
+            .then(val=>{
+                console.log('return simple task:', val);
+                return val;
+            });
     }
 }
 
@@ -18,4 +22,7 @@ class SimpleTask extends AbstractTask implements ITask {
 let container = new TaskContainer(__dirname);
 
 container.use({ modules: [SimpleTask] });
-container.run();
+container.run()
+.then(val=>{
+    console.log('after run task:', val);
+});

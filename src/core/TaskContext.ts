@@ -35,7 +35,13 @@ export class TaskContext extends TaskComposite<ITaskContext> implements ITaskCon
     protected getRunTasks(): Type<any>[] {
         let tasks = super.getRunTasks();
         let context = this.getContext();
-        return context.sort(context.filter(tasks));
+        if(context.filter) {
+            tasks = context.filter(tasks);
+        }
+        if(context.sort){
+            tasks = context.sort(tasks)
+        }
+        return tasks;
     }
 
     getTaskProvider(type: Type<any>): Providers[] {
