@@ -11,7 +11,7 @@ class SimpleTask extends AbstractTask implements ITask {
     run(): Promise<any> {
         console.log('before simple task:', this.name);
         return Promise.resolve('simple task')
-            .then(val=>{
+            .then(val => {
                 console.log('return simple task:', val);
                 return val;
             });
@@ -23,6 +23,6 @@ let container = new TaskContainer(__dirname);
 
 container.use({ modules: [SimpleTask] });
 container.run()
-.then(val=>{
-    console.log('after run task:', val);
-});
+    .then(val => {
+        console.log('after run task:', val);
+    });
