@@ -27,8 +27,16 @@ export class TaskContainer implements ITaskContainer {
         this.registerExt(this.container);
     }
 
-    use(modules: AsyncLoadOptions): this {
-        this.useModules.push(modules);
+    static create(root: string, container?: IContainer, ...modules: AsyncLoadOptions[]): ITaskContainer {
+        let taskContainer = new TaskContainer(root, container);
+        if (modules) {
+            taskContainer.use(...modules);
+        }
+        return taskContainer;
+    }
+
+    use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
+        this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
         return this;
     }
 

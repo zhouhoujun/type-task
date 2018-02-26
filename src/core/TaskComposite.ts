@@ -1,4 +1,4 @@
-import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, Provider, Providers, hasOwnClassMetadata } from 'tsioc';
+import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, Provider, Providers, hasOwnClassMetadata, isClass } from 'tsioc';
 import { TaskComponent } from './TaskComponent';
 import { Environment } from './Environment';
 import { IContext } from './IContext';
@@ -30,8 +30,8 @@ export class TaskComposite<T extends TaskComponent> extends GComposite<T> implem
     }
 
 
-    use(modules: AsyncLoadOptions): this {
-        this.useModules.push(modules);
+    use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
+        this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
         return this;
     }
 

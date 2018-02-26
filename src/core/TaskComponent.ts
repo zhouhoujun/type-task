@@ -13,11 +13,11 @@ export interface TaskComponent extends GComponent<TaskComponent>, ITask, Compone
     /**
      * use modules
      *
-     * @param {AsyncLoadOptions} modules
+     * @param {...(Type<any> | AsyncLoadOptions)[]} modules
      * @returns {this}
      * @memberof TaskComponent
      */
-    use(modules: AsyncLoadOptions): this;
+    use(...modules: (Type<any> | AsyncLoadOptions)[]): this;
 
     /**
      * run task

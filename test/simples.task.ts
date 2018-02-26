@@ -28,7 +28,7 @@ container.bootstrap(SimpleTask)
     });
 
 let container2 = new TaskContainer(__dirname);
-container.use({ modules: [SimpleTask] })
+container.use(SimpleTask)
     .bootstrap('test')
     .then(val => {
         console.log('after run task:', val);
