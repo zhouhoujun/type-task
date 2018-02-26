@@ -1,7 +1,7 @@
 import { Task, ITask, taskSymbols, TaskContainer, AbstractTask } from '../src';
 import { Inject } from 'tsioc';
 
-@Task // ('test')
+@Task('test')
 class SimpleTask extends AbstractTask implements ITask {
 
     constructor(name: string) {
@@ -21,8 +21,15 @@ class SimpleTask extends AbstractTask implements ITask {
 
 let container = new TaskContainer(__dirname);
 
-container.use({ modules: [SimpleTask] });
-container.run()
+// container.use({ modules: [SimpleTask] });
+container.bootstrap(SimpleTask)
+    .then(val => {
+        console.log('after run task:', val);
+    });
+
+let container2 = new TaskContainer(__dirname);
+container.use({ modules: [SimpleTask] })
+    .bootstrap('test')
     .then(val => {
         console.log('after run task:', val);
     });

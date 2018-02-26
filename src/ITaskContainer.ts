@@ -1,5 +1,5 @@
-import { TaskComponent } from './core/index';
-import { IContainer } from 'tsioc';
+import { TaskComponent, ITask } from './core/index';
+import { IContainer, Type, Providers, Token } from 'tsioc';
 
 /**
  * task container.
@@ -8,7 +8,7 @@ import { IContainer } from 'tsioc';
  * @interface ITaskContainer
  * @extends {TaskComponent}
  */
-export interface ITaskContainer extends TaskComponent {
+export interface ITaskContainer {
     /**
      * root of task environment.
      *
@@ -16,13 +16,7 @@ export interface ITaskContainer extends TaskComponent {
      * @memberof ITaskContainer
      */
     rootPath: string;
-    /**
-     * root compoment.
-     *
-     * @type {TaskComponent}
-     * @memberof ITaskContainer
-     */
-    root: TaskComponent;
+
     /**
      * ioc container.
      *
@@ -30,4 +24,10 @@ export interface ITaskContainer extends TaskComponent {
      * @memberof ITaskContainer
      */
     container: IContainer;
+
+    /**
+     * bootstarp.
+     */
+    bootstrap(type: Token<ITask>, ...providers: Providers[]): Promise<any>;
+
 }

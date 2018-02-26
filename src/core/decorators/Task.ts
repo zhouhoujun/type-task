@@ -24,6 +24,7 @@ export function createTaskDecorator<T extends TaskMetadata>(
                 match: (arg) => isString(arg),
                 setMetadata: (metadata, arg) => {
                     metadata.name = arg;
+                    metadata.provide = arg;
                 }
             });
         },
