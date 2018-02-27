@@ -12,7 +12,7 @@ const uglify = require('gulp-uglify');
 TaskContainer.create(__dirname)
     .bootstrap(TaskContext, {
         context: <IContext>{
-            name:'tsion'
+            name: 'tsion'
         }
     });
 

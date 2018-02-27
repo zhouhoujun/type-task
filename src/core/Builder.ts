@@ -17,7 +17,7 @@ export class Builder implements IBuilder {
     build(component: ITaskComponent, context: IContext, ...types: Type<any>[]): ITaskComponent {
         this.filterTask(types)
             .forEach(ty => {
-                component.add(this.container.resolve(ty, context.getExecData()));
+                component.add(this.container.resolve(ty, context.getExecData(ty)));
             });
         return component;
     }
