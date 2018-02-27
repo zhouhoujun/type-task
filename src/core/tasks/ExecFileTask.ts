@@ -1,10 +1,10 @@
 import { ExecOptions, ExecFileOptions, execFile } from 'child_process';
-import { Task, TaskComposite, ITask, IContext } from '../core/index';
 import { isString, isArray, isFunction } from 'tsioc';
 import { existsSync } from 'fs';
-import { TaskSrc } from '../utils/index';
-import { TaskContext, TaskElement } from '../core/index';
-import { RunWay } from '../pipes/index';
+import { TaskSrc } from '../../utils/index';
+import { AbstractTask } from '../AbstractTask';
+import { Task } from '../decorators/index';
+import { RunWay } from '../RunWay';
 
 
 /**
@@ -13,13 +13,13 @@ import { RunWay } from '../pipes/index';
  * @class ExecFileTask
  * @implements {ITask}
  */
-@Task('ExecFile')
-export class ExecFileTask extends TaskElement  {
+@Task('execfile')
+export class ExecFileTask extends AbstractTask  {
     constructor(name: string, private files: string, private args?: string[], private options?: ExecFileOptions, private allowError = true, private fileRunWay= RunWay.sequence) {
         super(name);
     }
 
-    protected execute(): Promise<any> {
+    run(): Promise<any> {
         let files = isFunction(this.files) ? this.files(this.enviroment.container) : this.files;
         return Promise.resolve(files)
             .then(files => {

@@ -1,5 +1,6 @@
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask } from '../src';
+import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, TaskComponent, ITaskComponent } from '../src';
 import { Inject } from 'tsioc';
+import { RunWay } from '../src/core/RunWay';
 
 @Task('test')
 class SimpleTask extends AbstractTask implements ITask {
@@ -28,8 +29,33 @@ container.bootstrap(SimpleTask)
     });
 
 let container2 = new TaskContainer(__dirname);
-container.use(SimpleTask)
+container2.use(SimpleTask)
     .bootstrap('test')
     .then(val => {
         console.log('after run task:', val);
+    });
+
+
+@Task('comptest')
+class SimpleCTask extends TaskComponent<ITaskComponent> {
+
+    constructor(name: string, runWay?: RunWay) {
+        super(name, runWay);
+    }
+
+    protected execute(): Promise<any> {
+        console.log('before component task:', this.name);
+        return Promise.resolve('component task')
+            .then(val => {
+                console.log('return component task:', val);
+                return val;
+            });
+    }
+}
+
+
+TaskContainer.create(__dirname, null, SimpleCTask)
+    .bootstrap('comptest')
+    .then(val => {
+        console.log('after run component task:', val);
     });

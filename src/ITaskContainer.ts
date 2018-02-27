@@ -36,7 +36,12 @@ export interface ITaskContainer {
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this;
 
     /**
-     * bootstarp.
+     * bootstarp task
+     *
+     * @param {Token<ITask>} type
+     * @param {...Providers[]} providers
+     * @returns {Promise<any>}
+     * @memberof ITaskContainer
      */
     bootstrap(type: Token<ITask>, ...providers: Providers[]): Promise<any>;
 

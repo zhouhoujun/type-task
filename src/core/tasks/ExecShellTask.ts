@@ -1,7 +1,8 @@
 import { ExecOptions, ExecFileOptions, execFile, exec } from 'child_process';
-import { Task, TaskElement, ITask, IContext } from '../core/index';
 import { isString, isArray } from 'tsioc';
-import { RunWay } from '../pipes/index';
+import { Task } from '../decorators/index';
+import { AbstractTask } from '../AbstractTask';
+import { RunWay } from '../RunWay';
 
 /**
  * Shell Task
@@ -9,13 +10,13 @@ import { RunWay } from '../pipes/index';
  * @class ShellTask
  * @implements {ITask}
  */
-@Task('ExecShell')
-export class ExecShellTask extends TaskElement {
+@Task('shell')
+export class ExecShellTask extends AbstractTask {
     constructor(name: string, private cmds: string | string[], private options?: ExecOptions, private allowError = true, private shellRunWay = RunWay.sequence) {
         super(name);
     }
 
-    protected execute(): Promise<any> {
+    run(): Promise<any> {
         return Promise.resolve(this.cmds)
             .then(cmds => {
                 if (isString(cmds)) {

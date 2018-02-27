@@ -1,3 +1,7 @@
+/**
+ * IBuilder.
+ */
+export const IBuilder = Symbol('IBuilder');
 
 /**
  * IEnvironment.

@@ -1,9 +1,8 @@
 import { AsyncLoadOptions, Type } from 'tsioc';
-import { RunWay } from '../pipes';
-import { TaskComponent } from './TaskComponent';
+import { ITaskComponent } from './ITaskComponent';
 import { IContext } from './IContext';
 
-export interface ITaskContext extends TaskComponent {
+export interface ITaskContext extends ITaskComponent {
 
     /**
      * context

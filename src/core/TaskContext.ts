@@ -1,8 +1,10 @@
-import { TaskComposite } from './TaskComposite';
+import { TaskComponent } from './TaskComponent';
 import { IContext } from './IContext';
 import { Task } from './decorators/index';
 import { ITaskContext } from './ITaskContext';
-import { Mode, Type, Provider, Providers, Component } from 'tsioc';
+import { Mode, Type, Provider, Providers, Component, hasOwnClassMetadata } from 'tsioc';
+import { RunWay } from './RunWay';
+import { IBuilder } from './IBuilder';
 
 
 /**
@@ -10,13 +12,13 @@ import { Mode, Type, Provider, Providers, Component } from 'tsioc';
  *
  * @export
  * @class TaskContext
- * @extends {TaskComposite}
+ * @extends {TaskComponent}
  */
-@Component
-export class TaskContext extends TaskComposite<ITaskContext> implements ITaskContext {
+@Task('context')
+export class TaskContext extends TaskComponent<ITaskContext> implements ITaskContext {
 
-    constructor(name: string, public context?: IContext) {
-        super(name);
+    constructor(public context: IContext) {
+        super(context.name, context.runWay);
     }
 
     getContext<T extends IContext>(): T {
@@ -32,16 +34,12 @@ export class TaskContext extends TaskComposite<ITaskContext> implements ITaskCon
         }
     }
 
-    protected getRunTasks(): Type<any>[] {
-        let tasks = super.getRunTasks();
-        let context = this.getContext();
-        if (context.filter) {
-            tasks = context.filter(tasks);
-        }
-        if (context.sort) {
-            tasks = context.sort(tasks)
-        }
-        return tasks;
+    build(types: Type<any>[]) {
+        this.context.builder.build(this, this.context, ...types);
+    }
+
+    protected execute(data: any): Promise<any> {
+        return Promise.resolve(data);
     }
 
     getTaskProvider(type: Type<any>): Providers[] {
@@ -52,5 +50,6 @@ export class TaskContext extends TaskComposite<ITaskContext> implements ITaskCon
         }
         return providers;
     }
+
 
 }

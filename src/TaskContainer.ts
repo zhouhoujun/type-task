@@ -27,7 +27,17 @@ export class TaskContainer implements ITaskContainer {
         this.registerExt(this.container);
     }
 
-    static create(root: string, container?: IContainer, ...modules: AsyncLoadOptions[]): ITaskContainer {
+    /**
+     * create task container.
+     *
+     * @static
+     * @param {string} root
+     * @param {IContainer} [container]
+     * @param {...(Type<any> | AsyncLoadOptions)[]} modules
+     * @returns {ITaskContainer}
+     * @memberof TaskContainer
+     */
+    static create(root: string, container?: IContainer, ...modules: (Type<any> | AsyncLoadOptions)[]): ITaskContainer {
         let taskContainer = new TaskContainer(root, container);
         if (modules) {
             taskContainer.use(...modules);
@@ -35,11 +45,26 @@ export class TaskContainer implements ITaskContainer {
         return taskContainer;
     }
 
+    /**
+     * use modules
+     *
+     * @param {...(Type<any> | AsyncLoadOptions)[]} modules
+     * @returns {this}
+     * @memberof TaskContainer
+     */
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
         this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
         return this;
     }
 
+    /**
+     * bootstrap task.
+     *
+     * @param {Token<ITask>} type
+     * @param {...Providers[]} providers
+     * @returns {Promise<any>}
+     * @memberof TaskContainer
+     */
     bootstrap(type: Token<ITask>, ...providers: Providers[]): Promise<any> {
         let builder = this.container.get<IContainerBuilder>(symbols.IContainerBuilder);
         return Promise.all(this.useModules.map(option => {

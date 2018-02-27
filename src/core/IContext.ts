@@ -1,6 +1,13 @@
 import { AsyncLoadOptions, Type } from 'tsioc';
-import { RunWay } from '../pipes';
+import { RunWay } from './RunWay';
+import { IBuilder } from './IBuilder';
 
+/**
+ * context.
+ *
+ * @export
+ * @interface IContext
+ */
 export interface IContext {
 
     /**
@@ -20,6 +27,14 @@ export interface IContext {
     runWay?: RunWay;
 
     /**
+     * builder
+     *
+     * @type {IBuilder}
+     * @memberof IContext
+     */
+    builder?: IBuilder;
+
+    /**
      * load task modules.
      *
      * @type {AsyncLoadOptions}
@@ -35,25 +50,6 @@ export interface IContext {
      */
     execResult?: any;
 
-    /**
-     * filter task to run.
-     *
-     * @param {Type<any>[]} tasks
-     * @returns {Type<any>[]}
-     * @memberof TaskComponent
-     */
-    filter?(tasks: Type<any>[]): Type<any>[];
-
-
-    /**
-     * sort task run order.
-     *
-     * @param {Type<any>[]} tasks
-     * @returns {Type<any>[]}
-     * @memberof TaskComponent
-     */
-    sort?(tasks: Type<any>[]): Type<any>[];
-
 
     /**
      * get execution data.
@@ -63,4 +59,12 @@ export interface IContext {
      * @memberof TaskComponent
      */
     getExecData?(task: Type<any>): any;
+
+    /**
+     * children
+     *
+     * @type {IContext[]}
+     * @memberof IContext
+     */
+    children?: IContext[];
 }
