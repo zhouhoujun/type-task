@@ -1,5 +1,5 @@
 import { Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass } from 'tsioc';
-import { Src, taskSymbols } from './utils/index';
+import { taskSymbols } from './utils/index';
 import { ITask, registerTaskDecorators } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 

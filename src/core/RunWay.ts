@@ -25,11 +25,23 @@ export enum RunWay {
      */
     nodeLast = 1 << 3,
 
+    /**
+     * sequence and node first.
+     */
     seqFirst = sequence | nodeFirst,
 
+    /**
+     * sequence and node last.
+     */
     seqLast = sequence | nodeLast,
 
+    /**
+     * parallel and node first.
+     */
     paraFirst = parallel | nodeFirst,
 
+    /**
+     * parallel and node last.
+     */
     paraLast = parallel | nodeLast
 }

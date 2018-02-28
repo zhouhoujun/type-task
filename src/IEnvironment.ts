@@ -2,6 +2,12 @@ import { Src } from './utils/index';
 import { Express, IContainer } from 'tsioc';
 import { ITaskContainer } from './ITaskContainer';
 
+/**
+ * task environment.
+ * 
+ * @export
+ * @interface IEnvironment
+ */
 export interface IEnvironment {
 
     /**
