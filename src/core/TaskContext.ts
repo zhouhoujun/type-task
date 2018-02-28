@@ -5,6 +5,7 @@ import { ITaskContext } from './ITaskContext';
 import { Mode, Type, Provider, Providers, Component, hasOwnClassMetadata } from 'tsioc';
 import { RunWay } from './RunWay';
 import { IBuilder } from './IBuilder';
+import { isArray } from 'util';
 
 
 /**
@@ -30,7 +31,11 @@ export class TaskContext extends TaskComponent<ITaskContext> implements ITaskCon
 
     onInit() {
         if (this.context && this.context.loader) {
-            this.use(this.context.loader);
+            if (isArray(this.context.loader)) {
+                this.use(...this.context.loader);
+            } else {
+                this.use(this.context.loader);
+            }
         }
     }
 

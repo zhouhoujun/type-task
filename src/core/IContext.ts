@@ -1,6 +1,8 @@
 import { AsyncLoadOptions, Type } from 'tsioc';
 import { RunWay } from './RunWay';
 import { IBuilder } from './IBuilder';
+import { TaskModule } from '../utils/index';
+
 
 /**
  * context.
@@ -40,7 +42,7 @@ export interface IContext {
      * @type {AsyncLoadOptions}
      * @memberof ITaskContext
      */
-    loader?: AsyncLoadOptions;
+    loader?: TaskModule | TaskModule[];
 
     /**
      * execute result data
