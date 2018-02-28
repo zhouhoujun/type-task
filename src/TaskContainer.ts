@@ -1,6 +1,6 @@
-import { Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata } from 'tsioc';
+import { Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata, isFunction } from 'tsioc';
 import { taskSymbols } from './utils/index';
-import { ITask, IBuilder, IContext, registerTaskDecorators, Task } from './core/index';
+import { ITask, IBuilder, IContext, registerTaskDecorators, Task, TaskModule } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 
 /**
@@ -62,38 +62,55 @@ export class TaskContainer implements ITaskContainer {
     /**
      * bootstrap task.
      *
-     * @param {(IContext | Token<ITask>)} task
+     * @param {(IContext | Token<any>)} task
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof TaskContainer
      */
-    bootstrap(task: IContext | Token<ITask>, ...providers: Providers[]): Promise<any> {
+    bootstrap(task: IContext | Token<any>, ...providers: Providers[]): Promise<any> {
         let builder = this.containerBuilder;
         return Promise.all(this.useModules.map(option => {
             return builder.loadModule(this.container, option);
         })).then((types) => {
             if (isToken(task)) {
                 if (!this.container.has(task)) {
-                    if (isClass(task) && hasOwnClassMetadata(Task, task)) {
+                    if (isClass(task) && this.isTask(task)) {
                         this.container.register(task);
                     } else {
-                        return Promise.reject(`${ typeof task } is not vaild task type.`);
+                        return Promise.reject(`${typeof task} is not vaild task type.`);
                     }
                 }
-                return this.container.resolve(task, ...providers).run();
+                let instance = this.container.resolve(task, ...providers);
+                if (isFunction(instance.run)) {
+                    return instance.run();
+                } else if (instance.context && isClass(instance.context.task) && this.isTask(instance.context.task)) {
+                    let ctx = instance.context as IContext;
+                    return this.runContext(ctx);
+                } else {
+                    return Promise.reject(`${typeof task} is not vaild task type.`);
+                }
+
             } else {
-                return this.container.resolve<IBuilder>(task.builder || taskSymbols.IBuilder)
-                    .build(task)
-                    .then(task => {
-                        return task.run();
-                    });
+                return this.runContext(task);
             }
         });
+    }
+
+    protected runContext(ctx: IContext) {
+        return this.container.resolve<IBuilder>(ctx.builder || taskSymbols.IBuilder)
+            .build(ctx)
+            .then(task => {
+                return task.run();
+            });
     }
 
     protected registerExt(container: IContainer) {
         container.registerSingleton(taskSymbols.TaskContainer, this);
         registerTaskDecorators(container);
+    }
+
+    protected isTask(task: Type<ITask>): boolean {
+        return hasOwnClassMetadata(Task, task) || hasOwnClassMetadata(TaskModule, task);
     }
 }
 

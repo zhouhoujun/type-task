@@ -1,6 +1,7 @@
 import { ITask } from './ITask';
 import { GComponent, Token, ComponentLifecycle, AsyncLoadOptions, Type, Provider, Providers } from 'tsioc';
 import { RunWay } from './RunWay';
+import { ITaskModule } from './ITaskModule';
 
 /**
  * Task Component.
@@ -9,7 +10,7 @@ import { RunWay } from './RunWay';
  * @interface ITaskComponent
  * @extends {GComponent<TaskComponent>}
  */
-export interface ITaskComponent extends GComponent<ITaskComponent>, ITask, ComponentLifecycle {
+export interface ITaskComponent extends GComponent<ITaskComponent>, ITaskModule, ComponentLifecycle {
 
     /**
      * children run way.

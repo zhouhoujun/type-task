@@ -11,6 +11,20 @@ import { ITaskContainer } from '../ITaskContainer';
  * @interface IBuilder
  */
 export interface IBuilder {
+    /**
+     * task container.
+     *
+     * @type {ITaskContainer}
+     * @memberof IBuilder
+     */
     taskContainer: ITaskContainer;
+    /**
+     * build task component.
+     *
+     * @param {IContext} context
+     * @param {ITaskComponent} [root]
+     * @returns {Promise<ITaskComponent>}
+     * @memberof IBuilder
+     */
     build(context: IContext, root?: ITaskComponent): Promise<ITaskComponent>;
 }

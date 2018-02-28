@@ -22,6 +22,8 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     protected registerModules: Type<any>[];
     protected useModules: AsyncLoadOptions[];
 
+    context?: IContext;
+
     /**
      * task run enviroment.
      */
@@ -41,6 +43,9 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     run(data?: any): Promise<any> {
         return this.loadModules(this.enviroment.container)
+            .then((container) => {
+                return this.build(container);
+            })
             .then(() => {
                 let execPromise: Promise<any>;
                 if (this.runWay & RunWay.nodeFirst) {
@@ -71,6 +76,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
             });
     }
 
+
     loadModules(container: IContainer): Promise<IContainer> {
         if (this.useModules.length) {
             let builder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
@@ -88,6 +94,18 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
         } else {
             return Promise.resolve(container);
         }
+    }
+
+
+    protected build(container: IContainer) {
+        if (this.context) {
+            return container.resolve<IBuilder>(this.context.builder || taskSymbols.IBuilder)
+                .build(this.context, this)
+                .then(() => {
+                    return container;
+                });
+        }
+        return container;
     }
 
     /**

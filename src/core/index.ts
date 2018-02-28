@@ -1,11 +1,12 @@
 import { IContainer, symbols, LifeScope, CoreActions, DecoratorType, IContainerBuilder } from 'tsioc';
-import { Task } from './decorators/index';
+import { Task, TaskModule } from './decorators/index';
 import { InitTaskAction } from './actions/InitTaskAction';
 import { Environment } from './Environment';
 import { TaskElement } from './TaskElement';
 
 import * as tasks from './tasks/index';
 import { Builder } from './Builder';
+import { InitTaskModuleAction } from './actions/InitTaskModuleAction';
 
 export * from './IBuilder';
 export * from './Builder';
@@ -29,8 +30,9 @@ export * from './tasks/index';
 export function registerTaskDecorators(container: IContainer) {
     let lifeScope = container.getLifeScope();
     lifeScope.addAction(new InitTaskAction(), DecoratorType.Class, CoreActions.afterConstructor);
+    lifeScope.addAction(new InitTaskModuleAction(), DecoratorType.Class, CoreActions.afterConstructor);
     lifeScope.registerDecorator(Task, CoreActions.bindProvider, 'InitTaskAction', CoreActions.componentCache, CoreActions.componentBeforeInit, CoreActions.componentInit);
-
+    lifeScope.registerDecorator(TaskModule,  CoreActions.bindProvider, 'InitTaskModuleAction', CoreActions.componentCache, CoreActions.componentBeforeInit, CoreActions.componentInit)
     container.register(Environment);
     container.register(TaskElement);
     container.register(Builder);

@@ -39,11 +39,11 @@ export interface ITaskContainer {
     /**
      * bootstarp task.
      *
-     * @param {(IContext | Token<ITask>)} task
+     * @param {(IContext | Token<any>)} task
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof ITaskContainer
      */
-    bootstrap(task: IContext | Token<ITask>, ...providers: Providers[]): Promise<any>;
+    bootstrap(task: IContext | Token<any>, ...providers: Providers[]): Promise<any>;
 
 }
