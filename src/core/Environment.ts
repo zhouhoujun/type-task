@@ -70,7 +70,7 @@ export class Environment implements IEnvironment {
         if (!this._package) {
             this._package = require(filename);
         }
-        return this._package
+        return this._package;
     }
 
     getPackageVersion(): string {
@@ -80,6 +80,7 @@ export class Environment implements IEnvironment {
         }
         return packageCfg.version || '';
     }
+
     getModuleVersion(name: string, dependencies = false): string {
         let packageCfg = this.getPackage();
         if (!packageCfg) {
@@ -87,10 +88,10 @@ export class Environment implements IEnvironment {
         }
         let version = '';
         if (packageCfg.dependencies) {
-            version = packageCfg.dependencies[name]
+            version = packageCfg.dependencies[name];
         }
         if (!dependencies && !version && packageCfg.devDependencies) {
-            version = packageCfg.devDependencies[name]
+            version = packageCfg.devDependencies[name];
         }
 
         return version || '';

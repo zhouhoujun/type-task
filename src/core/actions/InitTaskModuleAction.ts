@@ -33,7 +33,7 @@ export class InitTaskModuleAction extends ActionComposite {
             let task = data.target as ITaskModule;
             let metas = getTypeMetadata<TaskModuleMetadata>(TaskModule, data.targetType);
             if (metas.length) {
-                task.context = metas[0];
+                task.context = metas[0].context;
             }
         }
     }

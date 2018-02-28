@@ -87,7 +87,7 @@ export class TaskContainer implements ITaskContainer {
                     let ctx = instance.context as IContext;
                     return this.runContext(ctx);
                 } else {
-                    return Promise.reject(`${typeof task} is not vaild task type.`);
+                    return Promise.reject(`${ JSON.stringify(instance) } is not vaild task instance.`);
                 }
 
             } else {
