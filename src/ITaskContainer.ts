@@ -1,5 +1,5 @@
-import { TaskComponent, ITask } from './core/index';
-import { IContainer, Type, Providers, Token, AsyncLoadOptions } from 'tsioc';
+import { TaskComponent, ITask, IContext } from './core/index';
+import { IContainer, Type, Providers, Token, AsyncLoadOptions, IContainerBuilder } from 'tsioc';
 
 /**
  * task container.
@@ -25,6 +25,7 @@ export interface ITaskContainer {
      */
     container: IContainer;
 
+    containerBuilder: IContainerBuilder;
 
     /**
      * use modules
@@ -36,13 +37,13 @@ export interface ITaskContainer {
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this;
 
     /**
-     * bootstarp task
+     * bootstarp task.
      *
-     * @param {Token<ITask>} type
+     * @param {(IContext | Token<ITask>)} task
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof ITaskContainer
      */
-    bootstrap(type: Token<ITask>, ...providers: Providers[]): Promise<any>;
+    bootstrap(task: IContext | Token<ITask>, ...providers: Providers[]): Promise<any>;
 
 }

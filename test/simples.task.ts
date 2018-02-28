@@ -54,8 +54,25 @@ class SimpleCTask extends TaskComponent<ITaskComponent> {
 }
 
 
-TaskContainer.create(__dirname, null, SimpleCTask)
+TaskContainer.create(__dirname, SimpleCTask)
     .bootstrap('comptest')
     .then(val => {
         console.log('after run component task:', val);
+    });
+
+
+TaskContainer.create(__dirname)
+    .bootstrap({
+        providers: {
+            name: 'test'
+        },
+        task: TaskElement,
+        children: [
+            {
+                task: SimpleCTask
+            },
+            {
+                task: SimpleCTask
+            }
+        ]
     });

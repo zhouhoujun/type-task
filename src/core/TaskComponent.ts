@@ -41,10 +41,6 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     run(data?: any): Promise<any> {
         return this.loadModules(this.enviroment.container)
-            .then((container) => {
-                this.build(this.registerModules);
-                return container;
-            })
             .then(() => {
                 let execPromise: Promise<any>;
                 if (this.runWay & RunWay.nodeFirst) {
@@ -73,10 +69,6 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
                 return execPromise;
             });
-    }
-
-    build(types: Type<any>[]) {
-
     }
 
     loadModules(container: IContainer): Promise<IContainer> {

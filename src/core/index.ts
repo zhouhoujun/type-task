@@ -3,7 +3,6 @@ import { Task } from './decorators/index';
 import { InitTaskAction } from './actions/InitTaskAction';
 import { Environment } from './Environment';
 import { TaskElement } from './TaskElement';
-import { TaskContext } from './TaskContext';
 
 import * as tasks from './tasks/index';
 import { Builder } from './Builder';
@@ -15,7 +14,6 @@ export * from './AbstractTask';
 export * from './IContext';
 export * from './ITaskComponent';
 export * from './TaskComponent';
-export * from './TaskContext';
 export * from './TaskElement';
 
 export * from './decorators/index';
@@ -35,7 +33,6 @@ export function registerTaskDecorators(container: IContainer) {
 
     container.register(Environment);
     container.register(TaskElement);
-    container.register(TaskContext);
     container.register(Builder);
     let builder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
     builder.snycLoadModule(container, { modules: [tasks] });

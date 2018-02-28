@@ -1,24 +1,25 @@
-import { AsyncLoadOptions, Type } from 'tsioc';
+import { AsyncLoadOptions, Type, Token, Providers, ObjectMap } from 'tsioc';
 import { RunWay } from './RunWay';
 import { IBuilder } from './IBuilder';
-import { TaskModule } from '../utils/index';
+import { TaskType } from '../utils/index';
+import { ITask } from './ITask';
 
 
 /**
- * context.
+ * Task provider
  *
  * @export
- * @interface IContext
+ * @interface TaskProvider
+ * @extends {ObjectMap<any>}
  */
-export interface IContext {
-
+export interface ITaskProvider extends ObjectMap<any> {
     /**
-     * context tasks name.
-     *
-     * @type {string}
-     * @memberof IContext
-     */
-    name: string;
+    * context tasks name.
+    *
+    * @type {string}
+    * @memberof IContext
+    */
+    name?: string;
 
     /**
      * run way.
@@ -27,6 +28,33 @@ export interface IContext {
      * @memberof IContext
      */
     runWay?: RunWay;
+}
+
+export type TaskProvider = ITaskProvider | Providers;
+
+/**
+ * task context.
+ *
+ * @export
+ * @interface IContext
+ */
+export interface IContext {
+
+    /**
+     * task providers
+     *
+     * @type {(TaskProvider | TaskProvider[])}
+     * @memberof IContext
+     */
+    providers?: TaskProvider | TaskProvider[];
+
+    /**
+     * boostrap tasks.
+     *
+     * @type {Type<ITask>}
+     * @memberof IContext
+     */
+    task: Type<ITask>;
 
     /**
      * builder
@@ -34,7 +62,7 @@ export interface IContext {
      * @type {IBuilder}
      * @memberof IContext
      */
-    builder?: IBuilder;
+    builder?: Token<IBuilder>;
 
     /**
      * load task modules.
@@ -42,25 +70,7 @@ export interface IContext {
      * @type {AsyncLoadOptions}
      * @memberof ITaskContext
      */
-    loader?: TaskModule | TaskModule[];
-
-    /**
-     * execute result data
-     *
-     * @type {*}
-     * @memberof ITaskContext
-     */
-    execResult?: any;
-
-
-    /**
-     * get execution data.
-     *
-     * @param {Type<any>} task
-     * @returns {*}
-     * @memberof TaskComponent
-     */
-    getExecData?(task: Type<any>): any;
+    loader?: TaskType | TaskType[];
 
     /**
      * children

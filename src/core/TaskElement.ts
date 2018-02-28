@@ -1,15 +1,26 @@
 import { TaskComponent } from './TaskComponent';
 import { ITask } from './ITask';
-import { Component, Abstract } from 'tsioc';
 import { RunWay } from './RunWay';
 import { ITaskComponent } from './ITaskComponent';
+import { Task } from './decorators/index';
 
 
-@Abstract()
-export abstract class TaskElement extends TaskComponent<ITaskComponent> implements ITask {
+/**
+ * task element.
+ *
+ * @export
+ * @abstract
+ * @class TaskElement
+ * @extends {TaskComponent<ITaskComponent>}
+ * @implements {ITask}
+ */
+@Task('element')
+export class TaskElement extends TaskComponent<ITaskComponent> implements ITask {
     constructor(name: string, runWay = RunWay.seqFirst) {
         super(name, runWay);
     }
 
-    protected abstract execute(data: any): Promise<any>;
+    protected execute(data: any): Promise<any> {
+        return Promise.resolve(data);
+    }
 }

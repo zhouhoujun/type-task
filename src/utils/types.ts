@@ -1,6 +1,9 @@
 import { IContainer, AsyncLoadOptions, Type } from 'tsioc';
 
-export type TaskModule = Type<any> | AsyncLoadOptions;
+/**
+ * TaskType
+ */
+export type TaskType = Type<any> | AsyncLoadOptions;
 
 /**
  * source

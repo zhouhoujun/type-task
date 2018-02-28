@@ -1,6 +1,6 @@
-import { Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass } from 'tsioc';
+import { Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata } from 'tsioc';
 import { taskSymbols } from './utils/index';
-import { ITask, registerTaskDecorators } from './core/index';
+import { ITask, IBuilder, IContext, registerTaskDecorators, Task } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 
 /**
@@ -12,6 +12,7 @@ import { ITaskContainer } from './ITaskContainer';
 export class TaskContainer implements ITaskContainer {
 
     container: IContainer;
+    containerBuilder: IContainerBuilder;
 
     protected useModules: AsyncLoadOptions[];
 
@@ -20,8 +21,10 @@ export class TaskContainer implements ITaskContainer {
         if (!container) {
             let builder = new ContainerBuilder();
             this.container = builder.create();
+            this.containerBuilder = builder;
         } else {
             this.container = container;
+            this.containerBuilder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
         }
 
         this.registerExt(this.container);
@@ -32,13 +35,12 @@ export class TaskContainer implements ITaskContainer {
      *
      * @static
      * @param {string} root
-     * @param {IContainer} [container]
      * @param {...(Type<any> | AsyncLoadOptions)[]} modules
      * @returns {ITaskContainer}
      * @memberof TaskContainer
      */
-    static create(root: string, container?: IContainer, ...modules: (Type<any> | AsyncLoadOptions)[]): ITaskContainer {
-        let taskContainer = new TaskContainer(root, container);
+    static create(root: string, ...modules: (Type<any> | AsyncLoadOptions)[]): ITaskContainer {
+        let taskContainer = new TaskContainer(root);
         if (modules) {
             taskContainer.use(...modules);
         }
@@ -60,30 +62,38 @@ export class TaskContainer implements ITaskContainer {
     /**
      * bootstrap task.
      *
-     * @param {Token<ITask>} type
+     * @param {(IContext | Token<ITask>)} task
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof TaskContainer
      */
-    bootstrap(type: Token<ITask>, ...providers: Providers[]): Promise<any> {
-        let builder = this.container.get<IContainerBuilder>(symbols.IContainerBuilder);
+    bootstrap(task: IContext | Token<ITask>, ...providers: Providers[]): Promise<any> {
+        let builder = this.containerBuilder;
         return Promise.all(this.useModules.map(option => {
             return builder.loadModule(this.container, option);
         })).then((types) => {
-            if (!this.container.has(type)) {
-                if (isClass(type)) {
-                    this.container.register(type);
-                } else {
-                    console.error(type, ' is not vaild task type.');
+            if (isToken(task)) {
+                if (!this.container.has(task)) {
+                    if (isClass(task) && hasOwnClassMetadata(Task, task)) {
+                        this.container.register(task);
+                    } else {
+                        return Promise.reject(`${ typeof task } is not vaild task type.`);
+                    }
                 }
+                return this.container.resolve(task, ...providers).run();
+            } else {
+                return this.container.resolve<IBuilder>(task.builder || taskSymbols.IBuilder)
+                    .build(task)
+                    .then(task => {
+                        return task.run();
+                    });
             }
-            return this.container.resolve(type, ...providers).run();
         });
     }
 
     protected registerExt(container: IContainer) {
-        registerTaskDecorators(container);
         container.registerSingleton(taskSymbols.TaskContainer, this);
+        registerTaskDecorators(container);
     }
 }
 

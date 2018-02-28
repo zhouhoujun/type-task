@@ -4,7 +4,7 @@ import { ITaskContainer } from './ITaskContainer';
 
 /**
  * task environment.
- * 
+ *
  * @export
  * @interface IEnvironment
  */
