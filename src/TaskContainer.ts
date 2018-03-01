@@ -1,7 +1,8 @@
-import { Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata, isFunction } from 'tsioc';
+import { Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata, isFunction, isNodejsEnv } from 'tsioc';
 import { taskSymbols } from './utils/index';
 import { ITask, IBuilder, IContext, registerTaskDecorators, Task, TaskModule } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
+import { TaskLog } from './aop/TaskLog';
 
 /**
  * task container.
@@ -87,7 +88,7 @@ export class TaskContainer implements ITaskContainer {
                     let ctx = instance.context as IContext;
                     return this.runContext(ctx);
                 } else {
-                    return Promise.reject(`${ JSON.stringify(instance) } is not vaild task instance.`);
+                    return Promise.reject(`${JSON.stringify(instance)} is not vaild task instance.`);
                 }
 
             } else {
@@ -105,6 +106,9 @@ export class TaskContainer implements ITaskContainer {
     }
 
     protected registerExt(container: IContainer) {
+        if (isNodejsEnv()) {
+            container.register(TaskLog);
+        }
         container.registerSingleton(taskSymbols.TaskContainer, this);
         registerTaskDecorators(container);
     }

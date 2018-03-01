@@ -10,7 +10,7 @@ class SimpleTask extends AbstractTask implements ITask {
     }
 
     run(): Promise<any> {
-        console.log('before simple task:', this.name);
+        // console.log('before simple task:', this.name);
         return Promise.resolve('simple task')
             .then(val => {
                 console.log('return simple task:', val);
@@ -26,10 +26,11 @@ class SimpleCTask extends TaskComponent<ITaskComponent> {
 
     constructor(name: string, runWay?: RunWay) {
         super(name, runWay);
+        // console.log('SimpleCTask', Object.getOwnPropertyDescriptors(this));
     }
 
     protected execute(): Promise<any> {
-        console.log('before component task:', this.name);
+        // console.log('before component task:', this.name);
         return Promise.resolve('component task')
             .then(val => {
                 console.log('return component task:', val);
@@ -41,16 +42,16 @@ class SimpleCTask extends TaskComponent<ITaskComponent> {
 
 @TaskModule({
     providers: {
-        name: 'test1'
+        name: 'test-module'
     },
     task: TaskElement,
     children: [
         {
-            providers: { name: 'test------2' },
+            providers: { name: 'test------3' },
             task: SimpleTask
         },
         {
-            providers: { name: 'test------2' },
+            providers: { name: 'test------4' },
             task: SimpleCTask
         }
     ]
@@ -66,29 +67,20 @@ async function test() {
     let container = new TaskContainer(__dirname);
 
     // container.use({ modules: [SimpleTask] });
-    await container.bootstrap(SimpleTask)
-        .then(val => {
-            console.log('after run task:', val);
-        });
+    await container.bootstrap(SimpleTask);
 
 
-    console.log('------------------------------');
+    console.log('\n------------SimpleTask------------------');
     let container2 = new TaskContainer(__dirname);
     await container2.use(SimpleTask)
-        .bootstrap('test')
-        .then(val => {
-            console.log('after run task:', val);
-        });
+        .bootstrap('test');
 
-    console.log('------------------------------');
+    console.log('\n-----------SimpleCTask-------------------');
     await TaskContainer.create(__dirname, SimpleCTask)
-        .bootstrap('comptest')
-        .then(val => {
-            console.log('after run component task:', val);
-        });
+        .bootstrap('comptest');
 
 
-    console.log('------------------------------');
+    console.log('\n-----------Custome Component-------------------');
     await TaskContainer.create(__dirname)
         .bootstrap({
             providers: {
@@ -101,13 +93,13 @@ async function test() {
                     task: SimpleTask
                 },
                 {
-                    providers: { name: 'test------1' },
+                    providers: { name: 'test------2' },
                     task: SimpleCTask
                 }
             ]
         });
 
-    console.log('------------------------------');
+    console.log('\n-------------Component Module-----------------');
     await TaskContainer.create(__dirname)
         .bootstrap(TaskModuleTest);
 }
