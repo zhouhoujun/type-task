@@ -15,7 +15,7 @@ import { RunWay } from '../RunWay';
  */
 @Task('execfile')
 export class ExecFileTask extends AbstractTask  {
-    constructor(name: string, private files: string, private args?: string[], private options?: ExecFileOptions, private allowError = true, private fileRunWay= RunWay.sequence) {
+    constructor(name: string, private files: string, private args?: string[], private options?: ExecFileOptions, private allowError = true, private runWay= RunWay.sequence) {
         super(name);
     }
 
@@ -26,7 +26,7 @@ export class ExecFileTask extends AbstractTask  {
                 if (isString(files)) {
                     return this.execFile(files, this.args, this.options, this.allowError !== false);
                 } else if (isArray(files)) {
-                    if (this.fileRunWay === RunWay.sequence) {
+                    if (this.runWay === RunWay.sequence) {
                         let pip = Promise.resolve();
                         files.forEach(file => {
                             pip = pip.then(() => this.execFile(file, this.args, this.options, this.allowError !== false));

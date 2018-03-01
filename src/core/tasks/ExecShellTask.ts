@@ -12,7 +12,7 @@ import { RunWay } from '../RunWay';
  */
 @Task('shell')
 export class ExecShellTask extends AbstractTask {
-    constructor(name: string, private cmds: string | string[], private options?: ExecOptions, private allowError = true, private shellRunWay = RunWay.sequence) {
+    constructor(name: string, private cmds: string | string[], private options?: ExecOptions, private allowError = true, private runWay = RunWay.sequence) {
         super(name);
     }
 
@@ -22,7 +22,7 @@ export class ExecShellTask extends AbstractTask {
                 if (isString(cmds)) {
                     return this.execShell(cmds, this.options, this.allowError !== false);
                 } else if (isArray(cmds)) {
-                    if (this.shellRunWay === RunWay.sequence) {
+                    if (this.runWay === RunWay.sequence) {
                         let pip = Promise.resolve();
                         cmds.forEach(cmd => {
                             pip = pip.then(() => this.execShell(cmd, this.options));

@@ -14,7 +14,7 @@ import { Task } from './decorators/index';
  * @extends {TaskComponent<ITaskComponent>}
  * @implements {ITask}
  */
-@Task('element')
+@Task
 export class TaskElement extends TaskComponent<ITaskComponent> implements ITask {
     constructor(name: string, runWay = RunWay.seqFirst) {
         super(name, runWay);

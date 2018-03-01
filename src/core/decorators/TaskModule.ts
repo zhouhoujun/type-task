@@ -9,7 +9,8 @@ import { IContext } from '../IContext';
  * @extends {TaskMetadata}
  */
 export interface TaskModuleMetadata extends ClassMetadata {
-    context?: IContext
+    name?: string;
+    context?: IContext;
 }
 
 export interface ITaskClassDecorator<T extends TaskModuleMetadata> extends IClassDecorator<T> {
@@ -28,4 +29,13 @@ export const TaskModule: ITaskClassDecorator<TaskModuleMetadata> =
                 metadata.context = arg;
             }
         });
-    }) as ITaskClassDecorator<TaskModuleMetadata>;
+    },
+        metadata => {
+            if (!metadata.name && isClass(metadata.type)) {
+                metadata.name = metadata.type.classAnnations ? metadata.type.classAnnations.name : metadata.type.name;
+            }
+            if (!metadata.provide) {
+                metadata.provide = metadata.name;
+            }
+            return metadata;
+        }) as ITaskClassDecorator<TaskModuleMetadata>;
