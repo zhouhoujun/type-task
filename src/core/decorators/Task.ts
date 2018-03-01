@@ -37,7 +37,6 @@ export function createTaskDecorator<T extends TaskMetadata>(
                 metadata.name = metadata.type.classAnnations ? metadata.type.classAnnations.name : metadata.type.name;
             }
             metadata.taskType = taskType;
-            metadata.singleton = true;
             return metadata;
         }) as ITaskDecorator<T>;
 }

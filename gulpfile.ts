@@ -1,19 +1,30 @@
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, TaskComponent, ITaskComponent, TaskContext, IContext } from './src';
+import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, TaskComponent, ITaskComponent, IContext } from './src';
 import * as mocha from 'gulp-mocha';
 import * as minimist from 'minimist';
 // import * as _ from 'lodash';
-const del = require('del');
-const cache = require('gulp-cached');
-const ts = require('gulp-typescript');
-const sourcemaps = require('gulp-sourcemaps');
-let tsProject = ts.createProject('tsconfig.json');
-const uglify = require('gulp-uglify');
+// const del = require('del');
+// const cache = require('gulp-cached');
+// const ts = require('gulp-typescript');
+// const sourcemaps = require('gulp-sourcemaps');
+// let tsProject = ts.createProject('tsconfig.json');
+// const uglify = require('gulp-uglify');
+
+
 
 TaskContainer.create(__dirname)
-    .bootstrap(TaskContext, {
-        context: <IContext>{
-            name: 'tsion'
-        }
+    .bootstrap({
+        providers: {
+            name: 'tscomp'
+        },
+        task: TaskElement,
+        children: [
+            {
+                providers: {
+                    name: 'task'
+                },
+                task: TaskElement
+            }
+        ]
     });
 
 
