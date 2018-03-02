@@ -29,10 +29,11 @@ export abstract class AbstractTask implements ITask {
 
     /**
      * run task.
-     *
+     * 
      * @abstract
-     * @returns {Promise<any>}
+     * @param {*} [data] 
+     * @returns {Promise<any} 
      * @memberof AbstractTask
      */
-    abstract run(): Promise<any>;
+    abstract run(data?: any): Promise<any>;
 }

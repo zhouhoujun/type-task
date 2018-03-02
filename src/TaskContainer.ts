@@ -1,8 +1,9 @@
 import { Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata, isFunction, isNodejsEnv } from 'tsioc';
 import { taskSymbols } from './utils/index';
-import { ITask, IBuilder, IContext, registerTaskDecorators, Task, TaskModule } from './core/index';
+import { ITask, IBuilder, IContext, registerTaskCoreDecorators, Task, TaskModule } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 import { TaskLog } from './aop/TaskLog';
+import { registerTaskModules } from './tasks';
 
 /**
  * task container.
@@ -14,6 +15,7 @@ export class TaskContainer implements ITaskContainer {
 
     container: IContainer;
     containerBuilder: IContainerBuilder;
+    protected log: Type<any>;
 
     protected useModules: AsyncLoadOptions[];
 
@@ -58,6 +60,16 @@ export class TaskContainer implements ITaskContainer {
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
         this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
         return this;
+    }
+
+    /**
+     * use logger.
+     * 
+     * @param {Type<any>} logger 
+     * @memberof TaskContainer
+     */
+    useLogger(logger: Type<any>) {
+        this.log = logger;
     }
 
     /**
@@ -106,11 +118,10 @@ export class TaskContainer implements ITaskContainer {
     }
 
     protected registerExt(container: IContainer) {
-        if (isNodejsEnv()) {
-            container.register(TaskLog);
-        }
+        container.register(this.log || TaskLog);
         container.registerSingleton(taskSymbols.TaskContainer, this);
-        registerTaskDecorators(container);
+        registerTaskCoreDecorators(container);
+        registerTaskModules(container);
     }
 
     protected isTask(task: Type<ITask>): boolean {

@@ -28,21 +28,21 @@ export class TaskLog {
         if (joinPoint.state === JoinpointState.Before) {
             start = process.hrtime();
             this.startHrts[name] = start;
-            console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Starting:', taskname, '...');
+            console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Starting', taskname, '...');
         }
 
         if (joinPoint.state === JoinpointState.After) {
             start = this.startHrts[name];
             end = prettyTime(process.hrtime(start));
             delete this.startHrts[name];
-            console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Finished:', taskname, ' after ', chalk.magenta(end));
+            console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Finished', taskname, ' after ', chalk.magenta(end));
         }
 
         if (joinPoint.state === JoinpointState.AfterThrowing) {
             start = this.startHrts[name];
             end = prettyTime(process.hrtime(start));
             delete this.startHrts[name];
-            console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Finished:',  taskname, chalk.red('errored after'), chalk.magenta(end));
+            console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Finished',  taskname, chalk.red('errored after'), chalk.magenta(end));
         }
     }
 }

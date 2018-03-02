@@ -37,6 +37,14 @@ export interface ITaskContainer {
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this;
 
     /**
+     * use logger
+     * 
+     * @param {Type<any>} logger 
+     * @memberof ITaskContainer
+     */
+    useLogger(logger: Type<any>);
+
+    /**
      * bootstarp task.
      *
      * @param {(IContext | Token<any>)} task

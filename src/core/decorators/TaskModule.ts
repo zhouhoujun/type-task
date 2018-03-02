@@ -13,6 +13,14 @@ export interface TaskModuleMetadata extends ClassMetadata {
     context?: IContext;
 }
 
+/**
+ * task class decorator.
+ * 
+ * @export
+ * @interface ITaskClassDecorator
+ * @extends {IClassDecorator<T>}
+ * @template T 
+ */
 export interface ITaskClassDecorator<T extends TaskModuleMetadata> extends IClassDecorator<T> {
     (context: IContext, provide?: Registration<any> | symbol | string, alias?: string, singlton?: boolean, cache?: number): ClassDecorator;
     (metadata?: T): ClassDecorator;
@@ -22,14 +30,15 @@ export interface ITaskClassDecorator<T extends TaskModuleMetadata> extends IClas
  * pipe task.
  */
 export const TaskModule: ITaskClassDecorator<TaskModuleMetadata> =
-    createClassDecorator<TaskModuleMetadata>('TaskModule', args => {
-        args.next<TaskModuleMetadata>({
-            match: (arg) => arg.task && isClass(arg.task),
-            setMetadata: (metadata, arg) => {
-                metadata.context = arg;
-            }
-        });
-    },
+    createClassDecorator<TaskModuleMetadata>('TaskModule',
+        args => {
+            args.next<TaskModuleMetadata>({
+                match: (arg) => arg.task && isClass(arg.task),
+                setMetadata: (metadata, arg) => {
+                    metadata.context = arg;
+                }
+            });
+        },
         metadata => {
             if (!metadata.name && isClass(metadata.type)) {
                 metadata.name = metadata.type.classAnnations ? metadata.type.classAnnations.name : metadata.type.name;

@@ -4,7 +4,6 @@ import { InitTaskAction } from './actions/InitTaskAction';
 import { Environment } from './Environment';
 import { TaskElement } from './TaskElement';
 
-import * as tasks from './tasks/index';
 import { Builder } from './Builder';
 import { InitTaskModuleAction } from './actions/InitTaskModuleAction';
 
@@ -13,13 +12,15 @@ export * from './Builder';
 export * from './ITask';
 export * from './AbstractTask';
 export * from './IContext';
+export * from './ITaskProvider';
+
 export * from './ITaskComponent';
 export * from './TaskComponent';
 export * from './TaskElement';
 
 export * from './decorators/index';
 export * from './metadatas/index';
-export * from './tasks/index';
+export * from './RunWay';
 
 /**
  * register task decorators.
@@ -27,7 +28,7 @@ export * from './tasks/index';
  * @export
  * @param {IContainer} container
  */
-export function registerTaskDecorators(container: IContainer) {
+export function registerTaskCoreDecorators(container: IContainer) {
     let lifeScope = container.getLifeScope();
     lifeScope.addAction(new InitTaskAction(), DecoratorType.Class, CoreActions.afterConstructor);
     lifeScope.addAction(new InitTaskModuleAction(), DecoratorType.Class, CoreActions.afterConstructor);
@@ -36,6 +37,4 @@ export function registerTaskDecorators(container: IContainer) {
     container.register(Environment);
     container.register(TaskElement);
     container.register(Builder);
-    let builder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
-    builder.snycLoadModule(container, { modules: [tasks] });
 }

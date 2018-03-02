@@ -2,9 +2,8 @@ import { ExecOptions, ExecFileOptions, execFile } from 'child_process';
 import { isString, isArray, isFunction } from 'tsioc';
 import { existsSync } from 'fs';
 import { TaskSrc } from '../../utils/index';
-import { AbstractTask } from '../AbstractTask';
-import { Task } from '../decorators/index';
-import { RunWay } from '../RunWay';
+import { AbstractTask, Task, RunWay } from '../../core/index';
+
 
 
 /**

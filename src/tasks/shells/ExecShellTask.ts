@@ -1,8 +1,6 @@
 import { ExecOptions, ExecFileOptions, execFile, exec } from 'child_process';
 import { isString, isArray } from 'tsioc';
-import { Task } from '../decorators/index';
-import { AbstractTask } from '../AbstractTask';
-import { RunWay } from '../RunWay';
+import { AbstractTask, Task, RunWay } from '../../core/index';
 
 /**
  * Shell Task
