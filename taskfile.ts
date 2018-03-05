@@ -52,7 +52,7 @@ class TsCompile extends TaskElement {
     providers: {
         name: 'test',
         src: 'test/**/*.spec.ts',
-        pipes: [mocha]
+        pipes: [ ()=> mocha()]
     },
     task: PipeComponent
 })
