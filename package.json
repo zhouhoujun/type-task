@@ -1,7 +1,7 @@
 {
     "name": "type-task",
-    "version": "0.1.0",
-    "description": "development tools, generate gulp tasks, gulp task manager, run tasks in sequence via Promise. useful gulp task util: zipSequence, runSequence, runTaskSequence, toSequence, flattenSequence.",
+    "version": "0.1.0-beta",
+    "description": "type-task is task manager via AOP, IOC.",
     "main": "./lib/index.js",
     "typings": "./lib/index.d.ts",
     "scripts": {
@@ -13,32 +13,24 @@
         "e2e.live": "protractor --elementExplorer"
     },
     "keywords": [
-        "development",
-        "tool",
-        "gulp",
-        "promise",
-        "shell",
-        "command",
-        "generate",
+        "task",
         "task manager",
-        "zipSequence",
-        "flattenSequence",
-        "runSequence",
-        "runTaskSequence",
-        "toSequence",
-        "typescript",
-        "metadata",
-        "node"
+        "pipe",
+        "ioc",
+        "aop",
+        "shell",
+        "develop",
+        "tool"
     ],
     "author": "houjun",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/zhouhoujun/development-core/issues"
+        "url": "https://github.com/zhouhoujun/type-task/issues"
     },
     "registry": "jspm",
     "repository": {
         "type": "git",
-        "url": "https://github.com/zhouhoujun/development-core.git"
+        "url": "https://github.com/zhouhoujun/type-task.git"
     },
     "dependencies": {
         "@types/chalk": "^2.2.0",
@@ -69,5 +61,5 @@
         "typescript-class-annotations": "^0.1.0",
         "zone.js": "^0.8.12"
     },
-    "homepage": "https://github.com/zhouhoujun/development-core#readme"
+    "homepage": "https://github.com/zhouhoujun/type-task#readme"
 }
