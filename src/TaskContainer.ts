@@ -86,8 +86,7 @@ export class TaskContainer implements ITaskContainer {
         let builder = this.containerBuilder;
         let start, end;
         start = process.hrtime();
-        let taskname = '\'' + chalk.cyan('bootstrap') + '\'';
-        console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Starting', taskname, '...');
+        console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Starting'), '...');
 
         return Promise.all(this.useModules.map(option => {
             return builder.loadModule(this.container, option);
@@ -107,12 +106,12 @@ export class TaskContainer implements ITaskContainer {
             .then(
                 data => {
                     end = prettyTime(process.hrtime(start));
-                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Finished', taskname, ' after ', chalk.magenta(end));
+                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), ' after ', chalk.magenta(end));
                     return data;
                 },
                 err => {
                     end = prettyTime(process.hrtime(start));
-                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Finished', taskname, chalk.red('errored after'), chalk.magenta(end));
+                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), chalk.red('errored after'), chalk.magenta(end));
                     return err;
                 });
     }
