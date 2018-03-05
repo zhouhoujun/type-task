@@ -1,119 +1,63 @@
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, TaskComponent, ITaskComponent, IContext } from './src';
+import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, TaskComponent, ITaskComponent, IConfigure, PipeComponent, IPipeTaskProvider, TaskModule, ITransform } from './src';
 import * as mocha from 'gulp-mocha';
-import * as minimist from 'minimist';
-// import * as _ from 'lodash';
-// const del = require('del');
-// const cache = require('gulp-cached');
-// const ts = require('gulp-typescript');
-// const sourcemaps = require('gulp-sourcemaps');
-// let tsProject = ts.createProject('tsconfig.json');
-// const uglify = require('gulp-uglify');
+
+const del = require('del');
+const cache = require('gulp-cached');
+const ts = require('gulp-typescript');
+const sourcemaps = require('gulp-sourcemaps');
+let tsProject = ts.createProject('tsconfig.json');
+const uglify = require('gulp-uglify');
+import { classAnnotations } from 'typescript-class-annotations';
+
+@TaskModule({
+    providers: <IPipeTaskProvider>{
+        name: 'tscomp',
+        src: 'src/**/*.ts',
+        dest: 'lib',
+        pipes: [
+            (ctx) => cache('typescript'),
+            (ctx) => classAnnotations(),
+            sourcemaps.init,
+            (ctx) => tsProject()
+        ],
+        destPipes: {
+            js: [
+                (ctx, transform) => {
+                    let trans: ITransform = transform.js;
+                    trans.changeAsOrigin = true;
+                    return trans;
+                },
+                (ctx) => uglify(),
+                (ctx) => sourcemaps.write('./sourcemaps')
+            ],
+            dts: [
+                (ctx, transform) => {
+                    let tans: ITransform = transform.dts;
+                    tans.changeAsOrigin = true;
+                    return tans;
+                }
+            ]
+        }
+    },
+    task: PipeComponent
+})
+class TsCompile extends TaskElement {
+    execute(data?: any): Promise<any> {
+        return del(['lib/**']);
+    }
+}
 
 
+@TaskModule({
+    providers: {
+        name: 'test',
+        src: 'test/**/*.spec.ts',
+        pipes: [mocha]
+    },
+    task: PipeComponent
+})
+class TestTask extends TaskElement {
+}
 
 TaskContainer.create(__dirname)
-    .bootstrap({
-        providers: {
-            name: 'tscomp'
-        },
-        task: TaskElement,
-        children: [
-            {
-                providers: {
-                    name: 'task'
-                },
-                task: TaskElement
-            }
-        ]
-    });
-
-
-
-// gulp.task('start', () => {
-//     let options: IEnvOption = minimist(process.argv.slice(2), {
-//         string: 'env',
-//         default: { env: process.env.NODE_ENV || 'development' }
-//     }) as IEnvOption;
-//     return createTask(options);
-// });
-
-// let createTask = (env) => {
-//     env.root = __dirname;
-//     let context = createContext({
-//         env: env,
-//         option: { src: 'src', dist: 'lib', buildDist: 'build' }
-//     });
-
-//     // console.log(context);
-
-//     context.generateTask([
-//         // {
-//         //     name: 'tscompile', src: 'src/**/*.ts', dist: 'lib',
-//         //     pipes: [() => cache('typescript'), () => sourcemaps.init(), () => tsProject()],
-//         //     output: [
-//         //         {
-//         //             oper: Operation.release | Operation.deploy,
-//         //             toTransform: (tsmap, config, dt, gulp) => {
-//         //                 console.log('ouput dts file.')
-//         //                 return tsmap.dts.pipe(gulp.dest(config.getDist(dt)));
-//         //             }
-//         //         },
-//         //         {
-//         //             oper: Operation.release | Operation.deploy,
-//         //             toTransform: (tsmap, config, dt, gulp) => {
-//         //                 console.log('ouput js file. release------------');
-//         //                 return tsmap.js.pipe(babel({ presets: ['es2015'] }))
-//         //                     .pipe(uglify()).pipe(sourcemaps.write('./sourcemaps'))
-//         //                     .pipe(gulp.dest(config.getDist(dt)));
-//         //             }
-//         //         },
-//         //         {
-//         //             oper: Operation.build,
-//         //             toTransform: (tsmap, config, dt, gulp) => {
-//         //                 console.log('ouput js file.')
-//         //                 return tsmap.pipe(sourcemaps.write('./sourcemaps')).pipe(gulp.dest(config.getDist(dt)));
-//         //             }
-//         //         }
-//         //     ]
-//         // },
-//         {
-//             name: 'test', src: 'test/**/*spec.ts',
-//             oper: Operation.test | Operation.default,
-//             pipes: [mocha],
-//             output: null
-//         },
-//         {
-//             name: 'tscompile', src: 'src/**/*.ts', dist: 'lib',
-//             oper: Operation.build,
-//             pipes: [
-//                 () => cache('typescript'),
-//                 sourcemaps.init,
-//                 (config) => {
-//                     let transform = tsProject();
-//                     transform.transformSourcePipe = (source) => source.pipe(transform)['js'];
-//                     return transform;
-//                 },
-//                 (config) => sourcemaps.write('./sourcemaps')
-//             ]
-//         },
-//         {
-//             name: 'tscompile', src: 'src/**/*.ts', dist: 'lib',
-//             oper: Operation.release | Operation.deploy,
-//             pipes: [
-//                 () => cache('typescript'),
-//                 sourcemaps.init,
-//                 (config) => tsProject()
-//             ],
-//             output: [
-//                 (tsmap, config, dt, gulp) => tsmap.dts.pipe(gulp.dest(config.getDist(dt))),
-//                 (tsmap, config, dt, gulp) => tsmap.js
-//                     .pipe(uglify()).pipe(sourcemaps.write('./sourcemaps'))
-//                     .pipe(gulp.dest(config.getDist(dt)))
-//             ]
-//         },
-//         { src: 'src/**/*.ts', name: 'watch', watchTasks: ['tscompile'] },
-//         { name: 'clean', order: 0, src: 'src', dist: 'lib', task: (config) => del(config.getDist()) }
-//     ]);
-
-//     return context.run(); // runTaskSequence(tasks);
-// }
+    .bootstrap([TestTask, TsCompile]);

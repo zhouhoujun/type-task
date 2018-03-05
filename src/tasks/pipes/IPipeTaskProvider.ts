@@ -1,17 +1,29 @@
 import { ITaskProvider } from '../../core/index';
-import { TaskSource, TaskExpress } from './pipeTypes';
-import { ITaskContainer } from '../../ITaskContainer';
+import { TaskSource, StreamExpress, DestExpress } from './pipeTypes';
 import { ITransform } from './ITransform';
+import { IPipeComponent } from './IPipeComponent';
+import { Type } from 'tsioc';
+import { Src } from '../../utils/index';
+import { ITaskContext } from '../../ITaskContext';
+import { SrcOptions, DestOptions } from 'vinyl-fs';
 
 /**
  * pipe task provider.
- * 
+ *
  * @export
  * @interface IPipeTaskProvider
  * @extends {ITaskProvider}
  */
 export interface IPipeTaskProvider extends ITaskProvider {
-    src?: TaskSource<ITaskContainer>;
-    pipes?: TaskExpress<ITaskContainer, ITransform>
-    dest?: TaskSource<ITaskContainer>;
+    src?: TaskSource<ITaskContext>;
+    srcOptions?: SrcOptions;
+    srcType?: Type<IPipeComponent<Src>>;
+
+    pipes?: StreamExpress<ITaskContext, ITransform>;
+    pipesType?:  Type<IPipeComponent<ITransform>>;
+
+    dest?: TaskSource<ITaskContext>;
+    destOptions?: DestOptions;
+    destType?: Type<IPipeComponent<Src>>;
+    destPipes?: DestExpress<ITaskContext, ITransform>;
 }

@@ -1,6 +1,6 @@
 import { Abstract, Inject } from 'tsioc';
 import { ITask } from './ITask';
-import { IEnvironment } from '../IEnvironment';
+import { ITaskContext } from '../ITaskContext';
 import { taskSymbols } from '../utils/index';
 
 /**
@@ -17,11 +17,11 @@ export abstract class AbstractTask implements ITask {
     /**
      * task environment.
      *
-     * @type {IEnvironment}
+     * @type {ITaskContext}
      * @memberof AbstractTask
      */
-    @Inject(taskSymbols.IEnvironment)
-    enviroment: IEnvironment;
+    @Inject(taskSymbols.ITaskContext)
+    context: ITaskContext;
 
     constructor(public name: string) {
 
@@ -29,10 +29,10 @@ export abstract class AbstractTask implements ITask {
 
     /**
      * run task.
-     * 
+     *
      * @abstract
-     * @param {*} [data] 
-     * @returns {Promise<any} 
+     * @param {*} [data]
+     * @returns {Promise<any}
      * @memberof AbstractTask
      */
     abstract run(data?: any): Promise<any>;

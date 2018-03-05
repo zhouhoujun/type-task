@@ -1,28 +1,36 @@
 import { Src } from './utils/index';
-import { Express, IContainer } from 'tsioc';
+import { Express, IContainer, IContainerBuilder } from 'tsioc';
 import { ITaskContainer } from './ITaskContainer';
 
 /**
  * task environment.
  *
  * @export
- * @interface IEnvironment
+ * @interface ITaskContext
  */
-export interface IEnvironment {
+export interface ITaskContext {
 
     /**
      * ioc container.
      *
      * @type {IContainer}
-     * @memberof IEnvironment
+     * @memberof ITaskContext
      */
     container: IContainer;
+
+    /**
+     * container builder.
+     *
+     * @type {IContainerBuilder}
+     * @memberof ITaskContext
+     */
+    containerBuilder: IContainerBuilder;
 
     /**
      * task container.
      *
      * @type {ITaskContainer}
-     * @memberof IEnvironment
+     * @memberof ITaskContext
      */
     taskContainer: ITaskContainer;
 
@@ -69,7 +77,7 @@ export interface IEnvironment {
      * get project package.json.
      *
      * @returns {*}
-     * @memberof IEnvironment
+     * @memberof ITaskContext
      */
     getPackage(): any;
 
@@ -78,7 +86,7 @@ export interface IEnvironment {
      * get package version.
      *
      * @returns {string}
-     * @memberof IEnvironment
+     * @memberof ITaskContext
      */
     getPackageVersion(): string;
 
@@ -89,7 +97,7 @@ export interface IEnvironment {
      * @param {string} name
      * @param {boolean} [dependencies]
      * @returns {string}
-     * @memberof IEnvironment
+     * @memberof ITaskContext
      */
     getModuleVersion(name: string, dependencies?: boolean): string;
 }

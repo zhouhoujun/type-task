@@ -1,5 +1,5 @@
-import { Providers, ObjectMap } from "tsioc";
-import { RunWay } from "./RunWay";
+import { Providers, ObjectMap } from 'tsioc';
+import { RunWay } from './RunWay';
 
 
 /**

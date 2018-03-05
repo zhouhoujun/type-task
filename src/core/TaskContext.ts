@@ -1,18 +1,18 @@
-import { toAbsolutePath, Singleton, Express, Express2, Inject, symbols, IContainer } from 'tsioc';
+import { toAbsolutePath, Singleton, Express, Express2, Inject, symbols, IContainer, IContainerBuilder } from 'tsioc';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
-import { IEnvironment } from '../IEnvironment';
+import { ITaskContext } from '../ITaskContext';
 import { taskSymbols } from '../utils/index';
 import { ITaskContainer } from '../ITaskContainer';
 
 /**
- * Enviroment.
+ * TaskContext.
  *
  * @export
- * @class Environment
+ * @class TaskContext
  */
-@Singleton(taskSymbols.IEnvironment)
-export class Environment implements IEnvironment {
+@Singleton(taskSymbols.ITaskContext)
+export class TaskContext implements ITaskContext {
     packageFile = 'package.json';
 
     @Inject(taskSymbols.TaskContainer)
@@ -26,11 +26,15 @@ export class Environment implements IEnvironment {
         return this.taskContainer.container;
     }
 
+    get containerBuilder(): IContainerBuilder {
+        return this.taskContainer.containerBuilder;
+    }
+
     /**
      * get path.
      *
      * @returns
-     * @memberof Environment
+     * @memberof TaskContext
      */
     getRootPath() {
         return this.taskContainer.rootPath;

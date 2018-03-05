@@ -2,9 +2,10 @@ import { IBuilder } from './IBuilder';
 import { ITaskComponent } from './ITaskComponent';
 import { Type, hasOwnClassMetadata, Inject, symbols, IContainer, Injectable, Providers, Singleton, isArray, isClass } from 'tsioc';
 import { Task } from './decorators/index';
-import { IContext } from './IContext';
-import { ITaskContainer } from '../ITaskContainer';
+import { IConfigure } from './IConfigure';
+import { ITaskContext } from '../ITaskContext';
 import { taskSymbols, TaskType } from '../utils/index';
+import { ITask } from './ITask';
 
 /**
  * builder.
@@ -16,33 +17,37 @@ import { taskSymbols, TaskType } from '../utils/index';
 @Singleton(taskSymbols.IBuilder)
 export class Builder implements IBuilder {
 
-    @Inject(taskSymbols.TaskContainer)
-    taskContainer: ITaskContainer;
+    @Inject(taskSymbols.ITaskContext)
+    context: ITaskContext;
 
     constructor() {
 
     }
 
-    async build(context: IContext, root?: ITaskComponent): Promise<ITaskComponent> {
-        let component = await this.buildComponent(context);
+    async build(config: IConfigure, root?: ITaskComponent): Promise<ITaskComponent> {
+        let component = await this.buildComponent(config);
         if (root) {
             root.add(component)
         } else {
             root = component;
         }
 
-        if (context.children && context.children.length) {
-            await this.buildChildren(component, context.children)
+        if (config.children && config.children.length) {
+            await this.buildChildren(component, this.toConfigures(config.children))
         }
         return root;
     }
 
-    async buildChildren(parent: ITaskComponent, contexts: IContext[]) {
-        await Promise.all(contexts.map(async ctx => {
+    toConfigures(children: (IConfigure | Type<ITask>)[]): IConfigure[] {
+        return children.map(cfg => isClass(cfg) ? { task: cfg } : cfg);
+    }
+
+    async buildChildren(parent: ITaskComponent, configs: IConfigure[]) {
+        await Promise.all(configs.map(async ctx => {
             let node = await this.buildComponent(ctx);
             parent.add(node);
             if (ctx.children && ctx.children.length) {
-                this.buildChildren(node, ctx.children);
+                this.buildChildren(node, this.toConfigures(ctx.children));
             }
             return parent;
         }));
@@ -50,19 +55,19 @@ export class Builder implements IBuilder {
 
     async loadModules(modules: TaskType | TaskType[]) {
         if (isArray(modules)) {
-            await Promise.all(modules.map(md => this.taskContainer.containerBuilder.loadModule(this.taskContainer.container, isClass(md) ? { modules: [md] } : md)));
+            await Promise.all(modules.map(md => this.context.containerBuilder.loadModule(this.context.container, isClass(md) ? { modules: [md] } : md)));
         } else {
-            await this.taskContainer.containerBuilder.loadModule(this.taskContainer.container, isClass(modules) ? { modules: [modules] } : modules);
+            await this.context.containerBuilder.loadModule(this.context.container, isClass(modules) ? { modules: [modules] } : modules);
         }
     }
 
-    async buildComponent(context: IContext): Promise<ITaskComponent> {
-        await this.loadModules(context.loader);
-        if (!this.taskContainer.container.has(context.task) && isClass(context.task)) {
-            this.taskContainer.container.register(context.task);
+    async buildComponent(config: IConfigure): Promise<ITaskComponent> {
+        await this.loadModules(config.loader);
+        if (!this.context.container.has(config.task) && isClass(config.task)) {
+            this.context.container.register(config.task);
         }
-        let providers = isArray(context.providers) ? context.providers : [context.providers];
+        let providers = isArray(config.providers) ? config.providers : [config.providers];
 
-        return this.taskContainer.container.resolve<ITaskComponent>(context.task, ...providers);
+        return this.context.container.resolve<ITaskComponent>(config.task, ...providers);
     }
 }

@@ -2,43 +2,17 @@ import { ITaskProvider } from '../../core/index';
 import { Src } from '../../utils';
 import { ITaskContainer } from '../../ITaskContainer';
 import { ITransform } from './ITransform';
+import { ObjectMap } from 'tsioc';
 
 /**
  * task source.
  */
-export type TaskSource<T> = Src | ((container?: T) => Src);
+export type TaskSource<T> = Src | ((context?: T) => Src);
 
 /**
  * task express.
  */
-export type TaskExpress<T, TResult> = ((container?: T) => TResult[] | TResult) | ((container?: T) => TResult)[]
+export type StreamExpress<T, TResult extends ITransform> = ((context?: T, transform?: ITransform) => (TResult | ((context?: T, transform?: ITransform) => TResult))[]) | ((context?: T, transform?: ITransform) => TResult)[];
 
-// /**
-//  * pipe task provider.
-//  * 
-//  * @export
-//  * @interface IPipe
-//  */
-// export interface IPipe {
-//     /**
-//      *  pipe src
-//      * 
-//      * @type {TaskExpress<ITaskContainer, Src>}
-//      * @memberof IPipeTaskProvider
-//      */
-//     src?: TaskExpress<ITaskContainer, Src>;
-//     /**
-//      * pipes
-//      * 
-//      * @type {TaskExpress<ITaskContainer, ITransform>}
-//      * @memberof IPipeTaskProvider
-//      */
-//     pipes: TaskExpress<ITaskContainer, ITransform>;
-//     /**
-//      * pipe dest
-//      * 
-//      * @type {TaskExpress<ITaskContainer, ITransform>}
-//      * @memberof IPipeTaskProvider
-//      */
-//     dest?: TaskExpress<ITaskContainer, ITransform>;
-// }
+
+export type DestExpress<T, TResult extends ITransform> = ObjectMap<StreamExpress<T, TResult>> | StreamExpress<T, TResult>;

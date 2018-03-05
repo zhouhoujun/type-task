@@ -19,7 +19,7 @@ export class ExecFileTask extends AbstractTask  {
     }
 
     run(): Promise<any> {
-        let files = isFunction(this.files) ? this.files(this.enviroment.container) : this.files;
+        let files = isFunction(this.files) ? this.files(this.context.container) : this.files;
         return Promise.resolve(files)
             .then(files => {
                 if (isString(files)) {

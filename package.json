@@ -42,11 +42,13 @@
     },
     "dependencies": {
         "@types/chalk": "^2.2.0",
+        "@types/vinyl-fs": "^2.4.8",
         "chalk": "^2.3.1",
         "pretty-hrtime": "^1.0.3",
         "reflect-metadata": "^0.1.8",
         "time-stamp": "^2.0.0",
-        "tsioc": "^1.3.18"
+        "tsioc": "^1.3.18",
+        "vinyl-fs": "^3.0.2"
     },
     "devDependencies": {
         "@types/chai": "^3.4.34",
@@ -64,6 +66,7 @@
         "tslint": "^5.4.3",
         "tslint-stylish": "^2.1.0",
         "typescript": "^2.7.2",
+        "typescript-class-annotations": "^0.1.0",
         "zone.js": "^0.8.12"
     },
     "homepage": "https://github.com/zhouhoujun/development-core#readme"

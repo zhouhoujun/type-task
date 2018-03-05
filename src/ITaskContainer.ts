@@ -1,4 +1,4 @@
-import { TaskComponent, ITask, IContext } from './core/index';
+import { TaskComponent, ITask, IConfigure, BootsrapTask } from './core/index';
 import { IContainer, Type, Providers, Token, AsyncLoadOptions, IContainerBuilder } from 'tsioc';
 
 /**
@@ -38,8 +38,8 @@ export interface ITaskContainer {
 
     /**
      * use logger
-     * 
-     * @param {Type<any>} logger 
+     *
+     * @param {Type<any>} logger
      * @memberof ITaskContainer
      */
     useLogger(logger: Type<any>);
@@ -47,11 +47,11 @@ export interface ITaskContainer {
     /**
      * bootstarp task.
      *
-     * @param {(IContext | Token<any>)} task
+     * @param {BootsrapTask} tasks
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof ITaskContainer
      */
-    bootstrap(task: IContext | Token<any>, ...providers: Providers[]): Promise<any>;
+    bootstrap(tasks: BootsrapTask, ...providers: Providers[]): Promise<any>;
 
 }

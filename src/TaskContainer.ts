@@ -1,10 +1,12 @@
-import { Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata, isFunction, isNodejsEnv } from 'tsioc';
+import { isArray, Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata, isFunction, isNodejsEnv } from 'tsioc';
 import { taskSymbols } from './utils/index';
-import { ITask, IBuilder, IContext, registerTaskCoreDecorators, Task, TaskModule } from './core/index';
+import { ITask, IBuilder, IConfigure, BootsrapTask, registerTaskCoreDecorators, Task, TaskModule } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 import { TaskLog } from './aop/TaskLog';
 import { registerTaskModules } from './tasks';
-
+import chalk from 'chalk';
+const timestamp = require('time-stamp');
+const prettyTime = require('pretty-hrtime');
 /**
  * task container.
  *
@@ -64,8 +66,8 @@ export class TaskContainer implements ITaskContainer {
 
     /**
      * use logger.
-     * 
-     * @param {Type<any>} logger 
+     *
+     * @param {Type<any>} logger
      * @memberof TaskContainer
      */
     useLogger(logger: Type<any>) {
@@ -75,41 +77,71 @@ export class TaskContainer implements ITaskContainer {
     /**
      * bootstrap task.
      *
-     * @param {(IContext | Token<any>)} task
+     * @param {BootsrapTask} tasks
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof TaskContainer
      */
-    bootstrap(task: IContext | Token<any>, ...providers: Providers[]): Promise<any> {
+    bootstrap(tasks: BootsrapTask, ...providers: Providers[]): Promise<any> {
         let builder = this.containerBuilder;
+        let start, end;
+        start = process.hrtime();
+        let taskname = '\'' + chalk.cyan('bootstrap') + '\'';
+        console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Starting', taskname, '...');
+
         return Promise.all(this.useModules.map(option => {
             return builder.loadModule(this.container, option);
         })).then((types) => {
-            if (isToken(task)) {
-                if (!this.container.has(task)) {
-                    if (isClass(task) && this.isTask(task)) {
-                        this.container.register(task);
-                    } else {
-                        return Promise.reject(`${typeof task} is not vaild task type.`);
-                    }
-                }
-                let instance = this.container.resolve(task, ...providers);
-                if (isFunction(instance.run)) {
-                    return instance.run();
-                } else if (instance.context && isClass(instance.context.task) && this.isTask(instance.context.task)) {
-                    let ctx = instance.context as IContext;
-                    return this.runContext(ctx);
-                } else {
-                    return Promise.reject(`${JSON.stringify(instance)} is not vaild task instance.`);
-                }
-
+            if (isArray(tasks)) {
+                let seq = Promise.resolve();
+                tasks.forEach(task => {
+                    seq = seq.then(data => {
+                        return this.runTask(task, ...providers);
+                    })
+                });
+                return seq;
             } else {
-                return this.runContext(task);
+                return this.runTask(tasks, ...providers);
             }
-        });
+        })
+            .then(
+                data => {
+                    end = prettyTime(process.hrtime(start));
+                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Finished', taskname, ' after ', chalk.magenta(end));
+                    return data;
+                },
+                err => {
+                    end = prettyTime(process.hrtime(start));
+                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Finished', taskname, chalk.red('errored after'), chalk.magenta(end));
+                    return err;
+                });
     }
 
-    protected runContext(ctx: IContext) {
+    protected runTask(task: IConfigure | Token<any>, ...providers: Providers[]): Promise<any> {
+        if (isToken(task)) {
+            if (!this.container.has(task)) {
+                if (isClass(task) && this.isTask(task)) {
+                    this.container.register(task);
+                } else {
+                    return Promise.reject(`${typeof task} is not vaild task type.`);
+                }
+            }
+            let instance = this.container.resolve(task, ...providers);
+            if (isFunction(instance.run)) {
+                return instance.run();
+            } else if (instance.config && isClass(instance.config.task) && this.isTask(instance.config.task)) {
+                let ctx = instance.config as IConfigure;
+                return this.runContext(ctx);
+            } else {
+                return Promise.reject(`${JSON.stringify(instance)} is not vaild task instance.`);
+            }
+
+        } else {
+            return this.runContext(task);
+        }
+    }
+
+    protected runContext(ctx: IConfigure) {
         return this.container.resolve<IBuilder>(ctx.builder || taskSymbols.IBuilder)
             .build(ctx)
             .then(task => {

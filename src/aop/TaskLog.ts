@@ -1,7 +1,7 @@
 import { Around, Aspect, Joinpoint, JoinpointState, ObjectMap, Singleton } from 'tsioc';
 import chalk from 'chalk';
 const timestamp = require('time-stamp');
-const prettyTime = require('pretty-hrtime')
+const prettyTime = require('pretty-hrtime');
 /**
  * Task Log
  *

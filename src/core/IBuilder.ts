@@ -1,7 +1,7 @@
 import { ITaskComponent } from './ITaskComponent';
 import { Token } from 'tsioc';
-import { IContext } from './IContext';
-import { ITaskContainer } from '../ITaskContainer';
+import { IConfigure } from './IConfigure';
+import { ITaskContext } from '../ITaskContext';
 
 
 /**
@@ -14,17 +14,17 @@ export interface IBuilder {
     /**
      * task container.
      *
-     * @type {ITaskContainer}
+     * @type {ITaskContext}
      * @memberof IBuilder
      */
-    taskContainer: ITaskContainer;
+    context: ITaskContext;
     /**
      * build task component.
      *
-     * @param {IContext} context
+     * @param {IConfigure} config
      * @param {ITaskComponent} [root]
      * @returns {Promise<ITaskComponent>}
      * @memberof IBuilder
      */
-    build(context: IContext, root?: ITaskComponent): Promise<ITaskComponent>;
+    build(config: IConfigure, root?: ITaskComponent): Promise<ITaskComponent>;
 }

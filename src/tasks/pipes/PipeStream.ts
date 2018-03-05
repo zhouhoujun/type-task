@@ -1,42 +1,41 @@
 import { Task, TaskElement, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
-import { isArray, Abstract } from 'tsioc';
-import { ITransform } from '.';
-import { IPipeTask } from './IPipeTask';
-import { IEnvironment } from '../../IEnvironment';
-import { isFunction } from 'util';
-import { TaskExpress } from './pipeTypes';
+import { isArray, Abstract, isFunction } from 'tsioc';
+import { ITransform } from './ITransform';
+import { IPipeComponent } from './IPipeComponent';
+import { ITaskContext } from '../../ITaskContext';
+import { StreamExpress } from './pipeTypes';
 
 @Task
-export class PipeStream extends AbstractTask implements IPipeTask<ITransform> {
+export class PipeStream extends TaskElement implements IPipeComponent<ITransform> {
 
-    constructor(name: string, private pipes: TaskExpress<IEnvironment, ITransform>) {
-        super(name);
+    constructor(name: string, runWay = RunWay.seqFirst, protected pipes: StreamExpress<ITaskContext, ITransform>) {
+        super(name, runWay);
     }
 
-    run(data: ITransform): Promise<ITransform> {
-        if (isArray(this.pipes)) {
-            return Promise.all(this.pipes.map(trans => trans(this.enviroment)))
-                .then(transforms => {
-                    let pstream = data;
-                    if (isArray(transforms)) {
-                        transforms.forEach(trans => {
-                            pstream = pstream.pipe(trans);
-                        });
-                    }
-                    return pstream;
-                });
-        } else {
-            return Promise.resolve(this.pipes(this.enviroment))
-                .then(transforms => {
-                    let pstream = data;
-                    if (isArray(transforms)) {
-                        transforms.forEach(trans => {
-                            pstream.pipe(trans);
-                        });
-                    }
-                    return pstream;
-                });
+    execute(data: ITransform): Promise<ITransform> {
+        return this.pipeToPromise(data);
+    }
+
+    protected pipeToPromise(stream: ITransform): Promise<ITransform> {
+        if (!this.pipes) {
+            return Promise.resolve(stream);
         }
 
+        return Promise.resolve(isFunction(this.pipes) ? this.pipes(this.context, stream) : this.pipes)
+            .then(transforms => {
+                let pstream = stream;
+                if (isArray(transforms)) {
+                    transforms.forEach(transform => {
+                        let pipe = isFunction(transform) ? transform(this.context, pstream) : transform;
+                        if (pipe.changeAsOrigin) {
+                            pstream = pipe;
+                        } else {
+                            pstream = pstream.pipe(pipe);
+                        }
+                    });
+                }
+                return pstream;
+            });
     }
+
 }

@@ -4,9 +4,9 @@
 export const IBuilder = Symbol('IBuilder');
 
 /**
- * IEnvironment.
+ * ITaskContext.
  */
-export const IEnvironment = Symbol('IEnvironment');
+export const ITaskContext = Symbol('ITaskContext');
 /**
  * TaskContainer
  */

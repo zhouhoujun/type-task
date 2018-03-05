@@ -1,7 +1,7 @@
 import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, Provider, Providers, hasOwnClassMetadata, isClass, Abstract } from 'tsioc';
 import { ITaskComponent } from './ITaskComponent';
-import { Environment } from './Environment';
-import { IContext } from './IContext';
+import { TaskContext } from './TaskContext';
+import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
 import { Task } from './decorators/index';
 import { RunWay } from './RunWay';
@@ -22,17 +22,18 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     protected registerModules: Type<any>[];
     protected useModules: AsyncLoadOptions[];
 
-    context?: IContext;
+    config?: IConfigure;
 
     /**
      * task run enviroment.
      */
     @Inject()
-    enviroment: Environment;
+    context: TaskContext;
 
-    constructor(name: string, public runWay = RunWay.seqFirst) {
+    constructor(name: string, public runWay = RunWay.seqFirst, config?: IConfigure) {
         super(name);
         this.useModules = [];
+        this.config = config;
     }
 
 
@@ -42,7 +43,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     }
 
     run(data?: any): Promise<any> {
-        return this.loadModules(this.enviroment.container)
+        return this.loadModules(this.context.container)
             .then((container) => {
                 return this.build(container);
             })
@@ -62,7 +63,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
                     }, Mode.children);
                 } else if (this.runWay & RunWay.parallel) {
                     execPromise = execPromise.then(pdata => {
-                        return Promise.all(this.children.map(task => task.run(pdata || data)));
+                        return Promise.all(this.children.map(task => task.run(pdata)));
                     });
                 }
 
@@ -98,9 +99,9 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
 
     protected build(container: IContainer) {
-        if (this.context) {
-            return container.resolve<IBuilder>(this.context.builder || taskSymbols.IBuilder)
-                .build(this.context, this)
+        if (this.config) {
+            return container.resolve<IBuilder>(this.config.builder || taskSymbols.IBuilder)
+                .build(this.config, this)
                 .then(() => {
                     return container;
                 });

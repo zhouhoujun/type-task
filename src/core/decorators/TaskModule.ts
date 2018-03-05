@@ -1,5 +1,5 @@
 import { createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass } from 'tsioc';
-import { IContext } from '../IContext';
+import { IConfigure } from '../IConfigure';
 
 /**
  * pipe task metadata.
@@ -10,19 +10,19 @@ import { IContext } from '../IContext';
  */
 export interface TaskModuleMetadata extends ClassMetadata {
     name?: string;
-    context?: IContext;
+    config?: IConfigure;
 }
 
 /**
  * task class decorator.
- * 
+ *
  * @export
  * @interface ITaskClassDecorator
  * @extends {IClassDecorator<T>}
- * @template T 
+ * @template T
  */
 export interface ITaskClassDecorator<T extends TaskModuleMetadata> extends IClassDecorator<T> {
-    (context: IContext, provide?: Registration<any> | symbol | string, alias?: string, singlton?: boolean, cache?: number): ClassDecorator;
+    (config: IConfigure, provide?: Registration<any> | symbol | string, alias?: string, singlton?: boolean, cache?: number): ClassDecorator;
     (metadata?: T): ClassDecorator;
 }
 
@@ -33,9 +33,9 @@ export const TaskModule: ITaskClassDecorator<TaskModuleMetadata> =
     createClassDecorator<TaskModuleMetadata>('TaskModule',
         args => {
             args.next<TaskModuleMetadata>({
-                match: (arg) => arg.task && isClass(arg.task),
+                match: (arg) => arg && isClass(arg.task),
                 setMetadata: (metadata, arg) => {
-                    metadata.context = arg;
+                    metadata.config = arg;
                 }
             });
         },

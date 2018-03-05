@@ -10,7 +10,7 @@ import { ITask } from './ITask';
  * @export
  * @interface IContext
  */
-export interface IContext {
+export interface IConfigure {
 
     /**
      * task providers
@@ -47,8 +47,11 @@ export interface IContext {
     /**
      * children
      *
-     * @type {IContext[]}
-     * @memberof IContext
+     * @type {((IConfigure | Type<ITask>)[])}
+     * @memberof IConfigure
      */
-    children?: IContext[];
+    children?: (IConfigure | Type<ITask>)[];
 }
+
+
+export type BootsrapTask = IConfigure | Token<any> | (Token<any>|IConfigure)[];
