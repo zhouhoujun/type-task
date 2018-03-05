@@ -19,8 +19,6 @@ class SimpleTask extends AbstractTask implements ITask {
     }
 }
 
-
-
 @Task('comptest')
 class SimpleCTask extends TaskComponent<ITaskComponent> {
 
