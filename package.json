@@ -47,7 +47,7 @@
         "pretty-hrtime": "^1.0.3",
         "reflect-metadata": "^0.1.8",
         "time-stamp": "^2.0.0",
-        "tsioc": "^1.4.0",
+        "tsioc": "^1.4.1",
         "vinyl-fs": "^3.0.2"
     },
     "devDependencies": {
