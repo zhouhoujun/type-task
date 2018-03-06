@@ -1,10 +1,13 @@
 {
     "name": "type-task",
-    "version": "0.1.0-beta2",
+    "version": "0.1.0-beta3",
     "description": "type-task is task manager via AOP, IOC.",
     "main": "./lib/index.js",
     "bin": {
-        "runtask": "./bin/runtask.js"
+        "type-task": "node ./bin/type-task.js"
+    },
+    "engines": {
+        "node": ">= 8.9"
     },
     "typings": "./lib/index.d.ts",
     "scripts": {
@@ -40,6 +43,7 @@
         "@types/vinyl-fs": "^2.4.8",
         "chalk": "^2.3.1",
         "liftoff": "^2.5.0",
+        "minimist": "^1.2.0",
         "pretty-hrtime": "^1.0.3",
         "reflect-metadata": "^0.1.8",
         "time-stamp": "^2.0.0",

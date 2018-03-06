@@ -1,13 +1,38 @@
+#!/usr/bin/env node
 
+import { isUndefined } from 'tsioc';
+// const chalk = require('chalk');
 import chalk from 'chalk';
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
 const Liftoff = require('liftoff');
-const minimist = require('minimist');
+// import program from 'commander';
+
 process.env.INIT_CWD = process.cwd();
 
+let argv = require('minimist')(process.argv.slice(2));
+let cliPackage = require('../package');
+let versionFlag = argv.v || argv.version;
+
+// program
+//   .version(cliPackage.version, '-v, --version')
+//   .command('run [file]')
+//   .description('run with config taskfile')
+//   .alias('r')
+//   .option('-r, --release', 'release project mode')
+//   .option('-p, --publish', 'publish project mode')
+//   .option('-t, --task', 'run specil task')
+//   .action((file, options) => {
+//     file = file || './taskfile';
+//     require(file);
+//   })
+//   .command('init [name]', 'init taskfile')
+//   .alias('i')
+//   .parse(process.argv)
+
+
 const cli = new Liftoff({
-  name: 'runtask',
+  name: 'type-task',
   processTitle: 'type-task',
   moduleName: 'type-task',
   configName: 'taskfile',
@@ -20,10 +45,10 @@ const cli = new Liftoff({
     '.yaml': 'require-yaml',
     '.yml': 'require-yaml'
   },
-  v8flags: ['--harmony'],
+  v8flags: ['--harmony']
 });
 
-const argv = minimist(process.argv.slice(2));
+
 
 
 process.once('exit', function (code) {
@@ -47,18 +72,15 @@ cli.on('respawn', (flags, child) => {
   console.log('Respawned to PID:', pid);
 });
 
-let cliPackage = require('../package');
-let versionFlag = argv.v || argv.version;
-
 cli.launch({
   cwd: argv.cwd,
   configPath: argv.taskfile,
   require: argv.require,
-  completion: argv.completion,
+  completion: argv.completion
 }, (env) => {
   if (versionFlag) {
     console.log('type-task CLI version', cliPackage.version);
-    if (env.modulePackage && typeof env.modulePackage.version !== 'undefined') {
+    if (env.modulePackage && !isUndefined(env.modulePackage.version)) {
       console.log('Local version', env.modulePackage.version);
     }
     process.exit(0);
