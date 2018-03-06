@@ -8,12 +8,37 @@ import { StreamExpress } from './pipeTypes';
 @Task
 export class PipeStream extends TaskElement implements IPipeComponent<ITransform> {
 
-    constructor(name: string, runWay = RunWay.seqFirst, protected pipes: StreamExpress<ITaskContext, ITransform>) {
+    constructor(name: string, runWay = RunWay.seqFirst, protected pipes: StreamExpress<ITaskContext, ITransform>, protected awaitPiped = false) {
         super(name, runWay);
     }
 
     execute(data: ITransform): Promise<ITransform> {
-        return this.pipeToPromise(data);
+        let pStream = this.pipeToPromise(data);
+        if (this.awaitPiped) {
+            pStream = pStream.then(pipe => {
+                return new Promise((resolve, reject) => {
+                    if (pipe) {
+                        pipe
+                            .once('end', () => {
+                                resolve();
+                            })
+                            .once('error', reject);
+                    } else {
+                        resolve();
+                    }
+                }).then(() => {
+                    pipe.removeAllListeners('error');
+                    pipe.removeAllListeners('end');
+                    return pipe;
+                }, err => {
+                    pipe.removeAllListeners('error');
+                    pipe.removeAllListeners('end');
+                    process.exit(1);
+                    return err;
+                });
+            });
+        }
+        return pStream;
     }
 
     protected pipeToPromise(stream: ITransform): Promise<ITransform> {

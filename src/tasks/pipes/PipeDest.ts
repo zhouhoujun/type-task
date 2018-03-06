@@ -50,6 +50,7 @@ export class PipeDest extends TaskElement implements IPipeComponent<ITransform> 
                     }, err => {
                         output.removeAllListeners('error');
                         output.removeAllListeners('end');
+                        process.exit(1);
                         return err;
                     });
                 }))

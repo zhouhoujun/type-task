@@ -3,7 +3,7 @@ import { Inject } from 'tsioc';
 import { RunWay } from '../src/core/RunWay';
 
 @Task('test')
-class SimpleTask extends AbstractTask implements ITask {
+export class SimpleTask extends AbstractTask implements ITask {
 
     constructor(name: string) {
         super(name);
@@ -20,7 +20,7 @@ class SimpleTask extends AbstractTask implements ITask {
 }
 
 @Task('comptest')
-class SimpleCTask extends TaskComponent<ITaskComponent> {
+export class SimpleCTask extends TaskComponent<ITaskComponent> {
 
     constructor(name: string, runWay?: RunWay) {
         super(name, runWay);
@@ -54,52 +54,52 @@ class SimpleCTask extends TaskComponent<ITaskComponent> {
         }
     ]
 })
-class TaskModuleTest {
+export class TaskModuleTest {
 
 }
 
 
 
-async function test() {
+// async function test() {
 
-    let container = new TaskContainer(__dirname);
+//     let container = new TaskContainer(__dirname);
 
-    // container.use({ modules: [SimpleTask] });
-    await container.bootstrap(SimpleTask);
-
-
-    console.log('\n------------SimpleTask------------------');
-    let container2 = new TaskContainer(__dirname);
-    await container2.use(SimpleTask)
-        .bootstrap('test');
-
-    console.log('\n-----------SimpleCTask-------------------');
-    await TaskContainer.create(__dirname, SimpleCTask)
-        .bootstrap('comptest');
+//     // container.use({ modules: [SimpleTask] });
+//     await container.bootstrap(SimpleTask);
 
 
-    console.log('\n-----------Custome Component-------------------');
-    await TaskContainer.create(__dirname)
-        .bootstrap({
-            providers: {
-                name: 'test1'
-            },
-            task: TaskElement,
-            children: [
-                {
-                    providers: { name: 'test------1' },
-                    task: SimpleTask
-                },
-                {
-                    providers: { name: 'test------2' },
-                    task: SimpleCTask
-                }
-            ]
-        });
+//     console.log('\n------------SimpleTask------------------');
+//     let container2 = new TaskContainer(__dirname);
+//     await container2.use(SimpleTask)
+//         .bootstrap('test');
 
-    console.log('\n-------------Component Module-----------------');
-    await TaskContainer.create(__dirname)
-        .bootstrap(TaskModuleTest);
-}
+//     console.log('\n-----------SimpleCTask-------------------');
+//     await TaskContainer.create(__dirname, SimpleCTask)
+//         .bootstrap('comptest');
 
-test();
+
+//     console.log('\n-----------Custome Component-------------------');
+//     await TaskContainer.create(__dirname)
+//         .bootstrap({
+//             providers: {
+//                 name: 'test1'
+//             },
+//             task: TaskElement,
+//             children: [
+//                 {
+//                     providers: { name: 'test------1' },
+//                     task: SimpleTask
+//                 },
+//                 {
+//                     providers: { name: 'test------2' },
+//                     task: SimpleCTask
+//                 }
+//             ]
+//         });
+
+//     console.log('\n-------------Component Module-----------------');
+//     await TaskContainer.create(__dirname)
+//         .bootstrap(TaskModuleTest);
+// }
+
+// test();

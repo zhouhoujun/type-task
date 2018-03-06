@@ -21,6 +21,7 @@ export interface IPipeTaskProvider extends ITaskProvider {
 
     pipes?: StreamExpress<ITaskContext, ITransform>;
     pipesType?:  Type<IPipeComponent<ITransform>>;
+    awaitPiped?: boolean;
 
     dest?: TaskSource<ITaskContext>;
     destOptions?: DestOptions;

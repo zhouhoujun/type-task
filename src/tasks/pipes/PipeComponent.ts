@@ -27,6 +27,7 @@ export class PipeComponent extends TaskElement implements IPipeComponent<ITransf
 
         private pipes?: StreamExpress<ITaskContext, ITransform>,
         private pipesType?: Type<IPipeComponent<ITransform>>,
+        private awaitPiped?: boolean,
 
         private dest?: TaskSource<ITaskContext>,
         private destPipes?: DestExpress<ITaskContext, ITransform>,
@@ -42,7 +43,7 @@ export class PipeComponent extends TaskElement implements IPipeComponent<ITransf
             this.add(container.resolve<IPipeComponent<Src>>(this.srcType || 'PipeSource', { name: `${this.name}-src`, src: this.src, options: this.srcOptions }));
         }
         if (this.pipes) {
-            this.add(container.resolve<IPipeComponent<ITransform>>(this.pipesType || 'PipeStream', { name: `${this.name}-pipes`, pipes: this.pipes }))
+            this.add(container.resolve<IPipeComponent<ITransform>>(this.pipesType || 'PipeStream', { name: `${this.name}-pipes`, pipes: this.pipes, awaitPiped: !!this.awaitPiped }))
         }
 
         if (this.dest) {

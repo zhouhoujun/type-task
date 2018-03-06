@@ -167,6 +167,7 @@ class TsCompile extends TaskElement {
     providers: {
         name: 'test',
         src: 'test/**/*.spec.ts',
+        awaitPiped: true,
         pipes: [() => mocha()]
     },
     task: PipeComponent
