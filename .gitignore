@@ -6,4 +6,6 @@ bower_components
 jspm_packages
 build
 lib
+bin
+
 

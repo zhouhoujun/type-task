@@ -1,4 +1,4 @@
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, TaskComponent, ITaskComponent, IConfigure, PipeComponent, IPipeTaskProvider, TaskModule, ITransform } from './src';
+import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, TaskComponent, ITaskComponent, IConfigure, PipeComponent, IPipeTaskProvider, TaskModule, ITransform, Src } from './src';
 import * as mocha from 'gulp-mocha';
 
 const del = require('del');
@@ -12,7 +12,7 @@ import { classAnnotations } from 'typescript-class-annotations';
 @TaskModule({
     providers: <IPipeTaskProvider>{
         name: 'tscomp',
-        src: 'src/**/*.ts',
+        src: 'src/!(cli)/*.ts',
         dest: 'lib',
         pipes: [
             (ctx) => cache('typescript'),
@@ -42,6 +42,19 @@ import { classAnnotations } from 'typescript-class-annotations';
     task: PipeComponent
 })
 class TsCompile extends TaskElement {
+    constructor(name: string, private src: Src, private dest?: Src) {
+        super(name);
+    }
+
+    onInit() {
+        if (this.src) {
+            this.config.providers.src = this.src;
+        }
+        if (this.dest) {
+            this.config.providers.dest = this.dest;
+        }
+    }
+
     execute(data?: any): Promise<any> {
         return del(['lib/**']);
     }
@@ -52,7 +65,7 @@ class TsCompile extends TaskElement {
     providers: {
         name: 'test',
         src: 'test/**/*.spec.ts',
-        pipes: [ ()=> mocha()]
+        pipes: [() => mocha()]
     },
     task: PipeComponent
 })
@@ -60,4 +73,10 @@ class TestTask extends TaskElement {
 }
 
 TaskContainer.create(__dirname)
-    .bootstrap([TestTask, TsCompile]);
+    .bootstrap([TestTask, TsCompile, {
+        providers: {
+            src: 'src/cli/*.ts',
+            dest: 'bin'
+        },
+        task: TsCompile
+    }]);

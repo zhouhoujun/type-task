@@ -2,7 +2,7 @@ import { isArray, Token, IContainer, IContainerBuilder, ContainerBuilder, symbol
 import { taskSymbols } from './utils/index';
 import { ITask, IBuilder, IConfigure, BootsrapTask, registerTaskCoreDecorators, Task, TaskModule } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
-import { TaskLog } from './aop/TaskLog';
+import { TaskLogAspect } from './aop/index';
 import { registerTaskModules } from './tasks';
 import chalk from 'chalk';
 const timestamp = require('time-stamp');
@@ -149,7 +149,7 @@ export class TaskContainer implements ITaskContainer {
     }
 
     protected registerExt(container: IContainer) {
-        container.register(this.log || TaskLog);
+        container.register(this.log || TaskLogAspect);
         container.registerSingleton(taskSymbols.TaskContainer, this);
         registerTaskCoreDecorators(container);
         registerTaskModules(container);
