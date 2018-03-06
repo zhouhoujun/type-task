@@ -12,7 +12,7 @@ import { classAnnotations } from 'typescript-class-annotations';
 @TaskModule({
     providers: <IPipeTaskProvider>{
         name: 'tscomp',
-        src: 'src/!(cli)/*.ts',
+        src: ['src/**/*.ts', '!src/cli/**'],
         dest: 'lib',
         pipes: [
             (ctx) => cache('typescript'),
@@ -42,7 +42,7 @@ import { classAnnotations } from 'typescript-class-annotations';
     task: PipeComponent
 })
 class TsCompile extends TaskElement {
-    constructor(name: string, private src: Src, private dest?: Src) {
+    constructor(name: string, private src?: Src, private dest?: Src) {
         super(name);
     }
 
@@ -53,10 +53,6 @@ class TsCompile extends TaskElement {
         if (this.dest) {
             this.config.providers.dest = this.dest;
         }
-    }
-
-    execute(data?: any): Promise<any> {
-        return del(['lib/**']);
     }
 }
 
@@ -70,6 +66,9 @@ class TsCompile extends TaskElement {
     task: PipeComponent
 })
 class TestTask extends TaskElement {
+    execute(data?: any): Promise<any> {
+        return del(['lib/**', 'bin/**']);
+    }
 }
 
 TaskContainer.create(__dirname)
