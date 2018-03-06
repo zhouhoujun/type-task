@@ -1,10 +1,10 @@
 {
     "name": "type-task",
-    "version": "0.1.0-beta3",
+    "version": "0.1.0-beta4",
     "description": "type-task is task manager via AOP, IOC.",
     "main": "./lib/index.js",
     "bin": {
-        "type-task": "node ./bin/type-task.js"
+        "type-task": "./bin/type-task.js"
     },
     "engines": {
         "node": ">= 8.9"
