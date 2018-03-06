@@ -38,12 +38,84 @@ const cli = new Liftoff({
   configName: 'taskfile',
   extensions: {
     '.js': null,
-    '.json': null,
+    '.babel.js': [
+      {
+        module: 'babel-register',
+        register: function (module) {
+          module({
+            // register on .js extension due to https://github.com/joyent/node/blob/v0.12.0/lib/module.js#L353
+            // which only captures the final extension (.babel.js -> .js)
+            extensions: '.js'
+          });
+        }
+      },
+      {
+        module: 'babel-core/register',
+        register: function (module) {
+          module({
+            extensions: '.js'
+          });
+        }
+      },
+      {
+        module: 'babel/register',
+        register: function (module) {
+          module({
+            extensions: '.js'
+          });
+        }
+      }
+    ],
+    '.buble.js': 'buble/register',
+    '.cirru': 'cirru-script/lib/register',
+    '.cjsx': 'node-cjsx/register',
+    '.co': 'coco',
+    '.coffee': ['coffeescript/register', 'coffee-script/register', 'coffeescript', 'coffee-script'],
+    '.coffee.md': ['coffeescript/register', 'coffee-script/register', 'coffeescript', 'coffee-script'],
+    '.eg': 'earlgrey/register',
+    '.iced': ['iced-coffee-script/register', 'iced-coffee-script'],
+    '.iced.md': 'iced-coffee-script/register',
+    '.jsx': [
+      {
+        module: 'babel-register',
+        register: function (module) {
+          module({
+            extensions: '.jsx'
+          });
+        }
+      },
+      {
+        module: 'babel-core/register',
+        register: function (module) {
+          module({
+            extensions: '.jsx'
+          });
+        }
+      },
+      {
+        module: 'babel/register',
+        register: function (module) {
+          module({
+            extensions: '.jsx'
+          });
+        },
+      },
+      {
+        module: 'node-jsx',
+        register: function (module) {
+          module.install({
+            extension: '.jsx',
+            harmony: true
+          });
+        }
+      }
+    ],
+    '.litcoffee': ['coffeescript/register', 'coffee-script/register', 'coffeescript', 'coffee-script'],
+    '.liticed': 'iced-coffee-script/register',
+    '.ls': ['livescript', 'LiveScript'],
     '.ts': 'ts-node/register',
     '.tsx': 'ts-node/register',
-    '.xml': 'require-xml',
-    '.yaml': 'require-yaml',
-    '.yml': 'require-yaml'
+    '.wisp': 'wisp/engine/node'
   },
   v8flags: ['--harmony']
 });
@@ -96,7 +168,7 @@ cli.launch({
     console.log('Working directory changed to', chalk.magenta(env.cwd));
   }
 
+  console.log('Using taskfile', chalk.magenta(env.configPath));
   require(env.configPath);
 
-  console.log('Using taskfile', chalk.magenta(env.configPath));
 });
