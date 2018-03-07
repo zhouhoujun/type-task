@@ -1,5 +1,5 @@
 import { AsyncLoadOptions, Type, Token, Providers, ObjectMap } from 'tsioc';
-import { ITaskProvider } from './ITaskProvider';
+import { ITaskProvider, TaskProvider } from './ITaskProvider';
 import { IBuilder } from './IBuilder';
 import { TaskType } from '../utils/index';
 import { ITask } from './ITask';
@@ -18,7 +18,7 @@ export interface IConfigure {
      * @type {ITaskProvider}
      * @memberof IConfigure
      */
-    providers?: ITaskProvider;
+    providers?: TaskProvider | TaskProvider[];
 
     /**
      * boostrap tasks.

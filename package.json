@@ -1,17 +1,14 @@
 {
     "name": "type-task",
-    "version": "0.1.0-beta7",
+    "version": "0.1.0-beta8",
     "description": "type-task is task manager via AOP, IOC.",
     "main": "./lib/index.js",
     "bin": {
         "type-task": "./bin/type-task.js"
     },
-    "engines": {
-        "node": ">= 8.9"
-    },
     "typings": "./lib/index.d.ts",
     "scripts": {
-        "ts-node": "ts-node",
+        "postinstall": "npm prune",
         "reinstall": "npm cache clean && npm install",
         "test": "ts-node taskfile.ts",
         "prepublish": "ts-node taskfile.ts",
