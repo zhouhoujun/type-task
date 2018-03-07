@@ -1,6 +1,6 @@
 {
     "name": "type-task",
-    "version": "0.1.0-beta8",
+    "version": "0.1.0-beta9",
     "description": "type-task is task manager via AOP, IOC.",
     "main": "./lib/index.js",
     "bin": {
@@ -35,6 +35,7 @@
         "type": "git",
         "url": "https://github.com/zhouhoujun/type-task.git"
     },
+    "bundleDependencies": false,
     "dependencies": {
         "@types/chalk": "^2.2.0",
         "@types/vinyl-fs": "^2.4.8",
@@ -67,5 +68,6 @@
         "typescript-class-annotations": "^0.1.0",
         "zone.js": "^0.8.12"
     },
+    "deprecated": false,
     "homepage": "https://github.com/zhouhoujun/type-task#readme"
 }
