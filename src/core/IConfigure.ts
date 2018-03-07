@@ -18,7 +18,7 @@ export interface IConfigure {
      * @type {ITaskProvider}
      * @memberof IConfigure
      */
-    providers?: TaskProvider | TaskProvider[];
+    providers?: ITaskProvider;
 
     /**
      * boostrap tasks.

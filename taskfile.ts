@@ -1,4 +1,4 @@
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, PipeElement, ITaskComponent, IConfigure, PipeComponent, IPipeTaskProvider, TaskModule, ITransform, Src } from './src';
+import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, PipeElement, ITaskComponent, IConfigure, PipeComponent, IPipeElementProvider, TaskModule, ITransform, Src } from './src';
 import * as mocha from 'gulp-mocha';
 
 const del = require('del');
@@ -10,7 +10,7 @@ const uglify = require('gulp-uglify');
 import { classAnnotations } from 'typescript-class-annotations';
 
 @TaskModule({
-    providers: <IPipeTaskProvider>{
+    providers: <IPipeElementProvider>{
         name: 'tscomp',
         src: ['src/**/*.ts', '!src/cli/**'],
         dest: 'lib',

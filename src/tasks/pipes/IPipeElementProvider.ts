@@ -14,7 +14,7 @@ import { SrcOptions, DestOptions } from 'vinyl-fs';
  * @interface IPipeTaskProvider
  * @extends {ITaskProvider}
  */
-export interface IPipeTaskProvider extends ITaskProvider {
+export interface IPipeElementProvider extends ITaskProvider {
     src?: TaskSource<ITaskContext>;
     srcOptions?: SrcOptions;
     srcType?: Type<IPipeComponent<Src>>;
