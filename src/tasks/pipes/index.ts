@@ -4,6 +4,7 @@ export * from './IPipeComponent';
 export * from './IPipeTask';
 export * from './IPipeTaskProvider';
 export * from './PipeComponent';
+export * from './PipeElement';
 export * from './PipeDest';
 export * from './PipeSource';
 export * from './PipeStream';

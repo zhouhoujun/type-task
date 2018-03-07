@@ -1,14 +1,15 @@
-import { Task, TaskElement, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
+import { Task, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
 import { TaskSource, DestExpress, StreamExpress } from './pipeTypes';
 import { isArray, Abstract, isFunction, ObjectMap } from 'tsioc';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { ITaskContext } from '../../ITaskContext';
 import { Src } from '../../utils/index';
+import { PipeComponent } from './PipeComponent';
 import { DestOptions, dest } from 'vinyl-fs';
 
 @Task
-export class PipeDest extends TaskElement implements IPipeComponent<ITransform> {
+export class PipeDest extends PipeComponent<IPipeComponent<ITransform>> implements IPipeComponent<ITransform> {
 
     constructor(name: string, runWay = RunWay.seqFirst, protected dest: TaskSource<ITaskContext>, protected destPipes?: DestExpress<ITaskContext, ITransform>, protected options?: DestOptions) {
         super(name, runWay);

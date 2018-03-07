@@ -1,12 +1,13 @@
-import { Task, TaskElement, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
+import { Task, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
 import { isArray, Abstract, isFunction } from 'tsioc';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { ITaskContext } from '../../ITaskContext';
+import { PipeComponent } from './PipeComponent';
 import { StreamExpress } from './pipeTypes';
 
 @Task
-export class PipeStream extends TaskElement implements IPipeComponent<ITransform> {
+export class PipeStream extends PipeComponent<IPipeComponent<ITransform>> implements IPipeComponent<ITransform> {
 
     constructor(name: string, runWay = RunWay.seqFirst, protected pipes: StreamExpress<ITaskContext, ITransform>, protected awaitPiped = false) {
         super(name, runWay);

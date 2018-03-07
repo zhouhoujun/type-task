@@ -104,7 +104,7 @@ TaskContainer.create(__dirname)
 more simples [see](https://github.com/zhouhoujun/type-task/blob/master/test/simples.task.ts)
 
 ```ts
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, TaskComponent, ITaskComponent, IConfigure, PipeComponent, IPipeTaskProvider, TaskModule, ITransform, Src } from './src';
+import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, PipeElement, ITaskComponent, IConfigure, PipeComponent, IPipeTaskProvider, TaskModule, ITransform, Src } from './src';
 import * as mocha from 'gulp-mocha';
 
 const del = require('del');
@@ -145,7 +145,7 @@ import { classAnnotations } from 'typescript-class-annotations';
             ]
         }
     },
-    task: PipeComponent
+    task: PipeElement
 })
 class TsCompile extends TaskElement {
     constructor(name: string, private src?: Src, private dest?: Src) {
@@ -170,7 +170,7 @@ class TsCompile extends TaskElement {
         awaitPiped: true,
         pipes: [() => mocha()]
     },
-    task: PipeComponent
+    task: PipeElement
 })
 class TestTask extends TaskElement {
     execute(data?: any): Promise<any> {
@@ -186,10 +186,8 @@ TaskContainer.create(__dirname)
         },
         task: TsCompile
     }]);
-    
+
 ```
-
-
 
 ## Documentation [github](https://github.com/zhouhoujun/type-task.git)
 
