@@ -1,5 +1,5 @@
 import { Task, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
-import { TaskSource, DestExpress, StreamExpress } from './pipeTypes';
+import { TransformSource, DestExpress, TransformExpress, TransformMerger, TransformReference } from './pipeTypes';
 import { isArray, Abstract, isFunction, ObjectMap } from 'tsioc';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
@@ -9,22 +9,22 @@ import { PipeComponent } from './PipeComponent';
 import { DestOptions, dest } from 'vinyl-fs';
 
 @Task
-export class PipeDest extends PipeComponent<IPipeComponent<ITransform>> implements IPipeComponent<ITransform> {
+export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComponent {
 
-    constructor(name: string, runWay = RunWay.seqFirst, protected dest: TaskSource<ITaskContext>, protected destPipes?: DestExpress<ITaskContext, ITransform>, protected options?: DestOptions) {
-        super(name, runWay);
+    constructor(name: string, runWay = RunWay.seqFirst, protected dest: TransformSource, protected destPipes?: DestExpress, merger?: TransformMerger, reference?: TransformReference, protected options?: DestOptions) {
+        super(name, runWay, merger, reference);
     }
 
-    execute(data: ITransform): Promise<ITransform> {
+    pipe(transform: ITransform): Promise<ITransform> {
         let dest = isFunction(this.dest) ? this.dest(this.context) : this.dest;
 
         if (isArray(dest)) {
-            return Promise.all(dest.map(dist => this.writeStream(data, dist)))
+            return Promise.all(dest.map(dist => this.writeStream(transform, dist)))
                 .then(() => {
-                    return data;
+                    return transform;
                 });
         } else {
-            return this.writeStream(data, dest)
+            return this.writeStream(transform, dest)
         }
     }
 
@@ -80,7 +80,7 @@ export class PipeDest extends PipeComponent<IPipeComponent<ITransform>> implemen
         }
     }
 
-    protected pipeToPromise(stream: ITransform, pipes: StreamExpress<ITaskContext, ITransform>): Promise<ITransform> {
+    protected pipeToPromise(stream: ITransform, pipes: TransformExpress): Promise<ITransform> {
         if (!pipes) {
             return Promise.resolve(stream);
         }

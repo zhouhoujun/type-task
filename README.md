@@ -59,7 +59,7 @@ class DelComponentTask extends TaskElement {
 
 ``` ts
 @TaskModule({
-    providers: <IPipeTaskProvider>{
+    providers: <IPipeElementProvider>{
         name: 'tscomplie',
         src: 'src/**/*.ts',
         dest: 'lib',
@@ -70,7 +70,7 @@ class DelComponentTask extends TaskElement {
             (ctx) => tsProject()
         ]
     },
-    task: PipeComponent
+    task: PipeElement
 })
 class TsCompile extends TaskElement {
 }
@@ -104,7 +104,7 @@ TaskContainer.create(__dirname)
 more simples [see](https://github.com/zhouhoujun/type-task/blob/master/test/simples.task.ts)
 
 ```ts
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, PipeElement, ITaskComponent, IConfigure, PipeComponent, IPipeTaskProvider, TaskModule, ITransform, Src } from './src';
+import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, PipeElement, ITaskComponent, IConfigure, PipeComponent, IPipeElementProvider, TaskModule, ITransform, Src } from 'type-task';
 import * as mocha from 'gulp-mocha';
 
 const del = require('del');
@@ -116,7 +116,7 @@ const uglify = require('gulp-uglify');
 import { classAnnotations } from 'typescript-class-annotations';
 
 @TaskModule({
-    providers: <IPipeTaskProvider>{
+    providers: <IPipeElementProvider>{
         name: 'tscomp',
         src: ['src/**/*.ts', '!src/cli/**'],
         dest: 'lib',
@@ -186,6 +186,7 @@ TaskContainer.create(__dirname)
         },
         task: TsCompile
     }]);
+
 
 ```
 

@@ -4,17 +4,17 @@ import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { ITaskContext } from '../../ITaskContext';
 import { PipeComponent } from './PipeComponent';
-import { StreamExpress } from './pipeTypes';
+import { TransformExpress, TransformMerger, TransformReference } from './pipeTypes';
 
 @Task
-export class PipeStream extends PipeComponent<IPipeComponent<ITransform>> implements IPipeComponent<ITransform> {
+export class PipeStream extends PipeComponent<IPipeComponent> implements IPipeComponent {
 
-    constructor(name: string, runWay = RunWay.seqFirst, protected pipes: StreamExpress<ITaskContext, ITransform>, protected awaitPiped = false) {
-        super(name, runWay);
+    constructor(name: string, runWay = RunWay.seqFirst, protected pipes: TransformExpress, merger?: TransformMerger, reference?: TransformReference, protected awaitPiped = false) {
+        super(name, runWay, merger, reference);
     }
 
-    execute(data: ITransform): Promise<ITransform> {
-        let pStream = this.pipeToPromise(data);
+    pipe(transform: ITransform): Promise<ITransform> {
+        let pStream = this.pipeToPromise(transform);
         if (this.awaitPiped) {
             pStream = pStream.then(pipe => {
                 return new Promise((resolve, reject) => {
@@ -42,14 +42,14 @@ export class PipeStream extends PipeComponent<IPipeComponent<ITransform>> implem
         return pStream;
     }
 
-    protected pipeToPromise(stream: ITransform): Promise<ITransform> {
+    protected pipeToPromise(transform: ITransform): Promise<ITransform> {
         if (!this.pipes) {
-            return Promise.resolve(stream);
+            return Promise.resolve(transform);
         }
 
-        return Promise.resolve(isFunction(this.pipes) ? this.pipes(this.context, stream) : this.pipes)
+        return Promise.resolve(isFunction(this.pipes) ? this.pipes(this.context, transform) : this.pipes)
             .then(transforms => {
-                let pstream = stream;
+                let pstream = transform;
                 if (isArray(transforms)) {
                     transforms.forEach(transform => {
                         let pipe = isFunction(transform) ? transform(this.context, pstream) : transform;

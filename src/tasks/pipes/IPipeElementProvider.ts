@@ -1,5 +1,5 @@
 import { ITaskProvider } from '../../core/index';
-import { TaskSource, StreamExpress, DestExpress } from './pipeTypes';
+import { TransformSource, TransformExpress, DestExpress, TransformMerger, TransformReference } from './pipeTypes';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { Type } from 'tsioc';
@@ -15,16 +15,25 @@ import { SrcOptions, DestOptions } from 'vinyl-fs';
  * @extends {ITaskProvider}
  */
 export interface IPipeElementProvider extends ITaskProvider {
-    src?: TaskSource<ITaskContext>;
-    srcOptions?: SrcOptions;
-    srcType?: Type<IPipeComponent<Src>>;
+    merger?: TransformMerger;
+    reference?: TransformReference;
 
-    pipes?: StreamExpress<ITaskContext, ITransform>;
-    pipesType?:  Type<IPipeComponent<ITransform>>;
+    src?: TransformSource;
+    srcOptions?: SrcOptions;
+    srcType?: Type<IPipeComponent>;
+    srcMerger?: TransformMerger;
+    srcReference?: TransformReference;
+
+    pipes?: TransformExpress;
+    pipesType?: Type<IPipeComponent>;
+    pipesMerger?: TransformMerger;
+    pipesReference?: TransformReference;
     awaitPiped?: boolean;
 
-    dest?: TaskSource<ITaskContext>;
+    dest?: TransformSource;
+    destPipes?: DestExpress;
     destOptions?: DestOptions;
-    destType?: Type<IPipeComponent<Src>>;
-    destPipes?: DestExpress<ITaskContext, ITransform>;
+    destType?: Type<IPipeComponent>;
+    destMerger?: TransformMerger;
+    destReference?: TransformReference;
 }

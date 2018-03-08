@@ -1,33 +1,39 @@
 import { Task, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
 import { Src } from '../../utils/index';
 import { ITransform } from './ITransform';
-import { TaskSource } from './pipeTypes';
 import { isFunction, isString, isArray } from 'tsioc';
 import { ITaskContext } from '../../ITaskContext';
 import { src, SrcOptions } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';
 import { IPipeComponent } from './IPipeComponent';
+import { TransformSource, TransformMerger, TransformReference } from './pipeTypes';
 
 @Task
-export class PipeSource extends PipeComponent<IPipeComponent<Src>> implements IPipeComponent<Src>  {
+export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeComponent {
 
-    constructor(name: string, runWay = RunWay.seqFirst, protected src: TaskSource<ITaskContext>, protected options?: SrcOptions) {
-        super(name, runWay);
+    constructor(name: string, runWay = RunWay.paraLast, protected src: TransformSource, merger?: TransformMerger, reference?: TransformReference, protected options?: SrcOptions) {
+        super(name, runWay, merger, reference);
         this.options = Object.assign({ allowEmpty: true }, this.options || {});
     }
 
-    execute(data?: Src): Promise<ITransform> {
+    protected source(): ITransform {
         let source = isFunction(this.src) ? this.src(this.context) : this.src;
-        if (data && (isArray(data) || isString(data))) {
-            let srcs = isArray(source) ? source : [source];
-            let datas = isArray(data) ? data : [data];
-            datas.forEach(data => {
-                if (isString(data)) {
-                    srcs.push(data);
-                }
-            });
-            source = srcs.filter(src => !!src);
+        return src(source, this.options);
+    }
+
+    protected mergeTransforms(data: ITransform | ITransform[]): ITransform {
+        let newTransform = this.source();
+        let merger = this.getMerger();
+        if (data && merger) {
+            let transforms = isArray(data) ? data : [data];
+            transforms.push(newTransform);
+            return merger.merge(transforms);
+        } else {
+            return newTransform;
         }
-        return Promise.resolve(src(source, this.options));
+    }
+
+    protected pipe(transform: ITransform): Promise<ITransform> {
+        return Promise.resolve(transform);
     }
 }

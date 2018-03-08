@@ -1,8 +1,10 @@
 
-export * from './ITransform';
 export * from './IPipeComponent';
-export * from './IPipeTask';
 export * from './IPipeElementProvider';
+export * from './IPipeTask';
+export * from './ITransform';
+export * from './ITransformMerger';
+export * from './ITransformReference';
 export * from './PipeComponent';
 export * from './PipeElement';
 export * from './PipeDest';

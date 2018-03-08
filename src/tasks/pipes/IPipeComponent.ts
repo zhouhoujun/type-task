@@ -10,13 +10,13 @@ import { ITransform } from './ITransform';
  * @extends {ITaskComponent}
  * @template T
  */
-export interface IPipeComponent<T> extends ITaskComponent {
+export interface IPipeComponent extends ITaskComponent {
     /**
      * run task.
      *
-     * @param {T} [data]
+     * @param {(ITransform | ITransform[])} [data]
      * @returns {Promise<ITransform>}
      * @memberof IPipeComponent
      */
-    run(data?: T): Promise<ITransform>;
+    run(data?: ITransform | ITransform[]): Promise<ITransform>;
 }

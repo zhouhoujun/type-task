@@ -1,18 +1,35 @@
 import { ITaskProvider } from '../../core/index';
 import { Src } from '../../utils';
-import { ITaskContainer } from '../../ITaskContainer';
+import { ITaskContext } from '../../ITaskContext';
 import { ITransform } from './ITransform';
-import { ObjectMap } from 'tsioc';
+import { ObjectMap, Type } from 'tsioc';
+import { IPipeTask } from './IPipeTask';
+import { ITransformMerger } from './ITransformMerger';
+import { ITransformReference } from './ITransformReference';
 
 /**
- * task source.
+ * transform source.
  */
-export type TaskSource<T> = Src | ((context?: T) => Src);
+export type TransformSource = Src | ((context?: ITaskContext) => Src);
 
 /**
- * task express.
+ * task transform express.
  */
-export type StreamExpress<T, TResult extends ITransform> = ((context?: T, transform?: ITransform) => (TResult | ((context?: T, transform?: ITransform) => TResult))[]) | ((context?: T, transform?: ITransform) => TResult)[];
+export type TransformExpress = ((context?: ITaskContext, transform?: ITransform) => (ITransform | ((context?: ITaskContext, transform?: ITransform) => ITransform))[])
+    | ((context?: ITaskContext, transform?: ITransform) => ITransform)[];
 
+/**
+ * transform dest express
+ */
+export type DestExpress = ObjectMap<TransformExpress> | TransformExpress;
 
-export type DestExpress<T, TResult extends ITransform> = ObjectMap<StreamExpress<T, TResult>> | StreamExpress<T, TResult>;
+/**
+ * transform merger.
+ */
+export type TransformMerger = ((transforms: ITransform[]) => ITransform) | ITransformMerger | Type<ITransformMerger>;
+
+/**
+ * transfrom reference
+ */
+export type TransformReference = ((transform: ITransform) => Promise<ITransform>) | ITransformReference | Type<ITransformReference>;
+
