@@ -88,7 +88,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
             .then(transform => {
                 let reference = this.getReference();
                 if (reference) {
-                    return reference.bindRefer(transform);
+                    return reference.bindReference(transform);
                 } else {
                     return transform;
                 }

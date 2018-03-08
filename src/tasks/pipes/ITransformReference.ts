@@ -15,5 +15,5 @@ export interface ITransformReference {
      * @returns {Promise<ITransform>}
      * @memberof ITransformReference
      */
-    bindRefer(transform: ITransform): Promise<ITransform>;
+    bindReference(transform: ITransform): Promise<ITransform>;
 }

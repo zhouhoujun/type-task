@@ -19,11 +19,11 @@ export abstract class PipeReference extends PipeStream implements IPipeComponent
     pipe(transform: ITransform): Promise<ITransform> {
         return super.pipe(transform)
             .then(transform => {
-                return this.bindRefer(transform);
+                return this.bindReference(transform);
             })
     }
 
-    bindRefer(transform: ITransform): Promise<ITransform> {
+    bindReference(transform: ITransform): Promise<ITransform> {
         return this.getReferSource(transform)
             .then(refTransform => {
                 refTransform = refTransform || [];
