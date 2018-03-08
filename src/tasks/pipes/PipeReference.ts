@@ -7,20 +7,17 @@ import { PipeComponent } from './PipeComponent';
 import { TransformExpress, TransformMerger, TransformReference } from './pipeTypes';
 import { PipeStream } from './PipeStream';
 import { ITransformReference } from './ITransformReference';
-import { PipeSource } from '.';
+import { IPipeTask } from './IPipeTask';
 
 @Abstract()
-export abstract class PipeReference extends PipeStream implements IPipeComponent, ITransformReference {
+export abstract class PipeReference extends AbstractTask implements IPipeTask<ITransform>, ITransformReference {
 
-    constructor(name: string, runWay = RunWay.seqFirst, pipes: TransformExpress, merger?: TransformMerger, reference?: TransformReference, awaitPiped = false) {
-        super(name, runWay, pipes, merger, reference, awaitPiped);
+    constructor(name: string) {
+        super(name);
     }
 
-    pipe(transform: ITransform): Promise<ITransform> {
-        return super.pipe(transform)
-            .then(transform => {
-                return this.bindReference(transform);
-            })
+    run(data: ITransform): Promise<ITransform> {
+        return this.bindReference(data);
     }
 
     bindReference(transform: ITransform): Promise<ITransform> {
