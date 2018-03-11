@@ -3,8 +3,10 @@ import { taskSymbols } from './utils/index';
 import { ITask, IBuilder, IConfigure, BootsrapTask, registerTaskCoreDecorators, Task, TaskModule } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 import { TaskLogAspect } from './aop/index';
-import { registerTaskModules } from './tasks';
+import { registerTaskModules } from './tasks/index';
 import chalk from 'chalk';
+import { ITaskContext } from './ITaskContext';
+
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
 /**
@@ -77,12 +79,12 @@ export class TaskContainer implements ITaskContainer {
     /**
      * bootstrap task.
      *
-     * @param {BootsrapTask} tasks
+     * @param {BootsrapTask} [tasks]
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof TaskContainer
      */
-    bootstrap(tasks: BootsrapTask, ...providers: Providers[]): Promise<any> {
+    bootstrap(tasks?: BootsrapTask, ...providers: Providers[]): Promise<any> {
         let builder = this.containerBuilder;
         let start, end;
         start = process.hrtime();
@@ -91,16 +93,30 @@ export class TaskContainer implements ITaskContainer {
         return Promise.all(this.useModules.map(option => {
             return builder.loadModule(this.container, option);
         })).then((types) => {
-            if (isArray(tasks)) {
+            if (!tasks) {
+                let runTasks = this.container.resolve<ITaskContext>(taskSymbols.ITaskContext)
+                    .getRunTasks();
+
                 let seq = Promise.resolve();
-                tasks.forEach(task => {
+                runTasks.forEach(task => {
                     seq = seq.then(data => {
                         return this.runTask(task, ...providers);
                     })
                 });
                 return seq;
+
             } else {
-                return this.runTask(tasks, ...providers);
+                if (isArray(tasks)) {
+                    let seq = Promise.resolve();
+                    tasks.forEach(task => {
+                        seq = seq.then(data => {
+                            return this.runTask(task, ...providers);
+                        })
+                    });
+                    return seq;
+                } else {
+                    return this.runTask(tasks, ...providers);
+                }
             }
         })
             .then(

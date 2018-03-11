@@ -1,6 +1,6 @@
-import { Task, ITask, ITaskComponent, TaskComponent } from '../../core/index';
+import { Task, ITask, RunWay, ITaskComponent, TaskComponent } from '../../core/index';
 import { ITransform } from './ITransform';
-import { RunWay } from '../../core/index';
+import {  } from '../../core/index';
 import { IPipeComponent } from './IPipeComponent';
 import { Abstract, isArray, isClass, isFunction } from 'tsioc';
 import { TransformMerger, TransformReference } from './pipeTypes';

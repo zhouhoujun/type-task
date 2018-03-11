@@ -47,11 +47,11 @@ export interface ITaskContainer {
     /**
      * bootstarp task.
      *
-     * @param {BootsrapTask} tasks
+     * @param {BootsrapTask} [tasks]
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof ITaskContainer
      */
-    bootstrap(tasks: BootsrapTask, ...providers: Providers[]): Promise<any>;
+    bootstrap(tasks?: BootsrapTask, ...providers: Providers[]): Promise<any>;
 
 }

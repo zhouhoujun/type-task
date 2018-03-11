@@ -8,11 +8,22 @@ Please file issues and pull requests against that repo.
 
 ## Install
 
+1. install modules:
+
 ```shell
-
-npm install type-task
-
+npm install -g type-task
 ```
+
+2. install cil:
+
+```shell
+npm install type-task
+```
+
+use command: `type-task [task names] [--param param]`
+
+taskname: decorator class with `@Task('taskname')` or `@TaskModule({name:'taskname'})`.
+
 
 You can `import` modules:
 

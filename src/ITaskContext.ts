@@ -1,6 +1,7 @@
 import { Src } from './utils/index';
-import { Express, IContainer, IContainerBuilder } from 'tsioc';
+import { Express, IContainer, IContainerBuilder, ObjectMap } from 'tsioc';
 import { ITaskContainer } from './ITaskContainer';
+
 
 /**
  * task environment.
@@ -33,6 +34,22 @@ export interface ITaskContext {
      * @memberof ITaskContext
      */
     taskContainer: ITaskContainer;
+
+    /**
+     * get process env agrs.
+     * 
+     * @returns {*} 
+     * @memberof ITaskContext
+     */
+    getEnvArgs(): ObjectMap<any>;
+
+    /**
+     * get run tasks via cil cammand options.
+     * 
+     * @returns {string[]} 
+     * @memberof ITaskContext
+     */
+    getRunTasks(): string[];
 
     /**
      * get development root.

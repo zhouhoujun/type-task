@@ -1,9 +1,11 @@
-import { toAbsolutePath, Singleton, Express, Express2, Inject, symbols, IContainer, IContainerBuilder } from 'tsioc';
+import { toAbsolutePath, Singleton, Express, Express2, Inject, symbols, IContainer, IContainerBuilder, ObjectMap } from 'tsioc';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
 import { ITaskContext } from '../ITaskContext';
 import { taskSymbols } from '../utils/index';
 import { ITaskContainer } from '../ITaskContainer';
+
+const minimist = require('minimist');
 
 /**
  * TaskContext.
@@ -28,6 +30,18 @@ export class TaskContext implements ITaskContext {
 
     get containerBuilder(): IContainerBuilder {
         return this.taskContainer.containerBuilder;
+    }
+
+    private args: ObjectMap<any>;
+    getEnvArgs(): ObjectMap<any> {
+        if (this.args) {
+            this.args = minimist(process.argv.slice(2));
+        }
+        return this.args;
+    }
+
+    getRunTasks(): string[] {
+        return this.getEnvArgs()._  ||  ['default'];
     }
 
     /**
