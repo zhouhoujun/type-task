@@ -25,6 +25,12 @@ export interface ITaskContainer {
      */
     container: IContainer;
 
+    /**
+     * container builder.
+     * 
+     * @type {IContainerBuilder}
+     * @memberof ITaskContainer
+     */
     containerBuilder: IContainerBuilder;
 
     /**
