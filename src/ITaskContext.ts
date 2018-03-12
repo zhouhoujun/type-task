@@ -37,16 +37,16 @@ export interface ITaskContext {
 
     /**
      * get process env agrs.
-     * 
-     * @returns {*} 
+     *
+     * @returns {*}
      * @memberof ITaskContext
      */
     getEnvArgs(): ObjectMap<any>;
 
     /**
      * get run tasks via cil cammand options.
-     * 
-     * @returns {string[]} 
+     *
+     * @returns {string[]}
      * @memberof ITaskContext
      */
     getRunTasks(): string[];
