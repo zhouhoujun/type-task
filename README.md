@@ -68,7 +68,7 @@ class DelComponentTask extends TaskElement {
 
 * Task module
 
-``` ts
+```ts
 @TaskModule({
     providers: <IPipeElementProvider>{
         name: 'tscomplie',
