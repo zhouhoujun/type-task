@@ -46,13 +46,13 @@ export class PipeStream extends PipeComponent<IPipeComponent> implements IPipeCo
         if (!this.pipes) {
             return Promise.resolve(transform);
         }
-
-        return Promise.resolve(isFunction(this.pipes) ? this.pipes(this.context, transform) : this.pipes)
+        let config = this.getConfig();
+        return Promise.resolve(isFunction(this.pipes) ? this.pipes(this.context, config, transform) : this.pipes)
             .then(transforms => {
                 let pstream = transform;
                 if (isArray(transforms)) {
                     transforms.forEach(transform => {
-                        let pipe = isFunction(transform) ? transform(this.context, pstream) : transform;
+                        let pipe = isFunction(transform) ? transform(this.context, config, pstream) : transform;
                         if (pipe.changeAsOrigin) {
                             pstream = pipe;
                         } else {

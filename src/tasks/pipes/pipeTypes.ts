@@ -1,4 +1,4 @@
-import { ITaskProvider } from '../../core/index';
+import { ITaskProvider, IConfigure } from '../../core/index';
 import { Src } from '../../utils';
 import { ITaskContext } from '../../ITaskContext';
 import { ITransform } from './ITransform';
@@ -10,13 +10,18 @@ import { ITransformReference } from './ITransformReference';
 /**
  * transform source.
  */
-export type TransformSource = Src | ((context?: ITaskContext) => Src);
+export type TransformSource = Src | ((context?: ITaskContext, config?: IConfigure) => Src);
+
+/**
+ * pipe express
+ */
+export type PipeExpress = (context?: ITaskContext, config?: IConfigure, transform?: ITransform) => ITransform;
 
 /**
  * task transform express.
  */
-export type TransformExpress = ((context?: ITaskContext, transform?: ITransform) => (ITransform | ((context?: ITaskContext, transform?: ITransform) => ITransform))[])
-    | ((context?: ITaskContext, transform?: ITransform) => ITransform)[];
+export type TransformExpress = ((context?: ITaskContext, config?: IConfigure, transform?: ITransform) => (ITransform | PipeExpress)[])
+    | PipeExpress[];
 
 /**
  * transform dest express
@@ -32,4 +37,3 @@ export type TransformMerger = ((transforms: ITransform[]) => ITransform) | ITran
  * transfrom reference
  */
 export type TransformReference = ((transform: ITransform) => Promise<ITransform>) | ITransformReference | Type<ITransformReference>;
-

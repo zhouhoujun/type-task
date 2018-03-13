@@ -29,6 +29,14 @@ export interface IConfigure {
     task: Type<ITask>;
 
     /**
+     * task target instance.
+     *
+     * @type {ITask}
+     * @memberof IConfigure
+     */
+    target?: ITask;
+
+    /**
      * builder
      *
      * @type {IBuilder}

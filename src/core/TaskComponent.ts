@@ -36,6 +36,10 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
         this.config = config;
     }
 
+    getConfig(): IConfigure {
+        return this.find(cmp => !!cmp.config, Mode.route).config;
+    }
+
 
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
         this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
@@ -100,6 +104,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     protected build(container: IContainer) {
         if (this.config) {
+            this.config.target = this;
             return container.resolve<IBuilder>(this.config.builder || taskSymbols.IBuilder)
                 .build(this.config, this)
                 .then(() => {

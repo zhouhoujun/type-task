@@ -17,7 +17,7 @@ export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeCo
     }
 
     protected source(): ITransform {
-        let source = isFunction(this.src) ? this.src(this.context) : this.src;
+        let source = isFunction(this.src) ? this.src(this.context, this.getConfig()) : this.src;
         return src(source, this.options);
     }
 

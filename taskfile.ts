@@ -22,7 +22,7 @@ import { classAnnotations } from 'typescript-class-annotations';
         ],
         destPipes: {
             js: [
-                (ctx, transform) => {
+                (ctx, config, transform) => {
                     let trans: ITransform = transform.js;
                     trans.changeAsOrigin = true;
                     return trans;
@@ -31,7 +31,7 @@ import { classAnnotations } from 'typescript-class-annotations';
                 (ctx) => sourcemaps.write('./sourcemaps')
             ],
             dts: [
-                (ctx, transform) => {
+                (ctx, config, transform) => {
                     let tans: ITransform = transform.dts;
                     tans.changeAsOrigin = true;
                     return tans;
