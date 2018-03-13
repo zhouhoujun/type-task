@@ -90,11 +90,13 @@ export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComp
                 let pstream = stream;
                 if (isArray(transforms)) {
                     transforms.forEach(transform => {
-                        let pipe = isFunction(transform) ? transform(this.context, config, pstream) : transform;
-                        if (pipe.changeAsOrigin) {
-                            pstream = pipe;
-                        } else {
-                            pstream = pstream.pipe(pipe);
+                        if (transform) {
+                            let pipe = isFunction(transform) ? transform(this.context, config, pstream) : transform;
+                            if (pipe.changeAsOrigin) {
+                                pstream = pipe;
+                            } else {
+                                pstream = pstream.pipe(pipe);
+                            }
                         }
                     });
                 }
