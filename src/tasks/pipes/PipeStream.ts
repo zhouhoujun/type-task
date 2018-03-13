@@ -41,16 +41,16 @@ export class PipeStream extends PipeComponent<IPipeComponent> implements IPipeCo
         let pStream = this.pipeToPromise(transform);
         if (this.awaitPiped) {
             pStream = pStream.then(pipe => {
+                if (!pipe) {
+                    return null;
+                }
+
                 return new Promise((resolve, reject) => {
-                    if (pipe) {
-                        pipe
-                            .once('end', () => {
-                                resolve();
-                            })
-                            .once('error', reject);
-                    } else {
-                        resolve();
-                    }
+                    pipe
+                        .once('end', () => {
+                            resolve();
+                        })
+                        .once('error', reject);
                 }).then(() => {
                     pipe.removeAllListeners('error');
                     pipe.removeAllListeners('end');
@@ -74,7 +74,7 @@ export class PipeStream extends PipeComponent<IPipeComponent> implements IPipeCo
         return Promise.resolve(isFunction(this.pipes) ? this.pipes(this.context, config, transform) : this.pipes)
             .then(transforms => {
                 let pstream = transform;
-                if (isArray(transforms)) {
+                if (pstream && isArray(transforms)) {
                     transforms.forEach(transform => {
                         if (transform) {
                             let pipe = isFunction(transform) ? transform(this.context, config, pstream) : transform;

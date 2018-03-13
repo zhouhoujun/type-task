@@ -66,16 +66,17 @@ export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComp
                 let transforms = isArray(streams) ? streams : [streams];
                 return Promise.all(transforms.map(transform => {
                     let output = transform.pipe(dest(this.context.toRootPath(dist), this.options));
+                    if (!output) {
+                        return null;
+                    }
+
                     return new Promise((resolve, reject) => {
-                        if (output) {
-                            output
-                                .once('end', () => {
-                                    resolve();
-                                })
-                                .once('error', reject);
-                        } else {
-                            resolve();
-                        }
+                        output
+                            .once('end', () => {
+                                resolve();
+                            })
+                            .once('error', reject);
+
                     }).then(() => {
                         output.removeAllListeners('error');
                         output.removeAllListeners('end');
@@ -120,7 +121,7 @@ export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComp
         return Promise.resolve(isFunction(pipes) ? pipes(this.context, config, stream) : pipes)
             .then(transforms => {
                 let pstream = stream;
-                if (isArray(transforms)) {
+                if (pstream && isArray(transforms)) {
                     transforms.forEach(transform => {
                         if (transform) {
                             let pipe = isFunction(transform) ? transform(this.context, config, pstream) : transform;
