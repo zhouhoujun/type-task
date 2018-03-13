@@ -1,10 +1,34 @@
 import { Task, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
 import { isArray, Abstract, isFunction } from 'tsioc';
 import { ITransform } from './ITransform';
-import { IPipeComponent } from './IPipeComponent';
+import { IPipeComponent, IPipeComponentProvider } from './IPipeComponent';
 import { ITaskContext } from '../../ITaskContext';
 import { PipeComponent } from './PipeComponent';
 import { TransformExpress, TransformMerger, TransformReference } from './pipeTypes';
+
+/**
+ * pipe stream provider
+ *
+ * @export
+ * @interface IPipeStreamProvider
+ * @extends {IPipeComponentProvider}
+ */
+export interface IPipeStreamProvider extends IPipeComponentProvider {
+    /**
+     * pipe stream.
+     *
+     * @type {TransformExpress}
+     * @memberof IPipeStreamProvider
+     */
+    pipes?: TransformExpress;
+    /**
+     * await piped.
+     *
+     * @type {boolean}
+     * @memberof IPipeStreamProvider
+     */
+    awaitPiped?: boolean;
+}
 
 @Task
 export class PipeStream extends PipeComponent<IPipeComponent> implements IPipeComponent {

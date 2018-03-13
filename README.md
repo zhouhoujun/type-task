@@ -127,16 +127,15 @@ const uglify = require('gulp-uglify');
 import { classAnnotations } from 'typescript-class-annotations';
 
 
+
 @TaskModule({
     providers: <IPipeElementProvider>{
         name: 'TsCompile',
-        dest: 'lib',
         pipes: [
             () => cache('typescript'),
-            () => classAnnotations(),
             sourcemaps.init,
             (ctx, config) => {
-                let target = config.target as TsCompile;
+                let target = config.moduleTarget as TsCompile;
                 if (target.tsconfig) {
                     return ts(target.tsconfig);
                 } else {
@@ -153,7 +152,7 @@ import { classAnnotations } from 'typescript-class-annotations';
                     return trans;
                 },
                 (ctx, config) => {
-                    let target = config.target as TsCompile;
+                    let target = config.moduleTarget as TsCompile;
                     if (target.uglify) {
                         return isBoolean(target.uglify) ? uglify() : uglify(target.uglify);
                     }
@@ -173,16 +172,32 @@ import { classAnnotations } from 'typescript-class-annotations';
     task: PipeElement
 })
 class TsCompile extends TaskElement {
-    constructor(name: string, public src?: Src, public dest?: Src, public tsconfigFile?: string, public tsconfig?: ObjectMap<any>, public uglify?: boolean | ObjectMap<any>) {
+
+    constructor(name: string, public src?: Src, public dest?: Src, private tsPipes?: TransformExpress, private jsPipes?: TransformExpress, public tsconfigFile?: string, public tsconfig?: ObjectMap<any>, public uglify?: boolean | ObjectMap<any>) {
         super(name);
     }
 
     onInit() {
+        let providers = this.config.providers as IPipeElementProvider;
         if (this.src) {
-            this.config.providers.src = this.src;
+            providers.src = this.src;
         }
         if (this.dest) {
-            this.config.providers.dest = this.dest;
+            providers.dest = this.dest;
+        }
+        if (this.tsPipes) {
+            let pipes: (ITransform | PipeExpress)[] = isFunction(providers.pipes) ? providers.pipes(this.context, this.getConfig()) : providers.pipes;
+            let tsPipes: (ITransform | PipeExpress)[] = isFunction(this.tsPipes) ? this.tsPipes(this.context, this.config) : this.tsPipes;
+            pipes.splice(1, 0, ...tsPipes);
+            providers.pipes = pipes;
+        }
+
+        if (this.jsPipes) {
+            let destPipes: any = isFunction(providers.destPipes) ? providers.destPipes(this.context, this.getConfig()) : providers.destPipes;
+            destPipes.js = isFunction(destPipes.js) ? destPipes.js(this.context, this.config) : destPipes.js;
+            let jsPipes: (ITransform | PipeExpress)[] = isFunction(this.jsPipes) ? this.jsPipes(this.context, this.config) : this.jsPipes;
+            destPipes.js.splice(1, 0, ...jsPipes);
+            providers.destPipes = destPipes;
         }
     }
 }

@@ -6,6 +6,7 @@ import { IConfigure } from './IConfigure';
 import { ITaskContext } from '../ITaskContext';
 import { taskSymbols, TaskType } from '../utils/index';
 import { ITask } from './ITask';
+import { isFunction } from 'util';
 
 /**
  * builder.
@@ -43,6 +44,9 @@ export class Builder implements IBuilder {
     }
 
     async buildChildren(parent: ITaskComponent, configs: IConfigure[]) {
+        if (!isFunction(parent.add)) {
+            return;
+        }
         await Promise.all(configs.map(async ctx => {
             let node = await this.buildComponent(ctx);
             parent.add(node);

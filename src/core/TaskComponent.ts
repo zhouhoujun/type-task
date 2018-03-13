@@ -104,7 +104,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     protected build(container: IContainer) {
         if (this.config) {
-            this.config.target = this;
+            this.config.moduleTarget = this;
             return container.resolve<IBuilder>(this.config.builder || taskSymbols.IBuilder)
                 .build(this.config, this)
                 .then(() => {

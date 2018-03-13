@@ -7,6 +7,31 @@ import { src, SrcOptions } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';
 import { IPipeComponent } from './IPipeComponent';
 import { TransformSource, TransformMerger, TransformReference } from './pipeTypes';
+import { IPipeComponentProvider } from '.';
+
+/**
+ * source provider.
+ *
+ * @export
+ * @interface IPipeSourceProvider
+ * @extends {IPipeComponentProvider}
+ */
+export interface IPipeSourceProvider extends IPipeComponentProvider {
+    /**
+     * source
+     *
+     * @type {TransformSource}
+     * @memberof IPipeSourceProvider
+     */
+    src?: TransformSource;
+    /**
+     * source options.
+     *
+     * @type {SrcOptions}
+     * @memberof IPipeSourceProvider
+     */
+    options?: SrcOptions;
+}
 
 @Task
 export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeComponent {

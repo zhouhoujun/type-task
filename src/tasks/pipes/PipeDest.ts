@@ -2,11 +2,43 @@ import { Task, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
 import { TransformSource, DestExpress, TransformExpress, TransformMerger, TransformReference } from './pipeTypes';
 import { isArray, Abstract, isFunction, ObjectMap } from 'tsioc';
 import { ITransform } from './ITransform';
-import { IPipeComponent } from './IPipeComponent';
+import { IPipeComponentProvider, IPipeComponent } from './IPipeComponent';
 import { ITaskContext } from '../../ITaskContext';
 import { Src } from '../../utils/index';
 import { PipeComponent } from './PipeComponent';
 import { DestOptions, dest } from 'vinyl-fs';
+
+
+/**
+ * pipe dest provider.
+ *
+ * @export
+ * @interface IPipeDestProvider
+ * @extends {IPipeComponentProvider}
+ */
+export interface IPipeDestProvider extends IPipeComponentProvider {
+    /**
+     * dest source.
+     *
+     * @type {TransformSource}
+     * @memberof IPipeDestProvider
+     */
+    dest?: TransformSource;
+    /**
+     * dest pipes.
+     *
+     * @type {DestExpress}
+     * @memberof IPipeDestProvider
+     */
+    destPipes?: DestExpress;
+    /**
+     * source options.
+     *
+     * @type {DestOptions}
+     * @memberof IPipeDestProvider
+     */
+    options?: DestOptions;
+}
 
 @Task
 export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComponent {

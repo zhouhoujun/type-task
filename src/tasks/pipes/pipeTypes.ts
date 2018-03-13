@@ -21,7 +21,7 @@ export type PipeExpress = (context?: ITaskContext, config?: IConfigure, transfor
  * task transform express.
  */
 export type TransformExpress = ((context?: ITaskContext, config?: IConfigure, transform?: ITransform) => (ITransform | PipeExpress)[])
-    | PipeExpress[];
+    | (ITransform | PipeExpress)[];
 
 /**
  * transform dest express
