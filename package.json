@@ -35,7 +35,6 @@
         "type": "git",
         "url": "https://github.com/zhouhoujun/type-task.git"
     },
-    "bundleDependencies": false,
     "dependencies": {
         "@types/chalk": "^2.2.0",
         "@types/vinyl-fs": "^2.4.8",
