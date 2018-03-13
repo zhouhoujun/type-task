@@ -126,16 +126,24 @@ let tsProject = ts.createProject('tsconfig.json');
 const uglify = require('gulp-uglify');
 import { classAnnotations } from 'typescript-class-annotations';
 
+
 @TaskModule({
     providers: <IPipeElementProvider>{
-        name: 'tscomp',
-        src: ['src/**/*.ts', '!src/cli/**'],
+        name: 'TsCompile',
         dest: 'lib',
         pipes: [
-            (ctx) => cache('typescript'),
-            (ctx) => classAnnotations(),
+            () => cache('typescript'),
+            () => classAnnotations(),
             sourcemaps.init,
-            (ctx) => tsProject()
+            (ctx, config) => {
+                let target = config.target as TsCompile;
+                if (target.tsconfig) {
+                    return ts(target.tsconfig);
+                } else {
+                    let tsProject = ts.createProject(ctx.toRootPath(target.tsconfigFile || './tsconfig.json'));
+                    return tsProject();
+                }
+            }
         ],
         destPipes: {
             js: [
@@ -144,7 +152,13 @@ import { classAnnotations } from 'typescript-class-annotations';
                     trans.changeAsOrigin = true;
                     return trans;
                 },
-                (ctx) => uglify(),
+                (ctx, config) => {
+                    let target = config.target as TsCompile;
+                    if (target.uglify) {
+                        return isBoolean(target.uglify) ? uglify() : uglify(target.uglify);
+                    }
+                    return null;
+                },
                 (ctx) => sourcemaps.write('./sourcemaps')
             ],
             dts: [
@@ -159,7 +173,7 @@ import { classAnnotations } from 'typescript-class-annotations';
     task: PipeElement
 })
 class TsCompile extends TaskElement {
-    constructor(name: string, private src?: Src, private dest?: Src) {
+    constructor(name: string, public src?: Src, public dest?: Src, public tsconfigFile?: string, public tsconfig?: ObjectMap<any>, public uglify?: boolean | ObjectMap<any>) {
         super(name);
     }
 
