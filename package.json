@@ -1,6 +1,6 @@
 {
     "name": "type-task",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "type-task is task manager via AOP, IOC.",
     "main": "./lib/index.js",
     "bin": {
@@ -45,7 +45,7 @@
         "pretty-hrtime": "^1.0.3",
         "reflect-metadata": "^0.1.8",
         "time-stamp": "^2.0.0",
-        "tsioc": "^1.4.1",
+        "tsioc": "^1.4.2",
         "vinyl-fs": "^3.0.2"
     },
     "devDependencies": {

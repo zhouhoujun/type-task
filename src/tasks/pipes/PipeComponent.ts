@@ -57,7 +57,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
                 } else if (isFunction(this.reference)) {
                     let func = this.reference;
                     this._reference = {
-                        bindRefer: (transform: ITransform) => func(transform)
+                        bindReference: (transform: ITransform) => func(transform)
                     }
                 }
             } else {
@@ -111,7 +111,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
         } else {
             tranform = data;
         }
-        return tranform;
+        return (tranform && isFunction(tranform.pipe)) ? tranform as ITransform : null;
     }
 
     /**

@@ -71,7 +71,6 @@ export class Builder implements IBuilder {
             this.context.container.register(config.task);
         }
         let providers = isArray(config.providers) ? config.providers : [config.providers];
-
         return this.context.container.resolve<ITaskComponent>(config.task, ...providers);
     }
 }

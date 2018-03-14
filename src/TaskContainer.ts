@@ -100,7 +100,7 @@ export class TaskContainer implements ITaskContainer {
                 let seq = Promise.resolve();
                 runTasks.forEach(task => {
                     seq = seq.then(data => {
-                        return this.runTask(task, ...providers);
+                        return this.runTask(task, data,  ...providers);
                     })
                 });
                 return seq;
@@ -110,12 +110,12 @@ export class TaskContainer implements ITaskContainer {
                     let seq = Promise.resolve();
                     tasks.forEach(task => {
                         seq = seq.then(data => {
-                            return this.runTask(task, ...providers);
+                            return this.runTask(task, data, ...providers);
                         })
                     });
                     return seq;
                 } else {
-                    return this.runTask(tasks, ...providers);
+                    return this.runTask(tasks, undefined, ...providers);
                 }
             }
         })
@@ -132,7 +132,7 @@ export class TaskContainer implements ITaskContainer {
                 });
     }
 
-    protected runTask(task: IConfigure | Token<any>, ...providers: Providers[]): Promise<any> {
+    protected runTask(task: IConfigure | Token<any>, data?: any, ...providers: Providers[]): Promise<any> {
         if (isToken(task)) {
             if (!this.container.has(task)) {
                 if (isClass(task) && this.isTask(task)) {
@@ -143,24 +143,24 @@ export class TaskContainer implements ITaskContainer {
             }
             let instance = this.container.resolve(task, ...providers);
             if (isFunction(instance.run)) {
-                return instance.run();
+                return instance.run(data);
             } else if (instance.config && isClass(instance.config.task) && this.isTask(instance.config.task)) {
-                let ctx = instance.config as IConfigure;
-                return this.runContext(ctx);
+                let cfg = instance.config as IConfigure;
+                return this.runContext(cfg, data);
             } else {
                 return Promise.reject(`${JSON.stringify(instance)} is not vaild task instance.`);
             }
 
         } else {
-            return this.runContext(task);
+            return this.runContext(task, data);
         }
     }
 
-    protected runContext(ctx: IConfigure) {
-        return this.container.resolve<IBuilder>(ctx.builder || taskSymbols.IBuilder)
-            .build(ctx)
+    protected runContext(cfg: IConfigure, data?: any) {
+        return this.container.resolve<IBuilder>(cfg.builder || taskSymbols.IBuilder)
+            .build(cfg)
             .then(task => {
-                return task.run();
+                return task.run(data);
             });
     }
 
