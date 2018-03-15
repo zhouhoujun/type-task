@@ -1,12 +1,11 @@
 import { IBuilder } from './IBuilder';
 import { ITaskComponent } from './ITaskComponent';
-import { Type, hasOwnClassMetadata, Inject, symbols, IContainer, Injectable, Providers, Singleton, isArray, isClass } from 'tsioc';
+import { Type, hasOwnClassMetadata, isFunction, Inject, symbols, IContainer, Injectable, Providers, Singleton, isArray, isClass } from 'tsioc';
 import { Task } from './decorators/index';
 import { IConfigure } from './IConfigure';
 import { ITaskContext } from '../ITaskContext';
 import { taskSymbols, TaskType } from '../utils/index';
 import { ITask } from './ITask';
-import { isFunction } from 'util';
 
 /**
  * builder.
