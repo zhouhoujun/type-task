@@ -1,4 +1,4 @@
-import { createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass } from 'tsioc';
+import { createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass, isArray } from 'tsioc';
 import { IConfigure } from '../IConfigure';
 
 /**
@@ -33,7 +33,7 @@ export const TaskModule: ITaskClassDecorator<TaskModuleMetadata> =
     createClassDecorator<TaskModuleMetadata>('TaskModule',
         args => {
             args.next<TaskModuleMetadata>({
-                match: (arg) => arg && isClass(arg.task),
+                match: (arg) => arg && (isClass(arg.task) || isArray(arg.children)),
                 setMetadata: (metadata, arg) => {
                     metadata.config = arg;
                 }

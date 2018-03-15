@@ -1,11 +1,11 @@
-import { Task, ITask, RunWay, ITaskComponent, TaskComponent, ITaskProvider, IConfigure } from '../../core/index';
+import { Task, ITask, RunWay, ITaskComponent, TaskComponent, ITaskProvider, IConfigure, TaskModule } from '../../core/index';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isClass, isFunction, IContainer } from 'tsioc';
+import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata } from 'tsioc';
 import { TransformMerger, TransformExpress, TransformType } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { ITaskOption } from '../../core/ITaskOption';
-import { IPipeTask } from '.';
+import { IPipeTask } from './IPipeTask';
 
 
 /**

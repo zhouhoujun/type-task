@@ -26,11 +26,18 @@ export class Builder implements IBuilder {
     }
 
     async build(config: IConfigure, root?: ITaskComponent): Promise<ITaskComponent> {
-        let component = await this.buildComponent(config);
-        if (root) {
-            root.add(component)
+        let component;
+        if (config.task) {
+            component = await this.buildComponent(config);
+        }
+        if (component) {
+            if (root) {
+                root.add(component)
+            } else {
+                root = component;
+            }
         } else {
-            root = component;
+            component = root || config.moduleTarget;
         }
 
         if (config.children && config.children.length) {
@@ -49,11 +56,13 @@ export class Builder implements IBuilder {
         }
         await Promise.all(configs.map(async ctx => {
             let node = await this.buildComponent(ctx);
+            if (!node) {
+                return;
+            }
             parent.add(node);
             if (ctx.children && ctx.children.length) {
-                this.buildChildren(node, this.toConfigures(ctx.children));
+               await this.buildChildren(node, this.toConfigures(ctx.children));
             }
-            return parent;
         }));
     }
 
@@ -66,11 +75,16 @@ export class Builder implements IBuilder {
     }
 
     async buildComponent(config: IConfigure): Promise<ITaskComponent> {
-        await this.loadModules(config.loader);
-        if (!this.context.container.has(config.task) && isClass(config.task)) {
-            this.context.container.register(config.task);
+        if (config.loader) {
+            await this.loadModules(config.loader);
         }
-        let providers = isArray(config.providers) ? config.providers : [config.providers];
-        return this.context.container.resolve<ITaskComponent>(config.task, ...providers);
+        if (config.task) {
+            if (!this.context.container.has(config.task) && isClass(config.task)) {
+                this.context.container.register(config.task);
+            }
+            let providers = isArray(config.providers) ? config.providers : [config.providers];
+            return this.context.container.resolve<ITaskComponent>(config.task, ...providers);
+        }
+        return null
     }
 }

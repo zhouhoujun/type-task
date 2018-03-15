@@ -11,6 +11,7 @@ export * from './IBuilder';
 export * from './Builder';
 export * from './ITask';
 export * from './AbstractTask';
+export * from './ITaskOption';
 export * from './IConfigure';
 export * from './ITaskProvider';
 

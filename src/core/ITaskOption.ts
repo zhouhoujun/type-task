@@ -19,5 +19,5 @@ export interface ITaskOption<T extends ITask> {
      * @type {Type<T>}
      * @memberof IContext
      */
-    task: Type<T>;
+    task?: Type<T>;
 }
