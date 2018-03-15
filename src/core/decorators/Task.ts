@@ -34,7 +34,12 @@ export function createTaskDecorator<T extends TaskMetadata>(
             }
 
             if (!metadata.name && isClass(metadata.type)) {
-                metadata.name = metadata.type.classAnnations ? metadata.type.classAnnations.name : metadata.type.name;
+                let isuglify = /^[a-z]$/.test(metadata.type.name);
+                if (isuglify && metadata.type.classAnnations) {
+                    metadata.name = metadata.type.classAnnations.name;
+                } else {
+                    metadata.name = metadata.type.name;
+                }
             }
             if (!metadata.provide) {
                 metadata.provide = metadata.name;
