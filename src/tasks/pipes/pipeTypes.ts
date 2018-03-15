@@ -5,7 +5,6 @@ import { ITransform } from './ITransform';
 import { ObjectMap, Type } from 'tsioc';
 import { IPipeComponent } from './IPipeComponent';
 import { ITransformMerger } from './ITransformMerger';
-import { ITransformReference } from './ITransformReference';
 import { ITaskOption } from '../../core/ITaskOption';
 
 /**
