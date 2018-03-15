@@ -1,8 +1,9 @@
 import { AsyncLoadOptions, Type, Token, Providers, ObjectMap } from 'tsioc';
-import { ITaskProvider, TaskProvider } from './ITaskProvider';
+import { ITaskProvider } from './ITaskProvider';
 import { IBuilder } from './IBuilder';
 import { TaskType } from '../utils/index';
 import { ITask } from './ITask';
+import { ITaskOption } from './ITaskOption';
 
 /**
  * task context.
@@ -10,23 +11,7 @@ import { ITask } from './ITask';
  * @export
  * @interface IContext
  */
-export interface IConfigure {
-
-    /**
-     * task providers
-     *
-     * @type {ITaskProvider}
-     * @memberof IConfigure
-     */
-    providers?: ITaskProvider;
-
-    /**
-     * boostrap tasks.
-     *
-     * @type {Type<ITask>}
-     * @memberof IContext
-     */
-    task: Type<ITask>;
+export interface IConfigure extends ITaskOption<ITask> {
 
     /**
      * config module target instance.
@@ -62,4 +47,4 @@ export interface IConfigure {
 }
 
 
-export type BootsrapTask = IConfigure | Token<any> | (Token<any>|IConfigure)[];
+export type BootsrapTask = IConfigure | Token<any> | (Token<any> | IConfigure)[];

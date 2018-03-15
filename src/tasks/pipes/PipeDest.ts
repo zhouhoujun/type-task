@@ -1,6 +1,6 @@
 import { Task, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
-import { TransformSource, DestExpress, TransformExpress, TransformMerger, TransformReference } from './pipeTypes';
-import { isArray, Abstract, isFunction, ObjectMap } from 'tsioc';
+import { TransformSource, DestExpress, TransformExpress, TransformMerger } from './pipeTypes';
+import { isArray, Abstract, isFunction, ObjectMap, isClass } from 'tsioc';
 import { ITransform } from './ITransform';
 import { IPipeComponentProvider, IPipeComponent } from './IPipeComponent';
 import { ITaskContext } from '../../ITaskContext';
@@ -43,8 +43,8 @@ export interface IPipeDestProvider extends IPipeComponentProvider {
 @Task
 export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComponent {
 
-    constructor(name: string, runWay = RunWay.seqFirst, protected dest: TransformSource, protected destPipes?: DestExpress, merger?: TransformMerger, reference?: TransformReference, protected options?: DestOptions) {
-        super(name, runWay, merger, reference);
+    constructor(name: string, runWay = RunWay.seqFirst, protected dest: TransformSource, protected destPipes?: DestExpress, merger?: TransformMerger, protected options?: DestOptions) {
+        super(name, runWay, merger);
     }
 
     pipe(transform: ITransform): Promise<ITransform> {
@@ -113,29 +113,4 @@ export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComp
         }
     }
 
-    protected pipeToPromise(stream: ITransform, pipes: TransformExpress): Promise<ITransform> {
-        if (!pipes) {
-            return Promise.resolve(stream);
-        }
-        let config = this.getConfig();
-        return Promise.resolve(isFunction(pipes) ? pipes(this.context, config, stream) : pipes)
-            .then(transforms => {
-                let pstream = stream;
-                if (pstream && isArray(transforms)) {
-                    transforms.forEach(transform => {
-                        if (transform) {
-                            let pipe = isFunction(transform) ? transform(this.context, config, pstream) : transform;
-                            if (pipe && isFunction(pipe.pipe)) {
-                                if (pipe.changeAsOrigin) {
-                                    pstream = pipe;
-                                } else {
-                                    pstream = pstream.pipe(pipe);
-                                }
-                            }
-                        }
-                    });
-                }
-                return pstream;
-            });
-    }
 }

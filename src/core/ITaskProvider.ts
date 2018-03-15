@@ -27,4 +27,3 @@ export interface ITaskProvider extends ObjectMap<any> {
     runWay?: RunWay;
 }
 
-export type TaskProvider = ITaskProvider | Providers;

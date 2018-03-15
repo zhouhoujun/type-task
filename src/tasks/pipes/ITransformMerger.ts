@@ -1,18 +1,12 @@
 import { ITransform } from './ITransform';
+import { IPipeTask } from './IPipeTask';
 
 /**
- * transforms merger.
+ * transforms merger task.
  *
  * @export
  * @interface ITransformMerger
  */
-export interface ITransformMerger {
-    /**
-     * merge transforms
-     *
-     * @param {ITransform[]} transforms
-     * @returns {ITransform}
-     * @memberof ITransformMerger
-     */
-    merge(transforms: ITransform[]): ITransform;
+export interface ITransformMerger extends IPipeTask<ITransform[]> {
+
 }

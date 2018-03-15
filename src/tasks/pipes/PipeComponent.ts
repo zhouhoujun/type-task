@@ -1,10 +1,11 @@
-import { Task, ITask, RunWay, ITaskComponent, TaskComponent, ITaskProvider } from '../../core/index';
+import { Task, ITask, RunWay, ITaskComponent, TaskComponent, ITaskProvider, IConfigure } from '../../core/index';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isClass, isFunction } from 'tsioc';
-import { TransformMerger, TransformReference } from './pipeTypes';
+import { Abstract, isArray, isClass, isFunction, IContainer } from 'tsioc';
+import { TransformMerger, TransformExpress, TransformType } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
-import { ITransformReference } from './ITransformReference';
+import { ITaskOption } from '../../core/ITaskOption';
+import { IPipeTask } from '.';
 
 
 /**
@@ -23,50 +24,11 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
     constructor(
         name: string,
         runWay = RunWay.seqFirst,
-        protected merger?: TransformMerger,
-        protected reference?: TransformReference
+        protected merger?: TransformMerger
     ) {
         super(name, runWay);
     }
 
-    private _merger;
-    getMerger(): ITransformMerger {
-        if (!this._merger) {
-            if (this.merger) {
-                if (isClass(this.merger)) {
-                    this._merger = this.context.container.resolve(this.merger);
-                } else if (isFunction(this.merger)) {
-                    let func = this.merger;
-                    this._merger = {
-                        merge: (transforms: ITransform[]) => func(transforms)
-                    }
-                } else {
-                    this._merger = this.merger;
-                }
-            }
-        }
-        return this._merger;
-    }
-
-    private _reference;
-    getReference(): ITransformReference {
-        if (!this._reference) {
-            if (this.reference) {
-                if (isClass(this.reference)) {
-                    this._reference = this.context.container.resolve(this.reference);
-                } else if (isFunction(this.reference)) {
-                    let func = this.reference;
-                    this._reference = {
-                        bindReference: (transform: ITransform) => func(transform)
-                    }
-                }
-            } else {
-                this._reference = this.reference;
-            }
-        }
-
-        return this._reference;
-    }
 
     run(data?: ITransform | ITransform[]): Promise<ITransform> {
         return super.run(data)
@@ -84,15 +46,8 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      * @memberof TaskComponent
      */
     protected execute(data: ITransform | ITransform[]): Promise<ITransform> {
-        return this.pipe(this.mergeTransforms(data))
-            .then(transform => {
-                let reference = this.getReference();
-                if (reference) {
-                    return reference.bindReference(transform);
-                } else {
-                    return transform;
-                }
-            });
+        return this.mergeTransforms(data)
+            .then(pstream => this.pipe(pstream));
     }
 
     /**
@@ -103,15 +58,35 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      * @returns {ITransform}
      * @memberof PipeComponent
      */
-    protected mergeTransforms(data: ITransform | ITransform[]): ITransform {
-        let tranform;
-        if (isArray(data) && data.length) {
-            let merger = this.getMerger();
-            tranform = merger ? merger.merge(data) : data[0];
-        } else {
-            tranform = data;
+    protected mergeTransforms(data: ITransform | ITransform[]): Promise<ITransform> {
+        let ptranform: Promise<ITransform>;
+        if (isArray(data)) {
+            if (this.merger) {
+                if (isClass(this.merger)) {
+                    if (this.isTask(this.merger)) {
+                        ptranform = this.runPipeTask(this.context.container, data, { task: this.merger })
+                    }
+                } else if (isFunction(this.merger)) {
+                    ptranform = Promise.resolve(this.merger(data));
+                } else {
+                    if (isFunction(this.merger['run'])) {
+                        let merger = this.merger as ITransformMerger;
+                        ptranform = merger.run(data);
+                    } else if (isClass(this.merger['task'])) {
+                        let opt = this.merger as ITaskOption<ITransformMerger>;
+                        if (this.isTask(opt.task)) {
+                            ptranform = this.runPipeTask(this.context.container, data, opt);
+                        }
+                    }
+                }
+            }
         }
-        return (tranform && isFunction(tranform.pipe)) ? tranform as ITransform : null;
+
+        if (!ptranform) {
+            ptranform = Promise.resolve(isArray(data) ? data[0] : data);
+        }
+
+        return ptranform.then(tranform => (tranform && isFunction(tranform.pipe)) ? tranform as ITransform : null);
     }
 
     /**
@@ -124,5 +99,73 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      * @memberof PipeComponent
      */
     protected abstract pipe(transform: ITransform): Promise<ITransform>;
+
+
+    /**
+     * pipe to promise.
+     *
+     * @protected
+     * @param {ITransform} source
+     * @param {TransformExpress} pipes
+     * @returns {Promise<ITransform>}
+     * @memberof PipeComponent
+     */
+    protected pipeToPromise(source: ITransform, pipes: TransformExpress): Promise<ITransform> {
+        if (!pipes) {
+            return Promise.resolve(source);
+        }
+        let config = this.getConfig();
+        return Promise.resolve(isFunction(pipes) ? pipes(this.context, config, source) : pipes)
+            .then(transforms => {
+                transforms = transforms || [];
+                let pstream = Promise.resolve(source);
+                transforms.forEach(transform => {
+                    if (transform) {
+                        pstream = pstream
+                            .then(stream => {
+                                return this.executePipe(stream, transform, config);
+                            });
+                    }
+                });
+
+                return pstream;
+            });
+    }
+
+    protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Promise<ITransform> {
+        let rpstram: Promise<ITransform>
+        if (isClass(transform)) {
+            rpstram = this.runPipeTask(this.context.container, stream, { task: transform });
+        } else if (isFunction(transform)) {
+            rpstram = Promise.resolve(transform(this.context, config, stream));
+        } else {
+            if (isClass(transform['task'])) {
+                let opt = transform as ITaskOption<IPipeComponent>;
+                rpstram = this.runPipeTask(this.context.container, stream, opt);
+            } else {
+                rpstram = Promise.resolve(transform as ITransform);
+            }
+        }
+        return rpstram.then(pst => {
+            if (pst && isFunction(pst.pipe)) {
+                if (pst.changeAsOrigin) {
+                    stream = pst;
+                } else {
+                    stream = stream.pipe(pst);
+                }
+            }
+            return stream;
+        });
+    }
+
+    protected runPipeTask(container: IContainer, source: ITransform | ITransform[], pipeOption: ITaskOption<IPipeTask<any>>): Promise<ITransform> {
+        if (pipeOption && this.isTask(pipeOption.task)) {
+            if (!container.has(pipeOption.task)) {
+                container.register(pipeOption.task);
+            }
+            return container.resolve(pipeOption.task, pipeOption.providers).run(source);
+        }
+        return Promise.resolve(null);
+    }
 
 }

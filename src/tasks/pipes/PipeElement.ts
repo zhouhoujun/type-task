@@ -1,7 +1,7 @@
 import { Task, TaskElement } from '../../core/index';
 import { ITransform } from './ITransform';
 import { RunWay } from '../../core/index';
-import { TransformSource, TransformExpress, DestExpress, TransformMerger, TransformReference } from './pipeTypes';
+import { TransformSource, TransformExpress, DestExpress, TransformMerger } from './pipeTypes';
 import { ITaskContext } from '../../ITaskContext';
 import { Type } from 'tsioc';
 import { IPipeComponent } from './IPipeComponent';
@@ -23,28 +23,24 @@ export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeC
         name: string,
         runWay = RunWay.seqFirst,
         merger?: TransformMerger,
-        reference?: TransformReference,
 
         private src?: TransformSource,
         private srcOptions?: SrcOptions,
         private srcType?: Type<IPipeComponent>,
         private srcMerger?: TransformMerger,
-        private srcReference?: TransformReference,
 
         private pipes?: TransformExpress,
         private pipesType?: Type<IPipeComponent>,
         private pipesMerger?: TransformMerger,
-        private pipesReference?: TransformReference,
         private awaitPiped?: boolean,
 
         private dest?: TransformSource,
         private destPipes?: DestExpress,
         private destOptions?: DestOptions,
         private destType?: Type<IPipeComponent>,
-        private destMerger?: TransformMerger,
-        private destReference?: TransformReference
+        private destMerger?: TransformMerger
     ) {
-        super(name, runWay, merger, reference);
+        super(name, runWay, merger);
     }
 
     onInit() {
@@ -52,18 +48,18 @@ export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeC
         if (this.src) {
             this.add(container.resolve<IPipeComponent>(
                 this.srcType || 'PipeSource',
-                { name: `${this.name}-src`, src: this.src, options: this.srcOptions, merger: this.srcMerger, reference: this.srcReference }));
+                { name: `${this.name}-src`, src: this.src, options: this.srcOptions, merger: this.srcMerger }));
         }
         if (this.pipes) {
             this.add(container.resolve<IPipeComponent>(
                 this.pipesType || 'PipeStream',
-                { name: `${this.name}-pipes`, pipes: this.pipes, awaitPiped: !!this.awaitPiped, merger: this.pipesMerger, reference: this.pipesReference }))
+                { name: `${this.name}-pipes`, pipes: this.pipes, awaitPiped: !!this.awaitPiped, merger: this.pipesMerger }))
         }
 
         if (this.dest) {
             this.add(container.resolve<IPipeComponent>(
                 this.destType || 'PipeDest',
-                { name: `${this.name}-dest`, dest: this.dest, destPipes: this.destPipes, options: this.destOptions, merger: this.destMerger, reference: this.destReference }))
+                { name: `${this.name}-dest`, dest: this.dest, destPipes: this.destPipes, options: this.destOptions, merger: this.destMerger }))
         }
     }
 

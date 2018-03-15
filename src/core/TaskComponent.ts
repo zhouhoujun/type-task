@@ -3,7 +3,7 @@ import { ITaskComponent } from './ITaskComponent';
 import { TaskContext } from './TaskContext';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
-import { Task } from './decorators/index';
+import { Task, TaskModule } from './decorators/index';
 import { RunWay } from './RunWay';
 import { Defer, taskSymbols } from '../utils/index';
 import { IBuilder } from './IBuilder';
@@ -123,4 +123,8 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
      * @memberof TaskComponent
      */
     protected abstract execute(data: any): Promise<any>;
+
+    protected isTask(task: Type<ITask>): boolean {
+        return hasOwnClassMetadata(Task, task) || hasOwnClassMetadata(TaskModule, task);
+    }
 }

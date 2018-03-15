@@ -1,5 +1,5 @@
 import { ITaskProvider } from '../../core/index';
-import { TransformSource, TransformExpress, DestExpress, TransformMerger, TransformReference } from './pipeTypes';
+import { TransformSource, TransformExpress, DestExpress, TransformMerger } from './pipeTypes';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { Type } from 'tsioc';
@@ -22,13 +22,6 @@ export interface IPipeElementProvider extends ITaskProvider {
      * @memberof IPipeElementProvider
      */
     merger?: TransformMerger;
-    /**
-     * bind reference.
-     *
-     * @type {TransformReference}
-     * @memberof IPipeElementProvider
-     */
-    reference?: TransformReference;
 
     /**
      * transform source.
@@ -58,13 +51,6 @@ export interface IPipeElementProvider extends ITaskProvider {
      * @memberof IPipeElementProvider
      */
     srcMerger?: TransformMerger;
-    /**
-     * source reference transform.
-     *
-     * @type {TransformReference}
-     * @memberof IPipeElementProvider
-     */
-    srcReference?: TransformReference;
 
     /**
      * transform pipes
@@ -87,13 +73,7 @@ export interface IPipeElementProvider extends ITaskProvider {
      * @memberof IPipeElementProvider
      */
     pipesMerger?: TransformMerger;
-    /**
-     * pipes reference transform.
-     *
-     * @type {TransformReference}
-     * @memberof IPipeElementProvider
-     */
-    pipesReference?: TransformReference;
+
     /**
      * await piped complete.
      *
@@ -137,11 +117,4 @@ export interface IPipeElementProvider extends ITaskProvider {
      * @memberof IPipeElementProvider
      */
     destMerger?: TransformMerger;
-    /**
-     * dest pipe reference merger.
-     *
-     * @type {TransformReference}
-     * @memberof IPipeElementProvider
-     */
-    destReference?: TransformReference;
 }

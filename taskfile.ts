@@ -1,4 +1,4 @@
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, PipeElement, ITaskComponent, IConfigure, PipeComponent, IPipeElementProvider, TaskModule, ITransform, Src, PipeExpress, RunWay, TransformExpress } from './src';
+import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, PipeElement, ITaskComponent, IConfigure, PipeComponent, IPipeElementProvider, TaskModule, ITransform, Src, PipeExpress, RunWay, TransformExpress, TransformType } from './src';
 import * as mocha from 'gulp-mocha';
 
 const del = require('del');
@@ -75,8 +75,8 @@ export class TsCompile extends TaskElement {
         }
 
         if (this.tsPipes) {
-            let pipes: (ITransform | PipeExpress)[] = isFunction(providers.pipes) ? providers.pipes(this.context, this.config) : providers.pipes;
-            let tsPipes: (ITransform | PipeExpress)[] = isFunction(this.tsPipes) ? this.tsPipes(this.context, this.config) : this.tsPipes;
+            let pipes: TransformType[] = isFunction(providers.pipes) ? providers.pipes(this.context, this.config) : providers.pipes;
+            let tsPipes: TransformType[] = isFunction(this.tsPipes) ? this.tsPipes(this.context, this.config) : this.tsPipes;
             pipes.splice(1, 0, ...tsPipes);
             providers.pipes = pipes;
         }
@@ -84,7 +84,7 @@ export class TsCompile extends TaskElement {
         if (this.jsPipes) {
             let destPipes: any = isFunction(providers.destPipes) ? providers.destPipes(this.context, this.config) : providers.destPipes;
             destPipes.js = isFunction(destPipes.js) ? destPipes.js(this.context, this.config) : destPipes.js;
-            let jsPipes: (ITransform | PipeExpress)[] = isFunction(this.jsPipes) ? this.jsPipes(this.context, this.config) : this.jsPipes;
+            let jsPipes: TransformType[] = isFunction(this.jsPipes) ? this.jsPipes(this.context, this.config) : this.jsPipes;
             destPipes.js.splice(1, 0, ...jsPipes);
             providers.destPipes = destPipes;
         }

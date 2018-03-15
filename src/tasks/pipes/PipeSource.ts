@@ -6,7 +6,7 @@ import { ITaskContext } from '../../ITaskContext';
 import { src, SrcOptions } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';
 import { IPipeComponent } from './IPipeComponent';
-import { TransformSource, TransformMerger, TransformReference } from './pipeTypes';
+import { TransformSource, TransformMerger } from './pipeTypes';
 import { IPipeComponentProvider } from '.';
 
 /**
@@ -36,8 +36,8 @@ export interface IPipeSourceProvider extends IPipeComponentProvider {
 @Task
 export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeComponent {
 
-    constructor(name: string, runWay = RunWay.paraLast, protected src: TransformSource, merger?: TransformMerger, reference?: TransformReference, protected options?: SrcOptions) {
-        super(name, runWay, merger, reference);
+    constructor(name: string, runWay = RunWay.paraLast, protected src: TransformSource, merger?: TransformMerger, protected options?: SrcOptions) {
+        super(name, runWay, merger);
         this.options = Object.assign({ allowEmpty: true }, this.options || {});
     }
 
@@ -46,15 +46,14 @@ export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeCo
         return src(source, this.options);
     }
 
-    protected mergeTransforms(data: ITransform | ITransform[]): ITransform {
+    protected mergeTransforms(data: ITransform | ITransform[]): Promise<ITransform> {
         let newTransform = this.source();
-        let merger = this.getMerger();
-        if (data && merger) {
+        if (data) {
             let transforms = isArray(data) ? data : [data];
             transforms.push(newTransform);
-            return merger.merge(transforms);
+            return super.mergeTransforms(transforms);
         } else {
-            return newTransform;
+            return Promise.resolve(newTransform);
         }
     }
 

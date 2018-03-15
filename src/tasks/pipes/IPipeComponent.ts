@@ -1,7 +1,7 @@
 import { IPipeTask } from './IPipeTask';
 import { ITaskComponent, ITaskProvider } from '../../core/index';
 import { ITransform } from './ITransform';
-import { TransformMerger, TransformReference } from './pipeTypes';
+import { TransformMerger } from './pipeTypes';
 
 /**
  * pipe component provider.
@@ -18,13 +18,6 @@ export interface IPipeComponentProvider extends ITaskProvider {
      * @memberof IPipeComponentProvider
      */
     merger?: TransformMerger;
-    /**
-     * reference transform.
-     *
-     * @type {TransformReference}
-     * @memberof IPipeComponentProvider
-     */
-    reference?: TransformReference;
 }
 
 /**

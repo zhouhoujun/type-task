@@ -115,25 +115,24 @@ TaskContainer.create(__dirname)
 more simples [see](https://github.com/zhouhoujun/type-task/blob/master/test/simples.task.ts)
 
 ```ts
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, PipeElement, ITaskComponent, IConfigure, PipeComponent, IPipeElementProvider, TaskModule, ITransform, Src } from 'type-task';
+import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, PipeElement, ITaskComponent, IConfigure, PipeComponent, IPipeElementProvider, TaskModule, ITransform, Src, PipeExpress, RunWay, TransformExpress, TransformType } from 'type-task';
 import * as mocha from 'gulp-mocha';
 
 const del = require('del');
 const cache = require('gulp-cached');
 const ts = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
-let tsProject = ts.createProject('tsconfig.json');
 const uglify = require('gulp-uglify');
 import { classAnnotations } from 'typescript-class-annotations';
-
+import { isFunction, isBoolean, ObjectMap } from 'tsioc';
 
 
 @TaskModule({
     providers: <IPipeElementProvider>{
-        name: 'TsCompile',
         pipes: [
             () => cache('typescript'),
             sourcemaps.init,
+            () => classAnnotations(),
             (ctx, config) => {
                 let target = config.moduleTarget as TsCompile;
                 if (target.tsconfig) {
@@ -171,37 +170,44 @@ import { classAnnotations } from 'typescript-class-annotations';
     },
     task: PipeElement
 })
-class TsCompile extends TaskElement {
+export class TsCompile extends TaskElement {
 
-    constructor(name: string, public src?: Src, public dest?: Src, private tsPipes?: TransformExpress, private jsPipes?: TransformExpress, public tsconfigFile?: string, public tsconfig?: ObjectMap<any>, public uglify?: boolean | ObjectMap<any>) {
-        super(name);
+    constructor(name: string, runWay?: RunWay, public src?: Src, public dest?: Src,
+        private tsPipes?: TransformExpress, private jsPipes?: TransformExpress,
+        public tsconfigFile?: string, public tsconfig?: ObjectMap<any>, public uglify?: boolean | ObjectMap<any>) {
+        super(name, runWay);
     }
 
     onInit() {
         let providers = this.config.providers as IPipeElementProvider;
+
+        console.log('src:', this.src, 'dest:', this.dest, 'providers:', providers);
+
         if (this.src) {
             providers.src = this.src;
         }
+
         if (this.dest) {
             providers.dest = this.dest;
         }
+
         if (this.tsPipes) {
-            let pipes: (ITransform | PipeExpress)[] = isFunction(providers.pipes) ? providers.pipes(this.context, this.getConfig()) : providers.pipes;
-            let tsPipes: (ITransform | PipeExpress)[] = isFunction(this.tsPipes) ? this.tsPipes(this.context, this.config) : this.tsPipes;
+            let pipes: TransformType[] = isFunction(providers.pipes) ? providers.pipes(this.context, this.config) : providers.pipes;
+            let tsPipes: TransformType[] = isFunction(this.tsPipes) ? this.tsPipes(this.context, this.config) : this.tsPipes;
             pipes.splice(1, 0, ...tsPipes);
             providers.pipes = pipes;
         }
 
         if (this.jsPipes) {
-            let destPipes: any = isFunction(providers.destPipes) ? providers.destPipes(this.context, this.getConfig()) : providers.destPipes;
+            let destPipes: any = isFunction(providers.destPipes) ? providers.destPipes(this.context, this.config) : providers.destPipes;
             destPipes.js = isFunction(destPipes.js) ? destPipes.js(this.context, this.config) : destPipes.js;
-            let jsPipes: (ITransform | PipeExpress)[] = isFunction(this.jsPipes) ? this.jsPipes(this.context, this.config) : this.jsPipes;
+            let jsPipes: TransformType[] = isFunction(this.jsPipes) ? this.jsPipes(this.context, this.config) : this.jsPipes;
             destPipes.js.splice(1, 0, ...jsPipes);
             providers.destPipes = destPipes;
         }
+        this.config.providers = providers;
     }
 }
-
 
 @TaskModule({
     providers: {
@@ -219,13 +225,26 @@ class TestTask extends TaskElement {
 }
 
 TaskContainer.create(__dirname)
-    .bootstrap([TestTask, TsCompile, {
-        providers: {
-            src: 'src/cli/*.ts',
-            dest: 'bin'
+    .bootstrap([
+        TestTask,
+        {
+            providers: {
+                name: 'tscompLIB',
+                src: ['src/**/*.ts', '!src/cli/**'],
+                dest: 'lib',
+                uglify: true
+            },
+            task: TsCompile
         },
-        task: TsCompile
-    }]);
+        {
+            providers: {
+                name: 'tscompCLI',
+                src: 'src/cli/*.ts',
+                dest: 'bin',
+                uglify: true
+            },
+            task: TsCompile
+        }]);
 
 
 ```
