@@ -1,11 +1,11 @@
-import { Task, ITask, RunWay, ITaskComponent, TaskComponent, ITaskProvider, IConfigure, TaskModule } from '../../core/index';
+import { Task, ITask, ITaskOption, RunWay, IBuilder, ITaskComponent, TaskComponent, ITaskProvider, IConfigure, TaskModule } from '../../core/index';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata } from 'tsioc';
 import { TransformMerger, TransformExpress, TransformType } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
-import { ITaskOption } from '../../core/ITaskOption';
 import { IPipeTask } from './IPipeTask';
+import { taskSymbols } from '../../utils/index';
 
 
 /**
@@ -64,7 +64,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
             if (this.merger) {
                 if (isClass(this.merger)) {
                     if (this.isTask(this.merger)) {
-                        ptranform = this.runPipeTask(this.context.container, data, { task: this.merger })
+                        ptranform = this.runByConfig({ task: this.merger }, data)
                     }
                 } else if (isFunction(this.merger)) {
                     ptranform = Promise.resolve(this.merger(data));
@@ -75,7 +75,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
                     } else if (isClass(this.merger['task'])) {
                         let opt = this.merger as ITaskOption<ITransformMerger>;
                         if (this.isTask(opt.task)) {
-                            ptranform = this.runPipeTask(this.context.container, data, opt);
+                            ptranform = this.runByConfig(opt, data, );
                         }
                     }
                 }
@@ -135,13 +135,13 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
     protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Promise<ITransform> {
         let rpstram: Promise<ITransform>
         if (isClass(transform)) {
-            rpstram = this.runPipeTask(this.context.container, stream, { task: transform });
+            rpstram = this.runByConfig({ task: transform }, stream);
         } else if (isFunction(transform)) {
             rpstram = Promise.resolve(transform(this.context, config, stream));
         } else {
             if (isClass(transform['task'])) {
                 let opt = transform as ITaskOption<IPipeComponent>;
-                rpstram = this.runPipeTask(this.context.container, stream, opt);
+                rpstram = this.runByConfig(opt, stream);
             } else {
                 rpstram = Promise.resolve(transform as ITransform);
             }
@@ -156,16 +156,6 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
             }
             return stream;
         });
-    }
-
-    protected runPipeTask(container: IContainer, source: ITransform | ITransform[], pipeOption: ITaskOption<IPipeTask<any>>): Promise<ITransform> {
-        if (pipeOption && this.isTask(pipeOption.task)) {
-            if (!container.has(pipeOption.task)) {
-                container.register(pipeOption.task);
-            }
-            return container.resolve(pipeOption.task, pipeOption.providers).run(source);
-        }
-        return Promise.resolve(null);
     }
 
 }

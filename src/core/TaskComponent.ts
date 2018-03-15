@@ -7,6 +7,7 @@ import { Task, TaskModule } from './decorators/index';
 import { RunWay } from './RunWay';
 import { Defer, taskSymbols } from '../utils/index';
 import { IBuilder } from './IBuilder';
+import { ITaskOption } from './ITaskOption';
 
 /**
  * task component.
@@ -49,7 +50,14 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     run(data?: any): Promise<any> {
         return this.loadModules(this.context.container)
             .then((container) => {
-                return this.build(container);
+                if (this.config) {
+                    this.config.moduleTarget = this;
+                    return this.build(this.config, this)
+                        .then(() => {
+                            return container;
+                        });
+                }
+                return container;
             })
             .then(() => {
                 let execPromise: Promise<any>;
@@ -102,16 +110,16 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     }
 
 
-    protected build(container: IContainer) {
-        if (this.config) {
-            this.config.moduleTarget = this;
-            return container.resolve<IBuilder>(this.config.builder || taskSymbols.IBuilder)
-                .build(this.config, this)
-                .then(() => {
-                    return container;
-                });
-        }
-        return container;
+    protected build(config: ITaskOption<ITask>, root?: ITaskComponent): Promise<ITaskComponent> {
+        return this.context.container.resolve<IBuilder>(this.config.builder || taskSymbols.IBuilder)
+            .build(this.config, root);
+    }
+
+    protected runByConfig<T, TResult>(cfg: ITaskOption<ITask>, data?: T): Promise<TResult> {
+        return this.build(cfg)
+            .then(task => {
+                return task.run(data);
+            });
     }
 
     /**

@@ -5,9 +5,8 @@ import { isFunction, isString, isArray } from 'tsioc';
 import { ITaskContext } from '../../ITaskContext';
 import { src, SrcOptions } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';
-import { IPipeComponent } from './IPipeComponent';
+import { IPipeComponent, IPipeComponentProvider } from './IPipeComponent';
 import { TransformSource, TransformMerger } from './pipeTypes';
-import { IPipeComponentProvider } from '.';
 
 /**
  * source provider.

@@ -146,17 +146,17 @@ export class TaskContainer implements ITaskContainer {
                 return instance.run(data);
             } else if (instance.config && isClass(instance.config.task) && this.isTask(instance.config.task)) {
                 let cfg = instance.config as IConfigure;
-                return this.runContext(cfg, data);
+                return this.runByConfig(cfg, data);
             } else {
                 return Promise.reject(`${JSON.stringify(instance)} is not vaild task instance.`);
             }
 
         } else {
-            return this.runContext(task, data);
+            return this.runByConfig(task, data);
         }
     }
 
-    protected runContext(cfg: IConfigure, data?: any) {
+    protected runByConfig(cfg: IConfigure, data?: any) {
         return this.container.resolve<IBuilder>(cfg.builder || taskSymbols.IBuilder)
             .build(cfg)
             .then(task => {
