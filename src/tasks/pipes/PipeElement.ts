@@ -3,7 +3,7 @@ import { ITransform } from './ITransform';
 import { RunWay } from '../../core/index';
 import { TransformSource, TransformExpress, DestExpress, TransformMerger } from './pipeTypes';
 import { ITaskContext } from '../../ITaskContext';
-import { Type } from 'tsioc';
+import { Type, isBoolean } from 'tsioc';
 import { IPipeComponent } from './IPipeComponent';
 import { Src } from '../../utils/index';
 import { SrcOptions, DestOptions } from 'vinyl-fs';
@@ -19,6 +19,8 @@ import { PipeComponent } from './PipeComponent';
  */
 @Task
 export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeComponent {
+    private watch?: TransformSource;
+
     constructor(
         name: string,
         runWay = RunWay.seqFirst,
@@ -28,6 +30,7 @@ export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeC
         private srcOptions?: SrcOptions,
         private srcType?: Type<IPipeComponent>,
         private srcMerger?: TransformMerger,
+        watch?: TransformSource | boolean,
 
         private pipes?: TransformExpress,
         private pipesType?: Type<IPipeComponent>,
@@ -41,6 +44,9 @@ export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeC
         private destMerger?: TransformMerger
     ) {
         super(name, runWay, merger);
+        if (watch) {
+            this.watch = isBoolean(watch) ? src : watch;
+        }
     }
 
     onInit() {

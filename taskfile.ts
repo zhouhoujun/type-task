@@ -13,7 +13,7 @@ import { isFunction, isBoolean, ObjectMap } from 'tsioc';
 @TaskModule({
     providers: <IPipeElementProvider>{
         pipes: [
-            () => cache('typescript'),
+            // () => cache('typescript'),
             sourcemaps.init,
             () => classAnnotations(),
             (ctx, config) => {

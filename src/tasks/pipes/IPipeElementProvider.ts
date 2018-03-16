@@ -30,6 +30,14 @@ export interface IPipeElementProvider extends ITaskProvider {
      * @memberof IPipeElementProvider
      */
     src?: TransformSource;
+
+    /**
+     * watch source change to run pipe task.
+     *
+     * @type {(TransformSource | boolean)}
+     * @memberof IPipeElementProvider
+     */
+    watch?: TransformSource | boolean;
     /**
      * src options.
      *
