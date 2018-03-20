@@ -102,6 +102,9 @@ TaskContainer.create(__dirname, moudles)
         task:...
     });
 3.
+TaskContainer.create(__dirname, moudles)
+    .bootstrap(TestTask);
+4.
 TaskContainer.create(__dirname)
     .bootstrap([TestTask, TsCompile, <IConfigure>{
         ...
