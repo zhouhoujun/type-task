@@ -8,7 +8,6 @@ import { RunWay } from './RunWay';
 import { Defer, taskSymbols } from '../utils/index';
 import { IBuilder } from './IBuilder';
 import { ITaskOption } from './ITaskOption';
-import * as cluster from 'cluster';
 
 /**
  * task component.
