@@ -127,4 +127,5 @@ TaskContainer.create(__dirname)
                 uglify: true
             },
             task: TsCompile
-        }]);
+        }
+    ]);

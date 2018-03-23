@@ -22,9 +22,9 @@ export class TaskLogAspect extends LoggerAspect {
     // @Around('execution(*.*)')
     // debug(joinPoint: Joinpoint) {
     //     if (joinPoint.state === JoinpointState.AfterThrowing) {
-    //         this.logger.error(joinPoint.fullName, joinPoint.args, joinPoint.throwing);
+    //         this.logger.error(joinPoint.fullName, joinPoint.state, joinPoint.throwing);
     //     } else {
-    //         this.logger.debug(joinPoint.fullName, joinPoint.state, joinPoint.args, joinPoint.returning, '\n------------------------\n')
+    //         this.logger.debug(joinPoint.fullName, joinPoint.state); // joinPoint.args, joinPoint.returning,
     //     }
     // }
 
