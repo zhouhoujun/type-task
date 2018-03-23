@@ -7,6 +7,7 @@ import { ITaskContext } from '../../ITaskContext';
 import { Src } from '../../utils/index';
 import { PipeComponent } from './PipeComponent';
 import { DestOptions, dest } from 'vinyl-fs';
+import { Observable } from 'rxjs/Observable';
 
 
 /**
@@ -47,22 +48,26 @@ export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComp
         super(name, runWay, merger);
     }
 
-    pipe(transform: ITransform): Promise<ITransform> {
+    pipe(transform: ITransform): Observable<ITransform> {
         let dest = isFunction(this.dest) ? this.dest(this.context, this.getConfig()) : this.dest;
 
         if (isArray(dest)) {
-            return Promise.all(dest.map(dist => this.writeStream(transform, dist)))
-                .then(() => {
-                    return transform;
-                });
+            if (dest.length) {
+                return Observable.forkJoin(dest.map(dist => this.writeStream(transform, dist)))
+                    .map(() => {
+                        return transform;
+                    });
+            } else {
+                return Observable.of(transform);
+            }
         } else {
             return this.writeStream(transform, dest)
         }
     }
 
-    protected writeStream(stream: ITransform, dist: string): Promise<ITransform> {
-        return this.destPipesToPromise(stream)
-            .then(streams => {
+    protected writeStream(stream: ITransform, dist: string): Observable<ITransform> {
+        return this.destPipesToObs(stream)
+            .flatMap(streams => {
                 let transforms = isArray(streams) ? streams : [streams];
                 return Promise.all(transforms.map(transform => {
                     let output = transform.pipe(dest(this.context.toRootPath(dist), this.options));
@@ -94,23 +99,21 @@ export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComp
             });
     }
 
-    protected destPipesToPromise(stream: ITransform): Promise<ITransform | ITransform[]> {
-        if (!this.destPipes) {
-            return Promise.resolve(stream);
-        }
-
-        if (isArray(this.destPipes) || isFunction(this.destPipes)) {
-            return this.pipeToPromise(stream, this.destPipes);
-        } else {
-            let keys = Object.keys(this.destPipes).filter(key => key !== 'constructor');
-            if (keys.length) {
-                return Promise.all(keys.map(key => {
-                    return this.pipeToPromise(stream, this.destPipes[key]);
-                }));
+    protected destPipesToObs(stream: ITransform): Observable<ITransform | ITransform[]> {
+        if (this.destPipes) {
+            if (isArray(this.destPipes) || isFunction(this.destPipes)) {
+                return this.pipeToObs(stream, this.destPipes);
             } else {
-                return Promise.resolve(stream);
+                let keys = Object.keys(this.destPipes).filter(key => key !== 'constructor');
+                if (keys.length) {
+                    return Observable.forkJoin(keys.map(key => {
+                        return this.pipeToObs(stream, this.destPipes[key]);
+                    }));
+                }
             }
         }
+
+        return Observable.of(stream);
     }
 
 }

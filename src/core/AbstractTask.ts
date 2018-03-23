@@ -2,7 +2,7 @@ import { Abstract, Inject } from 'tsioc';
 import { ITask } from './ITask';
 import { ITaskContext } from '../ITaskContext';
 import { taskSymbols } from '../utils/index';
-
+import { Observable} from 'rxjs/Observable';
 /**
  * abstract task.
  *
@@ -32,8 +32,8 @@ export abstract class AbstractTask implements ITask {
      *
      * @abstract
      * @param {*} [data]
-     * @returns {Promise<any}
+     * @returns {(Observable<any> | Promise<any>)}
      * @memberof AbstractTask
      */
-    abstract run(data?: any): Promise<any>;
+    abstract run(data?: any): Observable<any> | Promise<any>;
 }

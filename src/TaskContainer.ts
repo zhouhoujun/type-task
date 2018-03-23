@@ -1,4 +1,4 @@
-import { isArray, Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata, isFunction, isNodejsEnv } from 'tsioc';
+import { isArray, Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata, isFunction, isNodejsEnv, NonePointcut } from 'tsioc';
 import { taskSymbols } from './utils/index';
 import { ITask, IBuilder, IConfigure, BootsrapTask, registerTaskCoreDecorators, Task, TaskModule } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
@@ -6,6 +6,8 @@ import { TaskLogAspect } from './aop/index';
 import { registerTaskModules } from './tasks/index';
 import chalk from 'chalk';
 import { ITaskContext } from './ITaskContext';
+import { Observable } from 'rxjs/Observable';
+import { IScheduler } from 'rxjs/Scheduler';
 
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
@@ -15,6 +17,7 @@ const prettyTime = require('pretty-hrtime');
  * @export
  * @class TaskManager
  */
+@NonePointcut
 export class TaskContainer implements ITaskContainer {
 
     container: IContainer;
@@ -76,60 +79,68 @@ export class TaskContainer implements ITaskContainer {
         this.log = logger;
     }
 
+    getScheduler(): IScheduler {
+        if (this.container.has(taskSymbols.IScheduler)) {
+            return this.container.get<IScheduler>(taskSymbols.IScheduler) || undefined;
+        }
+        return undefined;
+    }
+
     /**
      * bootstrap task.
      *
      * @param {BootsrapTask} [tasks]
      * @param {...Providers[]} providers
-     * @returns {Promise<any>}
+     * @returns {Observable<any>}
      * @memberof TaskContainer
      */
-    bootstrap(tasks?: BootsrapTask, ...providers: Providers[]): Promise<any> {
+    bootstrap(tasks?: BootsrapTask, ...providers: Providers[]): Observable<any> {
         let builder = this.containerBuilder;
         let start, end;
         start = process.hrtime();
         console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Starting'), '...');
 
-        return Promise.all(this.useModules.map(option => {
-            return builder.loadModule(this.container, option);
-        })).then((types) => {
-            if (!tasks) {
-                let runTasks = this.container.resolve<ITaskContext>(taskSymbols.ITaskContext)
-                    .getRunTasks();
+        let obs = this.loadModules(this.container)
+            .flatMap((types) => {
+                if (!tasks) {
+                    let runTasks = this.container.resolve<ITaskContext>(taskSymbols.ITaskContext)
+                        .getRunTasks();
 
-                let seq = Promise.resolve();
-                runTasks.forEach(task => {
-                    seq = seq.then(data => {
-                        return this.runTask(task, data,  ...providers);
-                    })
-                });
-                return seq;
-
-            } else {
-                if (isArray(tasks)) {
-                    let seq = Promise.resolve();
-                    tasks.forEach(task => {
-                        seq = seq.then(data => {
+                    let seq = Observable.of(null);
+                    runTasks.forEach(task => {
+                        seq = seq.flatMap(data => {
                             return this.runTask(task, data, ...providers);
                         })
                     });
                     return seq;
+
                 } else {
-                    return this.runTask(tasks, undefined, ...providers);
+                    if (isArray(tasks)) {
+                        let seq = Observable.of(null);
+                        tasks.forEach(task => {
+                            seq = seq.flatMap(data => {
+                                return this.runTask(task, data, ...providers);
+                            })
+                        });
+                        return seq;
+                    } else {
+                        return this.runTask(tasks, undefined, ...providers);
+                    }
                 }
-            }
-        })
-            .then(
-                data => {
-                    end = prettyTime(process.hrtime(start));
-                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), ' after ', chalk.magenta(end));
-                    return data;
-                },
-                err => {
-                    end = prettyTime(process.hrtime(start));
-                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), chalk.red('errored after'), chalk.magenta(end));
-                    return err;
-                });
+            });
+
+        obs.subscribe(
+            data => {
+                end = prettyTime(process.hrtime(start));
+                console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), ' after ', chalk.magenta(end));
+                return data;
+            },
+            err => {
+                end = prettyTime(process.hrtime(start));
+                console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), chalk.red('errored after'), chalk.magenta(end));
+                return err;
+            });
+        return obs;
     }
 
     protected runTask(task: IConfigure | Token<any>, data?: any, ...providers: Providers[]): Promise<any> {
@@ -162,6 +173,17 @@ export class TaskContainer implements ITaskContainer {
             .then(task => {
                 return task.run(data);
             });
+    }
+
+    protected loadModules(container: IContainer): Observable<Type<any>[][]> {
+        if (this.useModules.length) {
+            let builder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
+            return Observable.forkJoin(this.useModules.map(option => {
+                return Observable.fromPromise(builder.loadModule(container, option), this.getScheduler());
+            }));
+        } else {
+            return Observable.of<Type<any>[][]>([], this.getScheduler());
+        }
     }
 
     protected registerExt(container: IContainer) {

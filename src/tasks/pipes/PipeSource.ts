@@ -7,6 +7,7 @@ import { src, SrcOptions } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';
 import { IPipeComponent, IPipeComponentProvider } from './IPipeComponent';
 import { TransformSource, TransformMerger } from './pipeTypes';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * source provider.
@@ -40,23 +41,24 @@ export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeCo
         this.options = Object.assign({ allowEmpty: true }, this.options || {});
     }
 
-    protected source(): ITransform {
-        let source = isFunction(this.src) ? this.src(this.context, this.getConfig()) : this.src;
-        return src(source, this.options);
+    pipe(transform: ITransform): Observable<ITransform> {
+        return Observable.of(transform, this.getScheduler());
     }
 
-    protected mergeTransforms(data: ITransform | ITransform[]): Promise<ITransform> {
+    protected source(): Observable<ITransform> {
+        let source = isFunction(this.src) ? this.src(this.context, this.getConfig()) : this.src;
+        return Observable.of(src(source, this.options), this.getScheduler());
+    }
+
+    protected merge(data: ITransform | ITransform[]): Observable<ITransform> {
         let newTransform = this.source();
         if (data) {
-            let transforms = isArray(data) ? data : [data];
-            transforms.push(newTransform);
-            return super.mergeTransforms(transforms);
-        } else {
-            return Promise.resolve(newTransform);
+            newTransform = newTransform.flatMap(source => {
+                let transforms = isArray(data) ? data : [data];
+                transforms.push(source);
+                return super.merge(transforms);
+            });
         }
-    }
-
-    protected pipe(transform: ITransform): Promise<ITransform> {
-        return Promise.resolve(transform);
+        return newTransform;
     }
 }

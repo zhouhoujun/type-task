@@ -3,6 +3,8 @@ import { GComponent, Token, ComponentLifecycle, AsyncLoadOptions, Type, Provider
 import { RunWay } from './RunWay';
 import { ITaskModule } from './ITaskModule';
 import { IConfigure } from '.';
+import { Observable } from 'rxjs/Observable';
+import { IScheduler } from 'rxjs/Scheduler';
 
 /**
  * Task Component.
@@ -30,6 +32,14 @@ export interface ITaskComponent extends GComponent<ITaskComponent>, ITaskModule,
     getConfig(): IConfigure;
 
     /**
+     * get scheduler.
+     *
+     * @returns {IScheduler}
+     * @memberof ITaskComponent
+     */
+    getScheduler(): IScheduler;
+
+    /**
      * use modules
      *
      * @param {...(Type<any> | AsyncLoadOptions)[]} modules
@@ -37,4 +47,13 @@ export interface ITaskComponent extends GComponent<ITaskComponent>, ITaskModule,
      * @memberof ITaskComponent
      */
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this;
+
+    /**
+     * execute current component node task
+     *
+     * @param {*} data
+     * @returns {(Promise<any> | Observable<any>)}
+     * @memberof ITaskComponent
+     */
+    execute(data: any): Promise<any> | Observable<any>;
 }

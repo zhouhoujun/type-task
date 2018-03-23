@@ -1,6 +1,6 @@
 import { ComponentLifecycle } from 'tsioc';
 import { ITaskContext } from '../ITaskContext';
-
+import { Observable } from 'rxjs/Observable'
 
 
 /**
@@ -31,10 +31,10 @@ export interface ITask extends ComponentLifecycle {
      * run task.
      *
      * @param {*} [data]
-     * @returns {Promise<any>}
+     * @returns {(Observable<any> | Promise<any>)}
      * @memberof ITask
      */
-    run(data?: any): Promise<any>;
+    run(data?: any): Observable<any> | Promise<any>;
 
 }
 

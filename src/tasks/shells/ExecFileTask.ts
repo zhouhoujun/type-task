@@ -3,6 +3,7 @@ import { isString, isArray, isFunction } from 'tsioc';
 import { existsSync } from 'fs';
 import { TaskSrc } from '../../utils/index';
 import { AbstractTask, Task, RunWay } from '../../core/index';
+import { Observable } from 'rxjs/Observable';
 
 
 

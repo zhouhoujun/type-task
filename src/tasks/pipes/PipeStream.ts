@@ -5,6 +5,7 @@ import { IPipeComponent, IPipeComponentProvider } from './IPipeComponent';
 import { ITaskContext } from '../../ITaskContext';
 import { PipeComponent } from './PipeComponent';
 import { TransformExpress, TransformMerger } from './pipeTypes';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * pipe stream provider
@@ -37,27 +38,27 @@ export class PipeStream extends PipeComponent<IPipeComponent> implements IPipeCo
         super(name, runWay, merger);
     }
 
-    pipe(transform: ITransform): Promise<ITransform> {
-        let pStream = this.pipeToPromise(transform, this.pipes);
+    pipe(transform: ITransform): Observable<ITransform> {
+        let pStream = this.pipeToObs(transform, this.pipes);
         if (this.awaitPiped) {
-            pStream = pStream.then(pipe => {
-                if (!pipe) {
-                    return null;
+            pStream = pStream.flatMap(stream => {
+                if (!stream) {
+                    return Observable.of(null);
                 }
 
                 return new Promise((resolve, reject) => {
-                    pipe
+                    stream
                         .once('end', () => {
                             resolve();
                         })
                         .once('error', reject);
                 }).then(() => {
-                    pipe.removeAllListeners('error');
-                    pipe.removeAllListeners('end');
-                    return pipe;
+                    stream.removeAllListeners('error');
+                    stream.removeAllListeners('end');
+                    return stream;
                 }, err => {
-                    pipe.removeAllListeners('error');
-                    pipe.removeAllListeners('end');
+                    stream.removeAllListeners('error');
+                    stream.removeAllListeners('end');
                     process.exit(1);
                     return err;
                 });

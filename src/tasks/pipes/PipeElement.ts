@@ -8,6 +8,7 @@ import { IPipeComponent } from './IPipeComponent';
 import { Src } from '../../utils/index';
 import { SrcOptions, DestOptions } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * pipe component
@@ -69,7 +70,7 @@ export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeC
         }
     }
 
-    protected pipe(data: ITransform): Promise<ITransform> {
-        return Promise.resolve(data);
+    pipe(data: ITransform): Observable<ITransform> | Promise<ITransform> {
+        return Observable.of(data, this.getScheduler());
     }
 }

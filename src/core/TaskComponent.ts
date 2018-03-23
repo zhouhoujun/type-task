@@ -8,6 +8,26 @@ import { RunWay } from './RunWay';
 import { Defer, taskSymbols } from '../utils/index';
 import { IBuilder } from './IBuilder';
 import { ITaskOption } from './ITaskOption';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw';
+import 'rxjs/add/observable/empty';
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/merge';
+import 'rxjs/add/operator/concat';
+import 'rxjs/add/operator/concatAll';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/distinct';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/timeout';
+import { IScheduler } from 'rxjs/Scheduler';
 
 /**
  * task component.
@@ -41,61 +61,70 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
         return this.find(cmp => !!cmp.config, Mode.route).config;
     }
 
+    getScheduler(): IScheduler {
+        if (this.context.container.has(taskSymbols.IScheduler)) {
+            return this.context.container.get<IScheduler>(taskSymbols.IScheduler) || undefined;
+        }
+        return undefined;
+    }
+
 
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
         this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
         return this;
     }
 
-    run(data?: any): Promise<any> {
+    run(data?: any): Observable<any> {
         return this.loadModules(this.context.container)
-            .then((container) => {
+            .flatMap((container) => {
                 if (this.config) {
                     this.config.moduleTarget = this;
-                    return this.build(this.config, this)
-                        .then(() => {
+                    return Observable.fromPromise(this.build(this.config, this), this.getScheduler())
+                        .map(() => {
                             return container;
                         });
                 }
-                return container;
+                return Observable.of(container);
             })
-            .then(() => {
-                let execPromise: Promise<any>;
+            .flatMap(() => {
+                let obsExec = Observable.of(data);
                 if (this.runWay & RunWay.nodeFirst) {
-                    execPromise = this.execute(data);
-                } else {
-                    execPromise = Promise.resolve(data);
+                    obsExec = obsExec.flatMap(data => this.execute(data));
                 }
 
                 if (this.runWay & RunWay.sequence) {
                     this.each(task => {
-                        execPromise = execPromise.then((data) => {
+                        obsExec = obsExec.flatMap((data) => {
                             return task.run(data);
                         });
                     }, Mode.children);
                 } else if (this.runWay & RunWay.parallel) {
-                    execPromise = execPromise.then(pdata => {
-                        return Promise.all(this.children.map(task => task.run(pdata)));
+                    obsExec = obsExec.flatMap(pdata => {
+                        if (this.children.length) {
+                            return Observable.forkJoin(this.children.map(task => task.run(pdata)))
+                        }
+                        return Observable.of(pdata);
+
                     });
                 }
 
                 if (this.runWay & RunWay.nodeLast) {
-                    execPromise = execPromise.then(data => {
+                    obsExec = obsExec.flatMap(data => {
                         return this.execute(data);
                     });
                 }
 
-                return execPromise;
+                return obsExec;
             });
     }
 
 
-    loadModules(container: IContainer): Promise<IContainer> {
+    loadModules(container: IContainer): Observable<IContainer> {
         if (this.useModules.length) {
             let builder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
-            return Promise.all(this.useModules.map(option => {
-                return builder.loadModule(container, option);
-            })).then((types) => {
+            return Observable.forkJoin(this.useModules.map(option => {
+                return Observable.fromPromise(builder.loadModule(container, option), this.getScheduler());
+            })).map((types) => {
                 this.registerModules = this.registerModules || [];
                 types.forEach(tys => {
                     this.registerModules = this.registerModules.concat(tys);
@@ -105,7 +134,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
                 return container;
             });
         } else {
-            return Promise.resolve(container);
+            return Observable.of(container, this.getScheduler());
         }
     }
 
@@ -115,9 +144,9 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
             .build(this.config, root);
     }
 
-    protected runByConfig<T, TResult>(cfg: ITaskOption<ITask>, data?: T): Promise<TResult> {
-        return this.build(cfg)
-            .then(task => {
+    protected runByConfig<T, TResult>(cfg: ITaskOption<ITask>, data?: T): Observable<TResult> {
+        return Observable.fromPromise(this.build(cfg), this.getScheduler())
+            .flatMap(task => {
                 return task.run(data);
             });
     }
@@ -127,10 +156,10 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
      *
      * @protected
      * @param {*} data
-     * @returns {Promise<any>}
+     * @returns {(Promise<any> | Observable<any>)}
      * @memberof TaskComponent
      */
-    protected abstract execute(data: any): Promise<any>;
+    abstract execute(data: any): Promise<any> | Observable<any>;
 
     protected isTask(task: Type<ITask>): boolean {
         return hasOwnClassMetadata(Task, task) || hasOwnClassMetadata(TaskModule, task);

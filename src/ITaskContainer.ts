@@ -1,5 +1,6 @@
 import { TaskComponent, ITask, IConfigure, BootsrapTask } from './core/index';
 import { IContainer, Type, Providers, Token, AsyncLoadOptions, IContainerBuilder } from 'tsioc';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * task container.
@@ -55,9 +56,9 @@ export interface ITaskContainer {
      *
      * @param {BootsrapTask} [tasks]
      * @param {...Providers[]} providers
-     * @returns {Promise<any>}
+     * @returns {Observable<any>}
      * @memberof ITaskContainer
      */
-    bootstrap(tasks?: BootsrapTask, ...providers: Providers[]): Promise<any>;
+    bootstrap(tasks?: BootsrapTask, ...providers: Providers[]): Observable<any>;
 
 }

@@ -19,6 +19,15 @@ export class TaskLogAspect extends LoggerAspect {
         this.startHrts = {};
     }
 
+    // @Around('execution(*.*)')
+    // debug(joinPoint: Joinpoint) {
+    //     if (joinPoint.state === JoinpointState.AfterThrowing) {
+    //         this.logger.error(joinPoint.fullName, joinPoint.args, joinPoint.throwing);
+    //     } else {
+    //         this.logger.debug(joinPoint.fullName, joinPoint.state, joinPoint.args, joinPoint.returning, '\n------------------------\n')
+    //     }
+    // }
+
     @Around('execution(*.run)')
     logging(joinPoint: Joinpoint) {
         let logger = this.logger;

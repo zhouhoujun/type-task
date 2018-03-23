@@ -4,6 +4,11 @@
 export const IBuilder = Symbol('IBuilder');
 
 /**
+ * IScheduler.
+ */
+export const IScheduler = Symbol('IScheduler');
+
+/**
  * ITaskContext.
  */
 export const ITaskContext = Symbol('ITaskContext');

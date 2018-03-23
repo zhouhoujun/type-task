@@ -1,11 +1,12 @@
 import { Task, ITask, ITaskOption, RunWay, IBuilder, ITaskComponent, TaskComponent, ITaskProvider, IConfigure, TaskModule } from '../../core/index';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata } from 'tsioc';
+import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata, isPromise } from 'tsioc';
 import { TransformMerger, TransformExpress, TransformType } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
 import { taskSymbols } from '../../utils/index';
+import { Observable } from 'rxjs/Observable';
 
 
 /**
@@ -30,9 +31,9 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
     }
 
 
-    run(data?: ITransform | ITransform[]): Promise<ITransform> {
+    run(data?: ITransform | ITransform[]): Observable<ITransform> {
         return super.run(data)
-            .then(rd => {
+            .map(rd => {
                 return rd as ITransform;
             });
     }
@@ -42,12 +43,12 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      *
      * @protected
      * @param {(ITransform | ITransform[])} data
-     * @returns {Promise<any>}
+     * @returns {Observable<any>}
      * @memberof TaskComponent
      */
-    protected execute(data: ITransform | ITransform[]): Promise<ITransform> {
-        return this.mergeTransforms(data)
-            .then(pstream => this.pipe(pstream));
+    execute(data: ITransform | ITransform[]): Observable<ITransform> {
+        return this.merge(data)
+            .flatMap(pstream => this.pipe(pstream));
     }
 
     /**
@@ -58,47 +59,54 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      * @returns {ITransform}
      * @memberof PipeComponent
      */
-    protected mergeTransforms(data: ITransform | ITransform[]): Promise<ITransform> {
-        let ptranform: Promise<ITransform>;
+    protected merge(data: ITransform | ITransform[]): Observable<ITransform> {
+        let obsTrsf: Observable<ITransform>;
         if (isArray(data)) {
-            if (this.merger) {
-                if (isClass(this.merger)) {
-                    if (this.isTask(this.merger)) {
-                        ptranform = this.runByConfig({ task: this.merger }, data)
-                    }
-                } else if (isFunction(this.merger)) {
-                    ptranform = Promise.resolve(this.merger(data));
-                } else {
-                    if (isFunction(this.merger['run'])) {
-                        let merger = this.merger as ITransformMerger;
-                        ptranform = merger.run(data);
-                    } else if (isClass(this.merger['task'])) {
-                        let opt = this.merger as ITaskOption<ITransformMerger>;
-                        if (this.isTask(opt.task)) {
-                            ptranform = this.runByConfig(opt, data, );
+            obsTrsf = Observable.of(data, this.getScheduler())
+                .flatMap(data => {
+                    if (this.merger) {
+                        if (isClass(this.merger)) {
+                            if (this.isTask(this.merger)) {
+                                return this.runByConfig<ITransform | ITransform[], ITransform>({ task: this.merger }, data)
+                            }
+                        } else if (isFunction(this.merger)) {
+                            let trsf = this.merger(data);
+                            if (isPromise(trsf) || trsf instanceof Observable) {
+                                return trsf;
+                            } else {
+                                return Observable.of(trsf);
+                            }
+                        } else {
+                            if (isFunction(this.merger['run'])) {
+                                let merger = this.merger as ITransformMerger;
+                                return merger.run(data);
+                            } else if (isClass(this.merger['task'])) {
+                                let opt = this.merger as ITaskOption<ITransformMerger>;
+                                if (this.isTask(opt.task)) {
+                                    return this.runByConfig(opt, data, );
+                                }
+                            }
                         }
                     }
-                }
-            }
+                    return Observable.of(data.length ? data[0] : null, this.getScheduler());
+                });
+
+        } else {
+            obsTrsf = Observable.of(data, this.getScheduler());
         }
 
-        if (!ptranform) {
-            ptranform = Promise.resolve(isArray(data) ? data[0] : data);
-        }
-
-        return ptranform.then(tranform => (tranform && isFunction(tranform.pipe)) ? tranform as ITransform : null);
+        return obsTrsf.map(tranform => (tranform && isFunction(tranform.pipe)) ? tranform as ITransform : null);
     }
 
     /**
      * pipe transform.
      *
-     * @protected
      * @abstract
      * @param {ITransform} transform
-     * @returns {Promise<ITransform>}
+     * @returns {(Observable<ITransform> | Promise<ITransform>)}
      * @memberof PipeComponent
      */
-    protected abstract pipe(transform: ITransform): Promise<ITransform>;
+    abstract pipe(transform: ITransform): Observable<ITransform> | Promise<ITransform>;
 
 
     /**
@@ -107,46 +115,50 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      * @protected
      * @param {ITransform} source
      * @param {TransformExpress} pipes
-     * @returns {Promise<ITransform>}
+     * @returns {Observable<ITransform>}
      * @memberof PipeComponent
      */
-    protected pipeToPromise(source: ITransform, pipes: TransformExpress): Promise<ITransform> {
+    protected pipeToObs(source: ITransform, pipes: TransformExpress): Observable<ITransform> {
+        let obs = Observable.of(source);
         if (!pipes) {
-            return Promise.resolve(source);
+            return obs;
         }
         let config = this.getConfig();
-        return Promise.resolve(isFunction(pipes) ? pipes(this.context, config, source) : pipes)
-            .then(transforms => {
-                transforms = transforms || [];
-                let pstream = Promise.resolve(source);
-                transforms.forEach(transform => {
-                    if (transform) {
-                        pstream = pstream
-                            .then(stream => {
-                                return this.executePipe(stream, transform, config);
-                            });
-                    }
-                });
+        let plist = isFunction(pipes) ? pipes(this.context, config, source) : pipes;
+        plist.forEach(transform => {
+            if (transform) {
+                obs = obs
+                    .flatMap(stream => {
+                        return this.executePipe(stream, transform, config);
+                    });
+            }
+        });
 
-                return pstream;
-            });
+        return obs;
     }
 
-    protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Promise<ITransform> {
-        let rpstram: Promise<ITransform>
+    protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Observable<ITransform> {
+        let rpstram: Observable<ITransform> = Observable.of(stream);
         if (isClass(transform)) {
-            rpstram = this.runByConfig({ task: transform }, stream);
+            rpstram = rpstram.flatMap(stream => this.runByConfig({ task: transform }, stream));
         } else if (isFunction(transform)) {
-            rpstram = Promise.resolve(transform(this.context, config, stream));
+            rpstram = rpstram.flatMap(stream => {
+                let trf = transform(this.context, config, stream);
+                if (isPromise(trf) || trf instanceof Observable) {
+                    return trf;
+                } else {
+                    return Observable.of(trf);
+                }
+            });
         } else {
             if (isClass(transform['task'])) {
                 let opt = transform as ITaskOption<IPipeComponent>;
-                rpstram = this.runByConfig(opt, stream);
+                rpstram = rpstram.flatMap(stream => this.runByConfig(opt, stream));
             } else {
-                rpstram = Promise.resolve(transform as ITransform);
+                rpstram = rpstram.flatMap(stream => Observable.of(transform as ITransform));
             }
         }
-        return rpstram.then(pst => {
+        return rpstram.map(pst => {
             if (pst && isFunction(pst.pipe)) {
                 if (pst.changeAsOrigin) {
                     stream = pst;

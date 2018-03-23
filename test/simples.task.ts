@@ -1,6 +1,6 @@
 import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, TaskComponent, ITaskComponent, TaskModule } from '../src';
 import { Inject } from 'tsioc';
-import { RunWay } from '../src/core/RunWay';
+import { RunWay } from '../src';
 
 @Task('test')
 export class SimpleTask extends AbstractTask implements ITask {
@@ -27,7 +27,7 @@ export class SimpleCTask extends TaskComponent<ITaskComponent> {
         // console.log('SimpleCTask', Object.getOwnPropertyDescriptors(this));
     }
 
-    protected execute(): Promise<any> {
+    execute(): Promise<any> {
         // console.log('before component task:', this.name);
         return Promise.resolve('component task')
             .then(val => {

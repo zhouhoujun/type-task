@@ -6,6 +6,7 @@ import { ObjectMap, Type } from 'tsioc';
 import { IPipeComponent } from './IPipeComponent';
 import { ITransformMerger } from './ITransformMerger';
 import { ITaskOption } from '../../core/ITaskOption';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * transform source.
@@ -15,7 +16,7 @@ export type TransformSource = Src | ((context?: ITaskContext, config?: IConfigur
 /**
  * pipe express
  */
-export type PipeExpress = (context?: ITaskContext, config?: IConfigure, transform?: ITransform) => ITransform | Promise<ITransform>;
+export type PipeExpress = (context?: ITaskContext, config?: IConfigure, transform?: ITransform) => ITransform | Promise<ITransform> | Observable<ITransform>;
 
 /**
  * transform type.
@@ -35,5 +36,5 @@ export type DestExpress = ObjectMap<TransformExpress> | TransformExpress;
 /**
  * transform merger.
  */
-export type TransformMerger = ((transforms: ITransform[]) => ITransform | Promise<ITransform>) | ITransformMerger | Type<ITransformMerger> | ITaskOption<ITransformMerger>;
+export type TransformMerger = ((transforms: ITransform[]) => ITransform | Promise<ITransform> | Observable<ITransform>) | ITransformMerger | Type<ITransformMerger> | ITaskOption<ITransformMerger>;
 
