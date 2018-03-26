@@ -11,22 +11,22 @@ describe('auto register with build', () => {
     });
 
     it('should bootstrap with single task.', async () => {
-        let result = await container.bootstrap(SimpleTask);
+        let result = await container.bootstrap(SimpleTask).toPromise();
         expect(result).eq('simple task');
     });
 
     it('should bootstrap with single task via name or provider.', async () => {
-        let result = await container.use(SimpleTask).bootstrap('test');
+        let result = await container.use(SimpleTask).bootstrap('test').toPromise();
         expect(result).eq('simple task');
     });
 
     it('should bootstrap with component task.', async () => {
-        let result = await container.bootstrap(SimpleCTask);
+        let result = await container.bootstrap(SimpleCTask).toPromise();
         expect(result).eq('component task');
     });
 
     it('should bootstrap with component task via name or provider.', async () => {
-        let result = await container.use(SimpleCTask).bootstrap('comptest');
+        let result = await container.use(SimpleCTask).bootstrap('comptest').toPromise();
         expect(result).eq('component task');
     });
 
@@ -46,12 +46,12 @@ describe('auto register with build', () => {
                     task: SimpleCTask
                 }
             ]
-        });
+        }).toPromise();
         expect(result).eq('component task');
     });
 
-    it('should bootstrap with IConfigure.', async () => {
-        let result = await container.bootstrap(TaskModuleTest);
+    it('should bootstrap with decorator IConfigure.', async () => {
+        let result = await container.bootstrap(TaskModuleTest).toPromise();
         expect(result).eq('component task');
     });
 
