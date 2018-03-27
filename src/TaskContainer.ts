@@ -143,13 +143,13 @@ export class TaskContainer implements ITaskContainer {
         return obs;
     }
 
-    protected runTask(task: IConfigure | Token<any>, data?: any, ...providers: Providers[]): Promise<any> {
+    protected runTask(task: IConfigure | Token<any>, data?: any, ...providers: Providers[]): Observable<any> {
         if (isToken(task)) {
             if (!this.container.has(task)) {
                 if (isClass(task) && this.isTask(task)) {
                     this.container.register(task);
                 } else {
-                    return Promise.reject(`${typeof task} is not vaild task type.`);
+                    return Observable.throw(`${typeof task} is not vaild task type.`);
                 }
             }
             let instance = this.container.resolve(task, ...providers);
@@ -159,7 +159,7 @@ export class TaskContainer implements ITaskContainer {
                 let cfg = instance.config as IConfigure;
                 return this.runByConfig(cfg, data);
             } else {
-                return Promise.reject(`${JSON.stringify(instance)} is not vaild task instance.`);
+                return Observable.throw(`${JSON.stringify(instance)} is not vaild task instance.`);
             }
 
         } else {
@@ -167,10 +167,10 @@ export class TaskContainer implements ITaskContainer {
         }
     }
 
-    protected runByConfig(cfg: IConfigure, data?: any) {
-        return this.container.resolve<IBuilder>(cfg.builder || taskSymbols.IBuilder)
-            .build(cfg)
-            .then(task => {
+    protected runByConfig<T, TResult>(cfg: IConfigure, data?: any): Observable<TResult> {
+        return Observable.fromPromise(this.container.resolve<IBuilder>(cfg.builder || taskSymbols.IBuilder)
+            .build(cfg), this.getScheduler())
+            .flatMap(task => {
                 return task.run(data);
             });
     }
