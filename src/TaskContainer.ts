@@ -100,47 +100,39 @@ export class TaskContainer implements ITaskContainer {
         start = process.hrtime();
         console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Starting'), '...');
 
-        let obs = this.loadModules(this.container)
+        let retObs = this.loadModules(this.container)
             .flatMap((types) => {
+                let runTasks: any[];
                 if (!tasks) {
-                    let runTasks = this.container.resolve<ITaskContext>(taskSymbols.ITaskContext)
+                    runTasks = this.container.resolve<ITaskContext>(taskSymbols.ITaskContext)
                         .getRunTasks();
-
-                    let seq = Observable.of(null);
-                    runTasks.forEach(task => {
-                        seq = seq.flatMap(data => {
-                            return this.runTask(task, data, ...providers);
-                        })
-                    });
-                    return seq;
-
                 } else {
-                    if (isArray(tasks)) {
-                        let seq = Observable.of(null);
-                        tasks.forEach(task => {
-                            seq = seq.flatMap(data => {
-                                return this.runTask(task, data, ...providers);
-                            })
-                        });
-                        return seq;
-                    } else {
-                        return this.runTask(tasks, undefined, ...providers);
-                    }
+                    runTasks = isArray(tasks) ? tasks : [tasks];
                 }
+                if (runTasks.length < 1) {
+                    return Observable.empty();
+                }
+                let seq = this.runTask(runTasks[0], null, ...providers);
+                runTasks.slice(1).forEach(task => {
+                    seq = seq.flatMap(data => {
+                        return this.runTask(task, data, ...providers);
+                    });
+                });
+                return seq;
             });
 
-        obs.subscribe(
-            data => {
-                end = prettyTime(process.hrtime(start));
-                console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), ' after ', chalk.magenta(end));
-                return data;
-            },
+        retObs.subscribe(data => {
+            end = prettyTime(process.hrtime(start));
+            console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), ' after ', chalk.magenta(end));
+            return Observable.of(data);
+        },
             err => {
                 end = prettyTime(process.hrtime(start));
                 console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), chalk.red('errored after'), chalk.magenta(end));
                 return err;
             });
-        return obs;
+
+        return retObs;
     }
 
     protected runTask(task: IConfigure | Token<any>, data?: any, ...providers: Providers[]): Observable<any> {
