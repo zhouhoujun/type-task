@@ -44,7 +44,7 @@ export class TaskLogAspect extends LoggerAspect {
             logger.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Starting', taskname, '...');
         }
 
-        if (joinPoint.state === JoinpointState.After) {
+        if (joinPoint.state === JoinpointState.AfterReturning) {
             start = this.startHrts[name];
             end = prettyTime(process.hrtime(start));
             delete this.startHrts[name];
