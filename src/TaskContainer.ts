@@ -124,12 +124,11 @@ export class TaskContainer implements ITaskContainer {
         retObs.subscribe(data => {
             end = prettyTime(process.hrtime(start));
             console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), ' after ', chalk.magenta(end));
-            return Observable.of(data);
         },
             err => {
                 end = prettyTime(process.hrtime(start));
                 console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), chalk.red('errored after'), chalk.magenta(end));
-                return err;
+                console.error(err);
             });
 
         return retObs;

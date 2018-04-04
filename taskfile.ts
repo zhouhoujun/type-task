@@ -64,7 +64,7 @@ export class TsCompile extends TaskElement {
     onInit() {
         let providers = this.config.providers as IPipeElementProvider;
 
-        console.log('src:', this.src, 'dest:', this.dest, 'providers:', providers);
+        // console.log('src:', this.src, 'dest:', this.dest, 'providers:', providers);
 
         if (this.src) {
             providers.src = this.src;

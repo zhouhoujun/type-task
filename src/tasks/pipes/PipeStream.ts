@@ -48,9 +48,7 @@ export class PipeStream extends PipeComponent<IPipeComponent> implements IPipeCo
 
                 return new Promise((resolve, reject) => {
                     stream
-                        .once('end', () => {
-                            resolve();
-                        })
+                        .once('end', resolve)
                         .once('error', reject);
                 }).then(() => {
                     stream.removeAllListeners('error');

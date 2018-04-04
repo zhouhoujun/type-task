@@ -1,7 +1,7 @@
 import { Task, ITask, ITaskOption, RunWay, IBuilder, ITaskComponent, TaskComponent, ITaskProvider, IConfigure, TaskModule } from '../../core/index';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata, isPromise } from 'tsioc';
+import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata, isPromise, isObservable } from 'tsioc';
 import { TransformMerger, TransformExpress, TransformType } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
@@ -125,12 +125,10 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
         }
         let config = this.getConfig();
         let plist = isFunction(pipes) ? pipes(this.context, config, source) : pipes;
+        plist = plist || [];
         plist.forEach(transform => {
             if (transform) {
-                obs = obs
-                    .flatMap(stream => {
-                        return this.executePipe(stream, transform, config);
-                    });
+                obs = obs.flatMap(stream => this.executePipe(stream, transform, config));
             }
         });
 
@@ -138,13 +136,15 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
     }
 
     protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Observable<ITransform> {
-        let rpstram: Observable<ITransform> = Observable.of(stream);
+        let rpstram: Observable<ITransform>;
         if (isClass(transform)) {
-            rpstram = rpstram.flatMap(stream => this.runByConfig({ task: transform }, stream));
+            rpstram = this.runByConfig({ task: transform }, stream);
         } else if (isFunction(transform)) {
-            rpstram = rpstram.flatMap(stream => {
+            rpstram = Observable.of(stream, this.getScheduler()).flatMap(stream => {
                 let trf = transform(this.context, config, stream);
-                if (isPromise(trf) || trf instanceof Observable) {
+                if (isPromise(trf)) {
+                    return trf;
+                } else if (trf instanceof Observable) {
                     return trf;
                 } else {
                     return Observable.of(trf);
@@ -153,17 +153,17 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
         } else {
             if (isClass(transform['task'])) {
                 let opt = transform as ITaskOption<IPipeComponent>;
-                rpstram = rpstram.flatMap(stream => this.runByConfig(opt, stream));
+                rpstram = this.runByConfig(opt, stream);
             } else {
-                rpstram = rpstram.flatMap(stream => Observable.of(transform as ITransform));
+                rpstram = Observable.of(transform as ITransform, );
             }
         }
-        return rpstram.map(pst => {
-            if (pst && isFunction(pst.pipe)) {
-                if (pst.changeAsOrigin) {
-                    stream = pst;
+        return rpstram.map(ost => {
+            if (ost && isFunction(ost.pipe)) {
+                if (ost.changeAsOrigin) {
+                    stream = ost;
                 } else {
-                    stream = stream.pipe(pst);
+                    stream = stream.pipe(ost);
                 }
             }
             return stream;

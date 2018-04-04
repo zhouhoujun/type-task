@@ -42,7 +42,6 @@ export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeCo
     }
 
     pipe(transform: ITransform): Observable<ITransform> {
-        // console.log('********** source pipe ************');
         return Observable.of(transform, this.getScheduler());
     }
 
