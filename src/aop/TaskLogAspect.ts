@@ -1,5 +1,6 @@
-import { Around, Aspect, Joinpoint, JoinpointState, ObjectMap, Singleton, LoggerAspect, Inject, symbols, IContainer } from 'tsioc';
+import { Around, Aspect, Joinpoint, JoinpointState, ObjectMap, Singleton, LoggerAspect, Inject, symbols, IContainer, Type, hasOwnClassMetadata } from 'tsioc';
 import chalk from 'chalk';
+import { ITask, Task, TaskModule } from '../core/index';
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
 /**
@@ -19,9 +20,17 @@ export class TaskLogAspect extends LoggerAspect {
         this.startHrts = {};
     }
 
+    isTask(task: Type<ITask>): boolean {
+        return hasOwnClassMetadata(Task, task) || hasOwnClassMetadata(TaskModule, task);
+    }
+
     @Around('execution(*.run)')
     logging(joinPoint: Joinpoint) {
         let logger = this.logger;
+
+        if (!this.isTask(joinPoint.targetType)) {
+            return;
+        }
 
         let name = joinPoint.target.name;
         if (!name) {

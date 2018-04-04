@@ -53,9 +53,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
                 if (this.config) {
                     this.config.moduleTarget = this;
                     return this.build(this.config, this)
-                        .then(() => {
-                            return container;
-                        });
+                        .then(() => container);
                 }
                 return container;
             })
@@ -69,9 +67,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
                 if (this.runWay & RunWay.sequence) {
                     this.each(task => {
-                        execPromise = execPromise.then((data) => {
-                            return task.run(data);
-                        });
+                        execPromise = execPromise.then(data => task.run(data));
                     }, Mode.children);
                 } else if (this.runWay & RunWay.parallel) {
                     execPromise = execPromise.then(pdata => {
@@ -80,9 +76,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
                 }
 
                 if (this.runWay & RunWay.nodeLast) {
-                    execPromise = execPromise.then(data => {
-                        return this.execute(data);
-                    });
+                    execPromise = execPromise.then(data => this.execute(data));
                 }
 
                 return execPromise;
@@ -117,9 +111,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     protected runByConfig<T, TResult>(cfg: ITaskOption<ITask>, data?: T): Promise<TResult> {
         return this.build(cfg)
-            .then(task => {
-                return task.run(data);
-            });
+            .then(task => task.run(data));
     }
 
     /**

@@ -94,30 +94,20 @@ export class TaskContainer implements ITaskContainer {
             return builder.loadModule(this.container, option);
         })).then((types) => {
             if (!tasks) {
-                let runTasks = this.container.resolve<ITaskContext>(taskSymbols.ITaskContext)
+                let tasks = this.container.resolve<ITaskContext>(taskSymbols.ITaskContext)
                     .getRunTasks();
-
-                let seq = Promise.resolve();
-                runTasks.forEach(task => {
-                    seq = seq.then(data => {
-                        return this.runTask(task, data,  ...providers);
-                    })
-                });
-                return seq;
-
-            } else {
-                if (isArray(tasks)) {
-                    let seq = Promise.resolve();
-                    tasks.forEach(task => {
-                        seq = seq.then(data => {
-                            return this.runTask(task, data, ...providers);
-                        })
-                    });
-                    return seq;
-                } else {
-                    return this.runTask(tasks, undefined, ...providers);
-                }
             }
+            if (!isArray(tasks)) {
+                tasks = [tasks];
+            }
+            let seq = Promise.resolve();
+            tasks.forEach(task => {
+                seq = seq.then(data => {
+                    return this.runTask(task, data, ...providers);
+                })
+            });
+            return seq;
+
         })
             .then(
                 data => {
