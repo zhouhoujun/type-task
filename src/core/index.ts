@@ -6,6 +6,7 @@ import { TaskElement } from './TaskElement';
 
 import { Builder } from './Builder';
 import { InitTaskModuleAction } from './actions/InitTaskModuleAction';
+import { TaskRunner } from './TaskRunner';
 
 export * from './IBuilder';
 export * from './Builder';
@@ -22,6 +23,8 @@ export * from './TaskElement';
 export * from './decorators/index';
 export * from './metadatas/index';
 export * from './RunWay';
+export * from './ITaskRunner'
+export * from './TaskRunner';
 
 /**
  * register task decorators.
@@ -38,4 +41,5 @@ export function registerTaskCoreDecorators(container: IContainer) {
     container.register(TaskContext);
     container.register(TaskElement);
     container.register(Builder);
+    container.register(TaskRunner);
 }

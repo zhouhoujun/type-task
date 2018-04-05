@@ -1,11 +1,11 @@
-import { isArray, Token, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Express, Mode, Providers, isClass, isToken, hasOwnClassMetadata, isFunction, isNodejsEnv } from 'tsioc';
+import { isArray, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Mode, Providers, isClass } from 'tsioc';
 import { taskSymbols } from './utils/index';
-import { ITask, IBuilder, IConfigure, BootsrapTask, registerTaskCoreDecorators, Task, TaskModule } from './core/index';
+import { BootsrapTask, registerTaskCoreDecorators, ITaskRunner } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 import { TaskLogAspect } from './aop/index';
 import { registerTaskModules } from './tasks/index';
 import chalk from 'chalk';
-import { ITaskContext } from './ITaskContext';
+import { ITaskContext } from './ITaskContext';;
 
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
@@ -101,9 +101,10 @@ export class TaskContainer implements ITaskContainer {
                 tasks = [tasks];
             }
             let seq = Promise.resolve();
+            let runner = this.container.get<ITaskRunner>(taskSymbols.ITaskRunner);
             tasks.forEach(task => {
                 seq = seq.then(data => {
-                    return this.runTask(task, data, ...providers);
+                    return runner.runTask(task, data, ...providers);
                 })
             });
             return seq;
@@ -122,38 +123,6 @@ export class TaskContainer implements ITaskContainer {
                 });
     }
 
-    protected runTask(task: IConfigure | Token<any>, data?: any, ...providers: Providers[]): Promise<any> {
-        if (isToken(task)) {
-            if (!this.container.has(task)) {
-                if (isClass(task) && this.isTask(task)) {
-                    this.container.register(task);
-                } else {
-                    return Promise.reject(`${typeof task} is not vaild task type.`);
-                }
-            }
-            let instance = this.container.resolve(task, ...providers);
-            if (isFunction(instance.run)) {
-                return instance.run(data);
-            } else if (instance.config && isClass(instance.config.task) && this.isTask(instance.config.task)) {
-                let cfg = instance.config as IConfigure;
-                return this.runByConfig(cfg, data);
-            } else {
-                return Promise.reject(`${JSON.stringify(instance)} is not vaild task instance.`);
-            }
-
-        } else {
-            return this.runByConfig(task, data);
-        }
-    }
-
-    protected runByConfig(cfg: IConfigure, data?: any) {
-        return this.container.resolve<IBuilder>(cfg.builder || taskSymbols.IBuilder)
-            .build(cfg)
-            .then(task => {
-                return task.run(data);
-            });
-    }
-
     protected registerExt(container: IContainer) {
         container.register(this.log || TaskLogAspect);
         container.registerSingleton(taskSymbols.TaskContainer, this);
@@ -161,8 +130,6 @@ export class TaskContainer implements ITaskContainer {
         registerTaskModules(container);
     }
 
-    protected isTask(task: Type<ITask>): boolean {
-        return hasOwnClassMetadata(Task, task) || hasOwnClassMetadata(TaskModule, task);
-    }
+    
 }
 

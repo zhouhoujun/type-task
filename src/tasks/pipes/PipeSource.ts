@@ -45,15 +45,11 @@ export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeCo
         return src(source, this.options);
     }
 
-    protected mergeTransforms(data: ITransform | ITransform[]): Promise<ITransform> {
+    protected merge(data: ITransform[]): Promise<ITransform> {
         let newTransform = this.source();
-        if (data) {
-            let transforms = isArray(data) ? data : [data];
-            transforms.push(newTransform);
-            return super.mergeTransforms(transforms);
-        } else {
-            return Promise.resolve(newTransform);
-        }
+        data = data || [];
+        data.unshift(newTransform);
+        return super.merge(data);
     }
 
     protected pipe(transform: ITransform): Promise<ITransform> {

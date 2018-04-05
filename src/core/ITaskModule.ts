@@ -1,5 +1,4 @@
 import { ITask } from './ITask';
-import { IConfigure } from './IConfigure';
 
 /**
  * task module.
@@ -9,11 +8,5 @@ import { IConfigure } from './IConfigure';
  * @extends {ITask}
  */
 export interface ITaskModule extends ITask {
-    /**
-     * context
-     *
-     * @type {IConfigure}
-     * @memberof ITaskModule
-     */
-    config?: IConfigure;
+    
 }

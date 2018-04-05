@@ -1,13 +1,13 @@
-import { GComponent, GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, Provider, Providers, hasOwnClassMetadata, isClass, Abstract } from 'tsioc';
+import { GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, isClass, Abstract } from 'tsioc';
 import { ITaskComponent } from './ITaskComponent';
 import { TaskContext } from './TaskContext';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
-import { Task, TaskModule } from './decorators/index';
 import { RunWay } from './RunWay';
 import { Defer, taskSymbols } from '../utils/index';
 import { IBuilder } from './IBuilder';
 import { ITaskOption } from './ITaskOption';
+import { ITaskRunner } from './ITaskRunner';
 
 /**
  * task component.
@@ -25,6 +25,8 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     config?: IConfigure;
 
+    private runner: ITaskRunner;
+
     /**
      * task run enviroment.
      */
@@ -41,6 +43,9 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
         return this.find(cmp => !!cmp.config, Mode.route).config;
     }
 
+    getRunner(): ITaskRunner {
+        return this.context.container.get<ITaskRunner>(taskSymbols.ITaskRunner);
+    }
 
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
         this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
@@ -109,11 +114,6 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
             .build(this.config, root);
     }
 
-    protected runByConfig<T, TResult>(cfg: ITaskOption<ITask>, data?: T): Promise<TResult> {
-        return this.build(cfg)
-            .then(task => task.run(data));
-    }
-
     /**
      * execute tasks
      *
@@ -124,7 +124,4 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
      */
     protected abstract execute(data: any): Promise<any>;
 
-    protected isTask(task: Type<ITask>): boolean {
-        return hasOwnClassMetadata(Task, task) || hasOwnClassMetadata(TaskModule, task);
-    }
 }

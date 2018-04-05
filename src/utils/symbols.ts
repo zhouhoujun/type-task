@@ -4,6 +4,10 @@
 export const IBuilder = Symbol('IBuilder');
 
 /**
+ * ITaskRunner.
+ */
+export const ITaskRunner = Symbol('ITaskRunner');
+/**
  * ITaskContext.
  */
 export const ITaskContext = Symbol('ITaskContext');

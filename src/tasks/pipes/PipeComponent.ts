@@ -1,4 +1,4 @@
-import { Task, ITask, ITaskOption, RunWay, IBuilder, ITaskComponent, TaskComponent, ITaskProvider, IConfigure, TaskModule } from '../../core/index';
+import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure } from '../../core/index';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata } from 'tsioc';
@@ -46,47 +46,49 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      * @memberof TaskComponent
      */
     protected execute(data: ITransform | ITransform[]): Promise<ITransform> {
-        return this.mergeTransforms(data)
+        return this.merge(isArray(data) ? data : [data])
             .then(pstream => this.pipe(pstream));
     }
 
     /**
      * merge transforms
-     *
+     * 
      * @protected
-     * @param {(ITransform | ITransform[])} data
-     * @returns {ITransform}
+     * @param {ITransform[]} data
+     * @returns {Promise<ITransform>}
      * @memberof PipeComponent
      */
-    protected mergeTransforms(data: ITransform | ITransform[]): Promise<ITransform> {
-        let ptranform: Promise<ITransform>;
-        if (isArray(data)) {
+    protected merge(data: ITransform[]): Promise<ITransform> {
+        let ptsf: Promise<ITransform>;
+        let trans = data.filter(it => !it);
+        if (trans.length > 1) {
+            let runner = this.getRunner();
             if (this.merger) {
                 if (isClass(this.merger)) {
-                    if (this.isTask(this.merger)) {
-                        ptranform = this.runByConfig({ task: this.merger }, data)
+                    if (runner.isTask(this.merger)) {
+                        ptsf = runner.runTask(this.merger, data)
                     }
                 } else if (isFunction(this.merger)) {
-                    ptranform = Promise.resolve(this.merger(data));
+                    ptsf = Promise.resolve(this.merger(data));
                 } else {
                     if (isFunction(this.merger['run'])) {
                         let merger = this.merger as ITransformMerger;
-                        ptranform = merger.run(data);
+                        ptsf = merger.run(data);
                     } else if (isClass(this.merger['task'])) {
                         let opt = this.merger as ITaskOption<ITransformMerger>;
-                        if (this.isTask(opt.task)) {
-                            ptranform = this.runByConfig(opt, data, );
+                        if (runner.isTask(opt.task)) {
+                            ptsf = runner.runByConfig(opt, data, );
                         }
                     }
                 }
             }
         }
 
-        if (!ptranform) {
-            ptranform = Promise.resolve(isArray(data) ? data[0] : data);
+        if (!ptsf) {
+            ptsf = Promise.resolve(isArray(data) ? data[0] : data);
         }
 
-        return ptranform.then(tranform => (tranform && isFunction(tranform.pipe)) ? tranform as ITransform : null);
+        return ptsf.then(tranform => (tranform && isFunction(tranform.pipe)) ? tranform as ITransform : null);
     }
 
     /**
@@ -133,20 +135,23 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
     }
 
     protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Promise<ITransform> {
-        let rpstram: Promise<ITransform>
+        let pstf: Promise<ITransform>;
+        let runner = this.getRunner();
         if (isClass(transform)) {
-            rpstram = this.runByConfig({ task: transform }, stream);
+            if (runner.isTask(transform)) {
+                pstf = runner.runTask(transform, stream);
+            }
         } else if (isFunction(transform)) {
-            rpstram = Promise.resolve(transform(this.context, config, stream));
+            pstf = Promise.resolve(transform(this.context, config, stream));
         } else {
             if (isClass(transform['task'])) {
                 let opt = transform as ITaskOption<IPipeComponent>;
-                rpstram = this.runByConfig(opt, stream);
+                pstf = runner.runByConfig(opt, stream);
             } else {
-                rpstram = Promise.resolve(transform as ITransform);
+                pstf = Promise.resolve(transform as ITransform);
             }
         }
-        return rpstram.then(pst => {
+        return pstf.then(pst => {
             if (pst && isFunction(pst.pipe)) {
                 if (pst.changeAsOrigin) {
                     stream = pst;
