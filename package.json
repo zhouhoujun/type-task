@@ -46,7 +46,7 @@
         "reflect-metadata": "^0.1.8",
         "rxjs": "^5.5.7",
         "time-stamp": "^2.0.0",
-        "tsioc": "^1.5.3",
+        "tsioc": "^1.5.4",
         "vinyl-fs": "^3.0.2"
     },
     "devDependencies": {
