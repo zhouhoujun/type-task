@@ -29,7 +29,6 @@ export class InitTaskModuleAction extends ActionComposite {
     }
 
     protected working(container: IContainer, data: InitTaskModuleActionData) {
-
         if (data.targetType && data.target && hasClassMetadata(TaskModule, data.targetType)) {
             let task = data.target as ITaskModule;
             let metas = getTypeMetadata<TaskModuleMetadata>(TaskModule, data.targetType);

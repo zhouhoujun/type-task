@@ -122,15 +122,18 @@ export class TaskContainer implements ITaskContainer {
                 err => {
                     end = prettyTime(process.hrtime(start));
                     console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), chalk.red('errored after'), chalk.magenta(end));
+                    console.error(err);
                     return err;
                 });
     }
 
     protected registerExt(container: IContainer) {
-        container.register(AopModule);
-        container.register(LogModule);
-        container.register(this.log || TaskLogAspect);
+        if (!container.has(LogModule)) {
+            container.register(LogModule);
+        }
+
         container.registerSingleton(taskSymbols.TaskContainer, this);
+        container.register(this.log || TaskLogAspect);
         registerTaskCoreDecorators(container);
         registerTaskModules(container);
     }
