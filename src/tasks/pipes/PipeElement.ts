@@ -3,7 +3,7 @@ import { ITransform } from './ITransform';
 import { RunWay } from '../../core/index';
 import { TransformSource, TransformExpress, DestExpress, TransformMerger } from './pipeTypes';
 import { ITaskContext } from '../../ITaskContext';
-import { Type, isBoolean } from 'tsioc';
+import { Type, isBoolean } from '@ts-ioc/core';
 import { IPipeComponent } from './IPipeComponent';
 import { Src } from '../../utils/index';
 import { SrcOptions, DestOptions } from 'vinyl-fs';

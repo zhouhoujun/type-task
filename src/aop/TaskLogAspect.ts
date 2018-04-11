@@ -1,4 +1,7 @@
-import { Around, Aspect, Joinpoint, JoinpointState, ObjectMap, Singleton, LoggerAspect, Inject, symbols, IContainer, Type, hasOwnClassMetadata } from 'tsioc';
+import { ObjectMap, Singleton, Inject, symbols, IContainer, Type, hasOwnClassMetadata } from '@ts-ioc/core';
+import {  Around, Aspect, Joinpoint, JoinpointState } from '@ts-ioc/aop';
+import { LoggerAspect } from '@ts-ioc/logs';
+
 import chalk from 'chalk';
 import { ITask, Task, TaskModule } from '../core/index';
 const timestamp = require('time-stamp');

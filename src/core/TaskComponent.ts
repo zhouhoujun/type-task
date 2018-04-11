@@ -1,4 +1,4 @@
-import { GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, isClass, Abstract } from 'tsioc';
+import { GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, isClass, Abstract } from '@ts-ioc/core';
 import { ITaskComponent } from './ITaskComponent';
 import { TaskContext } from './TaskContext';
 import { IConfigure } from './IConfigure';

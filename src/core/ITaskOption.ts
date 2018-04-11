@@ -1,4 +1,4 @@
-import { Type, Token, ObjectMap } from 'tsioc';
+import { Type, Token, ObjectMap } from '@ts-ioc/core';
 import { ITaskProvider } from './ITaskProvider';
 import { IBuilder } from './IBuilder';
 import { TaskType } from '../utils/index';

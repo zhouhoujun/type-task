@@ -1,5 +1,5 @@
 import { TaskComponent, ITask, IConfigure, BootsrapTask } from './core/index';
-import { IContainer, Type, Providers, Token, AsyncLoadOptions, IContainerBuilder } from 'tsioc';
+import { IContainer, Type, Providers, Token, AsyncLoadOptions, IContainerBuilder } from '@ts-ioc/core';
 
 /**
  * task container.

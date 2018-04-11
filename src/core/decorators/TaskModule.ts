@@ -1,4 +1,4 @@
-import { createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass, isArray } from 'tsioc';
+import { createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass, isArray } from '@ts-ioc/core';
 import { IConfigure } from '../IConfigure';
 
 /**

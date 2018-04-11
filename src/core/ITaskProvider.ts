@@ -1,4 +1,4 @@
-import { Providers, ObjectMap } from 'tsioc';
+import { Providers, ObjectMap } from '@ts-ioc/core';
 import { RunWay } from './RunWay';
 
 

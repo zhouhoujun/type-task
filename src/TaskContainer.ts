@@ -1,11 +1,14 @@
-import { isArray, IContainer, IContainerBuilder, ContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Mode, Providers, isClass } from 'tsioc';
+import { isArray, IContainer, IContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Mode, Providers, isClass } from '@ts-ioc/core';
 import { taskSymbols } from './utils/index';
 import { BootsrapTask, registerTaskCoreDecorators, ITaskRunner } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 import { TaskLogAspect } from './aop/index';
 import { registerTaskModules } from './tasks/index';
 import chalk from 'chalk';
-import { ITaskContext } from './ITaskContext';;
+import { ITaskContext } from './ITaskContext';
+import { ContainerBuilder } from '@ts-ioc/platform-server';
+import { AopModule } from '@ts-ioc/aop';
+import { LogModule } from '@ts-ioc/logs';
 
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
@@ -124,12 +127,13 @@ export class TaskContainer implements ITaskContainer {
     }
 
     protected registerExt(container: IContainer) {
+        container.register(AopModule);
+        container.register(LogModule);
         container.register(this.log || TaskLogAspect);
         container.registerSingleton(taskSymbols.TaskContainer, this);
         registerTaskCoreDecorators(container);
         registerTaskModules(container);
     }
 
-    
 }
 

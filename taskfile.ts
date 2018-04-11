@@ -7,7 +7,7 @@ const ts = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
 import { classAnnotations } from 'typescript-class-annotations';
-import { isFunction, isBoolean, ObjectMap } from 'tsioc';
+import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
 
 
 @TaskModule({

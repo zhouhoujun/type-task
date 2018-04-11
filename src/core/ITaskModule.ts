@@ -8,5 +8,5 @@ import { ITask } from './ITask';
  * @extends {ITask}
  */
 export interface ITaskModule extends ITask {
-    
+
 }

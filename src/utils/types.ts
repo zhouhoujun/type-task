@@ -1,4 +1,4 @@
-import { IContainer, AsyncLoadOptions, Type } from 'tsioc';
+import { IContainer, AsyncLoadOptions, Type } from '@ts-ioc/core';
 
 /**
  * TaskType

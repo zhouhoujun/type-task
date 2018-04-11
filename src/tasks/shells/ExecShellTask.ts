@@ -1,5 +1,5 @@
 import { ExecOptions, ExecFileOptions, execFile, exec } from 'child_process';
-import { isString, isArray } from 'tsioc';
+import { isString, isArray } from '@ts-ioc/core';
 import { AbstractTask, Task, RunWay } from '../../core/index';
 
 /**

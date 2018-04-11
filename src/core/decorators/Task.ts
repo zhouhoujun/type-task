@@ -1,4 +1,4 @@
-import { isString, isRegExp, isArray, isNumber, createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass } from 'tsioc';
+import { isString, isRegExp, isArray, isNumber, createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass } from '@ts-ioc/core';
 import { Src } from '../../utils/index';
 import { TaskMetadata } from '../metadatas/index';
 

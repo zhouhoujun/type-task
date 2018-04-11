@@ -1,7 +1,7 @@
 import { Task, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
 import { Src } from '../../utils/index';
 import { ITransform } from './ITransform';
-import { isFunction, isString, isArray } from 'tsioc';
+import { isFunction, isString, isArray } from '@ts-ioc/core';
 import { ITaskContext } from '../../ITaskContext';
 import { src, SrcOptions } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';

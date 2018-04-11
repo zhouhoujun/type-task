@@ -1,4 +1,4 @@
-import { ClassMetadata } from 'tsioc';
+import { ClassMetadata } from '@ts-ioc/core';
 import { Src } from '../../utils/index';
 
 /**

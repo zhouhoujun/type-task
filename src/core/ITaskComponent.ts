@@ -1,5 +1,5 @@
 import { ITask } from './ITask';
-import { GComponent, Token, ComponentLifecycle, AsyncLoadOptions, Type, Provider, Providers } from 'tsioc';
+import { GComponent, Token, ComponentLifecycle, AsyncLoadOptions, Type, Provider, Providers } from '@ts-ioc/core';
 import { RunWay } from './RunWay';
 import { ITaskModule } from './ITaskModule';
 import { IConfigure } from '.';

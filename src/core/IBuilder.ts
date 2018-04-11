@@ -1,5 +1,5 @@
 import { ITaskComponent } from './ITaskComponent';
-import { Token } from 'tsioc';
+import { Token } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
 import { ITaskContext } from '../ITaskContext';
 

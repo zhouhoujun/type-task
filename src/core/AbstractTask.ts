@@ -1,4 +1,4 @@
-import { Abstract, Inject } from 'tsioc';
+import { Abstract, Inject } from '@ts-ioc/core';
 import { ITask } from './ITask';
 import { ITaskContext } from '../ITaskContext';
 import { taskSymbols } from '../utils/index';

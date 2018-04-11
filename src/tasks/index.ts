@@ -1,4 +1,4 @@
-import { IContainer, symbols, LifeScope, CoreActions, DecoratorType, IContainerBuilder } from 'tsioc';
+import { IContainer, symbols, LifeScope, CoreActions, DecoratorType, IContainerBuilder } from '@ts-ioc/core';
 import * as shells from './shells/index';
 import * as pipes from './pipes/index';
 
@@ -12,6 +12,5 @@ export * from './pipes/index';
  * @param {IContainer} container
  */
 export function registerTaskModules(container: IContainer) {
-    let builder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
-    builder.snycLoadModule(container, { modules: [shells, pipes] });
+    container.use(shells, pipes);
 }

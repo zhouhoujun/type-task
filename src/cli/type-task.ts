@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { isUndefined } from 'tsioc';
+import { isUndefined } from '@ts-ioc/core';
 import chalk from 'chalk';
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');

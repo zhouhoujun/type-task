@@ -1,4 +1,5 @@
-import { toAbsolutePath, Singleton, Express, Express2, Inject, symbols, IContainer, IContainerBuilder, ObjectMap } from 'tsioc';
+import { Singleton, Express, Express2, Inject, symbols, IContainer, IContainerBuilder, ObjectMap } from '@ts-ioc/core';
+import { toAbsolutePath } from '@ts-ioc/platform-server';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
 import { ITaskContext } from '../ITaskContext';

@@ -2,7 +2,7 @@ import { ITaskProvider } from '../../core/index';
 import { TransformSource, TransformExpress, DestExpress, TransformMerger } from './pipeTypes';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Type } from 'tsioc';
+import { Type } from '@ts-ioc/core';
 import { Src } from '../../utils/index';
 import { ITaskContext } from '../../ITaskContext';
 import { SrcOptions, DestOptions } from 'vinyl-fs';

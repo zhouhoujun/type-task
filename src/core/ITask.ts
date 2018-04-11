@@ -1,4 +1,4 @@
-import { ComponentLifecycle } from 'tsioc';
+import { ComponentLifecycle } from '@ts-ioc/core';
 import { ITaskContext } from '../ITaskContext';
 import { IConfigure } from './IConfigure';
 

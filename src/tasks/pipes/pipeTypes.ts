@@ -2,7 +2,7 @@ import { ITaskProvider, IConfigure } from '../../core/index';
 import { Src } from '../../utils';
 import { ITaskContext } from '../../ITaskContext';
 import { ITransform } from './ITransform';
-import { ObjectMap, Type } from 'tsioc';
+import { ObjectMap, Type } from '@ts-ioc/core';
 import { IPipeComponent } from './IPipeComponent';
 import { ITransformMerger } from './ITransformMerger';
 import { ITaskOption } from '../../core/ITaskOption';

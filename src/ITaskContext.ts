@@ -1,5 +1,5 @@
 import { Src } from './utils/index';
-import { Express, IContainer, IContainerBuilder, ObjectMap } from 'tsioc';
+import { Express, IContainer, IContainerBuilder, ObjectMap } from '@ts-ioc/core';
 import { ITaskContainer } from './ITaskContainer';
 
 

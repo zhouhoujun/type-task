@@ -1,6 +1,6 @@
 import { ITask } from './ITask';
 import { ITaskOption } from './ITaskOption';
-import { Token } from 'tsioc';
+import { Token } from '@ts-ioc/core';
 
 /**
  * task context.

@@ -1,5 +1,5 @@
 import { Task, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
-import { isArray, Abstract, isFunction, isClass } from 'tsioc';
+import { isArray, Abstract, isFunction, isClass } from '@ts-ioc/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent, IPipeComponentProvider } from './IPipeComponent';
 import { ITaskContext } from '../../ITaskContext';

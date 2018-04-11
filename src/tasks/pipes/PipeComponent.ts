@@ -1,7 +1,7 @@
 import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure } from '../../core/index';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata } from 'tsioc';
+import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata } from '@ts-ioc/core';
 import { TransformMerger, TransformExpress, TransformType } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
@@ -52,7 +52,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
 
     /**
      * merge transforms
-     * 
+     *
      * @protected
      * @param {ITransform[]} data
      * @returns {Promise<ITransform>}
