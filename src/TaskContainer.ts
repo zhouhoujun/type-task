@@ -128,6 +128,9 @@ export class TaskContainer implements ITaskContainer {
     }
 
     protected registerExt(container: IContainer) {
+        if (!container.has(AopModule)) {
+            container.register(AopModule);
+        }
         if (!container.has(LogModule)) {
             container.register(LogModule);
         }
