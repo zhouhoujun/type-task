@@ -1,8 +1,7 @@
-import { Task, ITaskProvider, RunWay, AbstractTask } from '../../core/index';
+import { Task, ITaskContext, ITaskProvider, RunWay, AbstractTask } from '@taskp/core';
 import { isArray, Abstract, isFunction, isClass } from '@ts-ioc/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent, IPipeComponentProvider } from './IPipeComponent';
-import { ITaskContext } from '../../ITaskContext';
 import { PipeComponent } from './PipeComponent';
 import { TransformExpress, TransformMerger } from './pipeTypes';
 

@@ -1,5 +1,5 @@
 import { IPipeTask } from './IPipeTask';
-import { ITaskComponent, ITaskProvider } from '../../core/index';
+import { ITaskComponent, ITaskProvider } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { TransformMerger } from './pipeTypes';
 

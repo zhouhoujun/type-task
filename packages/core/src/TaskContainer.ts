@@ -3,7 +3,6 @@ import { taskSymbols } from './utils/index';
 import { BootsrapTask, registerTaskCoreDecorators, ITaskRunner } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 import { TaskLogAspect } from './aop/index';
-import { registerTaskModules } from './tasks/index';
 import chalk from 'chalk';
 import { ITaskContext } from './ITaskContext';
 import { ContainerBuilder } from '@ts-ioc/platform-server';
@@ -138,7 +137,6 @@ export class TaskContainer implements ITaskContainer {
         container.registerSingleton(taskSymbols.TaskContainer, this);
         container.register(this.log || TaskLogAspect);
         registerTaskCoreDecorators(container);
-        registerTaskModules(container);
     }
 
 }

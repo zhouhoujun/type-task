@@ -1,11 +1,8 @@
-import { ITaskProvider, IConfigure } from '../../core/index';
-import { Src } from '../../utils';
-import { ITaskContext } from '../../ITaskContext';
+import { Src, ITaskContext, ITaskProvider, ITaskOption, IConfigure } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { ObjectMap, Type } from '@ts-ioc/core';
 import { IPipeComponent } from './IPipeComponent';
 import { ITransformMerger } from './ITransformMerger';
-import { ITaskOption } from '../../core/ITaskOption';
 
 /**
  * transform source.

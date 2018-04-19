@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "../../packages",
+    "paths": {
+      "@taskp/core": [
+        "../core/src"
+      ]
+    }
+  },
+  "exclude": [
+    "lib",
+    "node_modules"    
+  ]
+}

@@ -1,11 +1,10 @@
-import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure } from '../../core/index';
+import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure, taskSymbols } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata } from '@ts-ioc/core';
 import { TransformMerger, TransformExpress, TransformType } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
-import { taskSymbols } from '../../utils/index';
 
 
 /**

@@ -1,4 +1,4 @@
-import { ITask } from '../../core/ITask';
+import { ITask } from '@taskp/core';
 import { ITransform } from './ITransform';
 
 /**

@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "../../packages",
+    "paths": {
+      "@taskp/pipes": [
+        "../pipes/src"
+      ]
+    }
+  },
+  "exclude": [
+    "lib",
+    "node_modules"    
+  ]
+}

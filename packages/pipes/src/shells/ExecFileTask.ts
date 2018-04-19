@@ -1,8 +1,7 @@
 import { ExecOptions, ExecFileOptions, execFile } from 'child_process';
 import { isString, isArray, isFunction } from '@ts-ioc/core';
 import { existsSync } from 'fs';
-import { TaskSrc } from '../../utils/index';
-import { AbstractTask, Task, RunWay } from '../../core/index';
+import { AbstractTask, TaskSrc, Task, RunWay } from '@taskp/core';
 
 
 
