@@ -3,7 +3,7 @@ import {  Around, Aspect, Joinpoint, JoinpointState } from '@ts-ioc/aop';
 import { LoggerAspect } from '@ts-ioc/logs';
 
 import chalk from 'chalk';
-import { ITask, Task, TaskModule } from '../core/index';
+import { ITask, Task, TaskModule } from '@taskp/core';
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
 /**

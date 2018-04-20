@@ -1,22 +1,20 @@
 import { isArray, IContainer, IContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Mode, Providers, isClass } from '@ts-ioc/core';
 import { taskSymbols } from './utils/index';
-import { BootsrapTask, registerTaskCoreDecorators, ITaskRunner } from './core/index';
+import { BootsrapTask, registerTaskCoreDecorators, ITaskRunner, IConfigure } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
-import chalk from 'chalk';
 import { ITaskContext } from './ITaskContext';
 import { ContainerBuilder } from '@ts-ioc/platform-server';
 import { AopModule } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 
-const timestamp = require('time-stamp');
-const prettyTime = require('pretty-hrtime');
+
 /**
- * task container.
+ * default task container.
  *
  * @export
- * @class TaskManager
+ * @class DefaultTaskContainer
  */
-export class TaskContainer implements ITaskContainer {
+export class DefaultTaskContainer implements ITaskContainer {
 
     container: IContainer;
     containerBuilder: IContainerBuilder;
@@ -39,39 +37,26 @@ export class TaskContainer implements ITaskContainer {
     }
 
     /**
-     * create task container.
-     *
-     * @static
-     * @param {string} root
-     * @param {...(Type<any> | AsyncLoadOptions)[]} modules
-     * @returns {ITaskContainer}
-     * @memberof TaskContainer
-     */
-    static create(root: string, ...modules: (Type<any> | AsyncLoadOptions)[]): ITaskContainer {
-        let taskContainer = new TaskContainer(root);
-        if (modules) {
-            taskContainer.use(...modules);
-        }
-        return taskContainer;
-    }
-
-    /**
      * use modules
      *
      * @param {...(Type<any> | AsyncLoadOptions)[]} modules
      * @returns {this}
-     * @memberof TaskContainer
+     * @memberof DefaultTaskContainer
      */
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
         this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
         return this;
     }
 
+    useConfigure(config: IConfigure) {
+
+    }
+
     /**
      * use logger.
      *
      * @param {Type<any>} logger
-     * @memberof TaskContainer
+     * @memberof DefaultTaskContainer
      */
     useLogger(logger: Type<any>) {
         this.log = logger;
@@ -83,13 +68,10 @@ export class TaskContainer implements ITaskContainer {
      * @param {BootsrapTask} [tasks]
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
-     * @memberof TaskContainer
+     * @memberof DefaultTaskContainer
      */
     bootstrap(tasks?: BootsrapTask, ...providers: Providers[]): Promise<any> {
         let builder = this.containerBuilder;
-        let start, end;
-        start = process.hrtime();
-        console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Starting'), '...');
 
         return Promise.all(this.useModules.map(option => {
             return builder.loadModule(this.container, option);
@@ -110,19 +92,7 @@ export class TaskContainer implements ITaskContainer {
             });
             return seq;
 
-        })
-            .then(
-                data => {
-                    end = prettyTime(process.hrtime(start));
-                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), ' after ', chalk.magenta(end));
-                    return data;
-                },
-                err => {
-                    end = prettyTime(process.hrtime(start));
-                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), chalk.red('errored after'), chalk.magenta(end));
-                    console.error(err);
-                    return err;
-                });
+        });
     }
 
     protected registerExt(container: IContainer) {
@@ -134,7 +104,6 @@ export class TaskContainer implements ITaskContainer {
         }
 
         container.registerSingleton(taskSymbols.TaskContainer, this);
-        // container.register(this.log || TaskLogAspect);
         registerTaskCoreDecorators(container);
     }
 
