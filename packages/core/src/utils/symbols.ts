@@ -1,33 +1,42 @@
 /**
- * IBuilder.
+ * Task symbols.
  */
-export const IBuilder = Symbol('IBuilder');
+export const taskSymbols = {
+    /**
+     * IBuilder.
+     */
+    IBuilder: Symbol('IBuilder'),
 
-/**
- * ITaskRunner.
- */
-export const ITaskRunner = Symbol('ITaskRunner');
-/**
- * ITaskContext.
- */
-export const ITaskContext = Symbol('ITaskContext');
-/**
- * TaskContainer
- */
-export const TaskContainer = Symbol('TaskContainer');
+    /**
+     * ITaskRunner.
+     */
+    ITaskRunner: Symbol('ITaskRunner'),
+    /**
+     * ITaskContext.
+     */
+    ITaskContext: Symbol('ITaskContext'),
+    /**
+     * TaskContainer
+     */
+    TaskContainer: Symbol('TaskContainer'),
 
-/**
- * ExecFile
- */
-export const ExecFile = Symbol('ExecFile');
+    /**
+     * ExecFile
+     */
+    ExecFile: Symbol('ExecFile'),
 
-/**
- * ExecShell
- */
-export const ExecShell = Symbol('ExecShell');
+    /**
+     * ExecShell
+     */
+    ExecShell: Symbol('ExecShell'),
 
 
-/**
- * PipeTask
- */
-export const PipeTask = Symbol('PipeTask');
+    /**
+     * PipeTask
+     */
+    PipeTask: Symbol('PipeTask')
+
+}
+
+export const TaskSymbols = taskSymbols;
+

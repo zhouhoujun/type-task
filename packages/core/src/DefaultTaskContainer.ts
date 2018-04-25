@@ -1,6 +1,6 @@
 import { isArray, IContainer, IContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Mode, Providers, isClass } from '@ts-ioc/core';
 import { taskSymbols } from './utils/index';
-import { BootsrapTask, registerTaskCoreDecorators, ITaskRunner, IConfigure } from './core/index';
+import { BootstrapTask, registerTaskCoreDecorators, ITaskRunner, IConfigure } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 import { ITaskContext } from './ITaskContext';
 import { ContainerBuilder } from '@ts-ioc/platform-server';
@@ -65,12 +65,12 @@ export class DefaultTaskContainer implements ITaskContainer {
     /**
      * bootstrap task.
      *
-     * @param {BootsrapTask} [tasks]
+     * @param {BootstrapTask} [tasks]
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof DefaultTaskContainer
      */
-    bootstrap(tasks?: BootsrapTask, ...providers: Providers[]): Promise<any> {
+    bootstrap(tasks?: BootstrapTask, ...providers: Providers[]): Promise<any> {
         let builder = this.containerBuilder;
 
         return Promise.all(this.useModules.map(option => {

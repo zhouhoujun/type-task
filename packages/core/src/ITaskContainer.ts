@@ -1,4 +1,4 @@
-import { TaskComponent, ITask, IConfigure, BootsrapTask } from './core/index';
+import { TaskComponent, ITask, IConfigure, BootstrapTask } from './core/index';
 import { IContainer, Type, Providers, Token, AsyncLoadOptions, IContainerBuilder } from '@ts-ioc/core';
 
 /**
@@ -51,13 +51,13 @@ export interface ITaskContainer {
     useLogger(logger: Type<any>);
 
     /**
-     * bootstarp task.
+     * bootstrap task.
      *
-     * @param {BootsrapTask} [tasks]
+     * @param {BootstrapTask} [tasks]
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof ITaskContainer
      */
-    bootstrap(tasks?: BootsrapTask, ...providers: Providers[]): Promise<any>;
+    bootstrap(tasks?: BootstrapTask, ...providers: Providers[]): Promise<any>;
 
 }

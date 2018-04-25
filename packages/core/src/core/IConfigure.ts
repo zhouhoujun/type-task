@@ -12,5 +12,7 @@ export interface IConfigure extends ITaskOption<ITask> {
 
 }
 
-
-export type BootsrapTask = IConfigure | Token<any> | (Token<any> | IConfigure)[];
+/**
+ * bootstrap task
+ */
+export type BootstrapTask = IConfigure | Token<any> | (Token<any> | IConfigure)[];

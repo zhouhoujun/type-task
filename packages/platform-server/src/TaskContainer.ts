@@ -1,4 +1,4 @@
-import { DefaultTaskContainer, ITaskContainer, BootsrapTask } from '@taskp/core';
+import { DefaultTaskContainer, ITaskContainer, BootstrapTask } from '@taskp/core';
 import { AsyncLoadOptions, Type, IContainer, Providers } from '@ts-ioc/core';
 import chalk from 'chalk';
 import { TaskLogAspect } from './aop/index';
@@ -31,12 +31,12 @@ export class TaskContainer extends DefaultTaskContainer {
     /**
      * bootstrap task.
      *
-     * @param {BootsrapTask} [tasks]
+     * @param {BootstrapTask} [tasks]
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof DefaultTaskContainer
      */
-    bootstrap(tasks?: BootsrapTask, ...providers: Providers[]): Promise<any> {
+    bootstrap(tasks?: BootstrapTask, ...providers: Providers[]): Promise<any> {
         let start, end;
         start = process.hrtime();
 
