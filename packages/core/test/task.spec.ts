@@ -1,13 +1,14 @@
 import 'mocha';
 import { expect } from 'chai';
-import { ITaskContainer, TaskContainer, TaskElement } from '../src';
+import { ITaskContainer, DefaultTaskContainer, TaskElement } from '../src';
+
 import { SimpleTask, SimpleCTask, TaskModuleTest } from './simples.task';
 
 describe('auto register with build', () => {
 
     let container: ITaskContainer;
     before(async () => {
-        container = new TaskContainer(__dirname);
+        container = new DefaultTaskContainer(__dirname);
     });
 
     it('should bootstrap with single task.', async () => {

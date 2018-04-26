@@ -1,10 +1,7 @@
 import { DefaultTaskContainer, ITaskContainer, BootstrapTask } from '@taskp/core';
 import { AsyncLoadOptions, Type, IContainer, Providers } from '@ts-ioc/core';
-import chalk from 'chalk';
 import { TaskLogAspect } from './aop/index';
-import { TaskContext } from './TaskContext';
-const timestamp = require('time-stamp');
-const prettyTime = require('pretty-hrtime');
+
 
 export class TaskContainer extends DefaultTaskContainer {
 
@@ -38,28 +35,27 @@ export class TaskContainer extends DefaultTaskContainer {
      * @memberof DefaultTaskContainer
      */
     bootstrap(tasks?: BootstrapTask, ...providers: Providers[]): Promise<any> {
-        let start, end;
-        start = process.hrtime();
+        let end: Date;
+        let start = new Date();
 
-        console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Starting'), '...');
+        console.log('[' + start.toString() + ']', 'Starting', '...');
 
         return super.bootstrap(tasks, ...providers)
             .then(
                 data => {
-                    end = prettyTime(process.hrtime(start));
-                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), ' after ', chalk.magenta(end));
+                    end = new Date();
+                    console.log('[' + end.toString() + ']', 'Finished', ' after ', end.getTime() - start.getTime());
                     return data;
                 },
                 err => {
-                    end = prettyTime(process.hrtime(start));
-                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), chalk.red('errored after'), chalk.magenta(end));
+                    end = new Date();
+                    console.log('[' + end.toString() + ']', 'Finished', 'errored after', end.getTime() - start.getTime());
                     console.error(err);
                     return err;
                 });
     }
 
     protected registerExt(container: IContainer) {
-        container.register(TaskContext);
         super.registerExt(container);
         container.register(this.log || TaskLogAspect);
     }

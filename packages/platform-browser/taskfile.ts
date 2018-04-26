@@ -1,4 +1,6 @@
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from './src';
+import { Task, ITask, taskSymbols, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from '@taskp/core';
+import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType } from '@taskp/pipes';
+
 import * as mocha from 'gulp-mocha';
 
 const del = require('del');
@@ -8,6 +10,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
 import { classAnnotations } from 'typescript-class-annotations';
 import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
+import { TaskContainer } from './src/TaskContainer';
 
 
 @TaskModule({

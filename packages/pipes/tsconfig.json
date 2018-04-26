@@ -6,7 +6,13 @@
     "paths": {
       "@taskp/core": [
         "../core/src"
-      ]
+      ],
+      "@taskp/pipes": [
+        "../pipes/src"
+      ],
+      "@taskp/platform-server": [
+        "../platform-server/src"
+      ],
     }
   },
   "exclude": [

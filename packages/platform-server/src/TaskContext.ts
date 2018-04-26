@@ -2,9 +2,7 @@ import { Singleton, Express, Express2, Inject, symbols, IContainer, IContainerBu
 import { toAbsolutePath } from '@ts-ioc/platform-server';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
-import { ITaskContext } from '../ITaskContext';
-import { taskSymbols } from '../utils/index';
-import { ITaskContainer } from '../ITaskContainer';
+import { ITaskContext, ITaskContainer, taskSymbols } from '@taskp/core';
 
 const minimist = require('minimist');
 

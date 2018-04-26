@@ -1,6 +1,8 @@
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from './src';
-import * as mocha from 'gulp-mocha';
+import { Task, ITask, taskSymbols, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from '@taskp/core';
 import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType } from '@taskp/pipes';
+import { TaskContainer } from '@taskp/platform-server';
+
+import * as mocha from 'gulp-mocha';
 const del = require('del');
 const cache = require('gulp-cached');
 const ts = require('gulp-typescript');

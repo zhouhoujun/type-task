@@ -1,4 +1,4 @@
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, TaskComponent, ITaskComponent, TaskModule } from '../src';
+import { Task, ITask, taskSymbols, AbstractTask, TaskElement, TaskComponent, ITaskComponent, TaskModule } from '../src';
 import { Inject } from '@ts-ioc/core';
 import { RunWay } from '../src/core/RunWay';
 

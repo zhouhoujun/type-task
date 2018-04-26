@@ -36,7 +36,7 @@ export interface ITaskContext {
     taskContainer: ITaskContainer;
 
     /**
-     * get process env agrs.
+     * get task context env agrs.
      *
      * @returns {*}
      * @memberof ITaskContext
