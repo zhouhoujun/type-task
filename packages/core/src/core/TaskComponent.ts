@@ -1,13 +1,13 @@
 import { GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, isClass, Abstract } from '@ts-ioc/core';
 import { ITaskComponent } from './ITaskComponent';
-import { TaskContext } from './TaskContext';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
 import { RunWay } from './RunWay';
-import { Defer, taskSymbols } from '../utils/index';
+import { Defer, taskSymbols, TaskSymbols } from '../utils/index';
 import { IBuilder } from './IBuilder';
 import { ITaskOption } from './ITaskOption';
 import { ITaskRunner } from './ITaskRunner';
+import { ITaskContext } from '../ITaskContext';
 
 /**
  * task component.
@@ -30,8 +30,8 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     /**
      * task run enviroment.
      */
-    @Inject()
-    context: TaskContext;
+    @Inject(TaskSymbols.ITaskContext)
+    context: ITaskContext;
 
     constructor(name: string, public runWay = RunWay.seqFirst, config?: IConfigure) {
         super(name);

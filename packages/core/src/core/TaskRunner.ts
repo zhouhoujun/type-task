@@ -6,6 +6,13 @@ import { taskSymbols } from '../utils/index';
 import { Task, TaskModule } from './decorators/index';
 import { ITaskRunner } from './ITaskRunner';
 
+/**
+ * task runner.
+ * 
+ * @export
+ * @class TaskRunner
+ * @implements {ITaskRunner}
+ */
 @Singleton(taskSymbols.ITaskRunner)
 export class TaskRunner implements ITaskRunner {
 

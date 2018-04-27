@@ -1,7 +1,48 @@
 /**
  * Task symbols.
  */
-export const taskSymbols = {
+export interface TaskSymbols {
+    /**
+     * IBuilder.
+     */
+    IBuilder: symbol;
+
+    /**
+     * ITaskRunner.
+     */
+    ITaskRunner: symbol;
+    /**
+     * ITaskContext.
+     */
+    ITaskContext: symbol;
+    /**
+     * TaskContainer
+     */
+    TaskContainer: symbol;
+
+    /**
+     * ExecFile
+     */
+    ExecFile: symbol;
+
+    /**
+     * ExecShell
+     */
+    ExecShell: symbol;
+
+
+    /**
+     * PipeTask
+     */
+    PipeTask: symbol;
+
+}
+
+
+/**
+ * Task symbols.
+ */
+export const TaskSymbols:TaskSymbols = {
     /**
      * IBuilder.
      */
@@ -38,5 +79,5 @@ export const taskSymbols = {
 
 }
 
-export const TaskSymbols = taskSymbols;
+export const taskSymbols = TaskSymbols;
 

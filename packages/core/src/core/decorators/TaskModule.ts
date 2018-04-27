@@ -1,4 +1,4 @@
-import { createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass, isArray } from '@ts-ioc/core';
+import { createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass, isArray, ITypeDecorator } from '@ts-ioc/core';
 import { IConfigure } from '../IConfigure';
 
 /**
@@ -18,16 +18,38 @@ export interface TaskModuleMetadata extends ClassMetadata {
  *
  * @export
  * @interface ITaskClassDecorator
- * @extends {IClassDecorator<T>}
+ * @extends {ITypeDecorator<T>}
  * @template T
  */
-export interface ITaskClassDecorator<T extends TaskModuleMetadata> extends IClassDecorator<T> {
+export interface ITaskClassDecorator<T extends TaskModuleMetadata> extends ITypeDecorator<T> {
+    /**
+     * task module.
+     * 
+     * @TaskModule
+     * 
+     * @param {IConfigure} config task module config.
+     * @param {(Registration<any> | symbol | string)} provide define this class provider for provide.
+     * @param {string} [alias] define this class provider with alias for provide.
+     * @param {boolean} [singlton] define this class as singlton.
+     * @param {number} [cache]  define class cahce expris when is not singlton.
+     */
     (config: IConfigure, provide?: Registration<any> | symbol | string, alias?: string, singlton?: boolean, cache?: number): ClassDecorator;
+
+    /**
+     * task module.
+     * 
+     * @TaskModule
+     * 
+     * @param {T} [metadata] task module metadata.
+     */
     (metadata?: T): ClassDecorator;
 }
 
 /**
- * pipe task.
+ * task module.
+ * 
+ * @TaskModule
+ * 
  */
 export const TaskModule: ITaskClassDecorator<TaskModuleMetadata> =
     createClassDecorator<TaskModuleMetadata>('TaskModule',
