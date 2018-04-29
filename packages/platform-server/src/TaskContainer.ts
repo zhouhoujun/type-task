@@ -2,10 +2,17 @@ import { DefaultTaskContainer, ITaskContainer, BootstrapTask } from '@taskp/core
 import { AsyncLoadOptions, Type, IContainer, Providers } from '@ts-ioc/core';
 import chalk from 'chalk';
 import { TaskLogAspect } from './aop/index';
-import { TaskContext } from './TaskContext';
+// import { TaskContext } from './TaskContext';
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
 
+/**
+ * task container in server.
+ * 
+ * @export
+ * @class TaskContainer
+ * @extends {DefaultTaskContainer}
+ */
 export class TaskContainer extends DefaultTaskContainer {
 
     constructor(rootPath: string, container?: IContainer) {
@@ -59,7 +66,6 @@ export class TaskContainer extends DefaultTaskContainer {
     }
 
     protected registerExt(container: IContainer) {
-        container.register(TaskContext);
         super.registerExt(container);
         container.register(this.log || TaskLogAspect);
     }

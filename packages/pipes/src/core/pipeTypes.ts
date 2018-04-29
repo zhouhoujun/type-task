@@ -1,18 +1,19 @@
-import { Src, ITaskContext, ITaskProvider, ITaskOption, IConfigure } from '@taskp/core';
+import { Src, ITaskProvider, ITaskOption, IConfigure } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { ObjectMap, Type } from '@ts-ioc/core';
 import { IPipeComponent } from './IPipeComponent';
 import { ITransformMerger } from './ITransformMerger';
+import { IPipeTaskContext } from './IPipeTaskContext';
 
 /**
  * transform source.
  */
-export type TransformSource = Src | ((context?: ITaskContext, config?: IConfigure) => Src);
+export type TransformSource = Src | ((context?: IPipeTaskContext, config?: IConfigure) => Src);
 
 /**
  * pipe express
  */
-export type PipeExpress = (context?: ITaskContext, config?: IConfigure, transform?: ITransform) => ITransform | Promise<ITransform>;
+export type PipeExpress = (context?: IPipeTaskContext, config?: IConfigure, transform?: ITransform) => ITransform | Promise<ITransform>;
 
 /**
  * transform type.
@@ -21,7 +22,7 @@ export type TransformType = ITransform | PipeExpress | Type<IPipeComponent> | IT
 /**
  * task transform express.
  */
-export type TransformExpress = ((context?: ITaskContext, config?: IConfigure, transform?: ITransform) => TransformType[])
+export type TransformExpress = ((context?: IPipeTaskContext, config?: IConfigure, transform?: ITransform) => TransformType[])
     | TransformType[];
 
 /**

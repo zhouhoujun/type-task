@@ -1,11 +1,13 @@
 import { isArray, IContainer, IContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Mode, Providers, isClass } from '@ts-ioc/core';
 import { taskSymbols } from './utils/index';
-import { BootstrapTask, registerTaskCoreDecorators, ITaskRunner, IConfigure } from './core/index';
+import { BootstrapTask, ITaskRunner, IConfigure } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
 import { ITaskContext } from './ITaskContext';
 import { ContainerBuilder } from '@ts-ioc/platform-server';
 import { AopModule } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
+import { DefaultTaskContext } from '.';
+import { CoreModule } from './CoreModule';
 
 
 /**
@@ -73,6 +75,11 @@ export class DefaultTaskContainer implements ITaskContainer {
     bootstrap(tasks?: BootstrapTask, ...providers: Providers[]): Promise<any> {
         let builder = this.containerBuilder;
 
+        // check has default task context registered.
+        if(!this.container.has(taskSymbols.ITaskContext)){
+            this.container.register(taskSymbols.ITaskContext, DefaultTaskContext);
+        }
+
         return Promise.all(this.useModules.map(option => {
             return builder.loadModule(this.container, option);
         })).then((types) => {
@@ -104,7 +111,9 @@ export class DefaultTaskContainer implements ITaskContainer {
         }
 
         container.registerSingleton(taskSymbols.TaskContainer, this);
-        registerTaskCoreDecorators(container);
+        if (!container.has(CoreModule)) {
+            container.register(CoreModule);
+        }
     }
 
 }

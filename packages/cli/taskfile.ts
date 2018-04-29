@@ -1,4 +1,7 @@
-import { Task, ITask, taskSymbols, TaskContainer, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from './src';
+import { Task, ITask, taskSymbols, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from '@taskp/core';
+import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType, PipeTask } from '@taskp/pipes';
+import { TaskContainer } from '@taskp/platform-server';
+
 import * as mocha from 'gulp-mocha';
 
 const del = require('del');
@@ -53,7 +56,7 @@ import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
     },
     task: PipeElement
 })
-export class TsCompile extends TaskElement {
+export class TsCompile extends PipeTask {
 
     constructor(name: string, runWay?: RunWay, public src?: Src, public dest?: Src,
         private tsPipes?: TransformExpress, private jsPipes?: TransformExpress,

@@ -1,5 +1,5 @@
 import { Task, ITask, taskSymbols, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from '@taskp/core';
-import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType } from '@taskp/pipes';
+import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType, PipeTask, PipeModule } from '@taskp/pipes';
 import { TaskContainer } from '@taskp/platform-server';
 
 import * as mocha from 'gulp-mocha';
@@ -57,7 +57,7 @@ import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
     },
     task: PipeElement
 })
-export class TsCompile extends TaskElement {
+export class TsCompile extends PipeTask {
 
     constructor(name: string, runWay?: RunWay, public src?: Src, public dest?: Src,
         private tsPipes?: TransformExpress, private jsPipes?: TransformExpress,
@@ -112,6 +112,7 @@ class TestTask extends TaskElement {
 }
 
 TaskContainer.create(__dirname)
+    .use(PipeModule)
     .bootstrap([
         TestTask,
         {

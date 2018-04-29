@@ -12,7 +12,7 @@
       ],
       "@taskp/platform-server": [
         "../platform-server/src"
-      ],
+      ]
     }
   },
   "exclude": [

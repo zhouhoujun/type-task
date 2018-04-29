@@ -2,8 +2,8 @@ import { Singleton, Express, Express2, Inject, symbols, IContainer, IContainerBu
 import { toAbsolutePath } from '@ts-ioc/platform-server';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
-import { ITaskContext, ITaskContainer, taskSymbols } from '@taskp/core';
-
+import { ITaskContext, ITaskContainer, taskSymbols, DefaultTaskContext } from '@taskp/core';
+import { IPipeTaskContext } from './IPipeTaskContext';
 const minimist = require('minimist');
 
 /**
@@ -12,23 +12,12 @@ const minimist = require('minimist');
  * @export
  * @class TaskContext
  */
-@Singleton(taskSymbols.ITaskContext)
-export class TaskContext implements ITaskContext {
+@Singleton(taskSymbols.ITaskContext, 'pipe')
+export class PipeTaskContext extends DefaultTaskContext implements IPipeTaskContext {
     packageFile = 'package.json';
 
-    @Inject(taskSymbols.TaskContainer)
-    public taskContainer: ITaskContainer;
-
     constructor() {
-
-    }
-
-    get container(): IContainer {
-        return this.taskContainer.container;
-    }
-
-    get containerBuilder(): IContainerBuilder {
-        return this.taskContainer.containerBuilder;
+        super()
     }
 
     private args: ObjectMap<any>;

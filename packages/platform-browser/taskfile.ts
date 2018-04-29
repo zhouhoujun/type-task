@@ -1,6 +1,6 @@
 import { Task, ITask, taskSymbols, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from '@taskp/core';
-import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType } from '@taskp/pipes';
-
+import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType, PipeTask } from '@taskp/pipes';
+import { TaskContainer } from './src/TaskContainer';
 import * as mocha from 'gulp-mocha';
 
 const del = require('del');
@@ -10,7 +10,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
 import { classAnnotations } from 'typescript-class-annotations';
 import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
-import { TaskContainer } from './src/TaskContainer';
+
 
 
 @TaskModule({
@@ -56,7 +56,7 @@ import { TaskContainer } from './src/TaskContainer';
     },
     task: PipeElement
 })
-export class TsCompile extends TaskElement {
+export class TsCompile extends PipeTask {
 
     constructor(name: string, runWay?: RunWay, public src?: Src, public dest?: Src,
         private tsPipes?: TransformExpress, private jsPipes?: TransformExpress,

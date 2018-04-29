@@ -2,7 +2,13 @@ import { DefaultTaskContainer, ITaskContainer, BootstrapTask } from '@taskp/core
 import { AsyncLoadOptions, Type, IContainer, Providers } from '@ts-ioc/core';
 import { TaskLogAspect } from './aop/index';
 
-
+/**
+ * task container in browser.
+ * 
+ * @export
+ * @class TaskContainer
+ * @extends {DefaultTaskContainer}
+ */
 export class TaskContainer extends DefaultTaskContainer {
 
     constructor(rootPath: string, container?: IContainer) {

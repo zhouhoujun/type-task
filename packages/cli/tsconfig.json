@@ -9,6 +9,9 @@
       ],
       "@taskp/pipes": [
         "../pipes/src"
+      ],
+      "@taskp/platform-server": [
+        "../platform-server/src"
       ]
     }
   },

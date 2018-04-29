@@ -1,10 +1,11 @@
-import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure, taskSymbols } from '@taskp/core';
+import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure, taskSymbols, TaskSymbols } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata } from '@ts-ioc/core';
+import { Abstract, isArray, isClass, isFunction, IContainer, getTypeMetadata, Inject, Registration } from '@ts-ioc/core';
 import { TransformMerger, TransformExpress, TransformType } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
+import { IPipeTaskContext } from './IPipeTaskContext';
 
 
 /**
@@ -20,6 +21,13 @@ import { IPipeTask } from './IPipeTask';
  */
 @Abstract()
 export abstract class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> implements ITask, IPipeComponent {
+    
+    /**
+     * pipe task run enviroment.
+     */
+    @Inject(new Registration(TaskSymbols.ITaskContext, 'pipe'))
+    context: IPipeTaskContext;
+
     constructor(
         name: string,
         runWay = RunWay.seqFirst,

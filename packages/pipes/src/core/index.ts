@@ -2,6 +2,7 @@
 export * from './IPipeComponent';
 export * from './IPipeElementProvider';
 export * from './IPipeTask';
+export * from './PipeTask';
 export * from './ITransform';
 export * from './ITransformMerger';
 export * from './PipeComponent';
@@ -10,3 +11,7 @@ export * from './PipeDest';
 export * from './PipeSource';
 export * from './PipeStream';
 export * from './pipeTypes';
+
+
+export * from './IPipeTaskContext';
+export * from './PipeTaskContext';
