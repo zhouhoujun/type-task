@@ -1,7 +1,7 @@
 import { IPipeTask } from './IPipeTask';
-import { ITaskComponent, ITaskProvider } from '@taskp/core';
+import { ITaskComponent, ITaskProvider, Src } from '@taskp/core';
 import { ITransform } from './ITransform';
-import { TransformMerger } from './pipeTypes';
+import { TransformMerger, TransformSource } from './pipeTypes';
 import { IPipeTaskContext } from './IPipeTaskContext'
 
 /**
@@ -38,9 +38,9 @@ export interface IPipeComponent extends ITaskComponent {
     /**
      * run task.
      *
-     * @param {(ITransform | ITransform[])} [data]
+     * @param {(Src | ITransform | ITransform[])} [data]
      * @returns {Promise<ITransform>}
      * @memberof IPipeComponent
      */
-    run(data?: ITransform | ITransform[]): Promise<ITransform>;
+    run(data?: Src | ITransform | ITransform[]): Promise<ITransform>;
 }

@@ -1,10 +1,11 @@
 import { Task, Src, TaskElement, RunWay, ITaskContext } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { TransformSource, TransformExpress, DestExpress, TransformMerger } from './pipeTypes';
-import { Type, isBoolean } from '@ts-ioc/core';
+import { Type, isBoolean, isFunction, Mode } from '@ts-ioc/core';
 import { IPipeComponent } from './IPipeComponent';
-import { SrcOptions, DestOptions } from 'vinyl-fs';
+import { SrcOptions, DestOptions, watch } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';
+import { IWatchSource } from './IWatchSource';
 
 /**
  * pipe component
@@ -15,15 +16,16 @@ import { PipeComponent } from './PipeComponent';
  * @implements {IPipeComponent<ITransform>}
  */
 @Task
-export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeComponent {
-    private watch?: TransformSource;
+export class PipeElement extends PipeComponent<IPipeComponent> implements IWatchSource {
+
+    public watchSrc?: TransformSource;
 
     constructor(
         name: string,
         runWay = RunWay.seqFirst,
         merger?: TransformMerger,
 
-        private src?: TransformSource,
+        public src?: TransformSource,
         private srcOptions?: SrcOptions,
         private srcType?: Type<IPipeComponent>,
         private srcMerger?: TransformMerger,
@@ -42,12 +44,15 @@ export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeC
     ) {
         super(name, runWay, merger);
         if (watch) {
-            this.watch = isBoolean(watch) ? src : watch;
+            this.watchSrc = isBoolean(watch) ? src : watch;
         }
     }
 
     onInit() {
         let container = this.context.container;
+        if (this.watchSrc) {
+            this.watch(this.watchSrc);
+        }
         if (this.src) {
             this.add(container.resolve<IPipeComponent>(
                 this.srcType || 'PipeSource',
@@ -64,6 +69,21 @@ export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeC
                 this.destType || 'PipeDest',
                 { name: `${this.name}-dest`, dest: this.dest, destPipes: this.destPipes, options: this.destOptions, merger: this.destMerger }))
         }
+    }
+
+    run(data?: Src | ITransform | ITransform[]): Promise<ITransform> {
+        return super.run(data)
+            .then(rd => {
+                return rd as ITransform;
+            });
+    }
+
+    watch(src?: TransformSource) {
+        src = src || this.src;
+        let watchSrc = isFunction(src) ? src(this.context, this.getConfig()) : src;
+        watch(watchSrc, () => {
+            this.run(watchSrc);
+        });
     }
 
     protected pipe(data: ITransform): Promise<ITransform> {

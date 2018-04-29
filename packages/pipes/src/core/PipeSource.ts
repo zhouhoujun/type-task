@@ -1,10 +1,10 @@
 import { Src, Task, ITaskProvider, ITaskContext, RunWay, AbstractTask } from '@taskp/core';
-import {  } from '../../utils/index';
 import { ITransform } from './ITransform';
-import { isFunction, isString, isArray } from '@ts-ioc/core';
+import { isFunction, isString, isArray, Mode } from '@ts-ioc/core';
 import { src, SrcOptions } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';
 import { IPipeComponent, IPipeComponentProvider } from './IPipeComponent';
+import { IWatchSource } from './IWatchSource';
 import { TransformSource, TransformMerger } from './pipeTypes';
 
 /**
@@ -32,20 +32,20 @@ export interface IPipeSourceProvider extends IPipeComponentProvider {
 }
 
 @Task
-export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeComponent {
+export class PipeSource extends PipeComponent<IPipeComponent> implements IWatchSource {
 
-    constructor(name: string, runWay = RunWay.paraLast, protected src: TransformSource, merger?: TransformMerger, protected options?: SrcOptions) {
+    constructor(name: string, runWay = RunWay.paraLast, public src?: TransformSource, public watchSrc?: TransformSource, merger?: TransformMerger, protected options?: SrcOptions) {
         super(name, runWay, merger);
         this.options = Object.assign({ allowEmpty: true }, this.options || {});
     }
 
-    protected source(): ITransform {
-        let source = isFunction(this.src) ? this.src(this.context, this.getConfig()) : this.src;
-        return src(source, this.options);
+    protected source(data: string[]): Promise<ITransform> {
+        return Promise.resolve(src(data, this.options));
     }
 
     protected merge(data: ITransform[]): Promise<ITransform> {
-        let newTransform = this.source();
+        let srcs = isFunction(this.src) ? this.src(this.context, this.getConfig()) : this.src;
+        let newTransform = src(srcs, this.options);
         data = data || [];
         data.unshift(newTransform);
         return super.merge(data);
