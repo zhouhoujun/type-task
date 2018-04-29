@@ -5,7 +5,7 @@ import { Type, isBoolean, isFunction, Mode } from '@ts-ioc/core';
 import { IPipeComponent } from './IPipeComponent';
 import { SrcOptions, DestOptions, watch } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';
-import { IWatchSource } from './IWatchSource';
+import { IPipeElement } from './IPipeElement';
 
 /**
  * pipe component
@@ -16,7 +16,7 @@ import { IWatchSource } from './IWatchSource';
  * @implements {IPipeComponent<ITransform>}
  */
 @Task
-export class PipeElement extends PipeComponent<IPipeComponent> implements IWatchSource {
+export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeElement {
 
     public watchSrc?: TransformSource;
 
