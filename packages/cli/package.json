@@ -2,15 +2,30 @@
   "name": "@taskp/cli",
   "version": "2.0.5",
   "description": "tsioc is AOP, Ioc container, via typescript decorator",
-  "main": "./bundles/core.umd.js",
-  "typings": "./lib/index.d.ts",
+  "main": "./lib/taskp.js",
+  "typings": "./lib/taskp.d.ts",
+  "bin": {
+    "taskp": "./bin/taskp.js"
+  },
   "scripts": {
     "postinstall": "npm prune",
     "reinstall": "npm cache clean && npm install",
     "test": "ts-node -r tsconfig-paths/register taskfile.ts",
     "prepublish": "ts-node -r tsconfig-paths/register taskfile.ts"
   },
-  "keywords": ["IoC", "AOP", "dependency", "injection", "framework", "container", "decorator", "autofac", "Inject", "type", "typescript"],
+  "keywords": [
+    "IoC",
+    "AOP",
+    "dependency",
+    "injection",
+    "framework",
+    "container",
+    "decorator",
+    "autofac",
+    "Inject",
+    "type",
+    "typescript"
+  ],
   "author": "houjun",
   "license": "MIT",
   "bugs": {

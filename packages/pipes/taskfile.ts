@@ -1,5 +1,5 @@
 import { Task, ITask, taskSymbols, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from '@taskp/core';
-import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType, PipeTask } from '@taskp/pipes';
+import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType, PipeTask, PipeModule } from '@taskp/pipes';
 import { TaskContainer } from '@taskp/platform-server';
 
 import * as mocha from 'gulp-mocha';
@@ -110,6 +110,7 @@ class TestTask extends TaskElement {
 }
 
 TaskContainer.create(__dirname)
+    .use(PipeModule)
     .bootstrap([
         TestTask,
         {

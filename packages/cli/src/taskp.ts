@@ -2,6 +2,7 @@
 
 import { isUndefined } from '@ts-ioc/core';
 import chalk from 'chalk';
+
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
 const Liftoff = require('liftoff');
@@ -32,9 +33,9 @@ let jsVariants = require('interpret').jsVariants;
 
 
 const cli = new Liftoff({
-  name: 'type-task',
-  processTitle: 'type-task',
-  moduleName: 'type-task',
+  name: 'taskp',
+  processTitle: 'taskp',
+  moduleName: 'taskp',
   configName: 'taskfile',
   extensions: jsVariants,
   v8flags: ['--harmony']
@@ -58,7 +59,7 @@ cli.launch({
 }, (env) => {
 
   if (versionFlag) {
-    console.log('type-task CLI version', cliPackage.version);
+    console.log('taskp CLI version', cliPackage.version);
     if (env.modulePackage && !isUndefined(env.modulePackage.version)) {
       console.log('Local version', env.modulePackage.version);
     }

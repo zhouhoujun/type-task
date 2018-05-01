@@ -3,9 +3,6 @@
     "version": "0.3.1",
     "description": "type-task is task manager via AOP, IOC.",
     "main": "./lib/index.js",
-    "bin": {
-        "type-task": "./bin/type-task.js"
-    },
     "typings": "./lib/index.d.ts",
     "scripts": {
         "reinstall": "npm cache clean && npm install",
