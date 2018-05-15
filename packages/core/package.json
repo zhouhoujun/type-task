@@ -10,7 +10,19 @@
     "test": "ts-node -r tsconfig-paths/register taskfile.ts",
     "prepublish": "ts-node -r tsconfig-paths/register taskfile.ts"
   },
-  "keywords": ["IoC", "AOP", "dependency", "injection", "framework", "container", "decorator", "autofac", "Inject", "type", "typescript"],
+  "keywords": [
+    "IoC",
+    "AOP",
+    "dependency",
+    "injection",
+    "framework",
+    "container",
+    "decorator",
+    "autofac",
+    "Inject",
+    "type",
+    "typescript"
+  ],
   "author": "houjun",
   "license": "MIT",
   "bugs": {
@@ -22,7 +34,9 @@
   },
   "homepage": "https://github.com/zhouhoujun/tsioc#readme",
   "dependencies": {
-    "reflect-metadata": "^0.1.12"
+    "reflect-metadata": "^0.1.12",
+    "@ts-ioc/aop": "^2.1.3",
+    "@ts-ioc/core": "^2.1.3"
   },
   "directories": {
     "lib": "lib",

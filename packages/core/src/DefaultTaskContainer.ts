@@ -6,7 +6,7 @@ import { ITaskContext } from './ITaskContext';
 import { ContainerBuilder } from '@ts-ioc/platform-server';
 import { AopModule } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
-import { DefaultTaskContext } from '.';
+import { DefaultTaskContext } from './DefaultTaskContext';
 import { CoreModule } from './CoreModule';
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { isUndefined } from '@ts-ioc/core';
+import { isUndefined } from 'util';
 import chalk from 'chalk';
 
 const timestamp = require('time-stamp');
@@ -30,7 +30,11 @@ let argv = require('minimist')(process.argv.slice(2));
 let cliPackage = require('../package');
 let versionFlag = argv.v || argv.version;
 let jsVariants = require('interpret').jsVariants;
-
+let tsregister: string[] = jsVariants['.ts']
+if (tsregister.indexOf('tsconfig-paths/register') < 0) {
+  tsregister.push('tsconfig-paths/register');
+  jsVariants['.ts'] = tsregister;
+}
 
 const cli = new Liftoff({
   name: 'taskp',
