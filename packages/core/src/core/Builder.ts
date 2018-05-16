@@ -1,11 +1,12 @@
-import { IBuilder } from './IBuilder';
+import { IBuilder, BuilderToken } from './IBuilder';
 import { ITaskComponent } from './ITaskComponent';
-import { Type, hasOwnClassMetadata, isFunction, Inject, symbols, IContainer, Injectable, Providers, Singleton, isArray, isClass } from '@ts-ioc/core';
+import { Type, hasOwnClassMetadata, isFunction, Inject, IContainer, Injectable, Providers, Singleton, isArray, isClass } from '@ts-ioc/core';
 import { Task } from './decorators/index';
 import { IConfigure } from './IConfigure';
 import { ITaskContext } from '../ITaskContext';
-import { taskSymbols, TaskType } from '../utils/index';
+import { TaskType } from '../utils/index';
 import { ITask } from './ITask';
+import { TaskContextToken } from '../ITaskContext';
 
 /**
  * builder.
@@ -14,10 +15,10 @@ import { ITask } from './ITask';
  * @class Builder
  * @implements {IBuilder}
  */
-@Singleton(taskSymbols.IBuilder)
+@Singleton(BuilderToken)
 export class Builder implements IBuilder {
 
-    @Inject(taskSymbols.ITaskContext)
+    @Inject(TaskContextToken)
     context: ITaskContext;
 
     constructor() {

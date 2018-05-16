@@ -1,4 +1,4 @@
-import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure, taskSymbols, TaskSymbols, Src } from '@taskp/core';
+import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure, Src, TaskContextToken } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { Abstract, isArray, isString, isClass, isFunction, IContainer, getTypeMetadata, Inject, Registration } from '@ts-ioc/core';
@@ -26,7 +26,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
     /**
      * pipe task run enviroment.
      */
-    @Inject(new Registration(TaskSymbols.ITaskContext, 'pipe'))
+    @Inject(new Registration(TaskContextToken, 'pipe'))
     context: IPipeTaskContext;
 
     constructor(

@@ -1,4 +1,4 @@
-import { IContainer, symbols, LifeScope, CoreActions, DecoratorType, IContainerBuilder, LifeState, IocState, Inject, IocModule } from '@ts-ioc/core';
+import { IContainer, LifeScope, CoreActions, DecoratorType, IContainerBuilder, LifeState, IocState, Inject, IocModule, ContainerToken } from '@ts-ioc/core';
 import { Builder, TaskRunner, Task, TaskModule, TaskElement } from './core/index';
 import { InitTaskAction } from './core/actions/InitTaskAction';
 import { InitTaskModuleAction } from './core/actions/InitTaskModuleAction';
@@ -12,7 +12,7 @@ import { InitTaskModuleAction } from './core/actions/InitTaskModuleAction';
  */
 @IocModule('setup')
 export class CoreModule {
-    constructor(@Inject(symbols.IContainer) private container: IContainer) {
+    constructor(@Inject(ContainerToken) private container: IContainer) {
     }
 
     setup() {

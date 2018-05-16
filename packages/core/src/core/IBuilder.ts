@@ -1,8 +1,12 @@
 import { ITaskComponent } from './ITaskComponent';
-import { Token } from '@ts-ioc/core';
+import { Token, InjectToken } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
 import { ITaskContext } from '../ITaskContext';
 
+/**
+ * builder token.
+ */
+export const BuilderToken = new InjectToken<IBuilder>('__TASK_Builder');
 
 /**
  * builder.

@@ -1,4 +1,4 @@
-import { ObjectMap, Singleton, Inject, symbols, IContainer, Type, hasOwnClassMetadata } from '@ts-ioc/core';
+import { ObjectMap, Singleton, Inject, IContainer, Type, hasOwnClassMetadata, ContainerToken } from '@ts-ioc/core';
 import { Around, Aspect, Joinpoint, JoinpointState } from '@ts-ioc/aop';
 import { LoggerAspect } from '@ts-ioc/logs';
 
@@ -14,7 +14,7 @@ import { ITask, Task, TaskModule } from '@taskp/core';
 export class TaskLogAspect extends LoggerAspect {
 
     private startHrts: ObjectMap<any>;
-    constructor(@Inject(symbols.IContainer) container: IContainer) {
+    constructor(@Inject(ContainerToken) container: IContainer) {
         super(container);
 
         this.startHrts = {};

@@ -1,5 +1,11 @@
 import { TaskComponent, ITask, IConfigure, BootstrapTask } from './core/index';
-import { IContainer, Type, Providers, Token, AsyncLoadOptions, IContainerBuilder } from '@ts-ioc/core';
+import { IContainer, Type, Providers, Token, AsyncLoadOptions, IContainerBuilder, InjectToken } from '@ts-ioc/core';
+
+
+/**
+ * TaskContainer token.
+ */
+export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskContainer');
 
 /**
  * task container.

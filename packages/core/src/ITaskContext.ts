@@ -1,7 +1,11 @@
 import { Src } from './utils/index';
-import { Express, IContainer, IContainerBuilder, ObjectMap } from '@ts-ioc/core';
+import { Express, IContainer, IContainerBuilder, ObjectMap, InjectToken } from '@ts-ioc/core';
 import { ITaskContainer } from './ITaskContainer';
 
+/**
+ * task context token.
+ */
+export const TaskContextToken = new InjectToken<ITaskContext>('_TASK_TaskContextToken');
 
 /**
  * task environment.

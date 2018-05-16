@@ -1,13 +1,12 @@
-import { GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, isClass, Abstract } from '@ts-ioc/core';
+import { GComposite, AsyncLoadOptions, IContainer, Type, IContainerBuilder, Inject, Mode, isClass, Abstract, ContainerBuilderToken } from '@ts-ioc/core';
 import { ITaskComponent } from './ITaskComponent';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
 import { RunWay } from './RunWay';
-import { Defer, taskSymbols, TaskSymbols } from '../utils/index';
-import { IBuilder } from './IBuilder';
+import { IBuilder, BuilderToken } from './IBuilder';
 import { ITaskOption } from './ITaskOption';
-import { ITaskRunner } from './ITaskRunner';
-import { ITaskContext } from '../ITaskContext';
+import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
+import { ITaskContext, TaskContextToken } from '../ITaskContext';
 
 /**
  * task component.
@@ -30,7 +29,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     /**
      * task run enviroment.
      */
-    @Inject(TaskSymbols.ITaskContext)
+    @Inject(TaskContextToken)
     context: ITaskContext;
 
     constructor(name: string, public runWay = RunWay.seqFirst, config?: IConfigure) {
@@ -44,7 +43,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     }
 
     getRunner(): ITaskRunner {
-        return this.context.container.get<ITaskRunner>(taskSymbols.ITaskRunner);
+        return this.context.container.get(TaskRunnerToken);
     }
 
     use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
@@ -91,7 +90,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     loadModules(container: IContainer): Promise<IContainer> {
         if (this.useModules.length) {
-            let builder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
+            let builder = container.get(ContainerBuilderToken);
             return Promise.all(this.useModules.map(option => {
                 return builder.loadModule(container, option);
             })).then((types) => {
@@ -110,7 +109,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
 
     protected build(config: ITaskOption<ITask>, root?: ITaskComponent): Promise<ITaskComponent> {
-        return this.context.container.resolve<IBuilder>(this.config.builder || taskSymbols.IBuilder)
+        return this.context.container.resolve<IBuilder>(this.config.builder || BuilderToken)
             .build(this.config, root);
     }
 
