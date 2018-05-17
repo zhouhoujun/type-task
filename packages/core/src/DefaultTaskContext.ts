@@ -1,6 +1,5 @@
 import { Inject, IContainer, IContainerBuilder, Singleton } from '@ts-ioc/core';
-import { taskSymbols } from './utils/index';
-import { ITaskContainer } from './ITaskContainer';
+import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 
 /**
  * default task context.
@@ -9,7 +8,8 @@ import { ITaskContainer } from './ITaskContainer';
  * @class DefaultTaskContext
  */
 export class DefaultTaskContext {
-    @Inject(taskSymbols.TaskContainer)
+
+    @Inject(TaskContainerToken)
     public taskContainer: ITaskContainer;
 
     constructor() {

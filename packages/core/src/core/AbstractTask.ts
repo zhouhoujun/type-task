@@ -1,7 +1,6 @@
 import { Abstract, Inject } from '@ts-ioc/core';
 import { ITask } from './ITask';
-import { ITaskContext } from '../ITaskContext';
-import { taskSymbols } from '../utils/index';
+import { ITaskContext, TaskContextToken } from '../ITaskContext';
 
 /**
  * abstract task.
@@ -20,7 +19,7 @@ export abstract class AbstractTask implements ITask {
      * @type {ITaskContext}
      * @memberof AbstractTask
      */
-    @Inject(taskSymbols.ITaskContext)
+    @Inject(TaskContextToken)
     context: ITaskContext;
 
     constructor(public name: string) {

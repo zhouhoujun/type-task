@@ -1,8 +1,7 @@
-import { isArray, IContainer, IContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Mode, Providers, isClass } from '@ts-ioc/core';
-import { taskSymbols } from './utils/index';
-import { BootstrapTask, ITaskRunner, IConfigure } from './core/index';
-import { ITaskContainer } from './ITaskContainer';
-import { ITaskContext } from './ITaskContext';
+import { isArray, IContainer, IContainerBuilder, AsyncLoadOptions, Type, Inject, Mode, Providers, isClass, ContainerBuilderToken } from '@ts-ioc/core';
+import { BootstrapTask, ITaskRunner, IConfigure, TaskRunnerToken } from './core/index';
+import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
+import { ITaskContext, TaskContextToken } from './ITaskContext';
 import { ContainerBuilder } from '@ts-ioc/platform-server';
 import { AopModule } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
@@ -32,7 +31,7 @@ export class DefaultTaskContainer implements ITaskContainer {
             this.containerBuilder = builder;
         } else {
             this.container = container;
-            this.containerBuilder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
+            this.containerBuilder = container.get(ContainerBuilderToken);
         }
 
         this.registerExt(this.container);
@@ -76,22 +75,22 @@ export class DefaultTaskContainer implements ITaskContainer {
         let builder = this.containerBuilder;
 
         // check has default task context registered.
-        if(!this.container.has(taskSymbols.ITaskContext)){
-            this.container.register(taskSymbols.ITaskContext, DefaultTaskContext);
+        if(!this.container.has(TaskContextToken)){
+            this.container.register(TaskContextToken, DefaultTaskContext);
         }
 
         return Promise.all(this.useModules.map(option => {
             return builder.loadModule(this.container, option);
         })).then((types) => {
             if (!tasks) {
-                let tasks = this.container.resolve<ITaskContext>(taskSymbols.ITaskContext)
+                let tasks = this.container.resolve(TaskContextToken)
                     .getRunTasks();
             }
             if (!isArray(tasks)) {
                 tasks = [tasks];
             }
             let seq = Promise.resolve();
-            let runner = this.container.get<ITaskRunner>(taskSymbols.ITaskRunner);
+            let runner = this.container.get(TaskRunnerToken);
             tasks.forEach(task => {
                 seq = seq.then(data => {
                     return runner.runTask(task, data, ...providers);
@@ -110,7 +109,7 @@ export class DefaultTaskContainer implements ITaskContainer {
             container.register(LogModule);
         }
 
-        container.registerSingleton(taskSymbols.TaskContainer, this);
+        container.registerSingleton(TaskContainerToken, this);
         if (!container.has(CoreModule)) {
             container.register(CoreModule);
         }

@@ -1,6 +1,11 @@
 import { IConfigure } from './IConfigure';
-import { Token, Providers, Type } from '@ts-ioc/core';
+import { Token, Providers, Type, InjectToken } from '@ts-ioc/core';
 import { ITask } from './ITask';
+
+/**
+ * task runner token.
+ */
+export const TaskRunnerToken = new InjectToken<ITaskRunner>('__TASK_TaskRunner');
 
 /**
  * task runner.

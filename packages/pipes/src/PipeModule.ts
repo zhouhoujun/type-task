@@ -1,7 +1,6 @@
-import { IContainer, symbols, LifeScope, CoreActions, DecoratorType, IContainerBuilder, IocModule, Inject } from '@ts-ioc/core';
+import { IContainer, LifeScope, CoreActions, DecoratorType, IContainerBuilder, IocModule, Inject, ContainerToken } from '@ts-ioc/core';
 import * as shells from './shells/index';
 import * as cores from './core/index';
-import { TaskSymbols } from '@taskp/core';
 /**
  * register task decorators.
  *
@@ -10,7 +9,7 @@ import { TaskSymbols } from '@taskp/core';
  */
 @IocModule('setup')
 export class PipeModule {
-    constructor(@Inject(symbols.IContainer) private container: IContainer) {
+    constructor(@Inject(ContainerToken) private container: IContainer) {
 
     }
 

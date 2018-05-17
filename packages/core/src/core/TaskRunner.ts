@@ -1,10 +1,9 @@
-import { isToken, Token, Providers, Inject, symbols, Singleton, IContainer, isClass, Type, hasOwnClassMetadata, isFunction } from '@ts-ioc/core';
+import { isToken, Token, Providers, Inject, Singleton, IContainer, isClass, Type, hasOwnClassMetadata, isFunction, ContainerToken } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
-import { IBuilder } from './IBuilder';
-import { taskSymbols } from '../utils/index';
+import { IBuilder, BuilderToken } from './IBuilder';
 import { Task, TaskModule } from './decorators/index';
-import { ITaskRunner } from './ITaskRunner';
+import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
 
 /**
  * task runner.
@@ -13,10 +12,10 @@ import { ITaskRunner } from './ITaskRunner';
  * @class TaskRunner
  * @implements {ITaskRunner}
  */
-@Singleton(taskSymbols.ITaskRunner)
+@Singleton(TaskRunnerToken)
 export class TaskRunner implements ITaskRunner {
 
-    constructor(@Inject(symbols.IContainer) private container: IContainer) {
+    constructor(@Inject(ContainerToken) private container: IContainer) {
 
     }
 
@@ -45,7 +44,7 @@ export class TaskRunner implements ITaskRunner {
     }
 
     runByConfig(cfg: IConfigure, data?: any): Promise<any> {
-        return this.container.resolve<IBuilder>(cfg.builder || taskSymbols.IBuilder)
+        return this.container.resolve<IBuilder>(cfg.builder || BuilderToken)
             .build(cfg)
             .then(task => {
                 return task.run(data);
