@@ -75,7 +75,7 @@ export class DefaultTaskContainer implements ITaskContainer {
         let builder = this.containerBuilder;
 
         // check has default task context registered.
-        if(!this.container.has(TaskContextToken)){
+        if (!this.container.has(TaskContextToken)) {
             this.container.register(TaskContextToken, DefaultTaskContext);
         }
 

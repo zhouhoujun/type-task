@@ -1,5 +1,5 @@
 import { ITask } from './ITask';
-import { GComponent, Token, ComponentLifecycle, AsyncLoadOptions, Type, Provider, Providers } from '@ts-ioc/core';
+import { GComponent, Token, ComponentLifecycle, AsyncLoadOptions, Type, Provider, Providers, ModuleType } from '@ts-ioc/core';
 import { RunWay } from './RunWay';
 import { ITaskModule } from './ITaskModule';
 import { IConfigure } from '.';
@@ -32,9 +32,9 @@ export interface ITaskComponent extends GComponent<ITaskComponent>, ITaskModule,
     /**
      * use modules
      *
-     * @param {...(Type<any> | AsyncLoadOptions)[]} modules
+     * @param {...(ModuleType | AsyncLoadOptions)[]} modules
      * @returns {this}
      * @memberof ITaskComponent
      */
-    use(...modules: (Type<any> | AsyncLoadOptions)[]): this;
+    use(...modules: (ModuleType | AsyncLoadOptions)[]): this;
 }
