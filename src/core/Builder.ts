@@ -1,6 +1,6 @@
 import { IBuilder } from './IBuilder';
 import { ITaskComponent } from './ITaskComponent';
-import { Type, hasOwnClassMetadata, isFunction, Inject, symbols, IContainer, Injectable, Providers, Singleton, isArray, isClass } from '@ts-ioc/core';
+import { Type, hasOwnClassMetadata, isFunction, Inject, IContainer, Injectable, Providers, Singleton, isArray, isClass } from '@ts-ioc/core';
 import { Task } from './decorators/index';
 import { IConfigure } from './IConfigure';
 import { ITaskContext } from '../ITaskContext';

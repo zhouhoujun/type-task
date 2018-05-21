@@ -1,4 +1,4 @@
-import { GComposite, AsyncLoadOptions, IContainer, Type, symbols, IContainerBuilder, Inject, Mode, isClass, Abstract } from '@ts-ioc/core';
+import { GComposite, IContainer, Type, IContainerBuilder, Inject, Mode, isClass, Abstract, LoadType, ContainerBuilderToken } from '@ts-ioc/core';
 import { ITaskComponent } from './ITaskComponent';
 import { TaskContext } from './TaskContext';
 import { IConfigure } from './IConfigure';
@@ -21,7 +21,7 @@ import { ITaskRunner } from './ITaskRunner';
 export abstract class TaskComponent<T extends ITaskComponent> extends GComposite<T> implements ITaskComponent {
 
     protected registerModules: Type<any>[];
-    protected useModules: AsyncLoadOptions[];
+    protected useModules: LoadType[];
 
     config?: IConfigure;
 
@@ -47,7 +47,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
         return this.context.container.get<ITaskRunner>(taskSymbols.ITaskRunner);
     }
 
-    use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
+    use(...modules: LoadType[]): this {
         this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
         return this;
     }
@@ -91,7 +91,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     loadModules(container: IContainer): Promise<IContainer> {
         if (this.useModules.length) {
-            let builder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
+            let builder = container.get<IContainerBuilder>(ContainerBuilderToken);
             return Promise.all(this.useModules.map(option => {
                 return builder.loadModule(container, option);
             })).then((types) => {

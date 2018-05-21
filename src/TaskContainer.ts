@@ -1,4 +1,4 @@
-import { isArray, IContainer, IContainerBuilder, symbols, AsyncLoadOptions, Type, Inject, Mode, Providers, isClass } from '@ts-ioc/core';
+import { isArray, IContainer, IContainerBuilder,  Type, Inject, Mode, Providers, isClass, LoadType, ContainerBuilderToken } from '@ts-ioc/core';
 import { taskSymbols } from './utils/index';
 import { BootsrapTask, registerTaskCoreDecorators, ITaskRunner } from './core/index';
 import { ITaskContainer } from './ITaskContainer';
@@ -24,7 +24,7 @@ export class TaskContainer implements ITaskContainer {
     containerBuilder: IContainerBuilder;
     protected log: Type<any>;
 
-    protected useModules: AsyncLoadOptions[];
+    protected useModules: LoadType[];
 
     constructor(public rootPath: string, container?: IContainer) {
         this.useModules = [];
@@ -34,7 +34,7 @@ export class TaskContainer implements ITaskContainer {
             this.containerBuilder = builder;
         } else {
             this.container = container;
-            this.containerBuilder = container.get<IContainerBuilder>(symbols.IContainerBuilder);
+            this.containerBuilder = container.get<IContainerBuilder>(ContainerBuilderToken);
         }
 
         this.registerExt(this.container);
@@ -49,7 +49,7 @@ export class TaskContainer implements ITaskContainer {
      * @returns {ITaskContainer}
      * @memberof TaskContainer
      */
-    static create(root: string, ...modules: (Type<any> | AsyncLoadOptions)[]): ITaskContainer {
+    static create(root: string, ...modules: LoadType[]): ITaskContainer {
         let taskContainer = new TaskContainer(root);
         if (modules) {
             taskContainer.use(...modules);
@@ -60,12 +60,12 @@ export class TaskContainer implements ITaskContainer {
     /**
      * use modules
      *
-     * @param {...(Type<any> | AsyncLoadOptions)[]} modules
+     * @param {...LoadType[]} modules
      * @returns {this}
      * @memberof TaskContainer
      */
-    use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
-        this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
+    use(...modules: LoadType[]): this {
+        this.useModules.push(...modules);
         return this;
     }
 

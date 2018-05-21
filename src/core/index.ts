@@ -1,4 +1,4 @@
-import { IContainer, symbols, LifeScope, CoreActions, DecoratorType, IContainerBuilder, LifeState, IocState } from '@ts-ioc/core';
+import { IContainer, LifeScope, CoreActions, DecoratorType, IContainerBuilder, LifeState, IocState } from '@ts-ioc/core';
 import { Task, TaskModule } from './decorators/index';
 import { InitTaskAction } from './actions/InitTaskAction';
 import { TaskContext } from './TaskContext';

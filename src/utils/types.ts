@@ -1,9 +1,9 @@
-import { IContainer, AsyncLoadOptions, Type } from '@ts-ioc/core';
+import { IContainer, Type, LoadType } from '@ts-ioc/core';
 
 /**
  * TaskType
  */
-export type TaskType = Type<any> | AsyncLoadOptions;
+export type TaskType = LoadType;
 
 /**
  * source

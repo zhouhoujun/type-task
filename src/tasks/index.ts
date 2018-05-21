@@ -1,4 +1,4 @@
-import { IContainer, symbols, LifeScope, CoreActions, DecoratorType, IContainerBuilder } from '@ts-ioc/core';
+import { IContainer, LifeScope, CoreActions, DecoratorType, IContainerBuilder } from '@ts-ioc/core';
 import * as shells from './shells/index';
 import * as pipes from './pipes/index';
 

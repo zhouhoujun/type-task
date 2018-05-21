@@ -1,4 +1,4 @@
-import { isToken, Token, Providers, Inject, symbols, Singleton, IContainer, isClass, Type, hasOwnClassMetadata, isFunction } from '@ts-ioc/core';
+import { isToken, Token, Providers, Inject, Singleton, IContainer, isClass, Type, hasOwnClassMetadata, isFunction, ContainerToken } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
 import { IBuilder } from './IBuilder';
@@ -9,7 +9,7 @@ import { ITaskRunner } from './ITaskRunner';
 @Singleton(taskSymbols.ITaskRunner)
 export class TaskRunner implements ITaskRunner {
 
-    constructor(@Inject(symbols.IContainer) private container: IContainer) {
+    constructor(@Inject(ContainerToken) private container: IContainer) {
 
     }
 

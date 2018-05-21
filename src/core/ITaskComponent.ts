@@ -1,8 +1,9 @@
 import { ITask } from './ITask';
-import { GComponent, Token, ComponentLifecycle, AsyncLoadOptions, Type, Provider, Providers } from '@ts-ioc/core';
+import { GComponent, Token, ComponentLifecycle, Type, Provider, Providers } from '@ts-ioc/core';
 import { RunWay } from './RunWay';
 import { ITaskModule } from './ITaskModule';
-import { IConfigure } from '.';
+import { IConfigure } from './IConfigure';
+import { TaskType } from '../utils/index';
 
 /**
  * Task Component.
@@ -32,9 +33,9 @@ export interface ITaskComponent extends GComponent<ITaskComponent>, ITaskModule,
     /**
      * use modules
      *
-     * @param {...(Type<any> | AsyncLoadOptions)[]} modules
+     * @param {...TaskType[]} modules
      * @returns {this}
      * @memberof ITaskComponent
      */
-    use(...modules: (Type<any> | AsyncLoadOptions)[]): this;
+    use(...modules: TaskType[]): this;
 }
