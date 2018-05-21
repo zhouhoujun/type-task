@@ -7,7 +7,7 @@ import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
 
 /**
  * task runner.
- * 
+ *
  * @export
  * @class TaskRunner
  * @implements {ITaskRunner}

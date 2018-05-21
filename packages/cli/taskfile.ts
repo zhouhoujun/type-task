@@ -1,4 +1,4 @@
-import { Task, ITask, taskSymbols, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from '@taskp/core';
+import { Task, ITask, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from '@taskp/core';
 import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType, PipeTask, PipeModule } from '@taskp/pipes';
 import { TaskContainer } from '@taskp/platform-server';
 
@@ -9,7 +9,7 @@ const cache = require('gulp-cached');
 const ts = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
-import { classAnnotations } from 'typescript-class-annotations';
+import { classAnnotations } from '@ts-ioc/class-annotations';
 import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
 
 

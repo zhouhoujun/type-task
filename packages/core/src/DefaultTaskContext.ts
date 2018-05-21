@@ -3,7 +3,7 @@ import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 
 /**
  * default task context.
- * 
+ *
  * @export
  * @class DefaultTaskContext
  */

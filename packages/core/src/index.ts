@@ -1,9 +1,3 @@
-import * as tokens from './symbols';
-
-/**
- * task tokens.
- */
-export const TaskTokens = tokens;
 
 export * from './ITaskContext';
 export * from './ITaskContainer';

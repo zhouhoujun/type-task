@@ -1,5 +1,6 @@
 import { TaskComponent, ITask, IConfigure, BootstrapTask } from './core/index';
-import { IContainer, Type, Providers, Token, AsyncLoadOptions, IContainerBuilder, InjectToken } from '@ts-ioc/core';
+import { IContainer, Type, Providers, Token, IContainerBuilder, InjectToken } from '@ts-ioc/core';
+import { TaskType } from './utils/index';
 
 
 /**
@@ -42,11 +43,11 @@ export interface ITaskContainer {
     /**
      * use modules
      *
-     * @param {...(Type<any> | AsyncLoadOptions)[]} modules
+     * @param {...TaskType[]} modules
      * @returns {this}
      * @memberof ITaskContainer
      */
-    use(...modules: (Type<any> | AsyncLoadOptions)[]): this;
+    use(...modules: TaskType[]): this;
 
     /**
      * use logger
