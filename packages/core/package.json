@@ -37,7 +37,8 @@
   "peerDependencies": {
     "reflect-metadata": "^0.1.12",
     "@ts-ioc/aop": "^2.3.0",
-    "@ts-ioc/core": "^2.3.0"
+    "@ts-ioc/core": "^2.3.0",
+    "@ts-ioc/logs": "^2.3.0"
   },
   "directories": {
     "lib": "lib"

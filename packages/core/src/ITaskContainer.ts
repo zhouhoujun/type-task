@@ -1,5 +1,5 @@
 import { TaskComponent, ITask, IConfigure, BootstrapTask } from './core/index';
-import { IContainer, Type, Providers, Token, IContainerBuilder, InjectToken } from '@ts-ioc/core';
+import { IContainer, Type, Providers, Token, IContainerBuilder, InjectToken, IPlatform } from '@ts-ioc/core';
 import { TaskType } from './utils/index';
 
 
@@ -15,7 +15,7 @@ export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskCo
  * @interface ITaskContainer
  * @extends {TaskComponent}
  */
-export interface ITaskContainer {
+export interface ITaskContainer extends IPlatform {
     /**
      * root of task environment.
      *
@@ -23,39 +23,6 @@ export interface ITaskContainer {
      * @memberof ITaskContainer
      */
     rootPath: string;
-
-    /**
-     * ioc container.
-     *
-     * @type {IContainer}
-     * @memberof ITaskContainer
-     */
-    container: IContainer;
-
-    /**
-     * container builder.
-     *
-     * @type {IContainerBuilder}
-     * @memberof ITaskContainer
-     */
-    containerBuilder: IContainerBuilder;
-
-    /**
-     * use modules
-     *
-     * @param {...TaskType[]} modules
-     * @returns {this}
-     * @memberof ITaskContainer
-     */
-    use(...modules: TaskType[]): this;
-
-    /**
-     * use logger
-     *
-     * @param {Type<any>} logger
-     * @memberof ITaskContainer
-     */
-    useLogger(logger: Type<any>);
 
     /**
      * bootstrap task.

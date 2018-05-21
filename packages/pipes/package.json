@@ -23,8 +23,7 @@
   "homepage": "https://github.com/zhouhoujun/tsioc#readme",
   "dependencies": {},
   "peerDependencies": {
-    "@taskp/core": "^2.0.13",
-    "@ts-ioc/logs": "^2.3.0"
+    "@taskp/core": "^2.0.13"
   },
   "directories": {
     "lib": "lib",
