@@ -24,9 +24,9 @@ export interface TaskModuleMetadata extends ClassMetadata {
 export interface ITaskClassDecorator<T extends TaskModuleMetadata> extends ITypeDecorator<T> {
     /**
      * task module.
-     * 
+     *
      * @TaskModule
-     * 
+     *
      * @param {IConfigure} config task module config.
      * @param {(Registration<any> | symbol | string)} provide define this class provider for provide.
      * @param {string} [alias] define this class provider with alias for provide.
@@ -37,9 +37,9 @@ export interface ITaskClassDecorator<T extends TaskModuleMetadata> extends IType
 
     /**
      * task module.
-     * 
+     *
      * @TaskModule
-     * 
+     *
      * @param {T} [metadata] task module metadata.
      */
     (metadata?: T): ClassDecorator;
@@ -47,9 +47,9 @@ export interface ITaskClassDecorator<T extends TaskModuleMetadata> extends IType
 
 /**
  * task module.
- * 
+ *
  * @TaskModule
- * 
+ *
  */
 export const TaskModule: ITaskClassDecorator<TaskModuleMetadata> =
     createClassDecorator<TaskModuleMetadata>('TaskModule',

@@ -8,7 +8,7 @@ const prettyTime = require('pretty-hrtime');
 
 /**
  * task container in server.
- * 
+ *
  * @export
  * @class TaskContainer
  * @extends {DefaultTaskContainer}

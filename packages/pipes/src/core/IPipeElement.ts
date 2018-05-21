@@ -1,13 +1,13 @@
 import { IWatchSource } from './IWatchSource';
 import { TransformSource } from './pipeTypes';
 
-export interface IPipeElement  extends IWatchSource {
-        
+export interface IPipeElement extends IWatchSource {
+
     /**
      * watch
-     * 
-     * @param {TransformSource} src 
+     *
+     * @param {TransformSource} src
      * @memberof IPipeComponent
      */
-    watch?(src:TransformSource);
+    watch?(src: TransformSource);
 }

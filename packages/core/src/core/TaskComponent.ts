@@ -1,4 +1,4 @@
-import { GComposite, AsyncLoadOptions, IContainer, Type, IContainerBuilder, Inject, Mode, isClass, Abstract, ContainerBuilderToken } from '@ts-ioc/core';
+import { GComposite, AsyncLoadOptions, IContainer, Type, IContainerBuilder, Inject, Mode, isClass, Abstract, ContainerBuilderToken, ModuleType } from '@ts-ioc/core';
 import { ITaskComponent } from './ITaskComponent';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
@@ -46,7 +46,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
         return this.context.container.get(TaskRunnerToken);
     }
 
-    use(...modules: (Type<any> | AsyncLoadOptions)[]): this {
+    use(...modules: (ModuleType | AsyncLoadOptions)[]): this {
         this.useModules.push(...modules.map(itm => isClass(itm) ? { modules: [itm] } : itm));
         return this;
     }
