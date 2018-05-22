@@ -36,6 +36,11 @@
         "url": "https://github.com/zhouhoujun/type-task.git"
     },
     "dependencies": {
+        "@ts-ioc/aop": "^2.3.2",
+        "@ts-ioc/core": "^2.3.2",
+        "@ts-ioc/logs": "^2.3.2",
+        "@ts-ioc/platform-browser": "^2.3.2",
+        "@ts-ioc/platform-server": "^2.3.2",
         "@types/chalk": "^2.2.0",
         "@types/vinyl-fs": "^2.4.8",
         "chalk": "^2.3.1",
@@ -48,13 +53,7 @@
         "time-stamp": "^2.0.0",
         "vinyl-fs": "^3.0.2"
     },
-    "peerDependencies": {
-        "@ts-ioc/aop": "^2.3.0",
-        "@ts-ioc/core": "^2.3.0",
-        "@ts-ioc/logs": "^2.3.0",
-        "@ts-ioc/platform-browser": "^2.3.0",
-        "@ts-ioc/platform-server": "^2.3.0"
-    },
+    "peerDependencies": {},
     "devDependencies": {
         "@ts-ioc/class-annotations": "^2.2.0",
         "@types/chai": "^3.4.34",
