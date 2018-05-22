@@ -1,6 +1,6 @@
 {
     "name": "type-task",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "description": "type-task is task manager via AOP, IOC.",
     "main": "./lib/index.js",
     "bin": {
