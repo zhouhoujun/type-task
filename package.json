@@ -1,6 +1,6 @@
 {
     "name": "type-task",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "description": "type-task is task manager via AOP, IOC.",
     "main": "./lib/index.js",
     "bin": {
@@ -49,20 +49,20 @@
         "vinyl-fs": "^3.0.2"
     },
     "peerDependencies": {
-        "@ts-ioc/aop": "^2.3.7",
-        "@ts-ioc/core": "^2.3.7",
-        "@ts-ioc/logs": "^2.3.7",
-        "@ts-ioc/platform-browser": "^2.3.7",
-        "@ts-ioc/platform-server": "^2.3.7",
-        "@ts-ioc/class-annotations": "^2.3.7"
+        "@ts-ioc/aop": "^2.3.8",
+        "@ts-ioc/core": "^2.3.8",
+        "@ts-ioc/logs": "^2.3.8",
+        "@ts-ioc/platform-browser": "^2.3.8",
+        "@ts-ioc/platform-server": "^2.3.8",
+        "@ts-ioc/class-annotations": "^2.3.8"
     },
     "devDependencies": {
-        "@ts-ioc/aop": "^2.3.7",
-        "@ts-ioc/core": "^2.3.7",
-        "@ts-ioc/logs": "^2.3.7",
-        "@ts-ioc/platform-browser": "^2.3.7",
-        "@ts-ioc/platform-server": "^2.3.7",
-        "@ts-ioc/class-annotations": "^2.3.7",
+        "@ts-ioc/aop": "^2.3.8",
+        "@ts-ioc/core": "^2.3.8",
+        "@ts-ioc/logs": "^2.3.8",
+        "@ts-ioc/platform-browser": "^2.3.8",
+        "@ts-ioc/platform-server": "^2.3.8",
+        "@ts-ioc/class-annotations": "^2.3.8",
         "@types/chai": "^3.4.34",
         "@types/gulp-mocha": "0.0.29",
         "bluebird": "^3.4.1",
