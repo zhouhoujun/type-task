@@ -39,7 +39,7 @@ export interface ITaskOption<T extends ITask> {
     task?: Type<T>;
 
 
-       /**
+    /**
      * config module target instance.
      *
      * @type {ITask}

@@ -111,8 +111,10 @@ class TestTask extends TaskElement {
     }
 }
 
+
+
 TaskContainer.create(__dirname)
-    .use(PipeModule)
+    .useModules(PipeModule)
     .bootstrap([
         TestTask,
         {

@@ -1,5 +1,5 @@
 import { ITask } from './ITask';
-import { GComponent, Token, ComponentLifecycle, AsyncLoadOptions, Type, Provider, Providers, ModuleType } from '@ts-ioc/core';
+import { GComponent, Token, ComponentLifecycle, Type, Provider, Providers, ModuleType, IContainer } from '@ts-ioc/core';
 import { RunWay } from './RunWay';
 import { ITaskModule } from './ITaskModule';
 import { IConfigure } from '.';
@@ -13,6 +13,13 @@ import { IConfigure } from '.';
  */
 export interface ITaskComponent extends GComponent<ITaskComponent>, ITaskModule, ComponentLifecycle {
 
+    /**
+     * ioc container.
+     *
+     * @type {IContainer}
+     * @memberof ITaskComponent
+     */
+    container: IContainer;
     /**
      * children run way.
      *
@@ -29,12 +36,4 @@ export interface ITaskComponent extends GComponent<ITaskComponent>, ITaskModule,
      */
     getConfig(): IConfigure;
 
-    /**
-     * use modules
-     *
-     * @param {...(ModuleType | AsyncLoadOptions)[]} modules
-     * @returns {this}
-     * @memberof ITaskComponent
-     */
-    use(...modules: (ModuleType | AsyncLoadOptions)[]): this;
 }

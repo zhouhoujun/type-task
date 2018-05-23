@@ -1,10 +1,8 @@
-import { isArray, IContainer, IContainerBuilder, Platform, IPlatform, Type, Inject, Mode, Providers, isClass, ContainerBuilderToken, AppConfiguration } from '@ts-ioc/core';
+import { isArray, IContainer, IContainerBuilder, Type, Inject, Mode, Providers, isClass, ContainerBuilderToken, ModuleBuilder } from '@ts-ioc/core';
 import { BootstrapTask, ITaskRunner, IConfigure, TaskRunnerToken } from './core/index';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
-import { ITaskContext, TaskContextToken } from './ITaskContext';
 import { AopModule } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
-import { DefaultTaskContext } from './DefaultTaskContext';
 import { CoreModule } from './CoreModule';
 
 
@@ -15,7 +13,7 @@ import { CoreModule } from './CoreModule';
  * @export
  * @class DefaultTaskContainer
  */
-export class DefaultTaskContainer extends Platform implements ITaskContainer {
+export class DefaultTaskContainer extends ModuleBuilder<IConfigure> implements ITaskContainer {
 
     constructor(public rootPath: string) {
         super()
@@ -29,39 +27,18 @@ export class DefaultTaskContainer extends Platform implements ITaskContainer {
      * @returns {Promise<any>}
      * @memberof DefaultTaskContainer
      */
-    async bootstrap(tasks?: BootstrapTask, ...providers: Providers[]): Promise<any> {
-
-        // check has default task context registered.
-
-        let container = await this.build();
-
-        if (!tasks) {
-            let tasks = container.resolve(TaskContextToken)
-                .getRunTasks();
-        }
-        if (!isArray(tasks)) {
-            tasks = [tasks];
-        }
-        let seq = Promise.resolve();
-        let runner = container.get(TaskRunnerToken);
-        tasks.forEach(task => {
-            seq = seq.then(data => {
-                return runner.runTask(task, data, ...providers);
-            })
-        });
-        let result = await seq;
-        return result;
+    async bootstrap<T>(task?: Type<T>): Promise<T> {
+        let taskInstance = await this.bootstrap(task);
+        return taskInstance;
     }
 
-    protected async initIContainer(config: AppConfiguration, container: IContainer) {
-        await super.initIContainer(config, container);
-        if (!container.has(TaskContextToken)) {
-            container.register(TaskContextToken, DefaultTaskContext);
-        }
+    protected async initContainer(config: IConfigure, container: IContainer) {
+        this.registerExt(container);
+        await super.initContainer(config, container);
         return container;
     }
 
-    protected setRootdir(config: AppConfiguration) {
+    protected setConfigRoot(config: IConfigure) {
         config.rootdir = this.rootPath;
     }
 
@@ -73,7 +50,7 @@ export class DefaultTaskContainer extends Platform implements ITaskContainer {
             container.register(LogModule);
         }
 
-        container.registerSingleton(TaskContainerToken, this);
+        container.bindProvider(TaskContainerToken, this);
         if (!container.has(CoreModule)) {
             container.register(CoreModule);
         }

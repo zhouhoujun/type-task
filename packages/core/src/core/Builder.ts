@@ -1,12 +1,9 @@
 import { IBuilder, BuilderToken } from './IBuilder';
 import { ITaskComponent } from './ITaskComponent';
-import { Type, hasOwnClassMetadata, isFunction, Inject, IContainer, Injectable, Providers, Singleton, isArray, isClass } from '@ts-ioc/core';
+import { Type, hasOwnClassMetadata, isFunction, Inject, IContainer, Injectable, Providers, Singleton, isArray, isClass, ContainerToken } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
-import { ITaskContext } from '../ITaskContext';
 import { TaskType } from '../utils/index';
 import { ITask } from './ITask';
-import { TaskContextToken } from '../ITaskContext';
-
 /**
  * builder.
  *
@@ -17,8 +14,8 @@ import { TaskContextToken } from '../ITaskContext';
 @Singleton(BuilderToken)
 export class Builder implements IBuilder {
 
-    @Inject(TaskContextToken)
-    context: ITaskContext;
+    @Inject(ContainerToken)
+    container: IContainer;
 
     constructor() {
 
@@ -65,24 +62,16 @@ export class Builder implements IBuilder {
         }));
     }
 
-    async loadModules(modules: TaskType | TaskType[]) {
-        if (isArray(modules)) {
-            await Promise.all(modules.map(md => this.context.containerBuilder.loadModule(this.context.container, isClass(md) ? { modules: [md] } : md)));
-        } else {
-            await this.context.containerBuilder.loadModule(this.context.container, isClass(modules) ? { modules: [modules] } : modules);
-        }
-    }
-
     async buildComponent(config: IConfigure): Promise<ITaskComponent> {
-        if (config.loader) {
-            await this.loadModules(config.loader);
+        if (config.imports) {
+            await this.container.loadModule(...config.imports);
         }
         if (config.task) {
-            if (!this.context.container.has(config.task) && isClass(config.task)) {
-                this.context.container.register(config.task);
+            if (!this.container.has(config.task) && isClass(config.task)) {
+                this.container.register(config.task);
             }
             let providers = isArray(config.providers) ? config.providers : [config.providers];
-            return this.context.container.resolve<ITaskComponent>(config.task, ...providers);
+            return this.container.resolve<ITaskComponent>(config.task, ...providers);
         }
         return null
     }

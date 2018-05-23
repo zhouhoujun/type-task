@@ -5,18 +5,18 @@ import { TaskMetadata } from '../metadatas/index';
 
 /**
  * task decorator, use to define class is a task element.
- * 
+ *
  * @export
  * @interface ITaskDecorator
  * @extends {ITypeDecorator<T>}
- * @template T 
+ * @template T
  */
 export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T> {
     /**
      * task decorator, use to define class as task element.
-     * 
+     *
      * @Task
-     * 
+     *
      * @param {string} [taskName] task name.
      * @param {(Registration<any> | symbol | string)} provide define this class provider for provide.
      * @param {string} [alias] define this class provider with alias for provide.
@@ -68,7 +68,7 @@ export function createTaskDecorator<T extends TaskMetadata>(
 
 /**
  * task decorator, use to define class is a task element.
- * 
+ *
  * @Task
  */
 export const Task: ITaskDecorator<TaskMetadata> = createTaskDecorator('Task');

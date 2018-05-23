@@ -1,5 +1,4 @@
 import { ComponentLifecycle } from '@ts-ioc/core';
-import { ITaskContext } from '../ITaskContext';
 import { IConfigure } from './IConfigure';
 
 
@@ -27,14 +26,6 @@ export interface ITask extends ComponentLifecycle {
      * @memberof ITaskModule
      */
     config?: IConfigure;
-
-    /**
-     * task context.
-     *
-     * @type {ITaskContext}
-     * @memberof ITask
-     */
-    context: ITaskContext;
 
     /**
      * run task.
