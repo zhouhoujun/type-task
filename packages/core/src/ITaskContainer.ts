@@ -6,7 +6,7 @@ import { TaskType } from './utils/index';
 /**
  * TaskContainer token.
  */
-export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskContainer');
+export const TaskContainerToken = new InjectToken<ITaskContainer<IConfigure>>('__TASK_TaskContainer');
 
 /**
  * task container.
@@ -15,7 +15,7 @@ export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskCo
  * @interface ITaskContainer
  * @extends {TaskComponent}
  */
-export interface ITaskContainer extends IModuleBuilder<IConfigure> {
+export interface ITaskContainer<T extends IConfigure> extends IModuleBuilder<IConfigure> {
     /**
      * root of task environment.
      *
@@ -27,10 +27,10 @@ export interface ITaskContainer extends IModuleBuilder<IConfigure> {
     /**
      * bootstrap task.
      *
-     * @param {Type<T>} [task]
+     * @param {(Token<ITask> | T)} [task]
      * @returns {Promise<T>}
      * @memberof ITaskContainer
      */
-    bootstrap<T extends ITask>(task?: Type<T>): Promise<T>;
+    bootstrap(task?: Token<ITask> | T): Promise<ITask>;
 
 }

@@ -1,9 +1,10 @@
 import { IBuilder, BuilderToken } from './IBuilder';
 import { ITaskComponent } from './ITaskComponent';
-import { Type, hasOwnClassMetadata, isFunction, Inject, IContainer, Injectable, Providers, Singleton, isArray, isClass, ContainerToken } from '@ts-ioc/core';
+import { Type, hasOwnClassMetadata, isFunction, Inject, IContainer, Injectable, Providers, Singleton, isArray, isClass, ContainerToken, ModuleBuilderToken, IModuleBuilder, isToken } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
 import { TaskType } from '../utils/index';
 import { ITask } from './ITask';
+import { TaskElement } from '.';
 /**
  * builder.
  *
@@ -16,6 +17,9 @@ export class Builder implements IBuilder {
 
     @Inject(ContainerToken)
     container: IContainer;
+
+    @Inject(ModuleBuilderToken)
+    moduleBuiler: IModuleBuilder<IConfigure>;
 
     constructor() {
 
@@ -37,14 +41,11 @@ export class Builder implements IBuilder {
         }
 
         if (config.children && config.children.length) {
-            await this.buildChildren(component, this.toConfigures(config.children))
+            await this.buildChildren(component, config.children)
         }
         return root;
     }
 
-    toConfigures(children: (IConfigure | Type<ITask>)[]): IConfigure[] {
-        return children.map(cfg => isClass(cfg) ? { task: cfg } : cfg);
-    }
 
     async buildChildren(parent: ITaskComponent, configs: IConfigure[]) {
         if (!isFunction(parent.add)) {
@@ -57,22 +58,34 @@ export class Builder implements IBuilder {
             }
             parent.add(node);
             if (ctx.children && ctx.children.length) {
-               await this.buildChildren(node, this.toConfigures(ctx.children));
+                await this.buildChildren(node, ctx.children);
             }
         }));
     }
 
-    async buildComponent(config: IConfigure): Promise<ITaskComponent> {
-        if (config.imports) {
-            await this.container.loadModule(...config.imports);
-        }
-        if (config.task) {
-            if (!this.container.has(config.task) && isClass(config.task)) {
-                this.container.register(config.task);
+    async buildComponent(child: IConfigure | ITask): Promise<ITaskComponent> {
+        if (isToken(child)) {
+            return await this.moduleBuiler.bootstrap(child)
+                .catch(err => {
+                    console.error(err);
+                    return null;
+                });
+        } else {
+            let config = child as IConfigure;
+            if (config.imports) {
+                await this.container.loadModule(...config.imports);
             }
-            let providers = isArray(config.providers) ? config.providers : [config.providers];
-            return this.container.resolve<ITaskComponent>(config.task, ...providers);
+            if (!config.children && !config.bootstrap) {
+                return null;
+            }
+            config.bootstrap = config.bootstrap || TaskElement;
+
+            return await this.moduleBuiler.bootstrap(config)
+                .catch(err => {
+                    console.error(err);
+                    return null;
+                });
         }
-        return null
+
     }
 }

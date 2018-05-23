@@ -2,6 +2,7 @@ import { ITask } from './ITask';
 import { ITaskOption } from './ITaskOption';
 import { Token, ModuleConfiguration, Type } from '@ts-ioc/core';
 import { IBuilder } from './IBuilder';
+import { RunWay } from './RunWay';
 
 /**
  * task context.
@@ -10,6 +11,22 @@ import { IBuilder } from './IBuilder';
  * @interface IContext
  */
 export interface IConfigure extends ModuleConfiguration {
+
+    /**
+    * context tasks name.
+    *
+    * @type {string}
+    * @memberof IContext
+    */
+   name?: string;
+
+   /**
+    * run way.
+    *
+    * @type {RunWay}
+    * @memberof IContext
+    */
+   runWay?: RunWay;
 
     /**
      * builder

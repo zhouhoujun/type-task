@@ -15,47 +15,45 @@ import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
 
 
 @TaskModule({
-    providers: <IPipeElementProvider>{
-        pipes: [
-            // () => cache('typescript'),
-            sourcemaps.init,
-            () => classAnnotations(),
+    pipes: [
+        // () => cache('typescript'),
+        sourcemaps.init,
+        () => classAnnotations(),
+        (ctx, config) => {
+            let target = config.moduleTarget as TsCompile;
+            if (target.tsconfig) {
+                return ts(target.tsconfig);
+            } else {
+                let tsProject = ts.createProject(ctx.toRootPath(target.tsconfigFile || './tsconfig.json'));
+                return tsProject();
+            }
+        }
+    ],
+    destPipes: {
+        js: [
+            (ctx, config, transform) => {
+                let trans: ITransform = transform.js;
+                trans.changeAsOrigin = true;
+                return trans;
+            },
             (ctx, config) => {
                 let target = config.moduleTarget as TsCompile;
-                if (target.tsconfig) {
-                    return ts(target.tsconfig);
-                } else {
-                    let tsProject = ts.createProject(ctx.toRootPath(target.tsconfigFile || './tsconfig.json'));
-                    return tsProject();
+                if (target.uglify) {
+                    return isBoolean(target.uglify) ? uglify() : uglify(target.uglify);
                 }
-            }
+                return null;
+            },
+            (ctx) => sourcemaps.write('./sourcemaps')
         ],
-        destPipes: {
-            js: [
-                (ctx, config, transform) => {
-                    let trans: ITransform = transform.js;
-                    trans.changeAsOrigin = true;
-                    return trans;
-                },
-                (ctx, config) => {
-                    let target = config.moduleTarget as TsCompile;
-                    if (target.uglify) {
-                        return isBoolean(target.uglify) ? uglify() : uglify(target.uglify);
-                    }
-                    return null;
-                },
-                (ctx) => sourcemaps.write('./sourcemaps')
-            ],
-            dts: [
-                (ctx, config, transform) => {
-                    let tans: ITransform = transform.dts;
-                    tans.changeAsOrigin = true;
-                    return tans;
-                }
-            ]
-        }
+        dts: [
+            (ctx, config, transform) => {
+                let tans: ITransform = transform.dts;
+                tans.changeAsOrigin = true;
+                return tans;
+            }
+        ]
     },
-    task: PipeElement
+    bootstrap: PipeElement
 })
 export class TsCompile extends PipeTask {
 
@@ -97,13 +95,11 @@ export class TsCompile extends PipeTask {
 }
 
 @TaskModule({
-    providers: {
-        name: 'test',
-        src: 'test/**/*.spec.ts',
-        awaitPiped: true,
-        pipes: [() => mocha()]
-    },
-    task: PipeElement
+    name: 'test',
+    src: 'test/**/*.spec.ts',
+    awaitPiped: true,
+    pipes: [() => mocha()],
+    bootstrap: PipeElement
 })
 class TestTask extends TaskElement {
     execute(data?: any): Promise<any> {
@@ -115,23 +111,22 @@ class TestTask extends TaskElement {
 
 TaskContainer.create(__dirname)
     .useModules(PipeModule)
-    .bootstrap([
-        TestTask,
-        {
-            providers: {
+    .bootstrap({
+        children: [
+            TestTask,
+            {
                 name: 'tscompLIB',
                 src: ['src/**/*.ts', '!src/cli/**'],
                 dest: 'lib',
-                uglify: true
+                uglify: true,
+                bootstrap: TsCompile
             },
-            task: TsCompile
-        },
-        {
-            providers: {
+            {
                 name: 'tscompCLI',
                 src: 'src/cli/*.ts',
                 dest: 'bin',
-                uglify: true
-            },
-            task: TsCompile
-        }]);
+                uglify: true,
+                bootstrap: TsCompile
+            }
+        ]
+    });
