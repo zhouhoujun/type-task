@@ -1,5 +1,5 @@
 import { IContainer, LifeScope, CoreActions, DecoratorType, IContainerBuilder, LifeState, IocState, Inject, ContainerToken, IocExt } from '@ts-ioc/core';
-import { Builder, TaskRunner, Task, TaskModule, TaskElement } from './core/index';
+import { TaskBuilder, TaskRunner, Task, TaskModule, TaskElement } from './core/index';
 import { InitTaskAction } from './core/actions/InitTaskAction';
 import { InitTaskModuleAction } from './core/actions/InitTaskModuleAction';
 
@@ -23,7 +23,7 @@ export class CoreModule {
         lifeScope.registerDecorator(Task, CoreActions.bindProvider, 'InitTaskAction', CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
         lifeScope.registerDecorator(TaskModule, CoreActions.bindProvider, 'InitTaskModuleAction', CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
         container.register(TaskElement);
-        container.register(Builder);
+        container.register(TaskBuilder);
         container.register(TaskRunner);
     }
 }

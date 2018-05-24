@@ -1,10 +1,11 @@
-import { IBuilder, BuilderToken } from './IBuilder';
+import { ITaskBuilder, BuilderToken } from './IBuilder';
 import { ITaskComponent } from './ITaskComponent';
-import { Type, hasOwnClassMetadata, isFunction, Inject, IContainer, Injectable, Providers, Singleton, isArray, isClass, ContainerToken, ModuleBuilderToken, IModuleBuilder, isToken } from '@ts-ioc/core';
+import { Type, hasOwnClassMetadata, isFunction, Inject, IContainer, Injectable, Providers, Singleton, isArray, isClass, ContainerToken, ModuleBuilderToken, IModuleBuilder, isToken, isBaseObject, isMetadataObject, Token, ModuleBuilder } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
 import { TaskType } from '../utils/index';
 import { ITask } from './ITask';
-import { TaskElement } from '.';
+import { TaskElement } from './TaskElement';
+
 /**
  * builder.
  *
@@ -13,19 +14,14 @@ import { TaskElement } from '.';
  * @implements {IBuilder}
  */
 @Singleton(BuilderToken)
-export class Builder implements IBuilder {
+export class TaskBuilder<T extends ITask> extends ModuleBuilder<T> implements ITaskBuilder<T> {
 
-    @Inject(ContainerToken)
-    container: IContainer;
-
-    @Inject(ModuleBuilderToken)
-    moduleBuiler: IModuleBuilder<IConfigure>;
-
-    constructor() {
-
+    constructor(@Inject(ContainerToken) container: IContainer) {
+        super();
+        this.useContainer(container);
     }
 
-    async build(config: IConfigure, root?: ITaskComponent): Promise<ITaskComponent> {
+    async build(task: Token<T> | Type<any> | IConfigure<T>, root?: ITaskComponent): Promise<T> {
         let component;
         if (config.task) {
             component = await this.buildComponent(config);
@@ -47,7 +43,7 @@ export class Builder implements IBuilder {
     }
 
 
-    async buildChildren(parent: ITaskComponent, configs: IConfigure[]) {
+    async buildChildren(parent: ITaskComponent, configs: IConfigure<ITask>[]) {
         if (!isFunction(parent.add)) {
             return;
         }
@@ -63,15 +59,16 @@ export class Builder implements IBuilder {
         }));
     }
 
-    async buildComponent(child: IConfigure | ITask): Promise<ITaskComponent> {
+    async buildComponent(child: IConfigure<ITask> | ITask): Promise<ITaskComponent> {
+        let component: ITaskComponent;
         if (isToken(child)) {
-            return await this.moduleBuiler.bootstrap(child)
+            component = await this.moduleBuiler.build(child)
                 .catch(err => {
                     console.error(err);
                     return null;
                 });
-        } else {
-            let config = child as IConfigure;
+        } else if (isMetadataObject(child)) {
+            let config = child as IConfigure<ITask>;
             if (config.imports) {
                 await this.container.loadModule(...config.imports);
             }
@@ -80,12 +77,16 @@ export class Builder implements IBuilder {
             }
             config.bootstrap = config.bootstrap || TaskElement;
 
-            return await this.moduleBuiler.bootstrap(config)
+            component = await this.moduleBuiler.build(config)
                 .catch(err => {
                     console.error(err);
                     return null;
                 });
+        } else {
+            component = null;
         }
+
+        return component;
 
     }
 }

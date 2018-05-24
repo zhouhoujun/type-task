@@ -1,7 +1,7 @@
 import { isToken, Token, Providers, Inject, Singleton, IContainer, isClass, Type, hasOwnClassMetadata, isFunction, ContainerToken } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
-import { IBuilder, BuilderToken } from './IBuilder';
+import { ITaskBuilder, BuilderToken } from './IBuilder';
 import { Task, TaskModule } from './decorators/index';
 import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
 
@@ -44,7 +44,7 @@ export class TaskRunner implements ITaskRunner {
     }
 
     runByConfig(cfg: IConfigure, data?: any): Promise<any> {
-        return this.container.resolve<IBuilder>(cfg.builder || BuilderToken)
+        return this.container.resolve<ITaskBuilder>(cfg.builder || BuilderToken)
             .build(cfg)
             .then(task => {
                 return task.run(data);

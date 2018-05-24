@@ -1,12 +1,12 @@
-import { TaskComponent, ITask, IConfigure, BootstrapTask } from './core/index';
-import { IContainer, Type, Providers, Token, IContainerBuilder, InjectToken, IModuleBuilder } from '@ts-ioc/core';
+import { TaskComponent, ITask, IConfigure } from './core/index';
+import { IContainer, Type, Providers, Token, IContainerBuilder, InjectToken, IModuleBuilder, IApplicationBuilder } from '@ts-ioc/core';
 import { TaskType } from './utils/index';
 
 
 /**
  * TaskContainer token.
  */
-export const TaskContainerToken = new InjectToken<ITaskContainer<IConfigure>>('__TASK_TaskContainer');
+export const TaskContainerToken = new InjectToken<ITaskContainer<ITask>>('__TASK_TaskContainer');
 
 /**
  * task container.
@@ -15,22 +15,6 @@ export const TaskContainerToken = new InjectToken<ITaskContainer<IConfigure>>('_
  * @interface ITaskContainer
  * @extends {TaskComponent}
  */
-export interface ITaskContainer<T extends IConfigure> extends IModuleBuilder<IConfigure> {
-    /**
-     * root of task environment.
-     *
-     * @type {string}
-     * @memberof ITaskContainer
-     */
-    rootPath: string;
-
-    /**
-     * bootstrap task.
-     *
-     * @param {(Token<ITask> | T)} [task]
-     * @returns {Promise<T>}
-     * @memberof ITaskContainer
-     */
-    bootstrap(task?: Token<ITask> | T): Promise<ITask>;
+export interface ITaskContainer<T extends ITask> extends IApplicationBuilder<T> {
 
 }

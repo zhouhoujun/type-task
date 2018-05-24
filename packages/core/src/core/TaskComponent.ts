@@ -3,7 +3,7 @@ import { ITaskComponent } from './ITaskComponent';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
 import { RunWay } from './RunWay';
-import { IBuilder, BuilderToken } from './IBuilder';
+import { ITaskBuilder, BuilderToken } from './IBuilder';
 import { ITaskOption } from './ITaskOption';
 import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
 
@@ -21,14 +21,14 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     @Inject(ContainerToken)
     container: IContainer;
 
-    config?: IConfigure;
+    config?: IConfigure<T>;
 
-    constructor(name: string, public runWay = RunWay.seqFirst, config?: IConfigure) {
+    constructor(name: string, public runWay = RunWay.seqFirst, config?: IConfigure<T>) {
         super(name);
         this.config = config;
     }
 
-    getConfig(): IConfigure {
+    getConfig(): IConfigure<T> {
         return this.find(cmp => !!cmp.config, Mode.route).config;
     }
 

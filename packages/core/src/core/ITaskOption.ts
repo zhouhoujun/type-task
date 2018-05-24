@@ -1,6 +1,6 @@
 import { Type, Token, ObjectMap } from '@ts-ioc/core';
 import { ITaskProvider } from './ITaskProvider';
-import { IBuilder } from './IBuilder';
+import { ITaskBuilder } from './IBuilder';
 import { TaskType } from '../utils/index';
 import { ITask } from './ITask';
 import { ITaskOption } from './ITaskOption';
@@ -25,10 +25,10 @@ export interface ITaskOption<T extends ITask> {
     /**
      * builder
      *
-     * @type {IBuilder}
+     * @type {ITaskBuilder}
      * @memberof IContext
      */
-    builder?: Token<IBuilder>;
+    builder?: Token<ITaskBuilder>;
 
     /**
      * boostrap tasks.
