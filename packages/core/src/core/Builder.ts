@@ -5,6 +5,7 @@ import { IConfigure } from './IConfigure';
 import { TaskType } from '../utils/index';
 import { ITask } from './ITask';
 import { TaskElement } from './TaskElement';
+import { TaskComponent } from '.';
 
 /**
  * builder.
@@ -28,46 +29,39 @@ export class TaskBuilder implements ITaskBuilder {
         return this._moduleBuiler;
     }
 
-    async build<T extends ITaskComponent>(task: Token<T> | Type<any> | IConfigure<T>, root?: ITaskComponent): Promise<T> {
-        let component: T;
-        let config = this.moduleBuiler.getConfigure(task) as IConfigure<T>;
-        if (config.task) {
-            component = await this.buildComponent<T>(config);
-        }
-        if (component) {
-            if (root) {
-                root.add(component)
-            } else {
-                root = component;
-            }
-        } else {
-            component = root || config.moduleTarget;
-        }
+    async build<T extends ITask>(task: Token<T> | Type<any> | IConfigure<T>): Promise<T> {
 
-        if (config.children && config.children.length) {
-            await this.buildChildren(component, config.children)
+        let taskInst = await this.moduleBuiler.build(task) as T;
+
+        if (taskInst instanceof TaskComponent) {
+            let config = this.moduleBuiler.getConfigure(task) as IConfigure<T>;
+            if (config.children && config.children.length) {
+                await this.buildChildren(taskInst, config.children)
+            }
         }
-        return root as T;
+        return taskInst;
     }
 
 
-    async buildChildren<T extends ITaskComponent>(parent: T, configs: IConfigure<T>[]) {
+    async buildChildren<T extends ITaskComponent>(parent: T, configs: IConfigure<ITask>[]) {
         if (!isFunction(parent.add)) {
             return;
         }
-        await Promise.all(configs.map(async ctx => {
-            let node = await this.buildComponent(ctx);
+        await Promise.all(configs.map(async cfg => {
+            let node = await this.moduleBuiler.build(cfg) as T;
             if (!node) {
                 return;
             }
             parent.add(node);
-            if (ctx.children && ctx.children.length) {
-                await this.buildChildren(node, ctx.children);
+            if (node instanceof TaskComponent) {
+                if (cfg.children && cfg.children.length) {
+                    await this.buildChildren(node, cfg.children);
+                }
             }
         }));
     }
 
-    async buildComponent<T extends ITaskComponent>(child: IConfigure<T> | T): Promise<T> {
+    async buildComponent<T extends ITask>(child: IConfigure<T> | T): Promise<T> {
         let component: T;
         if (isToken(child)) {
             component = await this.moduleBuiler.build(child)

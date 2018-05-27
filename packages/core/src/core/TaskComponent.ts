@@ -29,7 +29,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     }
 
     getConfig(): IConfigure<T> {
-        return this.find(cmp => !!cmp.config, Mode.route).config;
+        return this.find(cmp => !!cmp.config, Mode.route).config as T;
     }
 
     getRunner(): ITaskRunner {

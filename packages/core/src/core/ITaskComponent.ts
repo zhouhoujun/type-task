@@ -2,7 +2,7 @@ import { ITask } from './ITask';
 import { GComponent, Token, ComponentLifecycle, Type, Provider, Providers, ModuleType, IContainer } from '@ts-ioc/core';
 import { RunWay } from './RunWay';
 import { ITaskModule } from './ITaskModule';
-import { IConfigure } from '.';
+import { IConfigure } from './IConfigure';
 
 /**
  * Task Component.
@@ -11,7 +11,7 @@ import { IConfigure } from '.';
  * @interface ITaskComponent
  * @extends {GComponent<TaskComponent>}
  */
-export interface ITaskComponent extends GComponent<ITaskComponent>, ITaskModule, ComponentLifecycle {
+export interface ITaskComponent extends GComponent<ITaskComponent>, ITask, ComponentLifecycle {
 
     /**
      * ioc container.
@@ -34,6 +34,6 @@ export interface ITaskComponent extends GComponent<ITaskComponent>, ITaskModule,
      * @returns {IConfigure}
      * @memberof ITaskComponent
      */
-    getConfig(): IConfigure;
+    getConfig(): IConfigure<ITaskComponent>;
 
 }
