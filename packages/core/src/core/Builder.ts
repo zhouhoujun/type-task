@@ -14,17 +14,25 @@ import { TaskElement } from './TaskElement';
  * @implements {IBuilder}
  */
 @Singleton(BuilderToken)
-export class TaskBuilder<T extends ITask> extends ModuleBuilder<T> implements ITaskBuilder<T> {
+export class TaskBuilder implements ITaskBuilder {
 
-    constructor(@Inject(ContainerToken) container: IContainer) {
-        super();
-        this.useContainer(container);
+    constructor(@Inject(ContainerToken) private container: IContainer) {
+
     }
 
-    async build(task: Token<T> | Type<any> | IConfigure<T>, root?: ITaskComponent): Promise<T> {
-        let component;
+    private _moduleBuiler: IModuleBuilder<ITask>;
+    get moduleBuiler(): IModuleBuilder<ITask> {
+        if (!this._moduleBuiler) {
+            this._moduleBuiler = this.container.get(ModuleBuilderToken);
+        }
+        return this._moduleBuiler;
+    }
+
+    async build<T extends ITaskComponent>(task: Token<T> | Type<any> | IConfigure<T>, root?: ITaskComponent): Promise<T> {
+        let component: T;
+        let config = this.moduleBuiler.getConfigure(task) as IConfigure<T>;
         if (config.task) {
-            component = await this.buildComponent(config);
+            component = await this.buildComponent<T>(config);
         }
         if (component) {
             if (root) {
@@ -39,11 +47,11 @@ export class TaskBuilder<T extends ITask> extends ModuleBuilder<T> implements IT
         if (config.children && config.children.length) {
             await this.buildChildren(component, config.children)
         }
-        return root;
+        return root as T;
     }
 
 
-    async buildChildren(parent: ITaskComponent, configs: IConfigure<ITask>[]) {
+    async buildChildren<T extends ITaskComponent>(parent: T, configs: IConfigure<T>[]) {
         if (!isFunction(parent.add)) {
             return;
         }
@@ -59,8 +67,8 @@ export class TaskBuilder<T extends ITask> extends ModuleBuilder<T> implements IT
         }));
     }
 
-    async buildComponent(child: IConfigure<ITask> | ITask): Promise<ITaskComponent> {
-        let component: ITaskComponent;
+    async buildComponent<T extends ITaskComponent>(child: IConfigure<T> | T): Promise<T> {
+        let component: T;
         if (isToken(child)) {
             component = await this.moduleBuiler.build(child)
                 .catch(err => {
@@ -68,7 +76,7 @@ export class TaskBuilder<T extends ITask> extends ModuleBuilder<T> implements IT
                     return null;
                 });
         } else if (isMetadataObject(child)) {
-            let config = child as IConfigure<ITask>;
+            let config = child as IConfigure<T>;
             if (config.imports) {
                 await this.container.loadModule(...config.imports);
             }

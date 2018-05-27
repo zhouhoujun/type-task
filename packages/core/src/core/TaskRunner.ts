@@ -4,6 +4,7 @@ import { ITask } from './ITask';
 import { ITaskBuilder, BuilderToken } from './IBuilder';
 import { Task, TaskModule } from './decorators/index';
 import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
+import { ITaskComponent } from '.';
 
 /**
  * task runner.
@@ -19,7 +20,7 @@ export class TaskRunner implements ITaskRunner {
 
     }
 
-    runTask(task: IConfigure | Token<any>, data?: any, ...providers: Providers[]): Promise<any> {
+    runTask<T extends ITaskComponent>(task: IConfigure<T> | Token<any>, data?: any, ...providers: Providers[]): Promise<any> {
         if (isToken(task)) {
             if (!this.container.has(task)) {
                 if (isClass(task) && this.isTask(task)) {
@@ -32,7 +33,7 @@ export class TaskRunner implements ITaskRunner {
             if (isFunction(instance.run)) {
                 return instance.run(data);
             } else if (instance.config && isClass(instance.config.task) && this.isTask(instance.config.task)) {
-                let cfg = instance.config as IConfigure;
+                let cfg = instance.config as IConfigure<T>;
                 return this.runByConfig(cfg, data);
             } else {
                 return Promise.reject(`${JSON.stringify(instance)} is not vaild task instance.`);
@@ -43,7 +44,7 @@ export class TaskRunner implements ITaskRunner {
         }
     }
 
-    runByConfig(cfg: IConfigure, data?: any): Promise<any> {
+    runByConfig<T extends ITaskComponent>(cfg: IConfigure<T>, data?: any): Promise<any> {
         return this.container.resolve<ITaskBuilder>(cfg.builder || BuilderToken)
             .build(cfg)
             .then(task => {

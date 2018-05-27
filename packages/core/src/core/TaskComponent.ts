@@ -40,7 +40,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     protected build() {
         if (!this.builded) {
             this.builded = this.config ?
-                this.container.resolve(this.config.builder || BuilderToken).build(this.config, this)
+                this.container.resolve(this.config.builder || BuilderToken).build<T>(this.config, this)
                 : Promise.resolve(this);
         }
         return this.builded;

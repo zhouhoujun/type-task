@@ -6,7 +6,7 @@ import { ITask } from '.';
 /**
  * builder token.
  */
-export const BuilderToken = new InjectToken<ITaskBuilder<ITask>>('__TASK_Builder');
+export const BuilderToken = new InjectToken<ITaskBuilder>('__TASK_Builder');
 
 /**
  * builder.
@@ -14,7 +14,7 @@ export const BuilderToken = new InjectToken<ITaskBuilder<ITask>>('__TASK_Builder
  * @export
  * @interface ITaskBuilder
  */
-export interface ITaskBuilder<T extends ITask> extends IModuleBuilder<T> {
+export interface ITaskBuilder {
 
     /**
      * build task component.
@@ -24,5 +24,5 @@ export interface ITaskBuilder<T extends ITask> extends IModuleBuilder<T> {
      * @returns {Promise<T>}
      * @memberof ITaskBuilder
      */
-    build(task: Token<T> | Type<any> | IConfigure<T>, root?: ITaskComponent): Promise<T>;
+    build<T extends ITaskComponent>(task: Token<T> | Type<any> | IConfigure<T>, root?: ITaskComponent): Promise<T>;
 }
