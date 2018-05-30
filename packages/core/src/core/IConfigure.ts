@@ -1,6 +1,6 @@
 import { ITask } from './ITask';
 import { ITaskOption } from './ITaskOption';
-import { Token, ModuleConfiguration, Type } from '@ts-ioc/core';
+import { Token, Type, AppConfiguration } from '@ts-ioc/core';
 import { ITaskBuilder } from './IBuilder';
 import { RunWay } from './RunWay';
 
@@ -10,7 +10,7 @@ import { RunWay } from './RunWay';
  * @export
  * @interface IContext
  */
-export interface IConfigure<T extends ITask> extends ModuleConfiguration<T> {
+export interface IConfigure extends AppConfiguration<ITask> {
 
     /**
     * context tasks name.
@@ -43,12 +43,18 @@ export interface IConfigure<T extends ITask> extends ModuleConfiguration<T> {
      * @memberof IContext
      */
     builder?: Token<ITaskBuilder>;
-
+    /**
+     * task module.
+     *
+     * @type {Token<ITask>}
+     * @memberof IConfigure
+     */
+    task?: Token<ITask>;
     /**
      * children
      *
-     * @type {((IConfigure | Type<T>)[])}
+     * @type {((IConfigure | Type<ITask>)[])}
      * @memberof IConfigure
      */
-    children?: (IConfigure<T> | Type<T>)[];
+    children?: (IConfigure | Type<ITask>)[];
 }

@@ -29,12 +29,15 @@ export class TaskBuilder implements ITaskBuilder {
         return this._moduleBuiler;
     }
 
-    async build<T extends ITask>(task: Token<T> | Type<any> | IConfigure<T>): Promise<T> {
+    async build<T extends ITask>(task: Token<T> | Type<any> | IConfigure): Promise<T> {
 
         let taskInst = await this.moduleBuiler.build(task) as T;
 
         if (taskInst instanceof TaskComponent) {
-            let config = this.moduleBuiler.getConfigure(task) as IConfigure<T>;
+            let config = this.moduleBuiler.getConfigure(task) as IConfigure;
+            if (config.task) {
+                config.bootstrap = config.task;
+            }
             if (config.children && config.children.length) {
                 await this.buildChildren(taskInst, config.children)
             }
@@ -43,11 +46,14 @@ export class TaskBuilder implements ITaskBuilder {
     }
 
 
-    async buildChildren<T extends ITaskComponent>(parent: T, configs: IConfigure<ITask>[]) {
+    async buildChildren<T extends ITaskComponent>(parent: T, configs: IConfigure[]) {
         if (!isFunction(parent.add)) {
             return;
         }
         await Promise.all(configs.map(async cfg => {
+            if (cfg.task) {
+                cfg.bootstrap = cfg.task;
+            }
             let node = await this.moduleBuiler.build(cfg) as T;
             if (!node) {
                 return;
@@ -61,7 +67,7 @@ export class TaskBuilder implements ITaskBuilder {
         }));
     }
 
-    async buildComponent<T extends ITask>(child: IConfigure<T> | T): Promise<T> {
+    async buildComponent<T extends ITask>(child: IConfigure | T): Promise<T> {
         let component: T;
         if (isToken(child)) {
             component = await this.moduleBuiler.build(child)
@@ -70,7 +76,7 @@ export class TaskBuilder implements ITaskBuilder {
                     return null;
                 });
         } else if (isMetadataObject(child)) {
-            let config = child as IConfigure<T>;
+            let config = child as IConfigure;
             if (config.imports) {
                 await this.container.loadModule(...config.imports);
             }

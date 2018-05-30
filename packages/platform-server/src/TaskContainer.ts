@@ -1,5 +1,5 @@
-import { DefaultTaskContainer, ITaskContainer, BootstrapTask } from '@taskp/core';
-import { AsyncLoadOptions, Type, IContainer, Providers } from '@ts-ioc/core';
+import { DefaultTaskContainer, ITaskContainer, ITask } from '@taskp/core';
+import { Type, IContainer, Providers, ModuleType, Token, LoadType } from '@ts-ioc/core';
 import chalk from 'chalk';
 import { TaskLogAspect } from './aop/index';
 // import { TaskContext } from './TaskContext';
@@ -13,10 +13,11 @@ const prettyTime = require('pretty-hrtime');
  * @class TaskContainer
  * @extends {DefaultTaskContainer}
  */
-export class TaskContainer extends DefaultTaskContainer {
+export class TaskContainer extends DefaultTaskContainer<any> {
 
-    constructor(rootPath: string, container?: IContainer) {
-        super(rootPath, container);
+    constructor(rootPath: string) {
+        super(rootPath);
+        this.logAspect = TaskLogAspect;
     }
 
     /**
@@ -28,10 +29,10 @@ export class TaskContainer extends DefaultTaskContainer {
      * @returns {ITaskContainer}
      * @memberof TaskContainer
      */
-    static create(root: string, ...modules: (Type<any> | AsyncLoadOptions)[]): ITaskContainer {
+    static create(root: string, ...modules: LoadType[]) {
         let taskContainer = new TaskContainer(root);
         if (modules) {
-            taskContainer.use(...modules);
+            taskContainer.useModules(...modules);
         }
         return taskContainer;
     }
@@ -39,18 +40,18 @@ export class TaskContainer extends DefaultTaskContainer {
     /**
      * bootstrap task.
      *
-     * @param {BootstrapTask} [tasks]
-     * @param {...Providers[]} providers
+     * @template T
+     * @param {(Token<T> | Type<any>)} [task]
      * @returns {Promise<any>}
-     * @memberof DefaultTaskContainer
+     * @memberof TaskContainer
      */
-    bootstrap(tasks?: BootstrapTask, ...providers: Providers[]): Promise<any> {
+    bootstrap<T extends ITask>(task: Token<T> | Type<any>): Promise<any> {
         let start, end;
         start = process.hrtime();
 
         console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Starting'), '...');
 
-        return super.bootstrap(tasks, ...providers)
+        return super.bootstrap(task)
             .then(
                 data => {
                     end = prettyTime(process.hrtime(start));
@@ -63,10 +64,5 @@ export class TaskContainer extends DefaultTaskContainer {
                     console.error(err);
                     return err;
                 });
-    }
-
-    protected registerExt(container: IContainer) {
-        super.registerExt(container);
-        container.register(this.log || TaskLogAspect);
     }
 }

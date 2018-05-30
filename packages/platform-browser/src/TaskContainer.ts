@@ -1,18 +1,19 @@
-import { DefaultTaskContainer, ITaskContainer, BootstrapTask } from '@taskp/core';
-import { AsyncLoadOptions, Type, IContainer, Providers } from '@ts-ioc/core';
+import { DefaultTaskContainer, ITaskContainer, ITask } from '@taskp/core';
+import { Type, IContainer, Providers, ModuleType, Token, LoadType } from '@ts-ioc/core';
 import { TaskLogAspect } from './aop/index';
 
 /**
  * task container in browser.
- * 
+ *
  * @export
  * @class TaskContainer
  * @extends {DefaultTaskContainer}
  */
-export class TaskContainer extends DefaultTaskContainer {
+export class TaskContainer extends DefaultTaskContainer<any> {
 
-    constructor(rootPath: string, container?: IContainer) {
-        super(rootPath, container);
+    constructor(rootPath: string) {
+        super(rootPath);
+        this.logAspect = TaskLogAspect;
     }
 
     /**
@@ -20,14 +21,14 @@ export class TaskContainer extends DefaultTaskContainer {
      *
      * @static
      * @param {string} root
-     * @param {...(Type<any> | AsyncLoadOptions)[]} modules
+     * @param {...ModuleType[]} modules
      * @returns {ITaskContainer}
      * @memberof TaskContainer
      */
-    static create(root: string, ...modules: (Type<any> | AsyncLoadOptions)[]): ITaskContainer {
+    static create(root: string, ...modules: LoadType[]): ITaskContainer<any> {
         let taskContainer = new TaskContainer(root);
         if (modules) {
-            taskContainer.use(...modules);
+            taskContainer.useModules(...modules);
         }
         return taskContainer;
     }
@@ -40,13 +41,13 @@ export class TaskContainer extends DefaultTaskContainer {
      * @returns {Promise<any>}
      * @memberof DefaultTaskContainer
      */
-    bootstrap(tasks?: BootstrapTask, ...providers: Providers[]): Promise<any> {
+    bootstrap<T extends ITask>(task: Token<T> | Type<any>): Promise<any> {
         let end: Date;
         let start = new Date();
 
         console.log('[' + start.toString() + ']', 'Starting', '...');
 
-        return super.bootstrap(tasks, ...providers)
+        return super.bootstrap(task)
             .then(
                 data => {
                     end = new Date();
@@ -61,8 +62,4 @@ export class TaskContainer extends DefaultTaskContainer {
                 });
     }
 
-    protected registerExt(container: IContainer) {
-        super.registerExt(container);
-        container.register(this.log || TaskLogAspect);
-    }
 }

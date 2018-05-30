@@ -21,14 +21,14 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     @Inject(ContainerToken)
     container: IContainer;
 
-    config?: IConfigure<T>;
+    config?: IConfigure;
 
-    constructor(name: string, public runWay = RunWay.seqFirst, config?: IConfigure<T>) {
+    constructor(name: string, public runWay = RunWay.seqFirst, config?: IConfigure) {
         super(name);
         this.config = config;
     }
 
-    getConfig(): IConfigure<T> {
+    getConfig(): IConfigure {
         return this.find(cmp => !!cmp.config, Mode.route).config as T;
     }
 

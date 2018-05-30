@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { ITaskContainer, DefaultTaskContainer, TaskElement } from '../src';
+import { ITaskContainer, DefaultTaskContainer, TaskElement, IConfigure } from '../src';
 
 import { SimpleTask, SimpleCTask, TaskModuleTest } from './simples.task';
 
@@ -17,7 +17,7 @@ describe('auto register with build', () => {
     });
 
     it('should bootstrap with single task via name or provider.', async () => {
-        let result = await container.use(SimpleTask).bootstrap('test');
+        let result = await container.useModules(SimpleTask).bootstrap('test');
         expect(result).eq('simple task');
     });
 
@@ -27,23 +27,23 @@ describe('auto register with build', () => {
     });
 
     it('should bootstrap with component task via name or provider.', async () => {
-        let result = await container.use(SimpleCTask).bootstrap('comptest');
+        let result = await container.useModules(SimpleCTask).bootstrap('comptest');
         expect(result).eq('component task');
     });
 
     it('should bootstrap with IConfigure.', async () => {
         let result = await container.bootstrap({
-            providers: {
-                name: 'test1'
-            },
+            // providers: {
+            //     name: 'test1'
+            // },
             task: TaskElement,
             children: [
                 {
-                    providers: { name: 'test------1' },
+                    name: 'test------1',
                     task: SimpleTask
                 },
                 {
-                    providers: { name: 'test------2' },
+                    name: 'test------2',
                     task: SimpleCTask
                 }
             ]
