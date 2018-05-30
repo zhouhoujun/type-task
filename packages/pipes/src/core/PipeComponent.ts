@@ -1,13 +1,12 @@
-import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure, Src, TaskContextToken } from '@taskp/core';
+import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure, Src } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { Abstract, isArray, isString, isClass, isFunction, IContainer, getTypeMetadata, Inject, Registration } from '@ts-ioc/core';
-import { TransformMerger, TransformExpress, TransformType } from './pipeTypes';
+import { TransformMerger, TransformExpress, TransformType, TransformSource } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
-import { IPipeTaskContext } from './IPipeTaskContext';
-import { TransformSource } from './pipeTypes';
 import { src, SrcOptions } from 'vinyl-fs';
+import { ITaskContext, TaskContextToken } from '.';
 
 /**
  * pipe component
@@ -23,11 +22,8 @@ import { src, SrcOptions } from 'vinyl-fs';
 @Abstract()
 export abstract class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> implements ITask, IPipeComponent {
 
-    /**
-     * pipe task run enviroment.
-     */
-    @Inject(new Registration(TaskContextToken, 'pipe'))
-    context: IPipeTaskContext;
+    @Inject(TaskContextToken)
+    context: ITaskContext;
 
     constructor(
         name: string,

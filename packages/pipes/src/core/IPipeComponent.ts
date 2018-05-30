@@ -2,6 +2,7 @@ import { IPipeTask } from './IPipeTask';
 import { ITaskComponent, ITaskProvider, Src } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { TransformMerger, TransformSource } from './pipeTypes';
+import { ITaskContext } from './ITaskContext';
 
 /**
  * pipe component provider.
@@ -31,9 +32,13 @@ export interface IPipeComponentProvider extends ITaskProvider {
 export interface IPipeComponent extends ITaskComponent {
 
     /**
-     * pipe task run enviroment.
+     * context.
+     *
+     * @type {ITaskContext}
+     * @memberof ITaskContext
      */
-    context: IPipeTaskContext;
+    context: ITaskContext;
+
     /**
      * run task.
      *

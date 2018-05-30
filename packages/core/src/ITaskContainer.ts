@@ -16,6 +16,14 @@ export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskCo
  * @extends {TaskComponent}
  */
 export interface ITaskContainer extends IApplicationBuilder<ITask> {
+
+    /**
+     * get root path.
+     *
+     * @returns {string}
+     * @memberof ITaskContainer
+     */
+    getRootPath(): string;
     /**
      * use log aspect.
      *

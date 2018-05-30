@@ -14,6 +14,5 @@ export * from './PipeSource';
 export * from './PipeStream';
 export * from './pipeTypes';
 
-
-export * from './IPipeTaskContext';
-export * from './PipeTaskContext';
+export * from './ITaskContext';
+export * from './TaskContext';

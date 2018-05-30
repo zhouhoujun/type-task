@@ -23,6 +23,8 @@
   "homepage": "https://github.com/zhouhoujun/tsioc#readme",
   "dependencies": {},
   "peerDependencies": {
+    "reflect-metadata": "^0.1.12",
+    "tslib": "^1.9.2",
     "@taskp/core": "^2.0.13",
     "@ts-ioc/platform-browser": "^2.3.0"
   },

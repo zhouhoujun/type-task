@@ -39,6 +39,10 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
         return super.bootstrap(task);
     }
 
+    getRootPath() {
+        return this.rootPath;
+    }
+
     protected createModuleBuilder(): IModuleBuilder<ITask> {
         return this.getContainer().get(ModuleBuilderToken, 'task');
     }

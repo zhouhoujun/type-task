@@ -1,4 +1,4 @@
-import { Task, Src, TaskElement, RunWay, ITaskContext } from '@taskp/core';
+import { Task, Src, TaskElement, RunWay } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { TransformSource, TransformExpress, DestExpress, TransformMerger } from './pipeTypes';
 import { Type, isBoolean, isFunction, Mode } from '@ts-ioc/core';
@@ -49,7 +49,7 @@ export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeE
     }
 
     onInit() {
-        let container = this.context.container;
+        let container = this.container;
         if (this.watchSrc) {
             this.watch(this.watchSrc);
         }

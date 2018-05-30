@@ -1,4 +1,4 @@
-import { ITaskProvider, Src, ITaskContext } from '@taskp/core';
+import { ITaskProvider, Src } from '@taskp/core';
 import { TransformSource, TransformExpress, DestExpress, TransformMerger } from './pipeTypes';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';

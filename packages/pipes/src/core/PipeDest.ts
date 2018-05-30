@@ -1,4 +1,4 @@
-import { Task, ITaskContext, ITaskProvider, Src, RunWay, AbstractTask } from '@taskp/core';
+import { Task, ITaskProvider, Src, RunWay, AbstractTask } from '@taskp/core';
 import { TransformSource, DestExpress, TransformExpress, TransformMerger } from './pipeTypes';
 import { isArray, Abstract, isFunction, ObjectMap, isClass } from '@ts-ioc/core';
 import { ITransform } from './ITransform';
@@ -46,7 +46,7 @@ export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComp
     }
 
     pipe(transform: ITransform): Promise<ITransform> {
-        let dest = isFunction(this.dest) ? this.dest(this.context, this.getConfig()) : this.dest;
+        let dest = isFunction(this.dest) ? this.dest(this.getConfig()) : this.dest;
 
         if (isArray(dest)) {
             return Promise.all(dest.map(dist => this.writeStream(transform, dist)))
