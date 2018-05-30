@@ -34,6 +34,6 @@ export interface ITaskComponent extends GComponent<ITaskComponent>, ITask, Compo
      * @returns {IConfigure}
      * @memberof ITaskComponent
      */
-    getConfig(): IConfigure<ITaskComponent>;
+    getConfig(): IConfigure
 
 }

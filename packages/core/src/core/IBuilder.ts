@@ -19,10 +19,10 @@ export interface ITaskBuilder {
     /**
      * build task component.
      *
-     * @param {(Token<T> | Type<any> | IConfigure<T>)} task  task module class or task config.
+     * @param {(Token<T> | Type<any> | IConfigure)} task  task module class or task config.
      * @param {ITaskComponent} [root] root task component
      * @returns {Promise<T>}
      * @memberof ITaskBuilder
      */
-    build<T extends ITaskComponent>(task: Token<T> | Type<any> | IConfigure<T>, root?: ITaskComponent): Promise<T>;
+    build<T extends ITaskComponent>(task: Token<T> | Type<any> | IConfigure, root?: ITaskComponent): Promise<T>;
 }

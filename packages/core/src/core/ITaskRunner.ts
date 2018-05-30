@@ -17,13 +17,13 @@ export interface ITaskRunner {
     /**
      * run task.
      *
-     * @param {(IConfigure<ITask> | Token<any>)} task
+     * @param {(IConfigure | Token<any>)} task
      * @param {*} [data]
      * @param {...Providers[]} providers
      * @returns {Promise<any>}
      * @memberof ITaskRunner
      */
-    runTask(task: IConfigure<ITask> | Token<any>, data?: any, ...providers: Providers[]): Promise<any>;
+    runTask(task: IConfigure | Token<any>, data?: any, ...providers: Providers[]): Promise<any>;
 
     /**
      * run configure task
@@ -33,7 +33,7 @@ export interface ITaskRunner {
      * @returns {Promise<any>}
      * @memberof ITaskRunner
      */
-    runByConfig(cfg: IConfigure<ITask>, data?: any): Promise<any>;
+    runByConfig(cfg: IConfigure, data?: any): Promise<any>;
 
     /**
      * is type task or not.

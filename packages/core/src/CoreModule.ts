@@ -2,6 +2,7 @@ import { IContainer, LifeScope, CoreActions, DecoratorType, IContainerBuilder, L
 import { TaskBuilder, TaskRunner, Task, TaskModule, TaskElement } from './core/index';
 import { InitTaskAction } from './core/actions/InitTaskAction';
 import { InitTaskModuleAction } from './core/actions/InitTaskModuleAction';
+import { TaskModuleBuilder } from './TaskModuleBuilder';
 
 
 /**
@@ -25,5 +26,6 @@ export class CoreModule {
         container.register(TaskElement);
         container.register(TaskBuilder);
         container.register(TaskRunner);
+        container.register(TaskModuleBuilder);
     }
 }

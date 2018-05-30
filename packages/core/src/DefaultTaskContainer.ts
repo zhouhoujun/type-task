@@ -1,4 +1,4 @@
-import { isArray, IContainer, IContainerBuilder, Type, Inject, Mode, Providers, isClass, ContainerBuilderToken, ModuleBuilder, Token, ApplicationBuilder, IApplicationBuilder, hasClassMetadata } from '@ts-ioc/core';
+import { isArray, IContainer, IContainerBuilder, Type, Inject, Mode, Providers, isClass, ContainerBuilderToken, ModuleBuilder, Token, ApplicationBuilder, IApplicationBuilder, hasClassMetadata, ModuleBuilderToken, IModuleBuilder } from '@ts-ioc/core';
 import { ITaskRunner, IConfigure, TaskRunnerToken, ITask } from './core/index';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
@@ -39,12 +39,8 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
         return super.bootstrap(task);
     }
 
-    protected async getConfiguration(cfg?: IConfigure): Promise<IConfigure> {
-        let config = await super.getConfiguration(cfg) as IConfigure;
-        if (config.task) {
-            config.bootstrap = config.task;
-        }
-        return config;
+    protected createModuleBuilder(): IModuleBuilder<ITask> {
+        return this.getContainer().get(ModuleBuilderToken, 'task');
     }
 
 

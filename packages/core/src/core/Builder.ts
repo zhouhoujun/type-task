@@ -24,7 +24,7 @@ export class TaskBuilder implements ITaskBuilder {
     private _moduleBuiler: IModuleBuilder<ITask>;
     get moduleBuiler(): IModuleBuilder<ITask> {
         if (!this._moduleBuiler) {
-            this._moduleBuiler = this.container.get(ModuleBuilderToken);
+            this._moduleBuiler = this.container.get(ModuleBuilderToken, 'task');
         }
         return this._moduleBuiler;
     }

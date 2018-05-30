@@ -25,7 +25,7 @@ export interface ITask extends ComponentLifecycle {
      * @type {IConfigure}
      * @memberof ITaskModule
      */
-    config?: IConfigure<ITask>;
+    config?: IConfigure;
 
     /**
      * run task.

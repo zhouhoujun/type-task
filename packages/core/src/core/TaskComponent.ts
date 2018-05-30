@@ -25,30 +25,17 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     constructor(name: string, public runWay = RunWay.seqFirst, config?: IConfigure) {
         super(name);
-        this.config = config;
+        if (config) {
+            this.config = config;
+        }
     }
 
     getConfig(): IConfigure {
         return this.find(cmp => !!cmp.config, Mode.route).config as T;
     }
 
-    getRunner(): ITaskRunner {
-        return this.container.get(TaskRunnerToken);
-    }
-
-    private builded: Promise<ITaskComponent>;
-    protected build() {
-        if (!this.builded) {
-            this.builded = this.config ?
-                this.container.resolve(this.config.builder || BuilderToken).build<T>(this.config, this)
-                : Promise.resolve(this);
-        }
-        return this.builded;
-    }
 
     async run(data?: any): Promise<any> {
-        let component = await this.build();
-
         let execPromise: Promise<any>;
         if (this.runWay & RunWay.nodeFirst) {
             execPromise = this.execute(data);

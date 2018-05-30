@@ -39,17 +39,15 @@ export class SimpleCTask extends TaskComponent<ITaskComponent> {
 
 
 @TaskModule({
-    providers: {
-        name: 'test-module'
-    },
+    name: 'test-module',
     task: TaskElement,
     children: [
         {
-            providers: { name: 'test------3' },
+            name: 'test------3',
             task: SimpleTask
         },
         {
-            providers: { name: 'test------4' },
+            name: 'test------4',
             task: SimpleCTask
         }
     ]

@@ -2,7 +2,6 @@ import { IPipeTask } from './IPipeTask';
 import { ITaskComponent, ITaskProvider, Src } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { TransformMerger, TransformSource } from './pipeTypes';
-import { IPipeTaskContext } from './IPipeTaskContext'
 
 /**
  * pipe component provider.

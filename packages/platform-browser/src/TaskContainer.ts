@@ -9,7 +9,7 @@ import { TaskLogAspect } from './aop/index';
  * @class TaskContainer
  * @extends {DefaultTaskContainer}
  */
-export class TaskContainer extends DefaultTaskContainer<any> {
+export class TaskContainer extends DefaultTaskContainer {
 
     constructor(rootPath: string) {
         super(rootPath);
@@ -25,7 +25,7 @@ export class TaskContainer extends DefaultTaskContainer<any> {
      * @returns {ITaskContainer}
      * @memberof TaskContainer
      */
-    static create(root: string, ...modules: LoadType[]): ITaskContainer<any> {
+    static create(root: string, ...modules: LoadType[]): ITaskContainer {
         let taskContainer = new TaskContainer(root);
         if (modules) {
             taskContainer.useModules(...modules);

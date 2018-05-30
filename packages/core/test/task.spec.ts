@@ -33,9 +33,7 @@ describe('auto register with build', () => {
 
     it('should bootstrap with IConfigure.', async () => {
         let result = await container.bootstrap({
-            // providers: {
-            //     name: 'test1'
-            // },
+            name: 'test1',
             task: TaskElement,
             children: [
                 {
