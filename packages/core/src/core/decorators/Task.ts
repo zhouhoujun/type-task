@@ -1,4 +1,4 @@
-import { isString, isRegExp, isArray, isNumber, createClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass, ITypeDecorator } from '@ts-ioc/core';
+import { isString, isRegExp, isArray, isNumber, createClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass, ITypeDecorator, Type } from '@ts-ioc/core';
 import { Src } from '../../utils/index';
 import { TaskMetadata } from '../metadatas/index';
 
@@ -22,10 +22,14 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
      * @param {string} [alias] define this class provider with alias for provide.
      * @param {boolean} [singlton] define this class as singlton.
      */
-    (taskName?: string, provide?: Registration<any> | symbol | string, alias?: string, singleton?: boolean): ClassDecorator;
+    (metadata?: T): ClassDecorator;
+    /**
+     * task decorator, use to define class as task element.
+     *
+     * @Task
+     */
     (target: Function): void;
 }
-
 
 export function createTaskDecorator<T extends TaskMetadata>(
     taskType: string,

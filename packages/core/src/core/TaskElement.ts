@@ -16,8 +16,8 @@ import { Task } from './decorators/index';
  */
 @Task
 export class TaskElement extends TaskComponent<ITaskComponent> implements ITask {
-    constructor(name: string, runWay = RunWay.seqFirst) {
-        super(name, runWay);
+    constructor(name?: string) {
+        super(name);
     }
 
     protected execute(data: any): Promise<any> {

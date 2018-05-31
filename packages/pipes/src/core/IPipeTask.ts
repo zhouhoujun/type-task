@@ -1,6 +1,6 @@
 import { ITask } from '@taskp/core';
 import { ITransform } from './ITransform';
-
+import { IPipeConfigure } from './IPipeConfigure';
 /**
  * pipe task.
  *
@@ -9,13 +9,21 @@ import { ITransform } from './ITransform';
  * @extends {ITask}
  * @template T
  */
-export interface IPipeTask<T> extends ITask {
+export interface IPipeTask extends ITask {
+
+    /**
+     * pipe task config.
+     *
+     * @type {IPipeConfigure}
+     * @memberof IPipeTask
+     */
+    config: IPipeConfigure;
     /**
      * pipe task
      *
-     * @param {T} [data]
+     * @param {any} [data]
      * @returns {Promise<ITransform>}
      * @memberof IPipeTask
      */
-    run(data?: T): Promise<ITransform>;
+    run(data?: any): Promise<ITransform>;
 }

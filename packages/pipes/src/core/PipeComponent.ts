@@ -1,4 +1,4 @@
-import { ITask, ITaskOption, RunWay, TaskComponent, IConfigure, Src } from '@taskp/core';
+import { ITask, RunWay, TaskComponent, IConfigure, Src } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { Abstract, isArray, isString, isClass, isFunction, IContainer, getTypeMetadata, Inject, Registration } from '@ts-ioc/core';
@@ -6,7 +6,7 @@ import { TransformMerger, TransformExpress, TransformType, TransformSource } fro
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
 import { src, SrcOptions } from 'vinyl-fs';
-import { ITaskContext, TaskContextToken } from '.';
+import { ITaskContext, TaskContextToken } from './ITaskContext';
 
 /**
  * pipe component
@@ -20,26 +20,21 @@ import { ITaskContext, TaskContextToken } from '.';
  * @template T
  */
 @Abstract()
-export abstract class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> implements ITask, IPipeComponent {
+export abstract class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> implements IPipeComponent {
 
     @Inject(TaskContextToken)
     context: ITaskContext;
 
-    constructor(
-        name: string,
-        runWay = RunWay.seqFirst,
-        protected merger?: TransformMerger
-    ) {
-        super(name, runWay);
+    protected pipes: TransformType[];
+    constructor(name?: string) {
+        super(name);
+        this.pipes = [];
     }
 
 
-    run(data?: Src | ITransform | ITransform[]): Promise<ITransform> {
-        return super.run(data)
-            .then(rd => {
-                return rd as ITransform;
-            });
-    }
+    // run(data?: ITransform): Promise<ITransform> {
+    //     return super.run(data);
+    // }
 
     /**
      * execute tasks
@@ -49,61 +44,8 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      * @returns {Promise<any>}
      * @memberof TaskComponent
      */
-    protected execute(data: Src | ITransform | ITransform[]): Promise<ITransform> {
-        let exData = isArray(data) ? data : [data];
-        if (exData.some(it => isString(it))) {
-            return this.source(<string[]>exData)
-                .then(pstream => this.pipe(pstream));
-        } else {
-
-            return this.merge(<ITransform[]>exData)
-                .then(pstream => this.pipe(pstream));
-        }
-    }
-
-    protected source(data: string[]): Promise<ITransform> {
-        return Promise.resolve(src(data));
-    }
-
-    /**
-     * merge transforms
-     *
-     * @protected
-     * @param {ITransform[]} data
-     * @returns {Promise<ITransform>}
-     * @memberof PipeComponent
-     */
-    protected merge(data: ITransform[]): Promise<ITransform> {
-        let ptsf: Promise<ITransform>;
-        let trans: any[] = data.filter(it => !it);
-        if (trans.length > 1) {
-            let runner = this.getRunner();
-            if (this.merger) {
-                if (isClass(this.merger)) {
-                    if (runner.isTask(this.merger)) {
-                        ptsf = runner.runTask(this.merger, data)
-                    }
-                } else if (isFunction(this.merger)) {
-                    ptsf = Promise.resolve(this.merger(data));
-                } else {
-                    if (isFunction(this.merger['run'])) {
-                        let merger = this.merger as ITransformMerger;
-                        ptsf = merger.run(data);
-                    } else if (isClass(this.merger['task'])) {
-                        let opt = this.merger as ITaskOption<ITransformMerger>;
-                        if (runner.isTask(opt.task)) {
-                            ptsf = runner.runByConfig(opt, data, );
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!ptsf) {
-            ptsf = Promise.resolve(isArray(data) ? data[0] : data);
-        }
-
-        return ptsf.then(tranform => (tranform && isFunction(tranform.pipe)) ? tranform as ITransform : null);
+    protected execute(data: ITransform): Promise<ITransform> {
+        return this.pipeToPromise(data, this.pipes);
     }
 
     /**
@@ -123,30 +65,27 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      *
      * @protected
      * @param {ITransform} source
-     * @param {TransformExpress} pipes
+     * @param {TransformType[]} pipes
      * @returns {Promise<ITransform>}
      * @memberof PipeComponent
      */
-    protected pipeToPromise(source: ITransform, pipes: TransformExpress): Promise<ITransform> {
+    protected pipeToPromise(source: ITransform, pipes: TransformType[]): Promise<ITransform> {
         if (!pipes) {
             return Promise.resolve(source);
         }
-        let config = this.getConfig();
-        return Promise.resolve(isFunction(pipes) ? pipes(this.context, config, source) : pipes)
-            .then(transforms => {
-                transforms = transforms || [];
-                let pstream = Promise.resolve(source);
-                transforms.forEach(transform => {
-                    if (transform) {
-                        pstream = pstream
-                            .then(stream => {
-                                return this.executePipe(stream, transform, config);
-                            });
-                    }
-                });
+        let config = this.config;
 
-                return pstream;
-            });
+        let pstream = Promise.resolve(source);
+        pipes.forEach(transform => {
+            if (transform) {
+                pstream = pstream
+                    .then(stream => {
+                        return this.executePipe(stream, transform, config);
+                    });
+            }
+        });
+        return pstream;
+
     }
 
     protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Promise<ITransform> {

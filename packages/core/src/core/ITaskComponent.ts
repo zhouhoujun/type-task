@@ -20,20 +20,7 @@ export interface ITaskComponent extends GComponent<ITaskComponent>, ITask, Compo
      * @memberof ITaskComponent
      */
     container: IContainer;
-    /**
-     * children run way.
-     *
-     * @type {RunWay}
-     * @memberof ITaskComponent
-     */
-    runWay: RunWay;
 
-    /**
-     * get component config.
-     *
-     * @returns {IConfigure}
-     * @memberof ITaskComponent
-     */
-    getConfig(): IConfigure
+    getRoot(): ITaskComponent;
 
 }

@@ -1,15 +1,19 @@
-import { AbstractTask, Task } from '@taskp/core';
+import { Task, ITask, IConfigure, RunWay } from '@taskp/core';
 import { ITaskContext, TaskContextToken } from './ITaskContext';
 import { Inject } from '@ts-ioc/core';
 
 @Task
-export class BaseTask extends AbstractTask {
+export class BaseTask implements ITask {
+
+    config: IConfigure;
+
+    runWay = RunWay.seqFirst;
 
     @Inject(TaskContextToken)
     context: ITaskContext;
 
-    constructor(name: string) {
-        super(name);
+    constructor(public name: string) {
+
     }
 
     run(data?: any): Promise<any> {

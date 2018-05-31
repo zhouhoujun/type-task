@@ -2,7 +2,7 @@ import { toAbsolutePath } from '@ts-ioc/platform-server';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
 import { ObjectMap, Express2, Injectable, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata } from '@ts-ioc/core';
-import { ITaskContainer, TaskContainerToken, ITask, TaskModule, Task } from '@taskp/core';
+import { ITaskContainer, TaskContainerToken, ITask, Task } from '@taskp/core';
 import { ITaskContext, TaskContextToken } from './ITaskContext';
 const minimist = require('minimist');
 
@@ -106,6 +106,6 @@ export class TaskContext implements ITaskContext {
     }
 
     isTask(task: Type<ITask>): boolean {
-        return hasOwnClassMetadata(Task, task) || hasOwnClassMetadata(TaskModule, task);
+        return hasOwnClassMetadata(Task, task);
     }
 }

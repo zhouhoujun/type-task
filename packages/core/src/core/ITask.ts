@@ -1,5 +1,6 @@
 import { ComponentLifecycle } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
+import { RunWay } from './RunWay';
 
 
 
@@ -12,6 +13,14 @@ import { IConfigure } from './IConfigure';
 export interface ITask extends ComponentLifecycle {
 
     /**
+     * task instance guid id.
+     *
+     * @type {string}
+     * @memberof ITask
+     */
+    workflowId?: string;
+
+    /**
      * task name.
      *
      * @type {string}
@@ -20,12 +29,20 @@ export interface ITask extends ComponentLifecycle {
     name: string;
 
     /**
-     * context
+     * config metadata.
      *
      * @type {IConfigure}
-     * @memberof ITaskModule
+     * @memberof ITask
      */
     config?: IConfigure;
+
+    /**
+     * task run way.
+     *
+     * @type {RunWay}
+     * @memberof ITaskComponent
+     */
+    runWay: RunWay;
 
     /**
      * run task.

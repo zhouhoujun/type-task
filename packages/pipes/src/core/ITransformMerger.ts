@@ -7,6 +7,6 @@ import { IPipeTask } from './IPipeTask';
  * @export
  * @interface ITransformMerger
  */
-export interface ITransformMerger extends IPipeTask<ITransform[]> {
+export interface ITransformMerger extends IPipeTask {
 
 }

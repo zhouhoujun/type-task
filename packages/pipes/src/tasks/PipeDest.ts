@@ -5,6 +5,7 @@ import { ITransform } from './ITransform';
 import { IPipeComponentProvider, IPipeComponent } from './IPipeComponent';
 import { PipeComponent } from './PipeComponent';
 import { DestOptions, dest } from 'vinyl-fs';
+import { PipeTask } from '..';
 
 
 /**
@@ -38,7 +39,7 @@ export interface IPipeDestProvider extends IPipeComponentProvider {
     options?: DestOptions;
 }
 
-@Task
+@PipeTask()
 export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComponent {
 
     constructor(name: string, runWay = RunWay.seqFirst, protected dest: TransformSource, protected destPipes?: DestExpress, merger?: TransformMerger, protected options?: DestOptions) {

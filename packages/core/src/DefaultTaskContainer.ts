@@ -1,5 +1,5 @@
 import { isArray, IContainer, IContainerBuilder, Type, Inject, Mode, Providers, isClass, ContainerBuilderToken, ModuleBuilder, Token, ApplicationBuilder, IApplicationBuilder, hasClassMetadata, ModuleBuilderToken, IModuleBuilder } from '@ts-ioc/core';
-import { ITaskRunner, IConfigure, TaskRunnerToken, ITask } from './core/index';
+import { ITaskRunner, IConfigure, TaskRunnerToken, ITask, TaskBuilderToken, ITaskBuilder } from './core/index';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
@@ -43,8 +43,8 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
         return this.rootPath;
     }
 
-    protected createModuleBuilder(): IModuleBuilder<ITask> {
-        return this.getContainer().get(ModuleBuilderToken, 'task');
+    protected createModuleBuilder(): ITaskBuilder {
+        return this.getContainer().get(TaskBuilderToken);
     }
 
 

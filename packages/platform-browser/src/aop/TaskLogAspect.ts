@@ -2,7 +2,7 @@ import { ObjectMap, Singleton, Inject, IContainer, Type, hasOwnClassMetadata, Co
 import { Around, Aspect, Joinpoint, JoinpointState } from '@ts-ioc/aop';
 import { LoggerAspect } from '@ts-ioc/logs';
 
-import { ITask, Task, TaskModule } from '@taskp/core';
+import { ITask, Task } from '@taskp/core';
 /**
  * Task Log
  *
@@ -21,7 +21,7 @@ export class TaskLogAspect extends LoggerAspect {
     }
 
     isTask(task: Type<ITask>): boolean {
-        return hasOwnClassMetadata(Task, task) || hasOwnClassMetadata(TaskModule, task);
+        return hasOwnClassMetadata(Task, task);
     }
 
     @Around('execution(*.run)')

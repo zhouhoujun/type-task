@@ -1,10 +1,6 @@
-
-
-export * from './IBuilder';
-export * from './Builder';
+export * from './ITaskBuilder';
+export * from './TaskBuilder';
 export * from './ITask';
-export * from './AbstractTask';
-export * from './ITaskOption';
 export * from './IConfigure';
 export * from './ITaskProvider';
 
@@ -15,5 +11,5 @@ export * from './TaskElement';
 export * from './decorators/index';
 export * from './metadatas/index';
 export * from './RunWay';
-export * from './ITaskRunner'
+export * from './ITaskRunner';
 export * from './TaskRunner';

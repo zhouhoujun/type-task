@@ -1,4 +1,4 @@
-import { Task, ITask, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from '@taskp/core';
+import { Task, ITask, TaskElement, ITaskComponent, IConfigure, Src, RunWay } from '@taskp/core';
 import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType, PipeTask, PipeModule } from '@taskp/pipes';
 import { TaskContainer } from '@taskp/platform-server';
 
@@ -14,7 +14,7 @@ import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
 
 
 
-@TaskModule({
+@Task({
     pipes: [
         // () => cache('typescript'),
         sourcemaps.init,

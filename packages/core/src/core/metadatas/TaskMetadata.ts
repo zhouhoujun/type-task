@@ -1,5 +1,6 @@
 import { ClassMetadata } from '@ts-ioc/core';
 import { Src } from '../../utils/index';
+import { IConfigure } from '../IConfigure';
 
 /**
  * task metadata.
@@ -8,19 +9,6 @@ import { Src } from '../../utils/index';
  * @interface TaskMetadata
  * @extends {ClassMetadata}
  */
-export interface TaskMetadata extends ClassMetadata {
-    /**
-     * task name, default class name.
-     *
-     * @type {TaskString}
-     * @memberof IOperate
-     */
-    name?: string;
-    /**
-     * task type.
-     *
-     * @type {string}
-     * @memberof TaskMetadata
-     */
-    taskType?: string;
+export interface TaskMetadata extends ClassMetadata, IConfigure {
+
 }

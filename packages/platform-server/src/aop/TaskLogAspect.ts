@@ -3,7 +3,7 @@ import {  Around, Aspect, Joinpoint, JoinpointState } from '@ts-ioc/aop';
 import { LoggerAspect } from '@ts-ioc/logs';
 
 import chalk from 'chalk';
-import { ITask, Task, TaskModule } from '@taskp/core';
+import { ITask, Task } from '@taskp/core';
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
 /**
@@ -24,7 +24,7 @@ export class TaskLogAspect extends LoggerAspect {
     }
 
     isTask(task: Type<ITask>): boolean {
-        return hasOwnClassMetadata(Task, task) || hasOwnClassMetadata(TaskModule, task);
+        return hasOwnClassMetadata(Task, task);
     }
 
     @Around('execution(*.run)')

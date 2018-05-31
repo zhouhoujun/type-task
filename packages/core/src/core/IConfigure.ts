@@ -1,7 +1,5 @@
 import { ITask } from './ITask';
-import { ITaskOption } from './ITaskOption';
 import { Token, Type, AppConfiguration } from '@ts-ioc/core';
-import { ITaskBuilder } from './IBuilder';
 import { RunWay } from './RunWay';
 
 /**
@@ -36,13 +34,6 @@ export interface IConfigure extends AppConfiguration<ITask> {
     */
    runWay?: RunWay;
 
-    /**
-     * builder
-     *
-     * @type {IBuilder}
-     * @memberof IContext
-     */
-    builder?: Token<ITaskBuilder>;
     /**
      * task module.
      *

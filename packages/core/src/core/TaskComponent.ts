@@ -3,8 +3,7 @@ import { ITaskComponent } from './ITaskComponent';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
 import { RunWay } from './RunWay';
-import { ITaskBuilder, BuilderToken } from './IBuilder';
-import { ITaskOption } from './ITaskOption';
+import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
 
 /**
@@ -21,19 +20,24 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     @Inject(ContainerToken)
     container: IContainer;
 
-    config?: IConfigure;
+    /**
+     * task config.
+     *
+     * @type {IConfigure}
+     * @memberof TaskComponent
+     */
+    config: IConfigure;
 
-    constructor(name: string, public runWay = RunWay.seqFirst, config?: IConfigure) {
+    /**
+     * run way, default sequence node first
+     *
+     * @memberof TaskComponent
+     */
+    runWay = RunWay.seqFirst;
+
+    constructor(name?: string) {
         super(name);
-        if (config) {
-            this.config = config;
-        }
     }
-
-    getConfig(): IConfigure {
-        return this.find(cmp => !!cmp.config, Mode.route).config as T;
-    }
-
 
     async run(data?: any): Promise<any> {
         let execPromise: Promise<any>;
@@ -59,6 +63,10 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
         let result = await execPromise;
         return result;
+    }
+
+    getRoot(): ITaskComponent {
+        return this.find(it => !it.parent, Mode.route);
     }
 
     /**
