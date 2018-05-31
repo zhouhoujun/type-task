@@ -3,8 +3,9 @@ import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { Task } from './decorators/index';
-import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
+import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
 import { ITaskComponent } from './ITaskComponent';
+import * as uuid from 'uuid/v1';
 
 /**
  * task runner.
@@ -26,14 +27,21 @@ export class TaskRunner implements ITaskRunner {
     }
 
 
-    state: any;
+    state: RunState;
     currNode: ITask;
+    uuid: string;
 
     @Inject(ContainerToken)
     private container: IContainer;
 
+    /**
+     * Creates an instance of TaskRunner.
+     * @param {(Token<ITask> | Type<any> | IConfigure)} work
+     * @param {ITaskBuilder} [taskBuilder]
+     * @memberof TaskRunner
+     */
     constructor(private work: Token<ITask> | Type<any> | IConfigure, private taskBuilder?: ITaskBuilder) {
-
+        this.uuid = uuid();
     }
 
     getBuilder(): ITaskBuilder {
@@ -47,8 +55,15 @@ export class TaskRunner implements ITaskRunner {
     async start(data?: any): Promise<any> {
         if (!this.instance) {
             this.instance = await this.getBuilder().build(this.task);
+            this.instance.workflowId = this.uuid;
+            this.container.bindProvider(this.uuid, this);
         }
-        this.instance.run(data);
+        this.state = RunState.running;
+        this.instance.run(data)
+            .then(data => {
+                this.state = RunState.complete;
+                return data;
+            });
     }
 
     saveState(state: any) {
@@ -56,10 +71,10 @@ export class TaskRunner implements ITaskRunner {
     }
 
     stop(): void {
-        throw new Error("Method not implemented.");
+        this.state = RunState.stop;
     }
     pause(): void {
-        throw new Error("Method not implemented.");
+        this.state = RunState.pause;
     }
 
 }

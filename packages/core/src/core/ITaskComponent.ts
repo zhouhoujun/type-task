@@ -1,7 +1,6 @@
 import { ITask } from './ITask';
 import { GComponent, Token, ComponentLifecycle, Type, Provider, Providers, ModuleType, IContainer } from '@ts-ioc/core';
 import { RunWay } from './RunWay';
-import { ITaskModule } from './ITaskModule';
 import { IConfigure } from './IConfigure';
 
 /**
@@ -21,6 +20,12 @@ export interface ITaskComponent extends GComponent<ITaskComponent>, ITask, Compo
      */
     container: IContainer;
 
+    /**
+     * get root.
+     *
+     * @returns {ITaskComponent}
+     * @memberof ITaskComponent
+     */
     getRoot(): ITaskComponent;
 
 }

@@ -1,4 +1,4 @@
-import { Task, ITask, AbstractTask, TaskElement, TaskComponent, ITaskComponent, TaskModule } from '../src';
+import { Task, ITask, TaskElement, TaskComponent, ITaskComponent, AbstractTask } from '../src';
 import { Inject } from '@ts-ioc/core';
 import { RunWay } from '../src/core/RunWay';
 
@@ -22,8 +22,8 @@ export class SimpleTask extends AbstractTask implements ITask {
 @Task('comptest')
 export class SimpleCTask extends TaskComponent<ITaskComponent> {
 
-    constructor(name: string, runWay?: RunWay) {
-        super(name, runWay);
+    constructor(name: string) {
+        super(name);
         // console.log('SimpleCTask', Object.getOwnPropertyDescriptors(this));
     }
 
@@ -38,7 +38,7 @@ export class SimpleCTask extends TaskComponent<ITaskComponent> {
 }
 
 
-@TaskModule({
+@Task({
     name: 'test-module',
     task: TaskElement,
     children: [

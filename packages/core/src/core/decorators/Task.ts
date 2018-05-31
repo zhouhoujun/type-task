@@ -1,6 +1,7 @@
 import { isString, isRegExp, isArray, isNumber, createClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass, ITypeDecorator, Type } from '@ts-ioc/core';
 import { Src } from '../../utils/index';
 import { TaskMetadata } from '../metadatas/index';
+import { TaskToken } from '..';
 
 
 /**
@@ -17,12 +18,20 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
      *
      * @Task
      *
-     * @param {string} [taskName] task name.
+     * @param {T} [taskName] task name.
      * @param {(Registration<any> | symbol | string)} provide define this class provider for provide.
      * @param {string} [alias] define this class provider with alias for provide.
      * @param {boolean} [singlton] define this class as singlton.
      */
     (metadata?: T): ClassDecorator;
+    /**
+     * task decorator, use to define class as task element.
+     *
+     * @Task
+     *
+     * @param {string} [taskName] task name.
+     */
+    (taskName?: string): ClassDecorator;
     /**
      * task decorator, use to define class as task element.
      *
@@ -45,7 +54,6 @@ export function createTaskDecorator<T extends TaskMetadata>(
                 match: (arg) => isString(arg),
                 setMetadata: (metadata, arg) => {
                     metadata.name = arg;
-                    metadata.provide = arg;
                 }
             });
         },
@@ -62,9 +70,12 @@ export function createTaskDecorator<T extends TaskMetadata>(
                     metadata.name = metadata.type.name;
                 }
             }
-            if (!metadata.provide) {
-                metadata.provide = metadata.name;
+
+            if (metadata.name || metadata.alias) {
+                metadata.alias = metadata.alias || metadata.name;
+                metadata.provide = TaskToken;
             }
+
             metadata.taskType = taskType;
             return metadata;
         }) as ITaskDecorator<T>;

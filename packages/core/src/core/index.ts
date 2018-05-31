@@ -4,6 +4,7 @@ export * from './ITask';
 export * from './IConfigure';
 export * from './ITaskProvider';
 
+export * from './AbstractTask';
 export * from './ITaskComponent';
 export * from './TaskComponent';
 export * from './TaskElement';

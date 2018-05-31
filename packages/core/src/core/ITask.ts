@@ -1,8 +1,12 @@
-import { ComponentLifecycle } from '@ts-ioc/core';
+import { ComponentLifecycle, InjectToken } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
 import { RunWay } from './RunWay';
 
 
+/**
+ * task token.
+ */
+export const TaskToken = new InjectToken<ITask>('__TASK_Task');
 
 /**
  * task interface.
