@@ -1,5 +1,5 @@
 import { ObjectMap, Singleton, Inject, IContainer, Type, hasOwnClassMetadata, ContainerToken } from '@ts-ioc/core';
-import { Around, Aspect, Joinpoint, JoinpointState, Before, AfterReturning } from '@ts-ioc/aop';
+import { Around, Aspect, Joinpoint, JoinpointState, Before, AfterReturning, AspectMetadata } from '@ts-ioc/aop';
 import { LoggerAspect } from '@ts-ioc/logs';
 import { ITask, Task, TaskComponent, ITaskRunner, RunState } from '../core/index';
 
@@ -9,8 +9,10 @@ import { ITask, Task, TaskComponent, ITaskRunner, RunState } from '../core/index
  * @export
  * @class TaskLogAspect
  */
-@Aspect
-@Singleton
+@Aspect({
+    annotation: Task,
+    singleton: true
+})
 export class RunAspect {
 
     @Inject(ContainerToken)
@@ -19,15 +21,8 @@ export class RunAspect {
 
     }
 
-    isTask(task: Type<ITask>): boolean {
-        return hasOwnClassMetadata(Task, task);
-    }
-
     @Before('execution(*.run)')
     beforeRun(joinPoint: Joinpoint) {
-        if (!this.isTask(joinPoint.targetType)) {
-            return;
-        }
         let runner = this.getRunner(joinPoint.target);
         if (!runner) {
             return;
@@ -44,9 +39,7 @@ export class RunAspect {
 
     @AfterReturning('execution(*.run)')
     afterRun(joinPoint: Joinpoint) {
-        if (!this.isTask(joinPoint.targetType)) {
-            return;
-        }
+
         let runner = this.getRunner(joinPoint.target);
         if (!runner) {
             return;

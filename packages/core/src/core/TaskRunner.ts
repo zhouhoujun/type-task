@@ -6,6 +6,7 @@ import { Task } from './decorators/index';
 import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
 import { ITaskComponent } from './ITaskComponent';
 import * as uuid from 'uuid/v1';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 /**
  * task runner.
@@ -21,13 +22,13 @@ export class TaskRunner implements ITaskRunner {
         return this.work;
     }
 
-    private instance: ITask;
     get taskInstance(): ITask {
         return this.instance;
     }
 
 
     state: RunState;
+    stateChanged: BehaviorSubject<RunState>;
     currNode: ITask;
     uuid: string;
 
@@ -36,12 +37,17 @@ export class TaskRunner implements ITaskRunner {
 
     /**
      * Creates an instance of TaskRunner.
-     * @param {(Token<ITask> | Type<any> | IConfigure)} work
+     * @param {(Token<ITask> | Type<any> | IConfigure)} workflow
+     * @param {ITask} [instance] workflow instance
      * @param {ITaskBuilder} [taskBuilder]
      * @memberof TaskRunner
      */
-    constructor(private work: Token<ITask> | Type<any> | IConfigure, private taskBuilder?: ITaskBuilder) {
+    constructor(private work: Token<ITask> | Type<any> | IConfigure, private instance?: ITask, private taskBuilder?: ITaskBuilder) {
         this.uuid = uuid();
+        this.stateChanged = new BehaviorSubject(RunState.init);
+        if (this.instance) {
+            this.instance.workflowId = this.uuid;
+        }
     }
 
     getBuilder(): ITaskBuilder {
@@ -62,6 +68,7 @@ export class TaskRunner implements ITaskRunner {
         this.instance.run(data)
             .then(data => {
                 this.state = RunState.complete;
+                this.stateChanged.next(this.state);
                 return data;
             });
     }
@@ -72,9 +79,11 @@ export class TaskRunner implements ITaskRunner {
 
     stop(): void {
         this.state = RunState.stop;
+        this.stateChanged.next(this.state);
     }
     pause(): void {
         this.state = RunState.pause;
+        this.stateChanged.next(this.state);
     }
 
 }

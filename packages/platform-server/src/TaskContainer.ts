@@ -1,4 +1,4 @@
-import { DefaultTaskContainer, ITaskContainer, ITask } from '@taskp/core';
+import { DefaultTaskContainer, ITaskContainer, ITask, ITaskRunner, RunState } from '@taskp/core';
 import { Type, IContainer, Providers, ModuleType, Token, LoadType, Express2, ObjectMap } from '@ts-ioc/core';
 import chalk from 'chalk';
 import { TaskLogAspect } from './aop/index';
@@ -46,19 +46,41 @@ export class TaskContainer extends DefaultTaskContainer {
      * @returns {Promise<any>}
      * @memberof TaskContainer
      */
-    bootstrap<T extends ITask>(task: Token<T> | Type<any>): Promise<any> {
+    bootstrap<T extends ITask>(task: Token<T> | Type<any>): Promise<ITaskRunner> {
         let start, end;
         start = process.hrtime();
-
         console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Starting'), '...');
 
         return super.bootstrap(task)
-            .then(
-                data => {
-                    end = prettyTime(process.hrtime(start));
-                    console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), ' after ', chalk.magenta(end));
-                    return data;
-                },
+            .then(runner => {
+                runner.stateChanged.subscribe(state => {
+                    switch (state) {
+                        case RunState.running:
+                            if (!start) {
+                                start = process.hrtime();
+                            }
+                            break;
+                        case RunState.complete:
+                            end = prettyTime(process.hrtime(start));
+                            console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), ' after ', chalk.magenta(end));
+                            start = null;
+                            break;
+
+                        case RunState.stop:
+                            end = prettyTime(process.hrtime(start));
+                            console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Stopped'), ' after ', chalk.magenta(end));
+                            start = null;
+                            break;
+                        case RunState.pause:
+                            end = prettyTime(process.hrtime(start));
+                            console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Paused'), ' after ', chalk.magenta(end));
+                            start = null;
+                            break;
+                    }
+                });
+
+                return runner;
+            },
                 err => {
                     end = prettyTime(process.hrtime(start));
                     console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Finished'), chalk.red('errored after'), chalk.magenta(end));

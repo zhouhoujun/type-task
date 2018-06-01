@@ -2,6 +2,8 @@ import { IConfigure } from './IConfigure';
 import { Token, Providers, Type, InjectToken } from '@ts-ioc/core';
 import { ITask } from './ITask';
 import { ITaskBuilder } from './ITaskBuilder';
+import { EventEmitter } from 'events';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * task runner token.
@@ -9,6 +11,7 @@ import { ITaskBuilder } from './ITaskBuilder';
 export const TaskRunnerToken = new InjectToken<ITaskRunner>('__TASK_TaskRunner');
 
 export enum RunState {
+    init,
     running,
     pause,
     stop,
@@ -46,6 +49,14 @@ export interface ITaskRunner {
      * @memberof ITaskRunner
      */
     readonly state: RunState;
+
+    /**
+     *state changed.
+     *
+     * @type {Observable<RunState>}
+     * @memberof ITaskRunner
+     */
+    readonly stateChanged: Observable<RunState>;
 
     /**
      * current run task node.

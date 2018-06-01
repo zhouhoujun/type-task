@@ -35,8 +35,13 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
      * @returns {Promise<T>}
      * @memberof ApplicationBuilder
      */
-    bootstrap(task: Token<ITask> | Type<any> | IConfigure): Promise<ITask> {
-        return super.bootstrap(task);
+    bootstrap(task: Token<ITask> | Type<any> | IConfigure): Promise<ITaskRunner> {
+        return super.bootstrap(task)
+            .then(instance => {
+                let runner = this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });
+                runner.start();
+                return runner;
+            });
     }
 
     getRootPath() {

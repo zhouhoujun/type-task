@@ -1,5 +1,5 @@
 import { ObjectMap, Singleton, Inject, IContainer, Type, hasOwnClassMetadata, ContainerToken } from '@ts-ioc/core';
-import { Around, Aspect, Joinpoint, JoinpointState } from '@ts-ioc/aop';
+import { Around, Aspect, Joinpoint, JoinpointState, AspectMetadata } from '@ts-ioc/aop';
 import { LoggerAspect } from '@ts-ioc/logs';
 
 import { ITask, Task } from '@taskp/core';
@@ -9,8 +9,10 @@ import { ITask, Task } from '@taskp/core';
  * @export
  * @class TaskLogAspect
  */
-@Aspect
-@Singleton
+@Aspect({
+    annotation: Task,
+    singleton: true
+})
 export class TaskLogAspect extends LoggerAspect {
 
     private startHrts: ObjectMap<any>;
@@ -20,17 +22,9 @@ export class TaskLogAspect extends LoggerAspect {
         this.startHrts = {};
     }
 
-    isTask(task: Type<ITask>): boolean {
-        return hasOwnClassMetadata(Task, task);
-    }
-
     @Around('execution(*.run)')
     logging(joinPoint: Joinpoint) {
         let logger = this.logger;
-
-        if (!this.isTask(joinPoint.targetType)) {
-            return;
-        }
 
         let name = joinPoint.target.name;
         if (!name) {

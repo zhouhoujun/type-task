@@ -1,4 +1,4 @@
-import { TaskComponent, ITask, IConfigure } from './core/index';
+import { TaskComponent, ITask, IConfigure, ITaskRunner } from './core/index';
 import { IContainer, Type, Providers, Token, IContainerBuilder, InjectToken, IModuleBuilder, IApplicationBuilder } from '@ts-ioc/core';
 import { TaskType } from './utils/index';
 
@@ -37,8 +37,8 @@ export interface ITaskContainer extends IApplicationBuilder<ITask> {
      * bootstrap app via main module.
      *
      * @param {(Token<ITask> | Type<any> | IConfigure)} bootModule bootstrap module.
-     * @returns {Promise<any>}
+     * @returns {Promise<ITaskRunner>}
      * @memberof IApplicationBuilder
      */
-    bootstrap(bootModule: Token<ITask> | Type<any> | IConfigure): Promise<ITask>;
+    bootstrap(bootModule: Token<ITask> | Type<any> | IConfigure): Promise<ITaskRunner>;
 }

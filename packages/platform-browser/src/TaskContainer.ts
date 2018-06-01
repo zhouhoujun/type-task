@@ -1,4 +1,4 @@
-import { DefaultTaskContainer, ITaskContainer, ITask } from '@taskp/core';
+import { DefaultTaskContainer, ITaskContainer, ITask, RunState } from '@taskp/core';
 import { Type, IContainer, Providers, ModuleType, Token, LoadType } from '@ts-ioc/core';
 import { TaskLogAspect } from './aop/index';
 
@@ -49,10 +49,34 @@ export class TaskContainer extends DefaultTaskContainer {
 
         return super.bootstrap(task)
             .then(
-                data => {
-                    end = new Date();
-                    console.log('[' + end.toString() + ']', 'Finished', ' after ', end.getTime() - start.getTime());
-                    return data;
+                runner => {
+                    runner.stateChanged.subscribe(state => {
+                        switch (state) {
+                            case RunState.running:
+                                if (!start) {
+                                    start = new Date();
+                                }
+                                break;
+                            case RunState.complete:
+                                end = new Date();
+                                console.log('[' + end.toString() + ']', 'Finished', ' after ', end.getTime() - start.getTime());
+                                start = null;
+                                break;
+
+                            case RunState.stop:
+                                end = new Date();
+                                console.log('[' + end.toString() + ']', 'Stopped', ' after ', end.getTime() - start.getTime());
+                                start = null;
+                                break;
+                            case RunState.pause:
+                                end = new Date();
+                                console.log('[' + end.toString() + ']', 'Paused', ' after ', end.getTime() - start.getTime());
+
+                                break;
+                        }
+                    });
+
+                    return runner;
                 },
                 err => {
                     end = new Date();
