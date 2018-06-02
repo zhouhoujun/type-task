@@ -1,7 +1,7 @@
-import { ITask, RunWay, TaskComponent, IConfigure, Src } from '@taskp/core';
+import { ITask, RunWay, TaskComponent, IConfigure, Src, TaskRunnerToken, ITaskBuilder } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isString, isClass, isFunction, IContainer, getTypeMetadata, Inject, Registration } from '@ts-ioc/core';
+import { Abstract, isArray, isString, isClass, isFunction, IContainer, getTypeMetadata, Inject, Registration, Token, Type } from '@ts-ioc/core';
 import { TransformMerger, TransformExpress, TransformType, TransformSource } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
@@ -88,12 +88,12 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
 
     }
 
+
     protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Promise<ITransform> {
         let pstf: Promise<ITransform>;
-        let runner = this.getRunner();
         if (isClass(transform)) {
-            if (runner.isTask(transform)) {
-                pstf = runner.runTask(transform, stream);
+            if (this.context.isTask(transform)) {
+                pstf = this.getRunner(transform).start(stream);
             }
         } else if (isFunction(transform)) {
             pstf = Promise.resolve(transform(this.context, config, stream));

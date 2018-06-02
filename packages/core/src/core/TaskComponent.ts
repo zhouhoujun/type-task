@@ -1,4 +1,4 @@
-import { GComposite, IContainer, Type, IContainerBuilder, Inject, Mode, isClass, Abstract, ContainerBuilderToken, ModuleType, Injectable, ContainerToken } from '@ts-ioc/core';
+import { GComposite, IContainer, Type, IContainerBuilder, Inject, Mode, isClass, Abstract, ContainerBuilderToken, ModuleType, Injectable, ContainerToken, Token } from '@ts-ioc/core';
 import { ITaskComponent } from './ITaskComponent';
 import { IConfigure } from './IConfigure';
 import { ITask } from './ITask';
@@ -67,6 +67,11 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     getRoot(): ITaskComponent {
         return this.find(it => !it.parent, Mode.route);
+    }
+
+
+    getRunner(task: Token<ITask> | Type<any> | IConfigure, instance?: any, builder?: ITaskBuilder) {
+        return this.container.resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: builder })
     }
 
     /**

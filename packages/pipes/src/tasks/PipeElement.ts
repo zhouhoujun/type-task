@@ -1,11 +1,8 @@
 import { Task, Src, TaskElement, RunWay } from '@taskp/core';
-import { ITransform } from './ITransform';
-import { TransformSource, TransformExpress, DestExpress, TransformMerger } from './pipeTypes';
+import { IPipeComponent, PipeComponent, ITransform, TransformSource, TransformExpress, DestExpress, TransformMerger } from '../core/index';
 import { Type, isBoolean, isFunction, Mode } from '@ts-ioc/core';
-import { IPipeComponent } from './IPipeComponent';
 import { SrcOptions, DestOptions, watch } from 'vinyl-fs';
-import { PipeComponent } from './PipeComponent';
-import { IPipeElement } from './IPipeElement';
+
 
 /**
  * pipe component
@@ -16,7 +13,7 @@ import { IPipeElement } from './IPipeElement';
  * @implements {IPipeComponent<ITransform>}
  */
 @Task
-export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeElement {
+export class PipeElement extends PipeComponent<IPipeComponent> {
 
     public watchSrc?: TransformSource;
 
@@ -42,7 +39,7 @@ export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeE
         private destType?: Type<IPipeComponent>,
         private destMerger?: TransformMerger
     ) {
-        super(name, runWay, merger);
+        super(name);
         if (watch) {
             this.watchSrc = isBoolean(watch) ? src : watch;
         }
@@ -80,7 +77,7 @@ export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeE
 
     watch(src?: TransformSource) {
         src = src || this.src;
-        let watchSrc = isFunction(src) ? src(this.context, this.getConfig()) : src;
+        let watchSrc = isFunction(src) ? src(this.context, this.config) : src;
         watch(watchSrc, () => {
             this.run(watchSrc);
         });

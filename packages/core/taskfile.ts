@@ -1,5 +1,5 @@
 import { Task, ITask, TaskElement, ITaskComponent, IConfigure, Src, RunWay } from '@taskp/core';
-import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType, PipeTask, PipeModule } from '@taskp/pipes';
+import { ITransform, TransformExpress, TransformType, PipeTask, PipeModule } from '@taskp/pipes';
 import { TaskContainer } from '@taskp/platform-server';
 
 import * as mocha from 'gulp-mocha';
@@ -14,7 +14,7 @@ import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
 
 
 
-@Task({
+@PipeTask({
     pipes: [
         // () => cache('typescript'),
         sourcemaps.init,
@@ -52,10 +52,9 @@ import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
                 return tans;
             }
         ]
-    },
-    bootstrap: PipeElement
+    }
 })
-export class TsCompile extends PipeTask {
+export class TsCompile extends PipeElement {
 
     constructor(name: string, runWay?: RunWay, public src?: Src, public dest?: Src,
         private tsPipes?: TransformExpress, private jsPipes?: TransformExpress,

@@ -1,4 +1,3 @@
-export * from './decorators/index';
 export * from './IPipeComponent';
 export * from './IPipeTask';
 export * from './ITransform';

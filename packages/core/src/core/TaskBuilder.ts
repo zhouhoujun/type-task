@@ -6,7 +6,7 @@ import { TaskType } from '../utils/index';
 import { ITask } from './ITask';
 import { TaskElement } from './TaskElement';
 import { TaskComponent } from './TaskComponent';
-import { Task } from './decorators';
+import { Task } from './decorators/index';
 
 /**
  * builder.
