@@ -1,9 +1,10 @@
 import { toAbsolutePath } from '@ts-ioc/platform-server';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
-import { ObjectMap, Express2, Injectable, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata } from '@ts-ioc/core';
-import { ITaskContainer, TaskContainerToken, ITask, Task } from '@taskp/core';
+import { isFunction, ObjectMap, Express2, Injectable, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata } from '@ts-ioc/core';
+import { ITaskContainer, TaskContainerToken, ITask, Task, IConfigure } from '@taskp/core';
 import { ITaskContext, TaskContextToken } from './ITaskContext';
+import { CtxType } from './pipeTypes';
 const minimist = require('minimist');
 
 @Singleton(TaskContextToken)
@@ -70,6 +71,10 @@ export class TaskContext implements ITaskContext {
 
     toRootPath(pathstr: string): string {
         return toAbsolutePath(this.getRootPath(), pathstr);
+    }
+
+    to<T>(target: CtxType<T>, config?: IConfigure): T {
+        return isFunction(target) ? target(this, config) : target;
     }
 
     private _package: any;

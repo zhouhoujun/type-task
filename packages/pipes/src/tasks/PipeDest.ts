@@ -1,31 +1,32 @@
 import { Task, ITaskProvider, Src, RunWay, AbstractTask } from '@taskp/core';
 import { isArray, Abstract, isFunction, ObjectMap, isClass } from '@ts-ioc/core';
 import { DestOptions, dest } from 'vinyl-fs';
-import { IPipeComponent, PipeComponent, ITransform, PipeTask, TransformSource, TransformExpress, DestExpress, TransformMerger } from '../core/index';
+import { IPipeComponent, PipeComponent, ITransform, TransformExpress, DestExpress, TransformMerger, CtxType } from '../core/index';
+import { PipeTask } from '../decorators/index';
 
 
 /**
  * pipe dest provider.
  *
  * @export
- * @interface IPipeDestProvider
- * @extends {IPipeComponentProvider}
+ * @interface IPipeDest
+ * @extends {IPipeComponent}
  */
-export interface IPipeDestProvider extends IPipeComponentProvider {
+export interface IPipeDest extends IPipeComponent {
     /**
      * dest source.
      *
      * @type {TransformSource}
-     * @memberof IPipeDestProvider
+     * @memberof IPipeDest
      */
-    dest?: TransformSource;
+    dest?: CtxType<Src>;
     /**
      * dest pipes.
      *
      * @type {DestExpress}
      * @memberof IPipeDestProvider
      */
-    destPipes?: DestExpress;
+    destPipes?: CtxType<DestExpress>;
     /**
      * source options.
      *
@@ -35,15 +36,17 @@ export interface IPipeDestProvider extends IPipeComponentProvider {
     options?: DestOptions;
 }
 
-@PipeTask()
-export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComponent {
+@PipeTask('dest')
+export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest {
+    dest: CtxType<Src>;
+    options: DestOptions
 
-    constructor(name: string, runWay = RunWay.seqFirst, protected dest: TransformSource, protected destPipes?: DestExpress, merger?: TransformMerger, protected options?: DestOptions) {
-        super(name, runWay, merger);
+    constructor(name?: string) {
+        super(name);
     }
 
     pipe(transform: ITransform): Promise<ITransform> {
-        let dest = isFunction(this.dest) ? this.dest(this.getConfig()) : this.dest;
+        let dest = this.to(this.dest);
 
         if (isArray(dest)) {
             return Promise.all(dest.map(dist => this.writeStream(transform, dist)))
@@ -90,17 +93,17 @@ export class PipeDest extends PipeComponent<IPipeComponent> implements IPipeComp
     }
 
     protected destPipesToPromise(stream: ITransform): Promise<ITransform | ITransform[]> {
-        if (!this.destPipes) {
+        let destPipes = 
+        if (!destPipes) {
             return Promise.resolve(stream);
         }
-
-        if (isArray(this.destPipes) || isFunction(this.destPipes)) {
-            return this.pipeToPromise(stream, this.destPipes);
+        if (isArray(destPipes)) {
+            return this.pipesToPromise(stream, destPipes);
         } else {
-            let keys = Object.keys(this.destPipes).filter(key => key !== 'constructor');
+            let keys = Object.keys(destPipes).filter(key => key !== 'constructor');
             if (keys.length) {
                 return Promise.all(keys.map(key => {
-                    return this.pipeToPromise(stream, this.destPipes[key]);
+                    return this.pipesToPromise(stream, destPipes[key]);
                 }));
             } else {
                 return Promise.resolve(stream);

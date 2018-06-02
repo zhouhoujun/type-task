@@ -1,8 +1,8 @@
-import { ITask, RunWay, TaskComponent, IConfigure, Src, TaskRunnerToken, ITaskBuilder } from '@taskp/core';
+import { ITask, RunWay, TaskComponent, IConfigure, Src, TaskRunnerToken, ITaskBuilder, TaskRunner } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isString, isClass, isFunction, IContainer, getTypeMetadata, Inject, Registration, Token, Type } from '@ts-ioc/core';
-import { TransformMerger, TransformExpress, TransformType, TransformSource } from './pipeTypes';
+import { Abstract, isArray, isString, isClass, isFunction, IContainer, getTypeMetadata, Inject, Registration, Token, Type, isMetadataObject } from '@ts-ioc/core';
+import { CtxType, TransformMerger, TransformExpress, TransformType, TransformSource, PipeExpress, isTransform } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
 import { src, SrcOptions } from 'vinyl-fs';
@@ -25,16 +25,44 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
     @Inject(TaskContextToken)
     context: ITaskContext;
 
-    protected pipes: TransformType[];
+    private _pipes: TransformType[];
     constructor(name?: string) {
         super(name);
-        this.pipes = [];
+        this._pipes = [];
     }
 
 
-    // run(data?: ITransform): Promise<ITransform> {
-    //     return super.run(data);
-    // }
+    getPipes(): TransformType[] {
+        return this._pipes || [];
+    }
+
+    setPipes(pipes: TransformExpress) {
+        if (pipes) {
+            this._pipes = this.translatePipes(pipes);
+        }
+    }
+
+    protected translatePipes(pipes: TransformExpress): TransformType[] {
+        let trsfs: TransformType[] = this.to(pipes);
+        if (!trsfs || trsfs.length < 1) {
+            return [];
+        }
+        trsfs = trsfs.map(p => {
+            if (isClass(p) && this.context.isTask(p)) {
+                return this.getRunner(p);
+            }
+            if (isMetadataObject(p)) {
+                let cfg = p as IConfigure;
+                if (cfg.task || cfg.bootstrap) {
+                    return this.getRunner(cfg);
+                } else {
+                    throw new Error('pipe configure error');
+                }
+            }
+            return p;
+        });
+        return trsfs;
+    }
 
     /**
      * execute tasks
@@ -45,19 +73,8 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      * @memberof TaskComponent
      */
     protected execute(data: ITransform): Promise<ITransform> {
-        return this.pipeToPromise(data, this.pipes);
+        return this.pipesToPromise(data, this.getPipes());
     }
-
-    /**
-     * pipe transform.
-     *
-     * @protected
-     * @abstract
-     * @param {ITransform} transform
-     * @returns {Promise<ITransform>}
-     * @memberof PipeComponent
-     */
-    protected abstract pipe(transform: ITransform): Promise<ITransform>;
 
 
     /**
@@ -69,7 +86,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      * @returns {Promise<ITransform>}
      * @memberof PipeComponent
      */
-    protected pipeToPromise(source: ITransform, pipes: TransformType[]): Promise<ITransform> {
+    protected pipesToPromise(source: ITransform, pipes: TransformType[]): Promise<ITransform> {
         if (!pipes) {
             return Promise.resolve(source);
         }
@@ -89,24 +106,22 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
     }
 
 
-    protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Promise<ITransform> {
+    protected executePipe(stream: ITransform, pipe: TransformType, config: IConfigure): Promise<ITransform> {
         let pstf: Promise<ITransform>;
-        if (isClass(transform)) {
-            if (this.context.isTask(transform)) {
-                pstf = this.getRunner(transform).start(stream);
-            }
-        } else if (isFunction(transform)) {
-            pstf = Promise.resolve(transform(this.context, config, stream));
+
+        if (pipe instanceof TaskRunner) {
+            pstf = pipe.start(stream);
+        } else if (!isClass(pipe) && isFunction(pipe)) {
+            let pexpress = pipe as PipeExpress;
+            pstf = Promise.resolve(pexpress(this.context, config, stream));
+        } else if (isTransform(pipe)) {
+            pstf = Promise.resolve(pipe as ITransform);
         } else {
-            if (isClass(transform['task'])) {
-                let opt = transform as ITaskOption<IPipeComponent>;
-                pstf = runner.runByConfig(opt, stream);
-            } else {
-                pstf = Promise.resolve(transform as ITransform);
-            }
+            pstf = Promise.resolve(null);
         }
+
         return pstf.then(pst => {
-            if (pst && isFunction(pst.pipe)) {
+            if (isTransform(pst.pipe)) {
                 if (pst.changeAsOrigin) {
                     stream = pst;
                 } else {
@@ -115,6 +130,10 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
             }
             return stream;
         });
+    }
+
+    protected to<T>(target: CtxType<T>): T {
+        return this.context.to(target, this.config);
     }
 
 }

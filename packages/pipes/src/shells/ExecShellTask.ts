@@ -1,6 +1,7 @@
 import { ExecOptions, ExecFileOptions, execFile, exec } from 'child_process';
 import { isString, isArray } from '@ts-ioc/core';
-import { AbstractTask, Task, RunWay } from '@taskp/core';
+import { AbstractTask, Task, RunWay, Src } from '@taskp/core';
+import { CtxType, BaseTask } from '../core/index';
 
 /**
  * Shell Task
@@ -9,25 +10,33 @@ import { AbstractTask, Task, RunWay } from '@taskp/core';
  * @implements {ITask}
  */
 @Task('shell')
-export class ExecShellTask extends AbstractTask {
-    constructor(name: string, private cmds: string | string[], private options?: ExecOptions, private allowError = true, private runWay = RunWay.sequence) {
+export class ExecShellTask extends BaseTask {
+    cmds: CtxType<Src>;
+    args: CtxType<string[]>;
+    options: CtxType<ExecOptions>;
+    allowError: CtxType<boolean> = true;
+    runWay = RunWay.sequence
+    constructor(name?: string) {
         super(name);
     }
 
     run(): Promise<any> {
-        return Promise.resolve(this.cmds)
+        return Promise.resolve(this.to(this.cmds))
             .then(cmds => {
+                let allowError = this.to(this.allowError);
+                let options = this.to(this.options);
+                let args = this.to(this.args);
                 if (isString(cmds)) {
-                    return this.execShell(cmds, this.options, this.allowError !== false);
+                    return this.execShell(cmds, options, allowError !== false);
                 } else if (isArray(cmds)) {
                     if (this.runWay === RunWay.sequence) {
                         let pip = Promise.resolve();
                         cmds.forEach(cmd => {
-                            pip = pip.then(() => this.execShell(cmd, this.options));
+                            pip = pip.then(() => this.execShell(cmd, options));
                         });
                         return pip;
                     } else {
-                        return Promise.all(cmds.map(cmd => this.execShell(cmd, this.options, this.allowError !== false)));
+                        return Promise.all(cmds.map(cmd => this.execShell(cmd, options, allowError !== false)));
                     }
                 } else {
                     return Promise.reject('shell task config error');

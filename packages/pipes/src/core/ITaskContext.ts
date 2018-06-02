@@ -1,5 +1,6 @@
 import { IContainer, ObjectMap, Express2, InjectToken, Type } from '@ts-ioc/core';
-import { ITaskContainer, ITask } from '@taskp/core';
+import { ITaskContainer, ITask, IConfigure } from '@taskp/core';
+import { CtxType } from './pipeTypes';
 
 /**
  * task context token.
@@ -89,6 +90,17 @@ export interface ITaskContext {
      * @memberof ITaskContext
      */
     toRootPath(pathstr: string): string;
+
+    /**
+     *convert to finally type via context.
+     *
+     * @template T
+     * @param {CtxType<T>} target
+     * @param {IConfigure} [config]
+     * @returns {T}
+     * @memberof ITaskContext
+     */
+    to<T>(target: CtxType<T>, config?: IConfigure): T;
 
     /**
      * get package.
