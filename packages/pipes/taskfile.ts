@@ -27,30 +27,30 @@ import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
             }
         }
     ],
-    destPipes: {
-        js: [
-            (ctx, config, transform) => {
-                let trans: ITransform = transform.js;
-                trans.changeAsOrigin = true;
-                return trans;
-            },
-            (ctx, config) => {
-                let target = config.moduleTarget as TsCompile;
-                if (target.uglify) {
-                    return isBoolean(target.uglify) ? uglify() : uglify(target.uglify);
-                }
-                return null;
-            },
-            (ctx) => sourcemaps.write('./sourcemaps')
-        ],
-        dts: [
-            (ctx, config, transform) => {
-                let tans: ITransform = transform.dts;
-                tans.changeAsOrigin = true;
-                return tans;
-            }
-        ]
-    }
+    // destPipes: {
+    //     js: [
+    //         (ctx, config, transform) => {
+    //             let trans: ITransform = transform.js;
+    //             trans.changeAsOrigin = true;
+    //             return trans;
+    //         },
+    //         (ctx, config) => {
+    //             let target = config.moduleTarget as TsCompile;
+    //             if (target.uglify) {
+    //                 return isBoolean(target.uglify) ? uglify() : uglify(target.uglify);
+    //             }
+    //             return null;
+    //         },
+    //         (ctx) => sourcemaps.write('./sourcemaps')
+    //     ],
+    //     dts: [
+    //         (ctx, config, transform) => {
+    //             let tans: ITransform = transform.dts;
+    //             tans.changeAsOrigin = true;
+    //             return tans;
+    //         }
+    //     ]
+    // }
 })
 export class TsCompile extends PipeTask {
 

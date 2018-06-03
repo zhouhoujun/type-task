@@ -1,8 +1,8 @@
 import { IPipeTask } from './IPipeTask';
 import { ITaskComponent, ITaskProvider, Src, ITaskRunner } from '@taskp/core';
 import { ITransform } from './ITransform';
-import { TransformType, TransformMerger } from './pipeTypes';
-import { IPipeContext } from './ITaskContext';
+import { TransformType, TransformMerger, TransformExpress, TransformMergerExpress } from './pipeTypes';
+import { IPipeContext } from './IPipeContext';
 import { IPipeConfigure } from './IPipeConfigure';
 import { Token, ObjectMap } from '@ts-ioc/core';
 
@@ -51,10 +51,26 @@ export interface IPipeComponent extends ITaskComponent, IPipeTask {
     getPipes(): TransformType[];
 
     /**
+     * set pipes.
+     *
+     * @param {TransformExpress} pipes
+     * @memberof IPipeComponent
+     */
+    setPipes(pipes: TransformExpress);
+
+    /**
      * get stream merger.
      *
      * @returns {TransformMerger}
      * @memberof IPipeComponent
      */
     getMerger(): TransformMerger;
+
+    /**
+     * set merger.
+     *
+     * @param {TransformMergerExpress} merger
+     * @memberof IPipeComponent
+     */
+    setMerger(merger: TransformMergerExpress)
 }

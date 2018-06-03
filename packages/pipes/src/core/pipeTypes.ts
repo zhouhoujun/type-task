@@ -1,7 +1,7 @@
 import { Src, ITaskProvider, IConfigure, ITaskRunner, TaskType, CtxType } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { ObjectMap, Type, Token, isMetadataObject, isBaseObject, isObservable, isBaseType } from '@ts-ioc/core';
-import { IPipeContext } from './ITaskContext';
+import { IPipeContext } from './IPipeContext';
 import { IPipeTask } from './IPipeTask';
 import { isObject, isFunction } from '@ts-ioc/core';
 import { Observable } from 'rxjs/Observable';

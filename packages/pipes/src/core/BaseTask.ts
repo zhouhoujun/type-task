@@ -1,5 +1,5 @@
 import { Task, ITask, IConfigure, RunWay } from '@taskp/core';
-import { IPipeContext, PipeContextToken } from './ITaskContext';
+import { IPipeContext, PipeContextToken } from './IPipeContext';
 import { Inject } from '@ts-ioc/core';
 
 @Task

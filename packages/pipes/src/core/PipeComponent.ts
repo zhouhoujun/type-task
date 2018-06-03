@@ -6,7 +6,7 @@ import { TransformMerger, TransformExpress, TransformType, PipeExpress, isTransf
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
 import { src, SrcOptions } from 'vinyl-fs';
-import { IPipeContext, PipeContextToken } from './ITaskContext';
+import { IPipeContext, PipeContextToken } from './IPipeContext';
 
 /**
  * pipe component

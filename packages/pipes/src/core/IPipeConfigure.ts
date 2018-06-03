@@ -66,6 +66,14 @@ export interface IPipeSourceConfigure extends IPipeConfigure {
     srcOptions?: CtxType<SrcOptions>;
 
     /**
+     * source pipes.
+     *
+     * @type {TransformExpress}
+     * @memberof IPipeSourceConfigure
+     */
+    srcPipes?: TransformExpress;
+
+    /**
      * watch source change to run pipe task.
      *
      * @type {CtxType<Src | boolean>}
@@ -99,5 +107,13 @@ export interface IPipeDestConfigure extends IPipeConfigure {
      * @memberof IPipeConfigure
      */
     destOptions?: CtxType<DestOptions>;
+
+    /**
+     * dest pipes
+     *
+     * @type {TransformExpress}
+     * @memberof IPipeDestConfigure
+     */
+    destPipes?: TransformExpress
 
 }

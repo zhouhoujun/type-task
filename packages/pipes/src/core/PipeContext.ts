@@ -3,11 +3,11 @@ import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
 import { isFunction, ObjectMap, Express2, Injectable, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata } from '@ts-ioc/core';
 import { ITaskContainer, TaskContainerToken, ITask, Task, IConfigure, Context, TaskType, ITaskBuilder, ITaskRunner, TaskBuilderToken, TaskRunnerToken } from '@taskp/core';
-import { IPipeContext, PipeContextToken } from './ITaskContext';
+import { IPipeContext, PipeContextToken } from './IPipeContext';
 const minimist = require('minimist');
 
 @Singleton(PipeContextToken)
-export class TaskContext extends Context implements IPipeContext {
+export class PipeContext extends Context implements IPipeContext {
 
     packageFile = 'package.json';
 
