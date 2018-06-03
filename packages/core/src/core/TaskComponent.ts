@@ -1,10 +1,11 @@
 import { GComposite, IContainer, Type, IContainerBuilder, Inject, Mode, isClass, Abstract, ContainerBuilderToken, ModuleType, Injectable, ContainerToken, Token } from '@ts-ioc/core';
 import { ITaskComponent } from './ITaskComponent';
-import { IConfigure } from './IConfigure';
+import { IConfigure, TaskType, ITaskConfigure } from './IConfigure';
 import { ITask } from './ITask';
 import { RunWay } from './RunWay';
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
+import { ContextToken, IContext } from './IContext';
 
 /**
  * task component.
@@ -17,16 +18,22 @@ import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
 @Abstract()
 export abstract class TaskComponent<T extends ITaskComponent> extends GComposite<T> implements ITaskComponent {
 
-    @Inject(ContainerToken)
-    container: IContainer;
+    /**
+     * task context.
+     *
+     * @type {IContext}
+     * @memberof AbstractTask
+     */
+    @Inject(ContextToken)
+    context: IContext;
 
     /**
      * task config.
      *
-     * @type {IConfigure}
+     * @type {ITaskConfigure<T>}
      * @memberof TaskComponent
      */
-    config: IConfigure;
+    config: ITaskConfigure<T>;
 
     /**
      * run way, default sequence node first
@@ -67,11 +74,6 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     getRoot(): ITaskComponent {
         return this.find(it => !it.parent, Mode.route);
-    }
-
-
-    getRunner(task: Token<ITask> | Type<any> | IConfigure, instance?: any, builder?: ITaskBuilder) {
-        return this.container.resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: builder })
     }
 
     /**

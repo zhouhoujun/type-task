@@ -13,14 +13,6 @@ import { IConfigure } from './IConfigure';
 export interface ITaskComponent extends GComponent<ITaskComponent>, ITask, ComponentLifecycle {
 
     /**
-     * ioc container.
-     *
-     * @type {IContainer}
-     * @memberof ITaskComponent
-     */
-    container: IContainer;
-
-    /**
      * get root.
      *
      * @returns {ITaskComponent}

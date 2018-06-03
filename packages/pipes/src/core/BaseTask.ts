@@ -1,7 +1,6 @@
 import { Task, ITask, IConfigure, RunWay } from '@taskp/core';
-import { ITaskContext, TaskContextToken } from './ITaskContext';
+import { IPipeContext, PipeContextToken } from './ITaskContext';
 import { Inject } from '@ts-ioc/core';
-import { CtxType } from './pipeTypes';
 
 @Task
 export class BaseTask implements ITask {
@@ -10,8 +9,8 @@ export class BaseTask implements ITask {
 
     runWay = RunWay.seqFirst;
 
-    @Inject(TaskContextToken)
-    context: ITaskContext;
+    @Inject(PipeContextToken)
+    context: IPipeContext;
 
     constructor(public name: string) {
 
@@ -19,9 +18,5 @@ export class BaseTask implements ITask {
 
     run(data?: any): Promise<any> {
         return Promise.resolve(data);
-    }
-
-    protected to<T>(target: CtxType<T>): T {
-        return this.context.to(target, this.config);
     }
 }

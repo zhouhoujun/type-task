@@ -1,7 +1,7 @@
 import { ComponentLifecycle, InjectToken } from '@ts-ioc/core';
 import { IConfigure } from './IConfigure';
 import { RunWay } from './RunWay';
-
+import { IContext } from './IContext';
 
 /**
  * task token.
@@ -23,6 +23,14 @@ export interface ITask extends ComponentLifecycle {
      * @memberof ITask
      */
     workflowId?: string;
+
+    /**
+     * task context.
+     *
+     * @type {IContext}
+     * @memberof ITask
+     */
+    context: IContext;
 
     /**
      * task name.

@@ -1,4 +1,4 @@
-import { IConfigure } from './IConfigure';
+import { IConfigure, TaskType } from './IConfigure';
 import { Token, Providers, Type, InjectToken } from '@ts-ioc/core';
 import { ITask } from './ITask';
 import { ITaskBuilder } from './ITaskBuilder';
@@ -32,7 +32,7 @@ export interface ITaskRunner {
      * @type {(Token<ITask> | Type<any> | IConfigure)}
      * @memberof ITaskRunner
      */
-    readonly task: Token<ITask> | Type<any> | IConfigure;
+    readonly task: TaskType<ITask>;
 
     /**
      * task instance

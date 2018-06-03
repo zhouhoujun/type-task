@@ -3,7 +3,6 @@ import { isString, isArray, isFunction } from '@ts-ioc/core';
 import { existsSync } from 'fs';
 import { TaskSrc, Task, RunWay, Src } from '@taskp/core';
 import { BaseTask } from '../core/index';
-import { CtxType } from '../core/pipeTypes';
 
 
 
@@ -15,8 +14,8 @@ import { CtxType } from '../core/pipeTypes';
  */
 @Task('execfile')
 export class ExecFileTask extends BaseTask {
-    files: CtxType<Src>;
-    args?: CtxType<string[]>;
+    files: Src;
+    args?: string[];
     options?: ExecFileOptions;
     allowError = true;
     runWay = RunWay.sequence
@@ -25,11 +24,11 @@ export class ExecFileTask extends BaseTask {
     }
 
     run(): Promise<any> {
-        return Promise.resolve(this.to(this.files))
+        return Promise.resolve(this.files)
             .then(files => {
-                let allowError = this.to(this.allowError);
-                let options = this.to(this.options);
-                let args = this.to(this.args);
+                let allowError = this.allowError;
+                let options = this.options;
+                let args = this.args;
                 if (isString(files)) {
                     return this.execFile(files, args, options, allowError !== false);
                 } else if (isArray(files)) {

@@ -1,7 +1,7 @@
 import { ExecOptions, ExecFileOptions, execFile, exec } from 'child_process';
 import { isString, isArray } from '@ts-ioc/core';
 import { AbstractTask, Task, RunWay, Src } from '@taskp/core';
-import { CtxType, BaseTask } from '../core/index';
+import { BaseTask, IPipeTask } from '../core/index';
 
 /**
  * Shell Task
@@ -11,21 +11,21 @@ import { CtxType, BaseTask } from '../core/index';
  */
 @Task('shell')
 export class ExecShellTask extends BaseTask {
-    cmds: CtxType<Src>;
-    args: CtxType<string[]>;
-    options: CtxType<ExecOptions>;
-    allowError: CtxType<boolean> = true;
+    cmds: Src;
+    args: string[];
+    options: ExecOptions;
+    allowError = true;
     runWay = RunWay.sequence
     constructor(name?: string) {
         super(name);
     }
 
     run(): Promise<any> {
-        return Promise.resolve(this.to(this.cmds))
+        return Promise.resolve(this.cmds)
             .then(cmds => {
-                let allowError = this.to(this.allowError);
-                let options = this.to(this.options);
-                let args = this.to(this.args);
+                let allowError = this.allowError;
+                let options = this.options;
+                let args = this.args;
                 if (isString(cmds)) {
                     return this.execShell(cmds, options, allowError !== false);
                 } else if (isArray(cmds)) {

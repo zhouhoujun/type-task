@@ -1,5 +1,5 @@
-import { Task, ITask, AbstractTask, TaskElement, ITaskComponent, IConfigure, TaskModule, Src, RunWay } from '@taskp/core';
-import { IPipeElementProvider, ITransform, PipeElement, TransformExpress, TransformType, PipeTask, PipeModule } from '@taskp/pipes';
+import { Task, ITask, AbstractTask, TaskElement, ITaskComponent, IConfigure, Src, RunWay } from '@taskp/core';
+import { ITransform, TransformExpress, TransformType, PipeTask, PipeModule, PipeTaskMetadata } from '@taskp/pipes';
 import { TaskContainer } from '@taskp/platform-server';
 
 import * as mocha from 'gulp-mocha';
@@ -12,48 +12,45 @@ import { classAnnotations } from '@ts-ioc/annotations';
 import { isFunction, isBoolean, ObjectMap } from '@ts-ioc/core';
 
 
-@TaskModule({
-    providers: <IPipeElementProvider>{
-        pipes: [
-            // () => cache('typescript'),
-            sourcemaps.init,
-            () => classAnnotations(),
+@PipeTask({
+    pipes: [
+        // () => cache('typescript'),
+        sourcemaps.init,
+        () => classAnnotations(),
+        (ctx, config) => {
+            let target = config.moduleTarget as TsCompile;
+            if (target.tsconfig) {
+                return ts(target.tsconfig);
+            } else {
+                let tsProject = ts.createProject(ctx.toRootPath(target.tsconfigFile || './tsconfig.json'));
+                return tsProject();
+            }
+        }
+    ],
+    destPipes: {
+        js: [
+            (ctx, config, transform) => {
+                let trans: ITransform = transform.js;
+                trans.changeAsOrigin = true;
+                return trans;
+            },
             (ctx, config) => {
                 let target = config.moduleTarget as TsCompile;
-                if (target.tsconfig) {
-                    return ts(target.tsconfig);
-                } else {
-                    let tsProject = ts.createProject(ctx.toRootPath(target.tsconfigFile || './tsconfig.json'));
-                    return tsProject();
+                if (target.uglify) {
+                    return isBoolean(target.uglify) ? uglify() : uglify(target.uglify);
                 }
-            }
+                return null;
+            },
+            (ctx) => sourcemaps.write('./sourcemaps')
         ],
-        destPipes: {
-            js: [
-                (ctx, config, transform) => {
-                    let trans: ITransform = transform.js;
-                    trans.changeAsOrigin = true;
-                    return trans;
-                },
-                (ctx, config) => {
-                    let target = config.moduleTarget as TsCompile;
-                    if (target.uglify) {
-                        return isBoolean(target.uglify) ? uglify() : uglify(target.uglify);
-                    }
-                    return null;
-                },
-                (ctx) => sourcemaps.write('./sourcemaps')
-            ],
-            dts: [
-                (ctx, config, transform) => {
-                    let tans: ITransform = transform.dts;
-                    tans.changeAsOrigin = true;
-                    return tans;
-                }
-            ]
-        }
-    },
-    task: PipeElement
+        dts: [
+            (ctx, config, transform) => {
+                let tans: ITransform = transform.dts;
+                tans.changeAsOrigin = true;
+                return tans;
+            }
+        ]
+    }
 })
 export class TsCompile extends PipeTask {
 

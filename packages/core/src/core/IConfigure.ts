@@ -3,12 +3,17 @@ import { Token, Type, AppConfiguration } from '@ts-ioc/core';
 import { RunWay } from './RunWay';
 
 /**
+ * task type
+ */
+export type TaskType<T> = Token<T> | Type<any> | ITaskConfigure<T>;
+
+/**
  * task context.
  *
  * @export
  * @interface IContext
  */
-export interface IConfigure extends AppConfiguration<ITask> {
+export interface ITaskConfigure<T> extends AppConfiguration<T> {
 
     /**
     * context tasks name.
@@ -16,36 +21,40 @@ export interface IConfigure extends AppConfiguration<ITask> {
     * @type {string}
     * @memberof IContext
     */
-   name?: string;
+    name?: string;
 
-   /**
-    * root dir.
-    *
-    * @type {string}
-    * @memberof IConfigure
-    */
-   rootdir?: string;
+    /**
+     * root dir.
+     *
+     * @type {string}
+     * @memberof IConfigure
+     */
+    rootdir?: string;
 
-   /**
-    * run way.
-    *
-    * @type {RunWay}
-    * @memberof IContext
-    */
-   runWay?: RunWay;
+    /**
+     * run way.
+     *
+     * @type {RunWay}
+     * @memberof IContext
+     */
+    runWay?: RunWay;
 
     /**
      * task module.
      *
-     * @type {Token<ITask>}
+     * @type {Token<T>}
      * @memberof IConfigure
      */
-    task?: Token<ITask>;
+    task?: Token<T>;
     /**
      * children
      *
-     * @type {((IConfigure | Type<ITask>)[])}
+     * @type {(ITaskConfigure<T> | Type<T>)[]}
      * @memberof IConfigure
      */
-    children?: (IConfigure | Type<ITask>)[];
+    children?: (ITaskConfigure<T> | Type<T>)[];
+}
+
+export interface IConfigure extends ITaskConfigure<ITask> {
+
 }

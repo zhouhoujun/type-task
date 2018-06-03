@@ -2,30 +2,23 @@ import { toAbsolutePath } from '@ts-ioc/platform-server';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
 import { isFunction, ObjectMap, Express2, Injectable, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata } from '@ts-ioc/core';
-import { ITaskContainer, TaskContainerToken, ITask, Task, IConfigure } from '@taskp/core';
-import { ITaskContext, TaskContextToken } from './ITaskContext';
-import { CtxType } from './pipeTypes';
+import { ITaskContainer, TaskContainerToken, ITask, Task, IConfigure, Context, TaskType, ITaskBuilder, ITaskRunner, TaskBuilderToken, TaskRunnerToken } from '@taskp/core';
+import { IPipeContext, PipeContextToken } from './ITaskContext';
 const minimist = require('minimist');
 
-@Singleton(TaskContextToken)
-export class TaskContext implements ITaskContext {
+@Singleton(PipeContextToken)
+export class TaskContext extends Context implements IPipeContext {
 
     packageFile = 'package.json';
 
-    @Inject(ContainerToken)
-    private container: IContainer;
-
     constructor() {
-
+        super()
     }
 
-
-    getContainer(): IContainer {
-        return this.container;
-    }
-
-    getTaskContiner(): ITaskContainer {
-        return this.container.resolve(TaskContainerToken);
+    getRunner(task: TaskType<ITask>, instance?: any, builder?: ITaskBuilder): ITaskRunner {
+        let container = this.getContainer();
+        builder = builder || container.get(TaskBuilderToken, 'pipe');
+        return container.resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: builder })
     }
 
     private args: ObjectMap<any>;
@@ -65,16 +58,8 @@ export class TaskContext implements ITaskContext {
         return folders;
     }
 
-    getRootPath() {
-        return this.getTaskContiner().getRootPath();
-    }
-
     toRootPath(pathstr: string): string {
         return toAbsolutePath(this.getRootPath(), pathstr);
-    }
-
-    to<T>(target: CtxType<T>, config?: IConfigure): T {
-        return isFunction(target) ? target(this, config) : target;
     }
 
     private _package: any;
@@ -108,9 +93,5 @@ export class TaskContext implements ITaskContext {
         }
 
         return version || '';
-    }
-
-    isTask(task: Type<ITask>): boolean {
-        return hasOwnClassMetadata(Task, task);
     }
 }

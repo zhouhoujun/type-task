@@ -1,8 +1,7 @@
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { ITaskComponent } from './ITaskComponent';
 import { Type, hasOwnClassMetadata, isFunction, Inject, IContainer, Injectable, Providers, Singleton, isArray, isClass, ContainerToken, ModuleBuilderToken, IModuleBuilder, isToken, isBaseObject, isMetadataObject, Token, ModuleBuilder, ModuleConfiguration, lang } from '@ts-ioc/core';
-import { IConfigure } from './IConfigure';
-import { TaskType } from '../utils/index';
+import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
 import { TaskElement } from './TaskElement';
 import { TaskComponent } from './TaskComponent';
@@ -22,7 +21,7 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
         super(container)
     }
 
-    async build<T extends ITask>(task: Token<T> | Type<any> | IConfigure): Promise<T> {
+    async build<T extends ITask>(task: TaskType<ITask>): Promise<T> {
         let taskInst = await super.build(task) as T;
         let config = this.getConfigure(task) as IConfigure;
         await this.buildWithConfigure(taskInst, config);
@@ -30,16 +29,17 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
     }
 
     async buildWithConfigure(taskInst: ITask, config: IConfigure): Promise<ITask> {
-        await this.bindConfig(taskInst, config);
+        await this.beforeBindConfig(taskInst, config);
         if (taskInst instanceof TaskComponent) {
             if (config.children && config.children.length) {
                 await this.buildChildren(taskInst, config.children)
             }
         }
+        await this.afterBindConfig(taskInst, config);
         return taskInst;
     }
 
-    async bindConfig(taskInst: ITask, config: IConfigure): Promise<ITask> {
+    async beforeBindConfig(taskInst: ITask, config: IConfigure): Promise<ITask> {
         if (config.name) {
             taskInst.name = config.name;
         }
@@ -47,6 +47,10 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
             taskInst.runWay = config.runWay;
         }
         taskInst.config = config;
+        return taskInst;
+    }
+
+    async afterBindConfig(taskInst: ITask, config: IConfigure): Promise<ITask> {
         return taskInst;
     }
 

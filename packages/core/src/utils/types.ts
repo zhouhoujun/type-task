@@ -1,9 +1,5 @@
 import { IContainer, Type, LoadType } from '@ts-ioc/core';
 
-/**
- * TaskType
- */
-export type TaskType = LoadType;
 
 /**
  * source

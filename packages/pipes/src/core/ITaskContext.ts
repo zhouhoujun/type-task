@@ -1,49 +1,32 @@
 import { IContainer, ObjectMap, Express2, InjectToken, Type } from '@ts-ioc/core';
-import { ITaskContainer, ITask, IConfigure } from '@taskp/core';
-import { CtxType } from './pipeTypes';
+import { ITaskContainer, ITask, IConfigure, IContext } from '@taskp/core';
 
 /**
  * task context token.
  */
-export const TaskContextToken = new InjectToken<ITaskContext>('__TASK_TaskContext');
+export const PipeContextToken = new InjectToken<IPipeContext>('__TASK_TaskContext');
 
 /**
  * task context.
  *
  * @export
- * @interface ITaskContext
+ * @interface IPipeContext
  */
-export interface ITaskContext {
+export interface IPipeContext extends IContext {
 
     /**
      * package file.
      *
      * @type {string}
-     * @memberof ITaskContext
+     * @memberof IPipeContext
      */
     packageFile: string;
-
-    /**
-     * get ioc container.
-     *
-     * @returns {IContainer}
-     * @memberof ITaskContext
-     */
-    getContainer(): IContainer;
-
-    /**
-     * get task container.
-     *
-     * @returns {ITaskContainer}
-     * @memberof ITaskContext
-     */
-    getTaskContiner(): ITaskContainer;
 
     /**
      * get task evn args.
      *
      * @returns {ObjectMap<any>}
-     * @memberof ITaskContext
+     * @memberof IPipeContext
      */
     getEnvArgs(): ObjectMap<any>;
 
@@ -51,16 +34,17 @@ export interface ITaskContext {
      * get run tasks.
      *
      * @returns {string[]}
-     * @memberof ITaskContext
+     * @memberof IPipeContext
      */
     getRunTasks(): string[];
+
 
     /**
      * get root folders.
      *
      * @param {Express2<string, string, boolean>} [express]
      * @returns {string[]}
-     * @memberof ITaskContext
+     * @memberof IPipeContext
      */
     getRootFolders(express?: Express2<string, string, boolean>): string[];
 
@@ -70,43 +54,24 @@ export interface ITaskContext {
      * @param {string} pathstr
      * @param {Express2<string, string, boolean>} [express]
      * @returns {string[]}
-     * @memberof ITaskContext
+     * @memberof IPipeContext
      */
     getFolders(pathstr: string, express?: Express2<string, string, boolean>): string[];
-
-    /**
-     * get task run root path.
-     *
-     * @returns {string}
-     * @memberof ITaskContext
-     */
-    getRootPath(): string;
 
     /**
      * to root path.
      *
      * @param {string} pathstr
      * @returns {string}
-     * @memberof ITaskContext
+     * @memberof IPipeContext
      */
     toRootPath(pathstr: string): string;
-
-    /**
-     *convert to finally type via context.
-     *
-     * @template T
-     * @param {CtxType<T>} target
-     * @param {IConfigure} [config]
-     * @returns {T}
-     * @memberof ITaskContext
-     */
-    to<T>(target: CtxType<T>, config?: IConfigure): T;
 
     /**
      * get package.
      *
      * @returns {*}
-     * @memberof ITaskContext
+     * @memberof IPipeContext
      */
     getPackage(): any;
 
@@ -114,7 +79,7 @@ export interface ITaskContext {
      * get package version.
      *
      * @returns {string}
-     * @memberof ITaskContext
+     * @memberof IPipeContext
      */
     getPackageVersion(): string;
 
@@ -124,16 +89,8 @@ export interface ITaskContext {
      * @param {string} name
      * @param {boolean} [dependencies]
      * @returns {string}
-     * @memberof ITaskContext
+     * @memberof IPipeContext
      */
     getModuleVersion(name: string, dependencies?: boolean): string;
 
-    /**
-     * check is task or not.
-     *
-     * @param {Type<ITask>} task
-     * @returns {boolean}
-     * @memberof ITaskContext
-     */
-    isTask(task: Type<ITask>): boolean;
 }

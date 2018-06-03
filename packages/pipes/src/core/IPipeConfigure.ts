@@ -1,10 +1,17 @@
-import { IConfigure } from '@taskp/core';
-import { TransformMerger, TransformSource, TransformExpress, DestExpress } from './pipeTypes';
+import { IConfigure, Src, ITaskConfigure, CtxType } from '@taskp/core';
+import { TransformMerger, TransformExpress, DestExpress, TransformMergerExpress } from './pipeTypes';
 import { SrcOptions, DestOptions } from 'vinyl-fs';
 import { Token } from '@ts-ioc/core';
 import { IPipeComponent } from './IPipeComponent';
 import { IPipeTask } from './IPipeTask';
 
+/**
+ * pipe configure.
+ *
+ * @export
+ * @interface IPipeConfigure
+ * @extends {IConfigure}
+ */
 export interface IPipeConfigure extends IConfigure {
 
     /**
@@ -18,105 +25,79 @@ export interface IPipeConfigure extends IConfigure {
     /**
      * await piped complete.
      *
-     * @type {boolean}
+     * @type {CtxType<boolean>}
      * @memberof IPipeConfigure
      */
-    awaitPiped?: boolean;
+    awaitPiped?: CtxType<boolean>;
 
-    // /**
-    //  * merger transform.
-    //  *
-    //  * @type {TransformMerger}
-    //  * @memberof IPipeConfigure
-    //  */
-    // merger?: TransformMerger;
+    /**
+     * streams merger.
+     *
+     * @type {TransformMergerExpress}
+     * @memberof IPipeConfigure
+     */
+    merger?: TransformMergerExpress
 
-    // /**
-    //  * transform source.
-    //  *
-    //  * @type {TransformSource}
-    //  * @memberof IPipeConfigure
-    //  */
-    // src?: TransformSource;
+}
 
-    // /**
-    //  * watch source change to run pipe task.
-    //  *
-    //  * @type {(TransformSource | boolean)}
-    //  * @memberof IPipeConfigure
-    //  */
-    // watch?: TransformSource | boolean;
-    // /**
-    //  * src options.
-    //  *
-    //  * @type {SrcOptions}
-    //  * @memberof IPipeConfigure
-    //  */
-    // srcOptions?: SrcOptions;
-    // /**
-    //  * source pipe component task.
-    //  *
-    //  * @type {Token<IPipeTask>}
-    //  * @memberof IPipeConfigure
-    //  */
-    // srcType?: Token<IPipeTask>;
-    // /**
-    //  * source merger transform.
-    //  *
-    //  * @type {TransformMerger}
-    //  * @memberof IPipeConfigure
-    //  */
-    // srcMerger?: TransformMerger;
+/**
+ * source pipe configure.
+ *
+ * @export
+ * @interface IPipeSourceConfigure
+ * @extends {IPipeConfigure}
+ */
+export interface IPipeSourceConfigure extends IPipeConfigure {
 
-    // /**
-    //  * transform pipes
-    //  *
-    //  * @type {TransformExpress}
-    //  * @memberof IPipeConfigure
-    //  */
-    // pipes?: TransformExpress;
+    /**
+     * transform source.
+     *
+     * @type {TransformSource}
+     * @memberof IPipeConfigure
+     */
+    src?: CtxType<Src>;
 
-    // /**
-    //  * await piped complete.
-    //  *
-    //  * @type {boolean}
-    //  * @memberof IPipeConfigure
-    //  */
-    // awaitPiped?: boolean;
+    /**
+     * src options.
+     *
+     * @type {CtxType<SrcOptions>}
+     * @memberof IPipeConfigure
+     */
+    srcOptions?: CtxType<SrcOptions>;
 
-    // /**
-    //  * pipe dest.
-    //  *
-    //  * @type {TransformSource}
-    //  * @memberof IPipeConfigure
-    //  */
-    // dest?: TransformSource;
-    // /**
-    //  * dest transform pipes.
-    //  *
-    //  * @type {DestExpress}
-    //  * @memberof IPipeConfigure
-    //  */
-    // destPipes?: DestExpress;
-    // /**
-    //  * dest options.
-    //  *
-    //  * @type {DestOptions}
-    //  * @memberof IPipeConfigure
-    //  */
-    // destOptions?: DestOptions;
-    // /**
-    //  * dest pipes component task.
-    //  *
-    //  * @type {Token<IPipeTask>}
-    //  * @memberof IPipeConfigure
-    //  */
-    // destType?: Token<IPipeTask>;
-    // /**
-    //  * dest pipe transform merger.
-    //  *
-    //  * @type {TransformMerger}
-    //  * @memberof IPipeConfigure
-    //  */
-    // destMerger?: TransformMerger;
+    /**
+     * watch source change to run pipe task.
+     *
+     * @type {CtxType<Src | boolean>}
+     * @memberof IPipeConfigure
+     */
+    watch?: CtxType<Src | boolean>;
+
+}
+
+/**
+ * dest pipe configure.
+ *
+ * @export
+ * @interface IPipeDestConfigure
+ * @extends {IPipeConfigure}
+ */
+export interface IPipeDestConfigure extends IPipeConfigure {
+
+    /**
+     * pipe dest.
+     *
+     * @type {CtxType<string>}
+     * @memberof IPipeConfigure
+     */
+    dest?: CtxType<string>;
+
+    /**
+     * dest options.
+     *
+     * @type {CtxType<DestOptions>}
+     * @memberof IPipeConfigure
+     */
+    destOptions?: CtxType<DestOptions>;
+
 }

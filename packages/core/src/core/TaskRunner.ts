@@ -1,5 +1,5 @@
 import { isToken, Token, Providers, Inject, Singleton, IContainer, isClass, Type, hasOwnClassMetadata, isFunction, ContainerToken, Injectable } from '@ts-ioc/core';
-import { IConfigure } from './IConfigure';
+import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { Task } from './decorators/index';
@@ -18,7 +18,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable(TaskRunnerToken)
 export class TaskRunner implements ITaskRunner {
 
-    get task(): Token<ITask> | Type<any> | IConfigure {
+    get task(): TaskType<ITask> {
         return this.work;
     }
 

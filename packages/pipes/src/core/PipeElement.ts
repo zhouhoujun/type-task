@@ -1,7 +1,29 @@
 import { Task, Src, TaskElement, RunWay } from '@taskp/core';
-import { IPipeComponent, PipeComponent, ITransform, TransformSource, TransformExpress, DestExpress, TransformMerger } from '../core/index';
+import { IPipeComponent, PipeComponent, ITransform, TransformExpress, DestExpress, TransformMerger } from '../core/index';
 import { Type, isBoolean, isFunction, Mode } from '@ts-ioc/core';
 import { SrcOptions, DestOptions, watch } from 'vinyl-fs';
+import { IPipeDest } from './PipeDest';
+import { IPipeSource } from './PipeSource';
+
+
+
+/**
+ * source provider.
+ *
+ * @export
+ * @interface IPipeElement
+ * @extends {IPipeComponent}
+ */
+export interface IPipeElement extends IPipeComponent { // , IPipeSource, IPipeDest {
+
+    /**
+     * watch source change to run pipe task.
+     *
+     * @type {(Src | boolean)}
+     * @memberof IPipeConfigure
+     */
+    watch?: Src | boolean;
+}
 
 
 /**
@@ -13,36 +35,25 @@ import { SrcOptions, DestOptions, watch } from 'vinyl-fs';
  * @implements {IPipeComponent<ITransform>}
  */
 @Task
-export class PipeElement extends PipeComponent<IPipeComponent> {
+export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeElement {
 
-    public watchSrc?: TransformSource;
 
-    constructor(
-        name: string,
-        runWay = RunWay.seqFirst,
-        merger?: TransformMerger,
+    watch?: Src | boolean;
 
-        public src?: TransformSource,
-        private srcOptions?: SrcOptions,
-        private srcType?: Type<IPipeComponent>,
-        private srcMerger?: TransformMerger,
-        watch?: TransformSource | boolean,
+    src?: Src;
+    srcOptions?: SrcOptions;
+    srcType?: Type<IPipeComponent>;
+    srcMerger?: TransformMerger;
 
-        private pipes?: TransformExpress,
-        private pipesType?: Type<IPipeComponent>,
-        private pipesMerger?: TransformMerger,
-        private awaitPiped?: boolean,
+    dest?: Src;
+    destPipes?: DestExpress;
+    destOptions?: DestOptions;
+    destType?: Type<IPipeComponent>;
+    destMerger?: TransformMerger;
 
-        private dest?: TransformSource,
-        private destPipes?: DestExpress,
-        private destOptions?: DestOptions,
-        private destType?: Type<IPipeComponent>,
-        private destMerger?: TransformMerger
-    ) {
+    constructor(name?: string) {
         super(name);
-        if (watch) {
-            this.watchSrc = isBoolean(watch) ? src : watch;
-        }
+
     }
 
     onInit() {
@@ -75,7 +86,7 @@ export class PipeElement extends PipeComponent<IPipeComponent> {
             });
     }
 
-    watch(src?: TransformSource) {
+    watchSrc(src?: TransformSource) {
         src = src || this.src;
         let watchSrc = isFunction(src) ? src(this.context, this.config) : src;
         watch(watchSrc, () => {

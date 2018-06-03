@@ -12,5 +12,7 @@ export * from './TaskElement';
 export * from './decorators/index';
 export * from './metadatas/index';
 export * from './RunWay';
+export * from './IContext';
+export * from './Context';
 export * from './ITaskRunner';
 export * from './TaskRunner';

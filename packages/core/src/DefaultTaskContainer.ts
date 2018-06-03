@@ -4,6 +4,7 @@ import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
+import { TaskType } from './core/index';
 
 
 /**
@@ -31,11 +32,11 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
     /**
      * bootstrap application via main module
      *
-     * @param {(Token<ITask> | Type<any> | IConfigure)} bootModule
+     * @param {(TaskType<ITask>)} bootModule
      * @returns {Promise<T>}
      * @memberof ApplicationBuilder
      */
-    bootstrap(task: Token<ITask> | Type<any> | IConfigure): Promise<ITaskRunner> {
+    bootstrap(task: TaskType<ITask>): Promise<ITaskRunner> {
         return super.bootstrap(task)
             .then(instance => {
                 let runner = this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });
