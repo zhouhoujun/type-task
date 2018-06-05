@@ -1,5 +1,6 @@
 import { createClassDecorator, IClassDecorator, ClassMetadata, MetadataExtends, MetadataAdapter, isClassMetadata, Registration, isClass, isArray } from '@ts-ioc/core';
 import { IConfigure } from '../IConfigure';
+import { createTaskDecorator } from './Task';
 
 /**
  * pipe task metadata.
@@ -30,7 +31,7 @@ export interface ITaskClassDecorator<T extends TaskModuleMetadata> extends IClas
  * pipe task.
  */
 export const TaskModule: ITaskClassDecorator<TaskModuleMetadata> =
-    createClassDecorator<TaskModuleMetadata>('TaskModule',
+    createTaskDecorator<TaskModuleMetadata>('TaskModule',
         args => {
             args.next<TaskModuleMetadata>({
                 match: (arg) => arg && (isClass(arg.task) || isArray(arg.children)),
