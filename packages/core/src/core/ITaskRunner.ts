@@ -10,11 +10,32 @@ import { Observable } from 'rxjs/Observable';
  */
 export const TaskRunnerToken = new InjectToken<ITaskRunner>('__TASK_TaskRunner');
 
+/**
+ *run state.
+ *
+ * @export
+ * @enum {number}
+ */
 export enum RunState {
+    /**
+     * task init.
+     */
     init,
+    /**
+     * runing.
+     */
     running,
+    /**
+     * task parused.
+     */
     pause,
+    /**
+     * task stopped.
+     */
     stop,
+    /**
+     * task complete.
+     */
     complete
 }
 

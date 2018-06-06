@@ -1,12 +1,39 @@
-import { PipeTask } from '../../decorators/index';
+import { PipeTask, AssetTask } from '../../decorators/index';
 import { TaskElement } from '@taskp/core';
-import { BaseTask, PipeElement } from '../../core/index';
+import { BaseTask, PipeElement, ITransform } from '../../core/index';
+import { IPipeConfigure } from '../../core/IPipeConfigure';
+import { isBoolean } from '@ts-ioc/core';
+import * as uglify from 'gulp-uglify';
+import * as sourcemaps from 'gulp-sourcemaps';
 
-@PipeTask({
+@AssetTask({
     name: 'tscompile',
-    src: '**/*.ts',
-    pipes: [
-
+    dest: [
+        {
+            pipes: [
+                (ctx, config, transform) => {
+                    let trans: ITransform = transform.js;
+                    trans.changeAsOrigin = true;
+                    return trans;
+                },
+                (ctx, config) => {
+                    if (config.uglify) {
+                        return isBoolean(config.uglify) ? uglify() : uglify(config.uglify);
+                    }
+                    return null;
+                },
+                (ctx) => sourcemaps.write('./sourcemaps')
+            ]
+        },
+        {
+            pipes: [
+                (ctx, config, transform) => {
+                    let tans: ITransform = transform.dts;
+                    tans.changeAsOrigin = true;
+                    return tans;
+                }
+            ]
+        }
     ]
 })
 export class TsCompile extends PipeElement {

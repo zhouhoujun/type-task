@@ -47,7 +47,7 @@ export interface IPipeConfigure extends IConfigure {
  * @interface IPipeSourceConfigure
  * @extends {IPipeConfigure}
  */
-export interface IPipeSourceConfigure extends IPipeConfigure {
+export interface ISourceConfigure extends IPipeConfigure {
 
     /**
      * transform source.
@@ -66,14 +66,6 @@ export interface IPipeSourceConfigure extends IPipeConfigure {
     srcOptions?: CtxType<SrcOptions>;
 
     /**
-     * source pipes.
-     *
-     * @type {TransformExpress}
-     * @memberof IPipeSourceConfigure
-     */
-    srcPipes?: TransformExpress;
-
-    /**
      * watch source change to run pipe task.
      *
      * @type {CtxType<Src | boolean>}
@@ -90,7 +82,7 @@ export interface IPipeSourceConfigure extends IPipeConfigure {
  * @interface IPipeDestConfigure
  * @extends {IPipeConfigure}
  */
-export interface IPipeDestConfigure extends IPipeConfigure {
+export interface IDestConfigure extends IPipeConfigure {
 
     /**
      * pipe dest.
@@ -108,12 +100,40 @@ export interface IPipeDestConfigure extends IPipeConfigure {
      */
     destOptions?: CtxType<DestOptions>;
 
+}
+
+/**
+ *
+ *
+ * @export
+ * @interface IAssetConfigure
+ * @extends {ISourceConfigure}
+ * @extends {IDestConfigure}
+ */
+export interface IAssetConfigure extends IPipeConfigure {
+
     /**
-     * dest pipes
+     * src.
      *
-     * @type {TransformExpress}
-     * @memberof IPipeDestConfigure
+     * @type {(CtxType<Src | ISourceConfigure>)}
+     * @memberof IAssetConfigure
      */
-    destPipes?: TransformExpress
+    src?: CtxType<Src | ISourceConfigure>;
+
+    /**
+     * uglify assets or not.
+     *
+     * @type {(boolean | TransformExpress)}
+     * @memberof IAssetConfigure
+     */
+    uglify?: boolean | TransformExpress;
+
+    /**
+     * dest.
+     *
+     * @type {(CtxType<string | IDestConfigure>)}
+     * @memberof IAssetConfigure
+     */
+    dest?: CtxType<string | IDestConfigure>;
 
 }

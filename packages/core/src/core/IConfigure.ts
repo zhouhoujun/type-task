@@ -8,10 +8,10 @@ import { RunWay } from './RunWay';
 export type TaskType<T> = Token<T> | Type<any> | ITaskConfigure<T>;
 
 /**
- * task context.
+ * task config.
  *
  * @export
- * @interface IContext
+ * @interface ITaskConfigure
  */
 export interface ITaskConfigure<T> extends AppConfiguration<T> {
 
@@ -46,6 +46,7 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
      * @memberof IConfigure
      */
     task?: Token<T>;
+
     /**
      * children
      *
@@ -55,6 +56,13 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
     children?: (ITaskConfigure<T> | Type<T>)[];
 }
 
+/**
+ * task configure.
+ *
+ * @export
+ * @interface IConfigure
+ * @extends {ITaskConfigure<ITask>}
+ */
 export interface IConfigure extends ITaskConfigure<ITask> {
 
 }

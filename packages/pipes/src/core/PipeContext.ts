@@ -6,6 +6,14 @@ import { ITaskContainer, TaskContainerToken, ITask, Task, IConfigure, Context, T
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 const minimist = require('minimist');
 
+/**
+ * pipe context.
+ *
+ * @export
+ * @class PipeContext
+ * @extends {Context}
+ * @implements {IPipeContext}
+ */
 @Singleton(PipeContextToken)
 export class PipeContext extends Context implements IPipeContext {
 

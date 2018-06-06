@@ -1,7 +1,7 @@
 import { createTaskDecorator, TaskMetadata, ITaskDecorator } from '@taskp/core';
-import { IPipeConfigure, IPipeSourceConfigure, IPipeDestConfigure } from '../core/IPipeConfigure';
+import { IPipeConfigure, ISourceConfigure, IDestConfigure } from '../core/IPipeConfigure';
 
-export interface PipeTaskMetadata extends TaskMetadata, IPipeConfigure, IPipeSourceConfigure, IPipeDestConfigure {
+export interface PipeTaskMetadata extends TaskMetadata, IPipeConfigure {
 
 }
 

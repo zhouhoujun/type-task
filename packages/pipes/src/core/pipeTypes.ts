@@ -1,4 +1,4 @@
-import { Src, ITaskProvider, IConfigure, ITaskRunner, TaskType, CtxType } from '@taskp/core';
+import { Src, ITaskProvider, IConfigure, ITaskRunner, TaskType, CtxType, ITask } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { ObjectMap, Type, Token, isMetadataObject, isBaseObject, isObservable, isBaseType } from '@ts-ioc/core';
 import { IPipeContext } from './IPipeContext';
@@ -14,7 +14,7 @@ import { IPipeConfigure } from './IPipeConfigure';
 /**
  * pipe express
  */
-export type PipeExpress = (context?: IPipeContext, config?: IConfigure, transform?: ITransform) => ITransform | Promise<ITransform>;
+export type PipeExpress = (context?: IPipeContext, config?: IPipeConfigure, transform?: ITransform, taskInstance?: ITask) => ITransform | Promise<ITransform>;
 
 /**
  * transform type.
