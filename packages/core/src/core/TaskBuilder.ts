@@ -1,6 +1,6 @@
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { ITaskComponent } from './ITaskComponent';
-import { Type, hasOwnClassMetadata, isFunction, Inject, IContainer, Injectable, Providers, Singleton, isArray, isClass, ContainerToken, ModuleBuilderToken, IModuleBuilder, isToken, isBaseObject, isMetadataObject, Token, ModuleBuilder, ModuleConfiguration, lang } from '@ts-ioc/core';
+import { Type, isFunction, Inject, IContainer, Singleton, isClass, ContainerToken, isToken, isMetadataObject, Token, ModuleBuilder, lang } from '@ts-ioc/core';
 import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
 import { TaskElement } from './TaskElement';

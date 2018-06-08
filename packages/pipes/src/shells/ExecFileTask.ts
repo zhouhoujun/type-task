@@ -1,7 +1,7 @@
-import { ExecOptions, ExecFileOptions, execFile } from 'child_process';
-import { isString, isArray, isFunction } from '@ts-ioc/core';
+import { ExecFileOptions, execFile } from 'child_process';
+import { isString, isArray } from '@ts-ioc/core';
 import { existsSync } from 'fs';
-import { TaskSrc, Task, RunWay, Src } from '@taskp/core';
+import { Task, RunWay, Src } from '@taskp/core';
 import { BaseTask } from '../core/index';
 
 

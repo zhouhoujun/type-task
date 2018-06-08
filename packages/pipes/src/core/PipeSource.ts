@@ -1,10 +1,8 @@
-import { Src, Task, ITaskProvider, RunWay, AbstractTask } from '@taskp/core';
+import { Src, Task } from '@taskp/core';
 import { ITransform } from './ITransform';
-import { isFunction, isString, isArray, Mode } from '@ts-ioc/core';
 import { src, SrcOptions } from 'vinyl-fs';
 import { PipeComponent } from './PipeComponent';
 import { IPipeComponent } from './IPipeComponent';
-import { TransformMerger, TransformType } from './pipeTypes';
 
 
 /**

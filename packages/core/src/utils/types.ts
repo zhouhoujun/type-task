@@ -1,4 +1,4 @@
-import { IContainer, Type, LoadType } from '@ts-ioc/core';
+import { IContainer } from '@ts-ioc/core';
 
 
 /**

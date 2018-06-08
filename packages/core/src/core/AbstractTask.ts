@@ -1,4 +1,4 @@
-import { ITask, IConfigure, RunWay, ITaskConfigure } from '@taskp/core';
+import { ITask, IConfigure, RunWay } from '@taskp/core';
 import { Inject, Abstract } from '@ts-ioc/core';
 import { IContext, ContextToken } from './IContext';
 

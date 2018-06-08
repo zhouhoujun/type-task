@@ -1,7 +1,7 @@
-import { ExecOptions, ExecFileOptions, execFile, exec } from 'child_process';
+import { ExecOptions, exec } from 'child_process';
 import { isString, isArray } from '@ts-ioc/core';
-import { AbstractTask, Task, RunWay, Src } from '@taskp/core';
-import { BaseTask, IPipeTask } from '../core/index';
+import { Task, RunWay, Src } from '@taskp/core';
+import { BaseTask } from '../core/index';
 
 /**
  * Shell Task

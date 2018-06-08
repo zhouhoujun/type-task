@@ -1,4 +1,4 @@
-import { isArray, IContainer, IContainerBuilder, Type, Inject, Mode, Providers, isClass, ContainerBuilderToken, ModuleBuilder, Token, ApplicationBuilder, IApplicationBuilder, hasClassMetadata, ModuleBuilderToken, IModuleBuilder } from '@ts-ioc/core';
+import { IContainer, Type, ApplicationBuilder, hasClassMetadata } from '@ts-ioc/core';
 import { ITaskRunner, IConfigure, TaskRunnerToken, ITask, TaskBuilderToken, ITaskBuilder } from './core/index';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';

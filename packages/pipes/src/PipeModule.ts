@@ -1,4 +1,4 @@
-import { IContainer, LifeScope, CoreActions, DecoratorType, IContainerBuilder, IocModule, Inject, ContainerToken } from '@ts-ioc/core';
+import { IContainer, CoreActions, IocModule, Inject, ContainerToken } from '@ts-ioc/core';
 import { PipeTask } from './decorators/index';
 import * as shells from './shells/index';
 import * as tasks from './tasks/index';

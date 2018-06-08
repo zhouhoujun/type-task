@@ -1,10 +1,9 @@
 import { IPipeTask } from './IPipeTask';
-import { ITaskComponent, ITaskProvider, Src, ITaskRunner } from '@taskp/core';
+import { ITaskComponent } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { TransformType, TransformMerger, TransformExpress, TransformMergerExpress } from './pipeTypes';
 import { IPipeContext } from './IPipeContext';
 import { IPipeConfigure } from './IPipeConfigure';
-import { Token, ObjectMap } from '@ts-ioc/core';
 
 
 /**

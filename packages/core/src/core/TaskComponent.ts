@@ -1,10 +1,7 @@
-import { GComposite, IContainer, Type, IContainerBuilder, Inject, Mode, isClass, Abstract, ContainerBuilderToken, ModuleType, Injectable, ContainerToken, Token } from '@ts-ioc/core';
+import { GComposite, Inject, Mode, Abstract } from '@ts-ioc/core';
 import { ITaskComponent } from './ITaskComponent';
-import { IConfigure, TaskType, ITaskConfigure } from './IConfigure';
-import { ITask } from './ITask';
+import { ITaskConfigure } from './IConfigure';
 import { RunWay } from './RunWay';
-import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
-import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
 import { ContextToken, IContext } from './IContext';
 
 /**

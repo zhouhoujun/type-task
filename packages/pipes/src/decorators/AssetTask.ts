@@ -1,4 +1,3 @@
-import { PipeTaskMetadata } from './PipeTask';
 import { ITaskDecorator, createTaskDecorator } from '@taskp/core';
 import { IAssetConfigure } from '../core/IPipeConfigure';
 

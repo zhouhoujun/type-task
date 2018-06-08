@@ -1,7 +1,5 @@
 import { ITask } from './ITask';
-import { GComponent, Token, ComponentLifecycle, Type, Provider, Providers, ModuleType, IContainer } from '@ts-ioc/core';
-import { RunWay } from './RunWay';
-import { IConfigure } from './IConfigure';
+import { GComponent, ComponentLifecycle } from '@ts-ioc/core';
 
 /**
  * Task Component.

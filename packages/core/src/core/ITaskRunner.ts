@@ -1,8 +1,7 @@
-import { IConfigure, TaskType } from './IConfigure';
-import { Token, Providers, Type, InjectToken } from '@ts-ioc/core';
+import { TaskType } from './IConfigure';
+import { InjectToken } from '@ts-ioc/core';
 import { ITask } from './ITask';
 import { ITaskBuilder } from './ITaskBuilder';
-import { EventEmitter } from 'events';
 import { Observable } from 'rxjs/Observable';
 
 /**

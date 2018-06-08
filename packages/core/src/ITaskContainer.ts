@@ -1,5 +1,5 @@
-import { TaskComponent, ITask, IConfigure, ITaskRunner, TaskType } from './core/index';
-import { IContainer, Type, Providers, Token, IContainerBuilder, InjectToken, IModuleBuilder, IApplicationBuilder } from '@ts-ioc/core';
+import { ITask, ITaskRunner, TaskType } from './core/index';
+import { Type, InjectToken, IApplicationBuilder } from '@ts-ioc/core';
 
 
 /**

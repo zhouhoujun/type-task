@@ -1,11 +1,10 @@
-import { ITask, RunWay, TaskComponent, IConfigure, Src, TaskRunnerToken, ITaskBuilder, TaskRunner, TaskType, TaskBuilderToken, ITaskRunner } from '@taskp/core';
+import { TaskComponent, IConfigure, TaskRunner, TaskType } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isString, isClass, isFunction, IContainer, getTypeMetadata, Inject, Registration, Token, Type, isMetadataObject } from '@ts-ioc/core';
+import { Abstract, isArray, isClass, isFunction, Inject, isMetadataObject } from '@ts-ioc/core';
 import { TransformMerger, TransformExpress, TransformType, PipeExpress, isTransform, TransformMergerExpress } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeTask } from './IPipeTask';
-import { src, SrcOptions } from 'vinyl-fs';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 
 /**

@@ -1,8 +1,8 @@
 import { toAbsolutePath } from '@ts-ioc/platform-server';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
-import { isFunction, ObjectMap, Express2, Injectable, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata } from '@ts-ioc/core';
-import { ITaskContainer, TaskContainerToken, ITask, Task, IConfigure, Context, TaskType, ITaskBuilder, ITaskRunner, TaskBuilderToken, TaskRunnerToken } from '@taskp/core';
+import { ObjectMap, Express2, Singleton } from '@ts-ioc/core';
+import { ITask, Context, TaskType, ITaskBuilder, ITaskRunner, TaskBuilderToken, TaskRunnerToken } from '@taskp/core';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 const minimist = require('minimist');
 

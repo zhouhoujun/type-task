@@ -2,7 +2,7 @@ import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
 import { ITaskRunner } from './ITaskRunner';
 import { ITaskBuilder } from './ITaskBuilder';
-import { InjectToken, IContainer, ObjectMap, Type } from '@ts-ioc/core';
+import { InjectToken, IContainer, Type } from '@ts-ioc/core';
 import { ITaskContainer } from '../ITaskContainer';
 
 /**

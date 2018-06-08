@@ -1,4 +1,3 @@
-import { ITransform } from './ITransform';
 import { IPipeTask } from './IPipeTask';
 
 /**

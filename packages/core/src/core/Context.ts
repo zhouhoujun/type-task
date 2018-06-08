@@ -1,5 +1,4 @@
-import { toAbsolutePath } from '@ts-ioc/platform-server';
-import { isFunction, ObjectMap, Express2, Injectable, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata } from '@ts-ioc/core';
+import { isFunction, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata } from '@ts-ioc/core';
 import { IContext, ContextToken, CtxType } from './IContext';
 import { ITaskContainer, TaskContainerToken } from '../ITaskContainer';
 import { IConfigure, TaskType } from './IConfigure';

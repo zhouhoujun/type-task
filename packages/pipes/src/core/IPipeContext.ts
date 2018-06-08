@@ -1,5 +1,5 @@
-import { IContainer, ObjectMap, Express2, InjectToken, Type } from '@ts-ioc/core';
-import { ITaskContainer, ITask, IConfigure, IContext } from '@taskp/core';
+import { ObjectMap, Express2, InjectToken } from '@ts-ioc/core';
+import { IContext } from '@taskp/core';
 
 /**
  * task context token.

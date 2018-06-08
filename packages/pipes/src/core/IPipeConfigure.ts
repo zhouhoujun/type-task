@@ -1,9 +1,6 @@
-import { IConfigure, Src, ITaskConfigure, CtxType } from '@taskp/core';
-import { TransformMerger, TransformExpress, DestExpress, TransformMergerExpress } from './pipeTypes';
+import { IConfigure, Src, CtxType } from '@taskp/core';
+import { TransformExpress, TransformMergerExpress } from './pipeTypes';
 import { SrcOptions, DestOptions } from 'vinyl-fs';
-import { Token } from '@ts-ioc/core';
-import { IPipeComponent } from './IPipeComponent';
-import { IPipeTask } from './IPipeTask';
 
 /**
  * pipe configure.

@@ -1,7 +1,6 @@
-import { ObjectMap, Singleton, Inject, IContainer, Type, hasOwnClassMetadata, ContainerToken } from '@ts-ioc/core';
-import { Around, Aspect, Joinpoint, JoinpointState, Before, AfterReturning, AspectMetadata } from '@ts-ioc/aop';
-import { LoggerAspect } from '@ts-ioc/logs';
-import { ITask, Task, TaskComponent, ITaskRunner, RunState } from '../core/index';
+import { Inject, IContainer, ContainerToken } from '@ts-ioc/core';
+import { Aspect, Joinpoint, Before, AfterReturning } from '@ts-ioc/aop';
+import { Task, TaskComponent, ITaskRunner, RunState } from '../core/index';
 
 /**
  * Task Log

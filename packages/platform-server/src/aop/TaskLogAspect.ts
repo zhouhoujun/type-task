@@ -1,11 +1,11 @@
-import { ObjectMap, Singleton, Inject, IContainer, Type, ContainerToken } from '@ts-ioc/core';
-import {  Around, Aspect, Joinpoint, JoinpointState } from '@ts-ioc/aop';
+import { ObjectMap, Inject, IContainer, ContainerToken } from '@ts-ioc/core';
+import { Around, Aspect, Joinpoint, JoinpointState } from '@ts-ioc/aop';
 import { LoggerAspect } from '@ts-ioc/logs';
-
 import chalk from 'chalk';
-import { ITask, Task } from '@taskp/core';
+import { Task } from '@taskp/core';
 const timestamp = require('time-stamp');
 const prettyTime = require('pretty-hrtime');
+
 /**
  * Task Log
  *

@@ -1,5 +1,5 @@
 import { DefaultTaskContainer, ITaskContainer, ITask, ITaskRunner, RunState } from '@taskp/core';
-import { Type, IContainer, Providers, ModuleType, Token, LoadType, Express2, ObjectMap } from '@ts-ioc/core';
+import { Type, Token, LoadType } from '@ts-ioc/core';
 import chalk from 'chalk';
 import { TaskLogAspect } from './aop/index';
 // import { TaskContext } from './TaskContext';

@@ -1,6 +1,5 @@
 import { TaskComponent } from './TaskComponent';
 import { ITask } from './ITask';
-import { RunWay } from './RunWay';
 import { ITaskComponent } from './ITaskComponent';
 import { Task } from './decorators/index';
 

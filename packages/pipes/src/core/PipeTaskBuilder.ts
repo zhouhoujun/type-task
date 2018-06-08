@@ -1,8 +1,6 @@
-import { TaskBuilder, ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskp/core';
-import { Inject, ContainerToken, IContainer, Singleton, Token } from '@ts-ioc/core';
-import { IPipeConfigure, ISourceConfigure, IDestConfigure } from './IPipeConfigure';
-import { PipeDest } from './PipeDest';
-import { PipeSource } from './PipeSource';
+import { TaskBuilder, ITask, IConfigure, TaskBuilderToken } from '@taskp/core';
+import { Inject, ContainerToken, IContainer, Singleton } from '@ts-ioc/core';
+import { IPipeConfigure } from './IPipeConfigure';
 import { IPipeComponent } from './IPipeComponent';
 
 @Singleton(TaskBuilderToken, 'pipe')

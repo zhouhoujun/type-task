@@ -1,9 +1,7 @@
-import { Task, Src, TaskElement, RunWay } from '@taskp/core';
-import { IPipeComponent, PipeComponent, ITransform, TransformExpress, DestExpress, TransformMerger } from '../core/index';
-import { Type, isBoolean, isFunction, Mode } from '@ts-ioc/core';
-import { SrcOptions, DestOptions, watch } from 'vinyl-fs';
-import { IPipeDest } from './PipeDest';
-import { IPipeSource } from './PipeSource';
+import { Task, Src } from '@taskp/core';
+import { IPipeComponent, PipeComponent, DestExpress, TransformMerger } from '../core/index';
+import { Type } from '@ts-ioc/core';
+import { SrcOptions, DestOptions } from 'vinyl-fs';
 
 
 

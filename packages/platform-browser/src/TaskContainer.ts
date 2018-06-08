@@ -1,5 +1,5 @@
 import { DefaultTaskContainer, ITaskContainer, ITask, RunState } from '@taskp/core';
-import { Type, IContainer, Providers, ModuleType, Token, LoadType } from '@ts-ioc/core';
+import { Type, Token, LoadType } from '@ts-ioc/core';
 import { TaskLogAspect } from './aop/index';
 
 /**

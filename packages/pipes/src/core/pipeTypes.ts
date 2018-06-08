@@ -1,10 +1,9 @@
-import { Src, ITaskProvider, IConfigure, ITaskRunner, TaskType, CtxType, ITask } from '@taskp/core';
+import { ITaskRunner, TaskType, CtxType, ITask } from '@taskp/core';
 import { ITransform } from './ITransform';
-import { ObjectMap, Type, Token, isMetadataObject, isBaseObject, isObservable, isBaseType } from '@ts-ioc/core';
+import { ObjectMap, isMetadataObject, isObservable, isBaseType } from '@ts-ioc/core';
 import { IPipeContext } from './IPipeContext';
 import { IPipeTask } from './IPipeTask';
-import { isObject, isFunction } from '@ts-ioc/core';
-import { Observable } from 'rxjs/Observable';
+import { isFunction } from '@ts-ioc/core';
 import { Stream } from 'stream';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeConfigure } from './IPipeConfigure';

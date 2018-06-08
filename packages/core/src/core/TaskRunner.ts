@@ -1,10 +1,8 @@
-import { isToken, Token, Providers, Inject, Singleton, IContainer, isClass, Type, hasOwnClassMetadata, isFunction, ContainerToken, Injectable } from '@ts-ioc/core';
+import { Token, Inject, IContainer, Type, ContainerToken, Injectable } from '@ts-ioc/core';
 import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
-import { Task } from './decorators/index';
 import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
-import { ITaskComponent } from './ITaskComponent';
 import * as uuid from 'uuid/v1';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 

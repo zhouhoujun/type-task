@@ -1,4 +1,4 @@
-import { ActionData, isFunction, ActionComposite, CoreActions, IContainer, hasClassMetadata, getTypeMetadata } from '@ts-ioc/core';
+import { ActionData, ActionComposite, IContainer, hasClassMetadata, getTypeMetadata } from '@ts-ioc/core';
 import { Task, } from '../decorators/index';
 import { ITask } from '../ITask';
 import { TaskMetadata } from '../metadatas/index';

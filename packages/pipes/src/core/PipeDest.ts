@@ -1,9 +1,6 @@
-import { Task, ITaskProvider, Src, RunWay, AbstractTask } from '@taskp/core';
-import { isArray, Abstract, isFunction, ObjectMap, isClass } from '@ts-ioc/core';
 import { DestOptions, dest } from 'vinyl-fs';
-import { TransformType, IPipeComponent, PipeComponent, ITransform, TransformExpress, DestExpress, TransformMerger } from '../core/index';
+import { TransformType, IPipeComponent, PipeComponent, ITransform } from '../core/index';
 import { PipeTask } from '../decorators/index';
-import { Stream } from 'stream';
 
 
 /**
