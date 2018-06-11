@@ -1,5 +1,6 @@
-import { ITaskDecorator, createTaskDecorator } from '@taskp/core';
-import { IAssetConfigure } from '../core/IPipeConfigure';
+import { ITaskDecorator, createTaskDecorator, TaskBuilderToken } from '@taskp/core';
+import { IAssetConfigure } from '../assets/IAssetConfigure';
+import { Registration } from '@ts-ioc/core';
 
 /**
  * asset task metadata.
@@ -17,4 +18,4 @@ export interface AssetTaskMetadata extends IAssetConfigure {
  *
  * @AssetTask
  */
-export const AssetTask: ITaskDecorator<AssetTaskMetadata> = createTaskDecorator<AssetTaskMetadata>('AssetTask');
+export const AssetTask: ITaskDecorator<AssetTaskMetadata> = createTaskDecorator<AssetTaskMetadata>('AssetTask', new Registration(TaskBuilderToken, 'Asset'));

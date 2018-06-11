@@ -2,7 +2,7 @@ import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
 import { ITaskRunner } from './ITaskRunner';
 import { ITaskBuilder } from './ITaskBuilder';
-import { InjectToken, IContainer, Type } from '@ts-ioc/core';
+import { InjectToken, IContainer, Type, Token } from '@ts-ioc/core';
 import { ITaskContainer } from '../ITaskContainer';
 
 /**
@@ -43,12 +43,12 @@ export interface IContext {
      * get task runner;
      *
      * @param {TaskType<ITask>} task
+     * @param {(ITaskBuilder | Token<ITaskBuilder>)} [builder]
      * @param {*} [instance]
-     * @param {ITaskBuilder} [builder]
      * @returns {ITaskRunner}
      * @memberof IContext
      */
-    getRunner(task: TaskType<ITask>, instance?: any, builder?: ITaskBuilder): ITaskRunner;
+    getRunner(task: TaskType<ITask>, builder?: ITaskBuilder | Token<ITaskBuilder>, instance?: any): ITaskRunner;
 
     /**
      * get task run root path.

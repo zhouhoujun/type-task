@@ -1,10 +1,7 @@
 import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskp/core';
 import { Inject, ContainerToken, IContainer, Singleton } from '@ts-ioc/core';
-import { IAssetConfigure } from './IPipeConfigure';
-import { PipeDest } from './PipeDest';
-import { PipeSource } from './PipeSource';
-import { IPipeComponent } from './IPipeComponent';
-import { PipeTaskBuilder } from './PipeTaskBuilder';
+import { IPipeComponent, PipeTaskBuilder, PipeDest, PipeSource } from '../core/index';
+import { IAssetConfigure } from './IAssetConfigure';
 
 @Singleton(TaskBuilderToken, 'Asset')
 export class AssetTaskBuilder  extends PipeTaskBuilder {
@@ -29,7 +26,7 @@ export class AssetTaskBuilder  extends PipeTaskBuilder {
 
     async afterBindConfig(taskInst: ITask, config: IConfigure): Promise<ITask> {
         if (config.dest && !(taskInst instanceof PipeDest)) {
-            let assetCfg = config.dest as IAssetConfigure;
+            let assetCfg = config as IAssetConfigure;
             await this.buildChildren(taskInst as ITaskComponent, [{
                 dest: assetCfg.dest,
                 pipes: assetCfg.pipes,

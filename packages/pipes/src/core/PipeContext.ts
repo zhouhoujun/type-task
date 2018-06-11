@@ -2,7 +2,7 @@ import { toAbsolutePath } from '@ts-ioc/platform-server';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
 import { ObjectMap, Express2, Singleton } from '@ts-ioc/core';
-import { ITask, Context, TaskType, ITaskBuilder, ITaskRunner, TaskBuilderToken, TaskRunnerToken } from '@taskp/core';
+import { Context, TaskBuilderToken } from '@taskp/core';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 const minimist = require('minimist');
 
@@ -21,12 +21,6 @@ export class PipeContext extends Context implements IPipeContext {
 
     constructor() {
         super()
-    }
-
-    getRunner(task: TaskType<ITask>, instance?: any, builder?: ITaskBuilder): ITaskRunner {
-        let container = this.getContainer();
-        builder = builder || container.get(TaskBuilderToken, 'pipe');
-        return container.resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: builder })
     }
 
     private args: ObjectMap<any>;
@@ -101,5 +95,9 @@ export class PipeContext extends Context implements IPipeContext {
         }
 
         return version || '';
+    }
+
+    protected createTaskBuilder() {
+        return this.getContainer().get(TaskBuilderToken, 'pipe');
     }
 }

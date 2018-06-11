@@ -24,7 +24,8 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
     async build<T extends ITask>(task: TaskType<ITask>): Promise<T> {
         let taskInst = await super.build(task) as T;
         let config = this.getConfigure(task) as IConfigure;
-        await this.buildWithConfigure(taskInst, config);
+        let ctxbuider = this.getConfigBuilder(config);
+        await ctxbuider.buildWithConfigure(taskInst, config);
         return taskInst;
     }
 
@@ -123,6 +124,17 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
 
     protected getBootstrapToken(cfg: IConfigure, token?: Token<ITask> | Type<any>): Token<ITask> {
         return cfg.task || cfg.bootstrap || token;
+    }
+
+    protected getConfigBuilder(cfg: IConfigure) {
+        if (cfg.builder) {
+            if (isToken(cfg.builder)) {
+                return this.container.resolve(cfg.builder);
+            } else if (cfg.builder instanceof TaskBuilder) {
+                return cfg.builder;
+            }
+        }
+        return this;
     }
 
 }
