@@ -14,14 +14,15 @@ import { AssetTask } from '../decorators/index';
  * @extends {IPipeComponent}
  */
 export interface IAssetPipe extends IPipeComponent {
-
     /**
-     * watch source change to run pipe task.
+     * asset src.
      *
-     * @type {(Src | boolean)}
-     * @memberof IPipeConfigure
+     * @type {Src}
+     * @memberof IAssetPipe
      */
-    watch?: Src | boolean;
+    src: Src;
+    dist?: Src;
+
 }
 
 
@@ -35,7 +36,7 @@ export interface IAssetPipe extends IPipeComponent {
  */
 @AssetTask
 export class AssetPipe extends PipeComponent<IAssetPipe> implements IAssetPipe {
-
+    src: Src;
     constructor(name?: string) {
         super(name);
 

@@ -1,5 +1,5 @@
 import { AssetTask } from '../../decorators/index';
-import { PipeElement, ITransform } from '../../core/index';
+import { ITransform, PipeElement } from '../../core/index';
 import { isBoolean } from '@ts-ioc/core';
 import * as uglify from 'gulp-uglify';
 import * as sourcemaps from 'gulp-sourcemaps';

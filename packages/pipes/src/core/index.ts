@@ -8,6 +8,7 @@ export * from './IPipeContext';
 export * from './IPipeConfigure';
 export * from './PipeContext';
 export * from './PipeComponent';
+export * from './PipeElement';
 export * from './BaseTask';
 export * from './PipeDest';
 export * from './PipeSource';

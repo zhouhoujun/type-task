@@ -3,6 +3,13 @@ import { Inject, ContainerToken, IContainer, Singleton } from '@ts-ioc/core';
 import { IPipeComponent, PipeTaskBuilder, PipeDest, PipeSource } from '../core/index';
 import { IAssetConfigure } from './IAssetConfigure';
 
+/**
+ * Asset task builder
+ *
+ * @export
+ * @class AssetTaskBuilder
+ * @extends {PipeTaskBuilder}
+ */
 @Singleton(TaskBuilderToken, 'Asset')
 export class AssetTaskBuilder  extends PipeTaskBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {

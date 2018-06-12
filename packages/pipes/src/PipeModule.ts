@@ -1,8 +1,9 @@
 import { IContainer, CoreActions, IocModule, Inject, ContainerToken } from '@ts-ioc/core';
-import { PipeTask } from './decorators/index';
+import { PipeTask, AssetTask } from './decorators/index';
 import * as shells from './shells/index';
 import * as tasks from './tasks/index';
 import * as cores from './core/index';
+import * as assets from './assets/index';
 
 /**
  * register task decorators.
@@ -19,6 +20,7 @@ export class PipeModule {
     setup() {
         let lifeScope = this.container.getLifeScope();
         lifeScope.registerDecorator(PipeTask, CoreActions.bindProvider, 'InitTaskAction', CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
-        this.container.use(cores, shells, tasks);
+        lifeScope.registerDecorator(AssetTask, CoreActions.bindProvider, 'InitTaskAction', CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
+        this.container.use(cores, assets, shells, tasks);
     }
 }

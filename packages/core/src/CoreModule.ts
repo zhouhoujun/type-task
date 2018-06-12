@@ -2,7 +2,6 @@ import { IContainer, CoreActions, LifeState, IocState, Inject, ContainerToken, I
 import { TaskBuilder, TaskRunner, Task, TaskElement } from './core/index';
 import { InitTaskAction } from './core/actions/InitTaskAction';
 import { RunAspect } from './aop/index';
-// import { InitTaskModuleAction } from './core/actions/InitTaskModuleAction';
 
 
 /**

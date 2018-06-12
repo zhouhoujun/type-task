@@ -3,6 +3,13 @@ import { Inject, ContainerToken, IContainer, Singleton } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { IPipeComponent } from './IPipeComponent';
 
+/**
+ * pipe task builder.
+ *
+ * @export
+ * @class PipeTaskBuilder
+ * @extends {TaskBuilder}
+ */
 @Singleton(TaskBuilderToken, 'pipe')
 export class PipeTaskBuilder extends TaskBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {
