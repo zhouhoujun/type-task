@@ -1,6 +1,12 @@
 import { IPipeConfigure, ISourceConfigure, TransformExpress, IDestConfigure } from '../core/index';
 import { CtxType, Src } from '@taskp/core';
 
+
+/**
+ * dest type.
+ */
+export type DestType = string | IDestConfigure;
+
 /**
  *
  *
@@ -20,19 +26,11 @@ export interface IAssetConfigure extends IPipeConfigure {
     src?: CtxType<Src | ISourceConfigure>;
 
     /**
-     * uglify assets or not.
-     *
-     * @type {(boolean | TransformExpress)}
-     * @memberof IAssetConfigure
-     */
-    uglify?: boolean | TransformExpress;
-
-    /**
      * dest.
      *
-     * @type {(CtxType<string | IDestConfigure>)}
+     * @type {CtxType<DestType | DestType[]>}
      * @memberof IAssetConfigure
      */
-    dest?: CtxType<string | IDestConfigure>;
+    dest?: CtxType<DestType | DestType[]>;
 
 }

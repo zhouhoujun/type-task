@@ -19,6 +19,7 @@ export class PipeTaskBuilder extends TaskBuilder {
     async beforeBindConfig(taskInst: ITask, config: IConfigure): Promise<ITask> {
         await super.beforeBindConfig(taskInst, config);
         let comp = taskInst as IPipeComponent;
+        console.log('task instance:', comp.setPipes);
         let pipeCfg = config as IPipeConfigure;
         if (pipeCfg.pipes) {
             comp.setPipes(pipeCfg.pipes);

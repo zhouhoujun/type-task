@@ -1,5 +1,5 @@
 import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskp/core';
-import { Inject, ContainerToken, IContainer, Singleton } from '@ts-ioc/core';
+import { Inject, ContainerToken, IContainer, Singleton, isArray, isString } from '@ts-ioc/core';
 import { IPipeComponent, PipeTaskBuilder, PipeDest, PipeSource } from '../core/index';
 import { IAssetConfigure } from './IAssetConfigure';
 
@@ -11,7 +11,7 @@ import { IAssetConfigure } from './IAssetConfigure';
  * @extends {PipeTaskBuilder}
  */
 @Singleton(TaskBuilderToken, 'Asset')
-export class AssetTaskBuilder  extends PipeTaskBuilder {
+export class AssetTaskBuilder extends PipeTaskBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {
         super(container)
     }
@@ -34,12 +34,24 @@ export class AssetTaskBuilder  extends PipeTaskBuilder {
     async afterBindConfig(taskInst: ITask, config: IConfigure): Promise<ITask> {
         if (config.dest && !(taskInst instanceof PipeDest)) {
             let assetCfg = config as IAssetConfigure;
-            await this.buildChildren(taskInst as ITaskComponent, [{
-                dest: assetCfg.dest,
-                pipes: assetCfg.pipes,
-                destOptions: assetCfg.destOptions,
-                task: PipeDest
-            }]);
+            let destcfg = taskInst.context.to(assetCfg.dest);
+            let destcfgs = isArray(destcfg) ? destcfg : [destcfg];
+
+            await Promise.all(destcfgs.map(cfg => {
+                if (isString(cfg)) {
+                    return this.buildChildren(taskInst as ITaskComponent, [{
+                        dest: cfg,
+                        task: PipeDest
+                    }]);
+                } else {
+                    return this.buildChildren(taskInst as ITaskComponent, [{
+                        dest: cfg.dest,
+                        pipes: cfg.pipes,
+                        destOptions: cfg.destOptions,
+                        task: PipeDest
+                    }]);
+                }
+            }));
         }
         return taskInst;
     }

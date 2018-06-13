@@ -1,7 +1,6 @@
 import { ExecOptions, exec } from 'child_process';
 import { isString, isArray } from '@ts-ioc/core';
-import { Task, RunWay, Src } from '@taskp/core';
-import { BaseTask } from '../core/index';
+import { Task, AbstractTask, RunWay, Src } from '@taskp/core';
 
 /**
  * Shell Task
@@ -10,7 +9,7 @@ import { BaseTask } from '../core/index';
  * @implements {ITask}
  */
 @Task('shell')
-export class ExecShellTask extends BaseTask {
+export class ExecShellTask extends AbstractTask {
     cmds: Src;
     args: string[];
     options: ExecOptions;

@@ -1,9 +1,25 @@
-import { Task, ITask, IConfigure, RunWay } from '@taskp/core';
+import { Task, IConfigure, RunWay } from '@taskp/core';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
-import { Inject } from '@ts-ioc/core';
+import { Inject, Abstract } from '@ts-ioc/core';
+import { IPipeTask } from './IPipeTask';
 
-@Task
-export class BaseTask implements ITask {
+/**
+ * base task.
+ *
+ * @export
+ * @class BaseTask
+ * @implements {ITask}
+ */
+@Abstract()
+export abstract class AbstractPipe implements IPipeTask {
+
+    /**
+     * task name.
+     *
+     * @type {string}
+     * @memberof AbstractPipe
+     */
+    name: string;
 
     /**
      * task config.
@@ -29,8 +45,8 @@ export class BaseTask implements ITask {
     @Inject(PipeContextToken)
     context: IPipeContext;
 
-    constructor(public name: string) {
-
+    constructor(name?: string) {
+        this.name = name;
     }
 
     /**
@@ -40,7 +56,5 @@ export class BaseTask implements ITask {
      * @returns {Promise<any>}
      * @memberof BaseTask
      */
-    run(data?: any): Promise<any> {
-        return Promise.resolve(data);
-    }
+    abstract run(data?: any): Promise<any>;
 }

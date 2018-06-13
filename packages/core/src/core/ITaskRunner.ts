@@ -103,7 +103,6 @@ export interface ITaskRunner {
      */
     start(data?: any): Promise<any>;
 
-
     /**
      * stop running task.
      *

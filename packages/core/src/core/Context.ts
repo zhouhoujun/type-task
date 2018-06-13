@@ -9,6 +9,13 @@ import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
 import { TaskBuilder } from '@taskp/core';
 
 
+/**
+ * task context.
+ *
+ * @export
+ * @class Context
+ * @implements {IContext}
+ */
 @Singleton(ContextToken)
 export class Context implements IContext {
 

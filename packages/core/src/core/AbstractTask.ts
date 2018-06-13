@@ -2,6 +2,15 @@ import { ITask, IConfigure, RunWay } from '@taskp/core';
 import { Inject, Abstract } from '@ts-ioc/core';
 import { IContext, ContextToken } from './IContext';
 
+
+/**
+ * abstract task.
+ *
+ * @export
+ * @abstract
+ * @class AbstractTask
+ * @implements {ITask}
+ */
 @Abstract()
 export abstract class AbstractTask implements ITask {
 

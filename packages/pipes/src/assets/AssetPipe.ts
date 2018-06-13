@@ -14,14 +14,6 @@ import { AssetTask } from '../decorators/index';
  * @extends {IPipeComponent}
  */
 export interface IAssetPipe extends IPipeComponent {
-    /**
-     * asset src.
-     *
-     * @type {Src}
-     * @memberof IAssetPipe
-     */
-    src: Src;
-    dist?: Src;
 
 }
 
@@ -36,7 +28,6 @@ export interface IAssetPipe extends IPipeComponent {
  */
 @AssetTask
 export class AssetPipe extends PipeComponent<IAssetPipe> implements IAssetPipe {
-    src: Src;
     constructor(name?: string) {
         super(name);
 

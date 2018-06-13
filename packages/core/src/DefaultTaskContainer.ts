@@ -54,18 +54,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
     }
 
 
-    protected async initContainer(config: IConfigure, container: IContainer) {
-        this.registerExt(container);
-        container.bindProvider(TaskContainerToken, this);
-        await super.initContainer(config, container);
-        return container;
-    }
-
-    protected setConfigRoot(config: IConfigure) {
-        config.rootdir = this.rootPath;
-    }
-
-    protected registerExt(container: IContainer) {
+    protected async registerExts(container: IContainer) {
         if (!container.has(AopModule)) {
             container.register(AopModule);
         }
@@ -77,7 +66,13 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
         if (!container.has(CoreModule)) {
             container.register(CoreModule);
         }
+
+        await super.registerExts(container);
+        return container;
     }
 
+    protected setConfigRoot(config: IConfigure) {
+        config.rootdir = this.rootPath;
+    }
 }
 
