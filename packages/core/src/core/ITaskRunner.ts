@@ -118,7 +118,12 @@ export interface ITaskRunner {
      */
     pause(): void;
 
-
+    /**
+     * save state.
+     *
+     * @param {*} state
+     * @memberof ITaskRunner
+     */
     saveState(state: any);
 
 }
