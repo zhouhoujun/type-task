@@ -1,6 +1,11 @@
-import { DestOptions, dest } from 'vinyl-fs';
-import { TransformType, IPipeComponent, PipeComponent, ITransform } from '../core/index';
+import { dest, DestOptions } from 'vinyl-fs';
 import { PipeTask } from '../decorators/index';
+import { IPipeComponent } from './IPipeComponent';
+import { PipeComponent } from './PipeComponent';
+import { ITransform } from './ITransform';
+import { TransformType } from './pipeTypes';
+import { OnTaskInit } from '@taskp/core';
+import { IDestConfigure } from './IPipeConfigure';
 
 
 /**
@@ -29,13 +34,32 @@ export interface IPipeDest extends IPipeComponent {
 }
 
 @PipeTask('dest')
-export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest {
+export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest, OnTaskInit {
 
+    /**
+     * source
+     *
+     * @type {TransformSource}
+     * @memberof IPipeSource
+     */
     dest: string;
+
+    /**
+     * source options.
+     *
+     * @type {DestOptions}
+     * @memberof PipeSource
+     */
     destOptions: DestOptions;
 
     constructor(name?: string) {
         super(name);
+    }
+
+    onTaskInit() {
+        let cfg = this.config as IDestConfigure;
+        this.dest = this.context.to(cfg.dest);
+        this.destOptions = this.context.to(cfg.destOptions);
     }
 
     protected pipesToPromise(source: ITransform, pipes: TransformType[]): Promise<ITransform> {
@@ -46,8 +70,7 @@ export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest {
     }
 
     protected writeStream(stream: ITransform): Promise<ITransform> {
-        let dist = this.dest;
-        let output = stream.pipe(dest(this.context.toRootPath(dist), this.destOptions));
+        let output = stream.pipe(dest(this.context.toRootPath(this.dest), this.destOptions));
         if (!output) {
             return null;
         }

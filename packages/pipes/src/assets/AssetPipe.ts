@@ -1,7 +1,4 @@
-import { Src } from '@taskp/core';
-import { IPipeComponent, PipeComponent, DestExpress, TransformMerger, IPipeSource, IPipeDest } from '../core/index';
-import { Type } from '@ts-ioc/core';
-import { SrcOptions, DestOptions } from 'vinyl-fs';
+import { IPipeComponent, PipeComponent } from '../core/index';
 import { AssetTask } from '../decorators/index';
 
 

@@ -27,6 +27,10 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
             throw new Error('builder task instance failed.');
         }
         let config = this.getConfigure(task) as IConfigure;
+        taskInst.config = config;
+        if (isFunction(taskInst['onTaskInit'])) {
+            taskInst['onTaskInit']();
+        }
         let ctxbuider = this.getConfigBuilder(config);
         await ctxbuider.buildWithConfigure(taskInst, config);
         return taskInst;
@@ -50,7 +54,7 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
         if (config.runWay) {
             taskInst.runWay = config.runWay;
         }
-        taskInst.config = config;
+
         return taskInst;
     }
 

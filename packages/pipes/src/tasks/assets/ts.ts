@@ -1,30 +1,40 @@
 import { AssetTask } from '../../decorators/index';
 import { ITransform, PipeElement, IDestConfigure } from '../../core/index';
-import { isBoolean, OnInit, ObjectMap, isString } from '@ts-ioc/core';
+import { isBoolean, ObjectMap, isString, isArray } from '@ts-ioc/core';
+import { OnTaskInit, RunWay } from '@taskp/core';
 import * as uglify from 'gulp-uglify';
 import * as sourcemaps from 'gulp-sourcemaps';
 import { IAssetConfigure, DestType } from '../../assets/index';
-import { dest } from 'vinyl-fs';
-import { isArray } from 'util';
+import * as ts from 'gulp-typescript';
 
+/**
+ * ts task configure.
+ *
+ * @export
+ * @interface TsConfigure
+ * @extends {IAssetConfigure}
+ */
 export interface TsConfigure extends IAssetConfigure {
     uglify?: boolean | ObjectMap<any>;
     tds?: boolean | string;
+    tsconfig?: string | ObjectMap<any>;
     sourcempas?: boolean | string;
 }
 
-@AssetTask({
-    name: 'tscompile'
-})
-export class TsCompile extends PipeElement implements OnInit {
+@AssetTask('tscompile')
+export class TsCompile extends PipeElement implements OnTaskInit {
 
-    onInit() {
+    runWay = RunWay.paraFirst;
+
+    onTaskInit() {
         let cfg = this.config as TsConfigure;
+        let pipes = this.context.to(cfg.pipes) || [];
         if (this.context.to(cfg.sourcempas) !== false) {
-            let pipes = this.context.to(cfg.pipes) || [];
             pipes.unshift(() => sourcemaps.init());
-            cfg.pipes = pipes;
         }
+        pipes.push(() => this.getTsCompilePipe(cfg));
+        cfg.pipes = pipes;
+
         if (cfg.dest) {
             let dest = this.context.to(cfg.dest);
             if (isArray(dest)) {
@@ -40,9 +50,19 @@ export class TsCompile extends PipeElement implements OnInit {
                 dest = dests;
             } else {
                 dest = this.generateDest(cfg, dest);
-
             }
             cfg.dest = dest;
+            console.log('dest,' , dest);
+        }
+    }
+
+    private getTsCompilePipe(cfg: TsConfigure): ITransform {
+        let tsconfig = this.context.to(cfg.tsconfig || './tsconfig.json');
+        if (isString(tsconfig)) {
+            let tsProject = ts.createProject(this.context.toRootPath(tsconfig));
+            return tsProject();
+        } else {
+            return ts(tsconfig);
         }
     }
 

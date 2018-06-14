@@ -1,8 +1,11 @@
-import { Src, Task } from '@taskp/core';
-import { ITransform } from './ITransform';
 import { src, SrcOptions } from 'vinyl-fs';
-import { PipeComponent } from './PipeComponent';
 import { IPipeComponent } from './IPipeComponent';
+import { PipeComponent } from './PipeComponent';
+import { ITransform } from './ITransform';
+import { PipeTask } from '../decorators';
+import { Src, OnTaskInit } from '@taskp/core';
+import { ISourceConfigure } from './IPipeConfigure';
+
 
 
 /**
@@ -29,8 +32,9 @@ export interface IPipeSource extends IPipeComponent {
     srcOptions?: SrcOptions;
 }
 
-@Task
-export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeSource {
+@PipeTask
+export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeSource, OnTaskInit {
+
 
     /**
      * source
@@ -38,7 +42,8 @@ export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeSo
      * @type {TransformSource}
      * @memberof IPipeSource
      */
-    src?: Src;
+    src: Src;
+
     /**
      * source options.
      *
@@ -50,6 +55,12 @@ export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeSo
 
     constructor(name?: string) {
         super(name);
+    }
+
+    onTaskInit() {
+        let cfg = this.config as ISourceConfigure;
+        this.src = this.context.to(cfg.src);
+        this.srcOptions  = this.context.to(cfg.srcOptions);
     }
 
     protected source(): Promise<ITransform> {

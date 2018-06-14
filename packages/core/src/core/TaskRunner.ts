@@ -63,7 +63,8 @@ export class TaskRunner implements ITaskRunner {
             this.container.bindProvider(this.uuid, this);
         }
         this.state = RunState.running;
-        this.instance.run(data)
+
+        return this.instance.run(data)
             .then(data => {
                 this.state = RunState.complete;
                 this.stateChanged.next(this.state);

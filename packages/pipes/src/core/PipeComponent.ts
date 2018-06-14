@@ -218,8 +218,8 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
         if (pipe instanceof TaskRunner) {
             pstf = pipe.start(stream);
         } else if (!isClass(pipe) && isFunction(pipe)) {
-            let pexpress = pipe as PipeExpress;
-            pstf = Promise.resolve(pexpress(this.context, config, stream, this));
+            let pex = pipe as PipeExpress;
+            pstf = Promise.resolve(pex(this.context, config, stream, this));
         } else if (isTransform(pipe)) {
             pstf = Promise.resolve(pipe as ITransform);
         } else {

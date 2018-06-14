@@ -1,27 +1,22 @@
-import { TaskElement } from '@taskp/core';
-import { PipeTask, PipeModule, PipeElement, TsCompile } from '@taskp/pipes';
+import { PipeModule, TsCompile, AssetTask, PipeElement } from '@taskp/pipes';
 import { TaskContainer } from '@taskp/platform-server';
 
 import * as mocha from 'gulp-mocha';
+import { AssetPipe } from '../pipes/src/assets';
 const del = require('del');
 
 
-@PipeTask({
+@AssetTask({
     name: 'test1',
-    src: 'test/**/*.spec.ts',
-    awaitPiped: true,
-    pipes: [() => mocha()],
+    test: {
+        test: 'test/**/*.spec.ts',
+        pipes: [() => mocha()],
+        awaitPiped: true,
+    },
     children: [
         {
-            name: 'tscompLIB',
-            src: ['src/**/*.ts', '!src/cli/**'],
-            dest: 'lib',
-            uglify: true,
-            task: TsCompile
-        },
-        {
             name: 'tscompCLI',
-            src: 'src/cli/*.ts',
+            src: 'src/**/*.ts',
             dest: 'bin',
             uglify: true,
             task: TsCompile

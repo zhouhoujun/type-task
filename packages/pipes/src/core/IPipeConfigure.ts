@@ -98,3 +98,21 @@ export interface IDestConfigure extends IPipeConfigure {
     destOptions?: CtxType<DestOptions>;
 
 }
+
+export interface ITestConfigure extends IPipeConfigure {
+    /**
+     * source for test.
+     *
+     * @type {CtxType<Src>}
+     * @memberof ITestConfigure
+     */
+    test?: CtxType<Src>;
+
+    /**
+     * dest options.
+     *
+     * @type {CtxType<SrcOptions>}
+     * @memberof IPipeConfigure
+     */
+    testSrcOptions?: CtxType<SrcOptions>;
+}

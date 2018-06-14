@@ -19,7 +19,7 @@ export class CoreModule {
         let container = this.container;
         let lifeScope = container.getLifeScope();
         lifeScope.addAction(new InitTaskAction(), IocState.runtime, LifeState.afterConstructor);
-        lifeScope.registerDecorator(Task, CoreActions.bindProvider, 'InitTaskAction', CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
+        lifeScope.registerDecorator(Task, CoreActions.bindProvider, CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
         container.register(TaskElement);
         container.register(TaskBuilder);
         container.register(TaskRunner);

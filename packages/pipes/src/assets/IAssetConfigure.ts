@@ -1,4 +1,4 @@
-import { IPipeConfigure, ISourceConfigure, TransformExpress, IDestConfigure } from '../core/index';
+import { IPipeConfigure, ISourceConfigure, IDestConfigure, ITestConfigure } from '../core/index';
 import { CtxType, Src } from '@taskp/core';
 
 
@@ -24,6 +24,14 @@ export interface IAssetConfigure extends IPipeConfigure {
      * @memberof IAssetConfigure
      */
     src?: CtxType<Src | ISourceConfigure>;
+
+    /**
+     * test
+     *
+     * @type {(CtxType<Src | ITestConfigure>)}
+     * @memberof IAssetConfigure
+     */
+    test?: CtxType<Src | ITestConfigure>;
 
     /**
      * dest.

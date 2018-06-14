@@ -10,6 +10,12 @@ import { Task, AbstractTask, RunWay, Src } from '@taskp/core';
  */
 @Task('shell')
 export class ExecShellTask extends AbstractTask {
+    /**
+     * cmds.
+     *
+     * @type {Src}
+     * @memberof ExecShellTask
+     */
     cmds: Src;
     args: string[];
     options: ExecOptions;
@@ -24,7 +30,6 @@ export class ExecShellTask extends AbstractTask {
             .then(cmds => {
                 let allowError = this.allowError;
                 let options = this.options;
-                let args = this.args;
                 if (isString(cmds)) {
                     return this.execShell(cmds, options, allowError !== false);
                 } else if (isArray(cmds)) {

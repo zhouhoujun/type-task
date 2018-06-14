@@ -18,8 +18,8 @@ export class PipeModule {
 
     setup() {
         let lifeScope = this.container.getLifeScope();
-        lifeScope.registerDecorator(PipeTask, CoreActions.bindProvider, 'InitTaskAction', CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
-        lifeScope.registerDecorator(AssetTask, CoreActions.bindProvider, 'InitTaskAction', CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
+        lifeScope.registerDecorator(PipeTask, CoreActions.bindProvider, CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
+        lifeScope.registerDecorator(AssetTask, CoreActions.bindProvider, CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
         this.container.use(cores, assets, tasks);
     }
 }

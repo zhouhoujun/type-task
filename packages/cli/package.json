@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/zhouhoujun/tsioc#readme",
   "dependencies": {
+    "gulp-typescript": "^5.0.0-alpha.1",
     "minimist": "^1.2.0",
     "pretty-hrtime": "^1.0.3",
     "reflect-metadata": "^0.1.12",
@@ -44,8 +45,8 @@
     "time-stamp": "^2.0.0",
     "ts-node": "^5.0.1",
     "tsconfig-paths": "^3.3.2",
-    "typescript": "^2.7.2",
     "tslib": "^1.9.2",
+    "typescript": "^2.7.2",
     "vinyl-fs": "^3.0.2"
   },
   "directories": {

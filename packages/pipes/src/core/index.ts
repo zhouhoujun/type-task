@@ -9,8 +9,9 @@ export * from './IPipeConfigure';
 export * from './PipeContext';
 export * from './PipeComponent';
 export * from './PipeElement';
-export * from './AbstractPipe';
 export * from './PipeDest';
 export * from './PipeSource';
+export * from './PipeTest';
+export * from './AbstractPipe';
 export * from './PipeTaskBuilder';
 
