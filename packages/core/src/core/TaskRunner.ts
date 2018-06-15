@@ -1,10 +1,11 @@
-import { Token, Inject, IContainer, Type, ContainerToken, Injectable } from '@ts-ioc/core';
+import { Token, Inject, IContainer, Type, ContainerToken } from '@ts-ioc/core';
 import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
 import * as uuid from 'uuid/v1';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Runner } from './decorators/index';
 
 /**
  * task runner.
@@ -13,7 +14,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
  * @class TaskRunner
  * @implements {ITaskRunner}
  */
-@Injectable(TaskRunnerToken)
+@Runner(TaskRunnerToken)
 export class TaskRunner implements ITaskRunner {
 
     get task(): TaskType<ITask> {

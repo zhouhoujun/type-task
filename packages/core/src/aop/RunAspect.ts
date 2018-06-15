@@ -1,6 +1,6 @@
 import { Inject, IContainer, ContainerToken } from '@ts-ioc/core';
 import { Aspect, Joinpoint, Before, AfterReturning } from '@ts-ioc/aop';
-import { Task, TaskComponent, ITaskRunner, RunState } from '../core/index';
+import { TaskComponent, ITaskRunner, RunState, Runner } from '../core/index';
 
 /**
  * Task Log
@@ -9,7 +9,7 @@ import { Task, TaskComponent, ITaskRunner, RunState } from '../core/index';
  * @class TaskLogAspect
  */
 @Aspect({
-    annotation: Task,
+    annotation: Runner,
     singleton: true
 })
 export class RunAspect {
