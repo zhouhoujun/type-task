@@ -1,9 +1,8 @@
 import { IPipeTask } from './IPipeTask';
 import { ITaskComponent } from '@taskp/core';
 import { ITransform } from './ITransform';
-import { TransformType, TransformMerger, TransformExpress, TransformMergerExpress } from './pipeTypes';
+import { TransformType, TransformMerger } from './pipeTypes';
 import { IPipeContext } from './IPipeContext';
-import { IPipeConfigure } from './IPipeConfigure';
 
 
 /**
@@ -17,20 +16,37 @@ import { IPipeConfigure } from './IPipeConfigure';
 export interface IPipeComponent extends ITaskComponent, IPipeTask {
 
     /**
-     * pipe task config.
-     *
-     * @type {IPipeConfigure}
-     * @memberof IPipeTask
-     */
-    config: IPipeConfigure;
-
-    /**
      * context.
      *
      * @type {IPipeContext}
      * @memberof ITaskContext
      */
     context: IPipeContext;
+
+    /**
+     * await pipe completed.
+     *
+     * @type {boolean}
+     * @memberof IPipeComponent
+     */
+    awaitPiped: boolean;
+
+    /**
+    * task pipes.
+    *
+    * @returns {TransformType[]}
+    * @memberof IPipeComponent
+    */
+    pipes: TransformType[];
+
+
+    /**
+     * stream merger.
+     *
+     * @returns {TransformMerger}
+     * @memberof IPipeComponent
+     */
+    merger: TransformMerger;
 
     /**
      * run task.
@@ -41,35 +57,4 @@ export interface IPipeComponent extends ITaskComponent, IPipeTask {
      */
     run(data?: any): Promise<ITransform>;
 
-    /**
-     * get pipes.
-     *
-     * @returns {TransformType[]}
-     * @memberof IPipeComponent
-     */
-    getPipes(): TransformType[];
-
-    /**
-     * set pipes.
-     *
-     * @param {TransformExpress} pipes
-     * @memberof IPipeComponent
-     */
-    setPipes(pipes: TransformExpress);
-
-    /**
-     * get stream merger.
-     *
-     * @returns {TransformMerger}
-     * @memberof IPipeComponent
-     */
-    getMerger(): TransformMerger;
-
-    /**
-     * set merger.
-     *
-     * @param {TransformMergerExpress} merger
-     * @memberof IPipeComponent
-     */
-    setMerger(merger: TransformMergerExpress)
 }

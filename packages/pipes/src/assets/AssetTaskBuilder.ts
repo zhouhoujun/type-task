@@ -1,5 +1,5 @@
 import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskp/core';
-import { Inject, ContainerToken, IContainer, Singleton, isArray, isString } from '@ts-ioc/core';
+import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, isBoolean } from '@ts-ioc/core';
 import { PipeTaskBuilder, PipeSource, PipeDest, PipeTest, IPipeConfigure } from '../core/index';
 import { IAssetConfigure } from './IAssetConfigure';
 
@@ -28,7 +28,14 @@ export class AssetTaskBuilder extends PipeTaskBuilder {
         }
         if (assetCfg.test && !(taskInst instanceof PipeTest)) {
             let test = taskInst.context.to(assetCfg.test);
-            let testCfg: IPipeConfigure = isString(test) ? { src: test } : test;
+            let testCfg;
+            if (isBoolean(test)) {
+                testCfg = {};
+            } else if (isString(test)) {
+                testCfg = { test: test };
+            } else {
+                testCfg = test;
+            }
             testCfg.task = testCfg.task || PipeTest;
             subs.push(testCfg);
         }
@@ -46,21 +53,18 @@ export class AssetTaskBuilder extends PipeTaskBuilder {
             let destcfg = taskInst.context.to(assetCfg.dest);
             let destcfgs = isArray(destcfg) ? destcfg : [destcfg];
 
-            await Promise.all(destcfgs.map(cfg => {
+            let children = destcfgs.map(cfg => {
                 if (isString(cfg)) {
-                    return this.buildChildren(taskInst as ITaskComponent, [{
+                    return {
                         dest: cfg,
                         task: PipeDest
-                    }]);
+                    };
                 } else {
-                    return this.buildChildren(taskInst as ITaskComponent, [{
-                        dest: cfg.dest,
-                        pipes: cfg.pipes,
-                        destOptions: cfg.destOptions,
-                        task: PipeDest
-                    }]);
+                    cfg.task = cfg.task || PipeDest;
+                    return cfg
                 }
-            }));
+            });
+            await this.buildChildren(taskInst as ITaskComponent, children);
         }
         return taskInst;
     }

@@ -28,10 +28,10 @@ export interface IAssetConfigure extends IPipeConfigure {
     /**
      * test
      *
-     * @type {(CtxType<Src | ITestConfigure>)}
+     * @type {(CtxType<boolean | Src | ITestConfigure>)}
      * @memberof IAssetConfigure
      */
-    test?: CtxType<Src | ITestConfigure>;
+    test?: CtxType<boolean | Src | ITestConfigure>;
 
     /**
      * dest.

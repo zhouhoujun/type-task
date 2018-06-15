@@ -10,7 +10,7 @@ import { Task } from '@taskp/core';
  * @class TaskLogAspect
  */
 @Aspect({
-    annotation: Task.toString(),
+    annotation: Task,
     singleton: true
 })
 export class TaskLogAspect extends LoggerAspect {

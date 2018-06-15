@@ -12,13 +12,6 @@ import { IPipeConfigure } from './IPipeConfigure';
 export interface IPipeTask extends ITask {
 
     /**
-     * pipe task config.
-     *
-     * @type {IPipeConfigure}
-     * @memberof IPipeTask
-     */
-    config: IPipeConfigure;
-    /**
      * pipe task
      *
      * @param {any} [data]

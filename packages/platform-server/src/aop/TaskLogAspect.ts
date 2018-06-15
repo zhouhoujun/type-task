@@ -13,7 +13,7 @@ const prettyTime = require('pretty-hrtime');
  * @class TaskLogAspect
  */
 @Aspect({
-    annotation: Task.toString(),
+    annotation: Task,
     singleton: true
 })
 export class TaskLogAspect extends LoggerAspect {

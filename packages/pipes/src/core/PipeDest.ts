@@ -56,10 +56,10 @@ export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest, OnT
         super(name);
     }
 
-    onTaskInit() {
-        let cfg = this.config as IDestConfigure;
-        this.dest = this.context.to(cfg.dest);
-        this.destOptions = this.context.to(cfg.destOptions);
+    onTaskInit(config: IDestConfigure) {
+        super.onTaskInit(config);
+        this.dest = this.context.to(config.dest);
+        this.destOptions = this.context.to(config.destOptions);
     }
 
     protected pipesToPromise(source: ITransform, pipes: TransformType[]): Promise<ITransform> {

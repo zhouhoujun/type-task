@@ -22,14 +22,6 @@ export abstract class AbstractPipe implements IPipeTask {
     name: string;
 
     /**
-     * task config.
-     *
-     * @type {IConfigure}
-     * @memberof BaseTask
-     */
-    config: IConfigure;
-
-    /**
      * run wary.
      *
      * @memberof BaseTask

@@ -1,10 +1,10 @@
 import { src, SrcOptions } from 'vinyl-fs';
-import { IPipeComponent } from './IPipeComponent';
-import { PipeComponent } from './PipeComponent';
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
 import { Src, OnTaskInit } from '@taskp/core';
 import { ISourceConfigure } from './IPipeConfigure';
+import { IPipeTask } from './IPipeTask';
+import { AbstractPipe } from './AbstractPipe';
 
 
 
@@ -13,9 +13,9 @@ import { ISourceConfigure } from './IPipeConfigure';
  *
  * @export
  * @interface IPipeSource
- * @extends {IPipeComponent}
+ * @extends {IPipeTask}
  */
-export interface IPipeSource extends IPipeComponent {
+export interface IPipeSource extends IPipeTask {
     /**
      * source
      *
@@ -33,7 +33,7 @@ export interface IPipeSource extends IPipeComponent {
 }
 
 @PipeTask
-export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeSource, OnTaskInit {
+export class PipeSource extends AbstractPipe implements IPipeSource, OnTaskInit {
 
 
     /**
@@ -57,20 +57,13 @@ export class PipeSource extends PipeComponent<IPipeComponent> implements IPipeSo
         super(name);
     }
 
-    onTaskInit() {
-        let cfg = this.config as ISourceConfigure;
-        this.src = this.context.to(cfg.src);
-        this.srcOptions  = this.context.to(cfg.srcOptions);
+    onTaskInit(config: ISourceConfigure) {
+        this.src = this.context.to(config.src);
+        this.srcOptions = this.context.to(config.srcOptions);
     }
 
-    protected source(): Promise<ITransform> {
+    run(): Promise<ITransform> {
         return Promise.resolve(src(this.src, this.srcOptions));
     }
 
-    protected async merge(...data: ITransform[]): Promise<ITransform> {
-        let newTransform = await this.source();
-        data = data || [];
-        data.unshift(newTransform);
-        return await super.merge(...data);
-    }
 }

@@ -25,14 +25,6 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
     context: IContext;
 
     /**
-     * task config.
-     *
-     * @type {ITaskConfigure<T>}
-     * @memberof TaskComponent
-     */
-    config: ITaskConfigure<T>;
-
-    /**
      * run way, default sequence node first
      *
      * @memberof TaskComponent

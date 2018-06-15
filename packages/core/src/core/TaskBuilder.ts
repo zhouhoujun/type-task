@@ -27,9 +27,8 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
             throw new Error('builder task instance failed.');
         }
         let config = this.getConfigure(task) as IConfigure;
-        taskInst.config = config;
         if (isFunction(taskInst['onTaskInit'])) {
-            taskInst['onTaskInit']();
+            taskInst['onTaskInit'](config);
         }
         let ctxbuider = this.getConfigBuilder(config);
         await ctxbuider.buildWithConfigure(taskInst, config);
@@ -68,9 +67,6 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
             return;
         }
         await Promise.all(configs.map(async cfg => {
-            if (cfg.task) {
-                cfg.bootstrap = cfg.task;
-            }
             let node = await this.build(cfg) as T;
             if (!node) {
                 return;
@@ -97,10 +93,12 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
             if (config.imports) {
                 await this.container.loadModule(...config.imports);
             }
-            if (!config.children && !config.bootstrap) {
+            if (!config.children && !(config.task || config.bootstrap)) {
                 return null;
             }
-            config.bootstrap = config.bootstrap || TaskElement;
+            if (!config.bootstrap) {
+                config.task = config.task || TaskElement;
+            }
 
             component = await this.build(config)
                 .catch(err => {

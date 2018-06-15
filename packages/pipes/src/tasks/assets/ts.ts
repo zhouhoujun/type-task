@@ -26,8 +26,8 @@ export class TsCompile extends PipeElement implements OnTaskInit {
 
     runWay = RunWay.paraFirst;
 
-    onTaskInit() {
-        let cfg = this.config as TsConfigure;
+    onTaskInit(cfg: TsConfigure) {
+        super.onTaskInit(cfg);
         let pipes = this.context.to(cfg.pipes) || [];
         if (this.context.to(cfg.sourcempas) !== false) {
             pipes.unshift(() => sourcemaps.init());
@@ -52,7 +52,6 @@ export class TsCompile extends PipeElement implements OnTaskInit {
                 dest = this.generateDest(cfg, dest);
             }
             cfg.dest = dest;
-            console.log('dest,' , dest);
         }
     }
 
@@ -92,6 +91,7 @@ export class TsCompile extends PipeElement implements OnTaskInit {
         }
 
         pipes.unshift((ctx, config, transform) => {
+            console.log('transform:----------------\n', transform);
             let trans: ITransform = transform.js;
             trans.changeAsOrigin = true;
             return trans;
@@ -107,6 +107,7 @@ export class TsCompile extends PipeElement implements OnTaskInit {
                 dest: cfg.tds,
                 pipes: [
                     (ctx, config, transform) => {
+                        console.log('transform:----------------\n', transform);
                         let tans: ITransform = transform.dts;
                         tans.changeAsOrigin = true;
                         return tans;

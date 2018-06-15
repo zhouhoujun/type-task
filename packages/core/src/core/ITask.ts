@@ -1,5 +1,4 @@
 import { ComponentLifecycle, InjectToken } from '@ts-ioc/core';
-import { IConfigure } from './IConfigure';
 import { RunWay } from './RunWay';
 import { IContext } from './IContext';
 
@@ -39,14 +38,6 @@ export interface ITask extends ComponentLifecycle {
      * @memberof ITask
      */
     name: string;
-
-    /**
-     * config metadata.
-     *
-     * @type {IConfigure}
-     * @memberof ITask
-     */
-    config?: IConfigure;
 
     /**
      * task run way.

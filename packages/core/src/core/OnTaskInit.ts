@@ -1,3 +1,4 @@
+import { IConfigure } from './IConfigure';
 
 /**
  * on task init.
@@ -7,9 +8,10 @@
  */
 export interface OnTaskInit {
     /**
-     * on task init.
+     * task init via config.
      *
+     * @param {IConfigure} config
      * @memberof OnTaskInit
      */
-    onTaskInit();
+    onTaskInit(config: IConfigure);
 }

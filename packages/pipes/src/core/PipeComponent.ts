@@ -1,11 +1,11 @@
-import { TaskComponent, IConfigure, TaskRunner, TaskType } from '@taskp/core';
+import { TaskComponent, IConfigure, TaskRunner, OnTaskInit } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isClass, isFunction, Inject, isMetadataObject } from '@ts-ioc/core';
-import { TransformMerger, TransformExpress, TransformType, PipeExpress, isTransform, TransformMergerExpress } from './pipeTypes';
+import { Abstract, isArray, isClass, isFunction, Inject } from '@ts-ioc/core';
+import { TransformMerger, TransformType, PipeExpress, isTransform } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
-import { IPipeTask } from './IPipeTask';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
+import { IPipeConfigure } from './IPipeConfigure';
 
 /**
  * pipe component
@@ -19,83 +19,43 @@ import { IPipeContext, PipeContextToken } from './IPipeContext';
  * @template T
  */
 @Abstract()
-export abstract class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> implements IPipeComponent {
+export abstract class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> implements IPipeComponent, OnTaskInit {
 
     @Inject(PipeContextToken)
     context: IPipeContext;
 
-    private pipes: TransformType[];
-    private merger: TransformMerger;
+    /**
+     * pipes.
+     *
+     * @type {TransformType[]}
+     * @memberof PipeComponent
+     */
+    pipes: TransformType[];
+    /**
+     * stream merger.
+     *
+     * @type {TransformMerger}
+     * @memberof PipeComponent
+     */
+    merger: TransformMerger;
+    /**
+     * await pipe compileted.
+     *
+     * @memberof PipeComponent
+     */
     awaitPiped = false;
+
+    private config: IPipeConfigure;
 
     constructor(name?: string) {
         super(name);
         this.pipes = [];
     }
 
-    getPipes() {
-        return this.pipes;
+    onTaskInit(config: IPipeConfigure) {
+        this.config = config;
     }
 
-    setPipes(pipes: TransformExpress) {
-        if (pipes) {
-            this.pipes = this.translatePipes(pipes);
-        }
-    }
-
-    setMerger(merger: TransformMergerExpress) {
-        if (merger) {
-            this.merger = this.translateMerger(merger);
-        }
-    }
-
-    getMerger(): TransformMerger {
-        return this.merger;
-    }
-
-    protected translatePipes(pipes: TransformExpress): TransformType[] {
-        let trsfs: (TransformType | TaskType<IPipeTask>)[] = this.context.to(pipes);
-        if (!trsfs || trsfs.length < 1) {
-            return [];
-        }
-        return trsfs.map(p => {
-            if (isClass(p) && this.context.isTask(p)) {
-                return this.context.getRunner(p);
-            }
-            if (isMetadataObject(p)) {
-                let cfg = p as IConfigure;
-                if (cfg.task || cfg.bootstrap) {
-                    return this.context.getRunner(cfg);
-                } else {
-                    throw new Error('pipe configure error');
-                }
-            }
-            return p as TransformType;
-        });
-    }
-
-    protected translateMerger(mergerExp: TransformMergerExpress): TransformMerger {
-        let mt: (TransformMerger | TaskType<IPipeTask>) = this.context.to(mergerExp);
-        if (!mt) {
-            return null;
-        }
-        let merger: TransformMerger;
-
-        if (isClass(mt) && this.context.isTask(mt)) {
-            merger = this.context.getRunner(mt);
-        } else if (isMetadataObject(mt)) {
-            let cfg = mt as IConfigure;
-            if (cfg.task || cfg.bootstrap) {
-                merger = this.context.getRunner(cfg);
-            } else {
-                throw new Error('pipe configure error');
-            }
-        } else {
-            merger = mt as TransformMerger;
-        }
-
-        return merger;
-    }
 
     /**
      * execute tasks
@@ -120,7 +80,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      * @memberof PipeComponent
      */
     protected pipe(data: ITransform): Promise<ITransform> {
-        let pStream = this.pipesToPromise(data, this.getPipes());
+        let pStream = this.pipesToPromise(data, this.pipes);
         if (this.awaitPiped) {
             pStream = pStream.then(pipe => {
                 if (!pipe) {
@@ -160,7 +120,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
         let ptsf: Promise<ITransform>;
         let trans = data.filter(it => !it);
         if (trans.length > 1) {
-            let merger = this.getMerger();
+            let merger = this.merger;
             if (merger) {
                 if (merger instanceof TaskRunner) {
                     ptsf = merger.start(data);
@@ -196,14 +156,13 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
         if (!pipes) {
             return Promise.resolve(source);
         }
-        let config = this.config;
 
         let pstream = Promise.resolve(source);
         pipes.forEach(transform => {
             if (transform) {
                 pstream = pstream
                     .then(stream => {
-                        return this.executePipe(stream, transform, config);
+                        return this.executePipe(stream, transform, this.config);
                     });
             }
         });
@@ -211,30 +170,47 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
 
     }
 
-
+    /**
+     * execute pipe.
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @param {TransformType} pipe
+     * @param {IConfigure} config
+     * @returns {Promise<ITransform>}
+     * @memberof PipeComponent
+     */
     protected executePipe(stream: ITransform, pipe: TransformType, config: IConfigure): Promise<ITransform> {
         let pstf: Promise<ITransform>;
 
         if (pipe instanceof TaskRunner) {
+            console.log('runner', stream);
             pstf = pipe.start(stream);
-        } else if (!isClass(pipe) && isFunction(pipe)) {
-            let pex = pipe as PipeExpress;
-            pstf = Promise.resolve(pex(this.context, config, stream, this));
-        } else if (isTransform(pipe)) {
-            pstf = Promise.resolve(pipe as ITransform);
+        } else if (isTransform(stream)) {
+            console.log('pipe', stream);
+            if (!isClass(pipe) && isFunction(pipe)) {
+                let pex = pipe as PipeExpress;
+                pstf = Promise.resolve(pex(this.context, config, stream, this));
+            } else if (isTransform(pipe)) {
+                pstf = Promise.resolve(pipe as ITransform);
+            }
+            if (pstf) {
+                pstf = pstf.then(pst => {
+                    if (isTransform(pst)) {
+                        if (pst.changeAsOrigin) {
+                            stream = pst;
+                        } else {
+                            stream = stream.pipe(pst);
+                        }
+                    }
+                    return stream;
+                })
+            }
         } else {
+            console.log('not stream', stream);
             pstf = Promise.resolve(null);
         }
 
-        return pstf.then(pst => {
-            if (isTransform(pst.pipe)) {
-                if (pst.changeAsOrigin) {
-                    stream = pst;
-                } else {
-                    stream = stream.pipe(pst);
-                }
-            }
-            return stream;
-        });
+        return pstf;
     }
 }

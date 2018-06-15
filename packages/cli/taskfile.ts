@@ -7,21 +7,14 @@ const del = require('del');
 
 
 @AssetTask({
-    name: 'test1',
-    test: {
+    children: [{
+        name: 'test1',
+        src: 'src/**/*.ts',
         test: 'test/**/*.spec.ts',
-        pipes: [() => mocha()],
-        awaitPiped: true,
-    },
-    children: [
-        {
-            name: 'tscompCLI',
-            src: 'src/**/*.ts',
-            dest: 'bin',
-            uglify: true,
-            task: TsCompile
-        }
-    ]
+        dest: 'bin',
+        uglify: true,
+        task: TsCompile
+    }]
 })
 class BuildTask extends PipeElement {
     constructor() {
