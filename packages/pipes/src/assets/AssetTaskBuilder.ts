@@ -20,12 +20,13 @@ export class AssetTaskBuilder extends PipeTaskBuilder {
         await super.beforeBindConfig(taskInst, config);
         let assetCfg = config as IAssetConfigure;
         let subs: IConfigure[] = [];
-        if (assetCfg.src && !(taskInst instanceof PipeSource)) {
-            let src = taskInst.context.to(assetCfg.src);
-            let srcCfg: IPipeConfigure = isString(src) ? { src: src } : src;
-            srcCfg.task = srcCfg.task || PipeSource;
-            subs.push(srcCfg);
+        if (assetCfg.src && taskInst instanceof PipeSource) {
+            // let src = taskInst.context.to(assetCfg.src);
+            // let srcCfg: IPipeConfigure = isString(src) ? { src: src } : src;
+            // srcCfg.task = srcCfg.task || PipeSource;
+            // subs.push(srcCfg);
         }
+
         if (assetCfg.test && !(taskInst instanceof PipeTest)) {
             let test = taskInst.context.to(assetCfg.test);
             let testCfg;

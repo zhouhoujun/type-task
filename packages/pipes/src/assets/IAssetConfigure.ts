@@ -15,15 +15,7 @@ export type DestType = string | IDestConfigure;
  * @extends {ISourceConfigure}
  * @extends {IDestConfigure}
  */
-export interface IAssetConfigure extends IPipeConfigure {
-
-    /**
-     * src.
-     *
-     * @type {(CtxType<Src | ISourceConfigure>)}
-     * @memberof IAssetConfigure
-     */
-    src?: CtxType<Src | ISourceConfigure>;
+export interface IAssetConfigure extends ISourceConfigure {
 
     /**
      * test

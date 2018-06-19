@@ -13,13 +13,7 @@ import { PipeComponent } from './PipeComponent';
  * @extends {IPipeComponent}
  */
 export interface IPipeElement extends IPipeComponent {
-    /**
-     * watch source change to run pipe task.
-     *
-     * @type {(Src | boolean)}
-     * @memberof IPipeConfigure
-     */
-    watch?: Src | boolean;
+
 }
 
 

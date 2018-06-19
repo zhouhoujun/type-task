@@ -37,6 +37,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
     async run(data?: any): Promise<any> {
         let execPromise: Promise<any>;
+
         if (this.runWay & RunWay.nodeFirst) {
             execPromise = this.execute(data);
         } else {
@@ -45,7 +46,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
 
         if (this.runWay & RunWay.sequence) {
             this.each(task => {
-                execPromise = execPromise.then(data => task.run(data));
+                execPromise = execPromise.then(pdata => task.run(pdata));
             }, Mode.children);
         } else if (this.runWay & RunWay.parallel) {
             execPromise = execPromise.then(pdata => {

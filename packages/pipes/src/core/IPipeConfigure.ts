@@ -99,6 +99,10 @@ export interface IDestConfigure extends IPipeConfigure {
 
 }
 
+export interface ICleanConfigure extends IPipeConfigure {
+    clean?: CtxType<Src>;
+}
+
 export interface ITestConfigure extends IPipeConfigure {
     /**
      * source for test.

@@ -8,9 +8,9 @@ const del = require('del');
 
 @AssetTask({
     children: [{
-        name: 'test1',
+        name: 'tsAssets',
         src: 'src/**/*.ts',
-        test: 'test/**/*.spec.ts',
+        // test: 'test/**/*.spec.ts',
         dest: 'bin',
         uglify: true,
         task: TsCompile
@@ -19,8 +19,10 @@ const del = require('del');
 class BuildTask extends PipeElement {
     constructor() {
         super()
+        this.awaitPiped = true;
     }
     execute(data?: any): Promise<any> {
+        console.log('execute del');
         return del(['lib/**', 'bin/**']);
     }
 }

@@ -33,17 +33,16 @@ export class PipeTest extends PipeComponent<IPipeComponent> implements OnTaskIni
 
     onTaskInit(config: ITestConfigure) {
         super.onTaskInit(config);
-        console.log(config);
-        config.awaitPiped = true;
         this.test = this.context.to(config.test);
         this.testSrcOptions = this.context.to(config.testSrcOptions);
         // defaults setting.
         this.awaitPiped = true;
         this.pipes = [() => mocha()];
+        console.log(this.test, config);
     }
 
     protected async execute(data: ITransform | ITransform[]): Promise<ITransform> {
-        let trans = await this.merge(...isArray(data) ? data : [data]);
+        let trans = await this.merge(...(isArray(data) ? data : [data]));
         if (this.test) {
             await this.pipe(this.source())
         } else {

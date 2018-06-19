@@ -31,8 +31,6 @@ export class TaskRunner implements ITaskRunner {
     currNode: ITask;
     uuid: string;
 
-    @Inject(ContainerToken)
-    private container: IContainer;
 
     /**
      * Creates an instance of TaskRunner.
@@ -41,12 +39,15 @@ export class TaskRunner implements ITaskRunner {
      * @param {ITaskBuilder} [taskBuilder]
      * @memberof TaskRunner
      */
-    constructor(private work: Token<ITask> | Type<any> | IConfigure, private instance?: ITask, private taskBuilder?: ITaskBuilder) {
+    constructor(
+        private work: Token<ITask> | Type<any> | IConfigure,
+        @Inject(ContainerToken) private container: IContainer,
+        private instance?: ITask,
+        private taskBuilder?: ITaskBuilder) {
         this.uuid = uuid();
         this.stateChanged = new BehaviorSubject(RunState.init);
-        if (this.instance) {
-            this.instance.workflowId = this.uuid;
-        }
+
+        this.container.bindProvider(this.uuid, this);
     }
 
     getBuilder(): ITaskBuilder {
@@ -56,16 +57,20 @@ export class TaskRunner implements ITaskRunner {
         return this.taskBuilder;
     }
 
-
-    async start(data?: any): Promise<any> {
+    async getInstance() {
         if (!this.instance) {
             this.instance = await this.getBuilder().build(this.task);
-            this.instance.workflowId = this.uuid;
-            this.container.bindProvider(this.uuid, this);
         }
-        this.state = RunState.running;
+        if (!this.instance.workflowId) {
+            this.instance.workflowId = this.uuid;
+        }
+        return this.instance;
+    }
 
-        return this.instance.run(data)
+
+    async start(data?: any): Promise<any> {
+        let instance = await this.getInstance();
+        return instance.run(data)
             .then(data => {
                 this.state = RunState.complete;
                 this.stateChanged.next(this.state);

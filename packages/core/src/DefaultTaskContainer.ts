@@ -5,6 +5,7 @@ import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
 import { TaskType } from './core/index';
+import { RunAspect } from './aop/RunAspect';
 
 
 /**
@@ -66,6 +67,8 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
         if (!container.has(CoreModule)) {
             container.register(CoreModule);
         }
+
+        container.register(this.logAspect);
 
         await super.registerExts(container);
         return container;

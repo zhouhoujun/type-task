@@ -1,6 +1,6 @@
 import { Inject, IContainer, ContainerToken } from '@ts-ioc/core';
 import { Aspect, Joinpoint, Before, AfterReturning } from '@ts-ioc/aop';
-import { TaskComponent, ITaskRunner, RunState, Runner } from '../core/index';
+import { TaskComponent, ITaskRunner, RunState, Task } from '../core/index';
 
 /**
  * Task Log
@@ -9,7 +9,7 @@ import { TaskComponent, ITaskRunner, RunState, Runner } from '../core/index';
  * @class TaskLogAspect
  */
 @Aspect({
-    annotation: Runner,
+    annotation: Task,
     singleton: true
 })
 export class RunAspect {
@@ -56,7 +56,7 @@ export class RunAspect {
     getRunner(task: any) {
         if (task instanceof TaskComponent) {
             let ins = task.getRoot();
-            if (ins.workflowId) {
+            if (ins.workflowId && this.container.has(ins.workflowId)) {
                 return this.container.resolve<ITaskRunner>(ins.workflowId);
             }
         }

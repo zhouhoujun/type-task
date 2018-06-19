@@ -1,4 +1,4 @@
-import { IPipeComponent, PipeComponent } from '../core/index';
+import { IPipeComponent, PipeComponent, PipeSource } from '../core/index';
 import { AssetTask } from '../decorators/index';
 
 
@@ -24,9 +24,8 @@ export interface IAssetPipe extends IPipeComponent {
  * @implements {IPipeComponent<ITransform>}
  */
 @AssetTask
-export class AssetPipe extends PipeComponent<IAssetPipe> implements IAssetPipe {
+export class AssetPipe extends PipeSource implements IAssetPipe {
     constructor(name?: string) {
         super(name);
-
     }
 }

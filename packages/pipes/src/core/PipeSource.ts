@@ -3,8 +3,8 @@ import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
 import { Src, OnTaskInit } from '@taskp/core';
 import { ISourceConfigure } from './IPipeConfigure';
-import { IPipeTask } from './IPipeTask';
-import { AbstractPipe } from './AbstractPipe';
+import { PipeComponent } from './PipeComponent';
+import { IPipeComponent } from './IPipeComponent';
 
 
 
@@ -15,7 +15,7 @@ import { AbstractPipe } from './AbstractPipe';
  * @interface IPipeSource
  * @extends {IPipeTask}
  */
-export interface IPipeSource extends IPipeTask {
+export interface IPipeSource extends IPipeComponent {
     /**
      * source
      *
@@ -33,7 +33,7 @@ export interface IPipeSource extends IPipeTask {
 }
 
 @PipeTask
-export class PipeSource extends AbstractPipe implements IPipeSource, OnTaskInit {
+export class PipeSource extends PipeComponent<IPipeSource> implements IPipeSource, OnTaskInit {
 
 
     /**
@@ -62,8 +62,17 @@ export class PipeSource extends AbstractPipe implements IPipeSource, OnTaskInit 
         this.srcOptions = this.context.to(config.srcOptions);
     }
 
-    run(): Promise<ITransform> {
-        return Promise.resolve(src(this.src, this.srcOptions));
+    protected merge(...data: ITransform[]): Promise<ITransform> {
+        if (!this.merger) {
+            return Promise.resolve(this.source());
+        } else {
+            data.unshift(this.source());
+            return super.merge(...data);
+        }
+    }
+
+    source(): ITransform {
+        return src(this.src, this.srcOptions);
     }
 
 }

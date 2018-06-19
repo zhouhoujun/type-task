@@ -1,7 +1,7 @@
 import { TaskComponent, IConfigure, TaskRunner, OnTaskInit } from '@taskp/core';
 import { ITransform } from './ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isClass, isFunction, Inject } from '@ts-ioc/core';
+import { Abstract, isArray, isClass, isFunction, Inject, Injectable } from '@ts-ioc/core';
 import { TransformMerger, TransformType, PipeExpress, isTransform } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
@@ -18,8 +18,8 @@ import { IPipeConfigure } from './IPipeConfigure';
  * @implements {IPipeComponent<ITransform>}
  * @template T
  */
-@Abstract()
-export abstract class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> implements IPipeComponent, OnTaskInit {
+@Injectable()
+export class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> implements IPipeComponent, OnTaskInit {
 
     @Inject(PipeContextToken)
     context: IPipeContext;
@@ -67,20 +67,19 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      */
     protected execute(data: ITransform | ITransform[]): Promise<ITransform> {
         return this.merge(...isArray(data) ? data : [data])
-            .then(pstream => this.pipe(pstream));
+            .then(stream => this.pipe(stream));
     }
 
     /**
      * pipe transform.
      *
      * @protected
-     * @abstract
      * @param {ITransform} transform
      * @returns {Promise<ITransform>}
      * @memberof PipeComponent
      */
-    protected pipe(data: ITransform): Promise<ITransform> {
-        let pStream = this.pipesToPromise(data, this.pipes);
+    protected pipe(stream: ITransform): Promise<ITransform> {
+        let pStream = this.pipesToPromise(stream, this.pipes);
         if (this.awaitPiped) {
             pStream = pStream.then(pipe => {
                 if (!pipe) {
@@ -101,7 +100,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
                     pipe.removeAllListeners('error');
                     pipe.removeAllListeners('end');
                     process.exit(1);
-                    return err;
+                    return Promise.reject(err);
                 });
             });
         }
@@ -140,7 +139,7 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
             ptsf = Promise.resolve(isArray(data) ? data[0] : data);
         }
 
-        return ptsf.then(tranform => (tranform && isFunction(tranform.pipe)) ? tranform as ITransform : null);
+        return ptsf.then(tranform => isTransform(tranform) ? tranform as ITransform : null);
     }
 
     /**
@@ -175,24 +174,21 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
      *
      * @protected
      * @param {ITransform} stream
-     * @param {TransformType} pipe
+     * @param {TransformType} transform
      * @param {IConfigure} config
      * @returns {Promise<ITransform>}
      * @memberof PipeComponent
      */
-    protected executePipe(stream: ITransform, pipe: TransformType, config: IConfigure): Promise<ITransform> {
+    protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Promise<ITransform> {
         let pstf: Promise<ITransform>;
-
-        if (pipe instanceof TaskRunner) {
-            console.log('runner', stream);
-            pstf = pipe.start(stream);
+        if (transform instanceof TaskRunner) {
+            pstf = transform.start(stream);
         } else if (isTransform(stream)) {
-            console.log('pipe', stream);
-            if (!isClass(pipe) && isFunction(pipe)) {
-                let pex = pipe as PipeExpress;
+            if (!isClass(transform) && isFunction(transform)) {
+                let pex = transform as PipeExpress;
                 pstf = Promise.resolve(pex(this.context, config, stream, this));
-            } else if (isTransform(pipe)) {
-                pstf = Promise.resolve(pipe as ITransform);
+            } else if (isTransform(transform)) {
+                pstf = Promise.resolve(transform as ITransform);
             }
             if (pstf) {
                 pstf = pstf.then(pst => {
@@ -207,7 +203,6 @@ export abstract class PipeComponent<T extends IPipeComponent> extends TaskCompon
                 })
             }
         } else {
-            console.log('not stream', stream);
             pstf = Promise.resolve(null);
         }
 
