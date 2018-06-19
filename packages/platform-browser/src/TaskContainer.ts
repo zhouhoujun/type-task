@@ -1,4 +1,4 @@
-import { DefaultTaskContainer, ITaskContainer, ITask, RunState } from '@taskp/core';
+import { DefaultTaskContainer, ITaskContainer, ITask, RunState, TaskType } from '@taskp/core';
 import { Type, Token, LoadType } from '@ts-ioc/core';
 import { TaskLogAspect } from './aop/index';
 
@@ -36,18 +36,17 @@ export class TaskContainer extends DefaultTaskContainer {
     /**
      * bootstrap task.
      *
-     * @param {BootstrapTask} [tasks]
-     * @param {...Providers[]} providers
+     * @param {...TaskType<ITask>[]} tasks
      * @returns {Promise<any>}
      * @memberof DefaultTaskContainer
      */
-    bootstrap<T extends ITask>(task: Token<T> | Type<any>): Promise<any> {
+    bootstrap<T extends ITask>(...tasks: TaskType<ITask>[]): Promise<any> {
         let end: Date;
         let start = new Date();
 
         console.log('[' + start.toString() + ']', 'Starting', '...');
 
-        return super.bootstrap(task)
+        return super.bootstrap(...tasks)
             .then(
                 runner => {
                     runner.stateChanged.subscribe(state => {

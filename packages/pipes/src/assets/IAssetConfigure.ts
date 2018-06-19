@@ -18,14 +18,6 @@ export type DestType = string | IDestConfigure;
 export interface IAssetConfigure extends ISourceConfigure {
 
     /**
-     * test
-     *
-     * @type {(CtxType<boolean | Src | ITestConfigure>)}
-     * @memberof IAssetConfigure
-     */
-    test?: CtxType<boolean | Src | ITestConfigure>;
-
-    /**
      * dest.
      *
      * @type {CtxType<DestType | DestType[]>}

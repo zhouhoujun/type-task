@@ -36,7 +36,7 @@ if (tsregister.indexOf('tsconfig-paths/register') < 0) {
   jsVariants['.ts'] = tsregister;
 }
 
-const cli = new Liftoff({
+export const cli = new Liftoff({
   name: 'taskp',
   processTitle: 'taskp',
   moduleName: 'taskp',

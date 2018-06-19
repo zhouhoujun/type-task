@@ -10,7 +10,7 @@ const del = require('del');
     children: [{
         name: 'tsAssets',
         src: 'src/**/*.ts',
-        // test: 'test/**/*.spec.ts',
+        test: 'test/**/*.spec.ts',
         dest: 'bin',
         uglify: true,
         task: TsCompile

@@ -1,4 +1,4 @@
-import { IPipeComponent, PipeComponent, PipeSource } from '../core/index';
+import { PipeSource, IPipeSource } from '../core/index';
 import { AssetTask } from '../decorators/index';
 
 
@@ -10,7 +10,7 @@ import { AssetTask } from '../decorators/index';
  * @interface IAssetPipe
  * @extends {IPipeComponent}
  */
-export interface IAssetPipe extends IPipeComponent {
+export interface IAssetPipe extends IPipeSource {
 
 }
 

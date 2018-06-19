@@ -1,4 +1,4 @@
-import { DefaultTaskContainer, ITaskContainer, ITask, ITaskRunner, RunState } from '@taskp/core';
+import { DefaultTaskContainer, ITaskContainer, ITask, ITaskRunner, RunState, TaskType } from '@taskp/core';
 import { Type, Token, LoadType } from '@ts-ioc/core';
 import chalk from 'chalk';
 import { TaskLogAspect } from './aop/index';
@@ -42,16 +42,16 @@ export class TaskContainer extends DefaultTaskContainer {
      * bootstrap task.
      *
      * @template T
-     * @param {(Token<T> | Type<any>)} [task]
+     * @param {...TaskType<ITask>[]} tasks
      * @returns {Promise<any>}
      * @memberof TaskContainer
      */
-    bootstrap<T extends ITask>(task: Token<T> | Type<any>): Promise<ITaskRunner> {
+    bootstrap<T extends ITask>(...tasks: TaskType<ITask>[]): Promise<ITaskRunner> {
         let start, end;
         start = process.hrtime();
         console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', chalk.cyan('Starting'), '...');
 
-        return super.bootstrap(task)
+        return super.bootstrap(...tasks)
             .then(runner => {
                 runner.stateChanged.subscribe(state => {
                     switch (state) {

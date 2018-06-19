@@ -67,6 +67,9 @@ export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest, OnT
             .then(stream => {
                 return this.writeStream(stream)
             })
+            .then(() => {
+                return source;
+            });
     }
 
     protected writeStream(stream: ITransform): Promise<ITransform> {
