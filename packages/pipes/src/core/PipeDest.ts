@@ -6,7 +6,12 @@ import { ITransform } from './ITransform';
 import { TransformType } from './pipeTypes';
 import { OnTaskInit } from '@taskp/core';
 import { IDestConfigure } from './IPipeConfigure';
+import { Registration } from '@ts-ioc/core';
+import { PipeToken } from './IPipeTask';
 
+
+
+export const DestToken = new Registration(PipeToken, 'dest');
 
 /**
  * pipe dest provider.
@@ -33,7 +38,8 @@ export interface IPipeDest extends IPipeComponent {
     destOptions?: DestOptions;
 }
 
-@PipeTask('dest')
+
+@PipeTask(DestToken)
 export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest, OnTaskInit {
 
     /**

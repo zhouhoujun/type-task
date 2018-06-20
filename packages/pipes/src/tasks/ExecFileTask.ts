@@ -1,8 +1,7 @@
-import { ExecFileOptions, execFile } from 'child_process';
 import { isString, isArray } from '@ts-ioc/core';
 import { existsSync } from 'fs';
 import { AbstractTask, Task, RunWay, Src } from '@taskp/core';
-
+import * as execa from 'execa';
 
 
 /**
@@ -15,7 +14,7 @@ import { AbstractTask, Task, RunWay, Src } from '@taskp/core';
 export class ExecFileTask extends AbstractTask {
     files: Src;
     args?: string[];
-    options?: ExecFileOptions;
+    options?: execa.Options;
     allowError = true;
     runWay = RunWay.sequence
     constructor(name?: string) {
@@ -46,37 +45,11 @@ export class ExecFileTask extends AbstractTask {
             });
     }
 
-    protected execFile(file: string, args?: string[], options?: ExecFileOptions, allowError = true): Promise<any> {
+    protected execFile(file: string, args?: string[], options?: execa.Options, allowError = true): Promise<any> {
         if (!file && !existsSync(file)) {
             return Promise.resolve();
         }
-        return new Promise((resolve, reject) => {
-            let proc = execFile(file, args, options, (err, stdout, stderr) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(stdout);
-                }
-            });
-
-            proc.stdout.on('data', data => {
-                console.log(data);
-            });
-
-            proc.stderr.on('data', data => {
-                console.log(data);
-                if (!allowError) {
-                    reject(data);
-                }
-            });
-
-            proc.on('exit', (code) => {
-                console.log(`exit child process with code：${code}`);
-                if (code > 0) {
-                    reject(code);
-                }
-            });
-        });
+        return execa(file, args, options);
     }
 
 }

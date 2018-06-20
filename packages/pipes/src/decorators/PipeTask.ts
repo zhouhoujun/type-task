@@ -1,6 +1,7 @@
 import { createTaskDecorator, TaskMetadata, ITaskDecorator, TaskBuilderToken } from '@taskp/core';
 import { IPipeConfigure } from '../core/IPipeConfigure';
 import { Registration } from '@ts-ioc/core';
+import { PipeToken } from '../core/IPipeTask';
 
 export interface PipeTaskMetadata extends TaskMetadata, IPipeConfigure {
 
@@ -11,4 +12,4 @@ export interface PipeTaskMetadata extends TaskMetadata, IPipeConfigure {
  *
  * @PipeTask
  */
-export const PipeTask: ITaskDecorator<PipeTaskMetadata> = createTaskDecorator<PipeTaskMetadata>('PipeTask', new Registration(TaskBuilderToken, 'pipe'));
+export const PipeTask: ITaskDecorator<PipeTaskMetadata> = createTaskDecorator<PipeTaskMetadata>('PipeTask', new Registration(TaskBuilderToken, 'pipe'), PipeToken);

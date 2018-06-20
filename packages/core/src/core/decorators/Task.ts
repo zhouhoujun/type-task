@@ -1,6 +1,6 @@
-import { isString, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token } from '@ts-ioc/core';
+import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken, isSymbol, InjectToken } from '@ts-ioc/core';
 import { TaskMetadata } from '../metadatas/index';
-import { TaskToken } from '../ITask';
+import { TaskToken, ITask } from '../ITask';
 import { TaskBuilderToken, ITaskBuilder } from '../ITaskBuilder';
 
 
@@ -24,14 +24,15 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
      * @param {boolean} [singlton] define this class as singlton.
      */
     (metadata?: T): ClassDecorator;
+
     /**
      * task decorator, use to define class as task element.
      *
      * @Task
-     *
-     * @param {string} [taskName] task name.
+     * @param {string} [provide] task name or provide.
+     * @param {string} [provide] task alias name.
      */
-    (taskName?: string): ClassDecorator;
+    (provide?: Registration<any> | symbol | string, alias?: string): ClassDecorator;
     /**
      * task decorator, use to define class as task element.
      *
@@ -42,7 +43,8 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
 
 export function createTaskDecorator<T extends TaskMetadata>(
     taskType: string,
-    builder: Token<ITaskBuilder> | ITaskBuilder = TaskBuilderToken,
+    builder: Token<ITaskBuilder> | ITaskBuilder,
+    provideType: InjectToken<ITask>,
     adapter?: MetadataAdapter,
     metadataExtends?: MetadataExtends<T>): ITaskDecorator<T> {
 
@@ -52,7 +54,21 @@ export function createTaskDecorator<T extends TaskMetadata>(
                 adapter(args);
             }
             args.next<TaskMetadata>({
-                match: (arg) => isString(arg),
+                match: (arg) => arg && (isString(arg) || (isObject(arg) && arg instanceof Registration)),
+                setMetadata: (metadata, arg) => {
+                    if (isString(arg)) {
+                        metadata.name = arg;
+                    } else {
+                        metadata.provide = arg;
+                        if (arg instanceof Registration) {
+                            metadata.name = arg.getDesc();
+                        }
+                    }
+                }
+            });
+
+            args.next<TaskMetadata>({
+                match: (arg) => arg && isString(arg),
                 setMetadata: (metadata, arg) => {
                     metadata.name = arg;
                 }
@@ -72,10 +88,8 @@ export function createTaskDecorator<T extends TaskMetadata>(
                 }
             }
 
-            if (metadata.name || metadata.alias) {
-                metadata.alias = metadata.alias || metadata.name;
-                metadata.provide = TaskToken;
-            }
+            metadata.provide = metadata.provide || provideType;
+            metadata.alias = metadata.alias || metadata.name;
 
             metadata.taskType = taskType;
             if (!metadata.builder) {
@@ -90,5 +104,5 @@ export function createTaskDecorator<T extends TaskMetadata>(
  *
  * @Task
  */
-export const Task: ITaskDecorator<TaskMetadata> = createTaskDecorator('Task');
+export const Task: ITaskDecorator<TaskMetadata> = createTaskDecorator('Task', TaskBuilderToken, TaskToken);
 

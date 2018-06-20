@@ -2,9 +2,15 @@ import { PipeElement } from './PipeElement';
 import { PipeTask } from '../decorators/index';
 import { OnTaskInit, Src } from '@taskp/core';
 import { ICleanConfigure } from './IPipeConfigure';
+import { Registration } from '@ts-ioc/core';
+import { PipeToken } from './IPipeTask';
 const del = require('del');
 
-@PipeTask
+
+
+export const CleanToken = new Registration(PipeToken, 'clean');
+
+@PipeTask(CleanToken)
 export class PipeClean extends PipeElement implements OnTaskInit {
     awaitPiped = true;
     cleanSrc: Src;

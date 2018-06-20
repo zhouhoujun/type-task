@@ -6,9 +6,13 @@ import { ITestConfigure } from './IPipeConfigure';
 import { OnTaskInit, Src } from '@taskp/core';
 import { src, SrcOptions } from 'vinyl-fs';
 import * as mocha from 'gulp-mocha';
-import { isArray } from '@ts-ioc/core';
+import { isArray, Registration } from '@ts-ioc/core';
+import { PipeToken } from './IPipeTask';
 
-@PipeTask('test')
+
+export const TestToken = new Registration(PipeToken, 'test');
+
+@PipeTask(TestToken)
 export class PipeTest extends PipeComponent<IPipeComponent> implements OnTaskInit {
 
     /**
@@ -38,7 +42,6 @@ export class PipeTest extends PipeComponent<IPipeComponent> implements OnTaskIni
         // defaults setting.
         this.awaitPiped = true;
         this.pipes = [() => mocha()];
-        console.log(this.test, config);
     }
 
     protected async execute(data: ITransform | ITransform[]): Promise<ITransform> {

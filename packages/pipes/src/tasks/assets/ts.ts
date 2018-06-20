@@ -21,7 +21,7 @@ export interface TsConfigure extends IAssetConfigure {
     sourcempas?: boolean | string;
 }
 
-@AssetTask('tscompile')
+@AssetTask('ts')
 export class TsCompile extends AssetPipe implements OnTaskInit {
 
     onTaskInit(cfg: TsConfigure) {

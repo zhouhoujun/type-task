@@ -1,6 +1,4 @@
 import { Task, ITask, TaskElement, TaskComponent, ITaskComponent, AbstractTask } from '../src';
-import { Inject } from '@ts-ioc/core';
-import { RunWay } from '../src/core/RunWay';
 
 @Task('test')
 export class SimpleTask extends AbstractTask implements ITask {

@@ -1,5 +1,5 @@
 import { IContainer, CoreActions, IocModule, Inject, ContainerToken } from '@ts-ioc/core';
-import { PipeTask, AssetTask } from './decorators/index';
+import { PipeTask, AssetTask, Packager } from './decorators/index';
 import * as tasks from './tasks/index';
 import * as cores from './core/index';
 import * as assets from './assets/index';
@@ -20,6 +20,7 @@ export class PipeModule {
         let lifeScope = this.container.getLifeScope();
         lifeScope.registerDecorator(PipeTask, CoreActions.bindProvider, CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
         lifeScope.registerDecorator(AssetTask, CoreActions.bindProvider, CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
+        lifeScope.registerDecorator(Packager, CoreActions.bindProvider, CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
         this.container.use(cores, assets, tasks);
     }
 }

@@ -113,22 +113,13 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
 
     }
 
-    getConfigure(modules?: Token<any> | IConfigure, moduleDecorator?: Function | string): IConfigure {
-        let cfg: IConfigure;
-        if (isClass(modules)) {
-            cfg = this.getMetaConfig(modules, moduleDecorator || Task);
-        } else if (!isToken(modules)) {
-            cfg = modules as IConfigure;
-            let token = this.getBootstrapToken(cfg);
-            if (isClass(token)) {
-                cfg = lang.assign({}, this.getMetaConfig(token, moduleDecorator || Task), cfg || {});
-            }
-        }
-        return cfg || {};
+    getConfigure(token?: Token<any> | IConfigure, moduleDecorator?: Function | string): IConfigure {
+        return super.getConfigure(token, moduleDecorator || Task);
     }
 
     protected getBootstrapToken(cfg: IConfigure, token?: Token<ITask> | Type<any>): Token<ITask> {
-        return cfg.task || cfg.bootstrap || token;
+        let bootstrapToken = cfg.task || cfg.bootstrap || token;
+        return bootstrapToken;
     }
 
     protected getConfigBuilder(cfg: IConfigure) {

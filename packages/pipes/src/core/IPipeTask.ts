@@ -1,6 +1,9 @@
 import { ITask } from '@taskp/core';
 import { ITransform } from './ITransform';
-import { IPipeConfigure } from './IPipeConfigure';
+import { InjectToken } from '@ts-ioc/core';
+
+export const PipeToken = new InjectToken<IPipeTask>('__Task_Pipe');
+
 /**
  * pipe task.
  *

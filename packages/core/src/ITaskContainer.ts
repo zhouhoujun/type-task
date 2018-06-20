@@ -35,9 +35,9 @@ export interface ITaskContainer extends IApplicationBuilder<ITask> {
     /**
      * bootstrap app via main module.
      *
-     * @param {(TaskType<ITask>)} bootModule bootstrap module.
+     * @param {...TaskType<ITask>[]} tasks bootstrap tasks.
      * @returns {Promise<ITaskRunner>}
      * @memberof IApplicationBuilder
      */
-    bootstrap(bootModule: TaskType<ITask>): Promise<ITaskRunner>;
+    bootstrap(...tasks: TaskType<ITask>[]): Promise<ITaskRunner>;
 }

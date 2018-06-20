@@ -1,19 +1,6 @@
-import { PipeSource, IPipeSource } from '../core/index';
+import { PipeSource } from '../core/index';
 import { AssetTask } from '../decorators/index';
-
-
-
-/**
- * source provider.
- *
- * @export
- * @interface IAssetPipe
- * @extends {IPipeComponent}
- */
-export interface IAssetPipe extends IPipeSource {
-
-}
-
+import { IAssetPipe } from './IAssetPipe';
 
 /**
  * pipe component

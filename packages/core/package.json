@@ -39,11 +39,13 @@
     "uuid": "^3.2.1"
   },
   "peerDependencies": {
-    "@ts-ioc/aop": "^2.3.0",
-    "@ts-ioc/core": "^2.3.0",
-    "@ts-ioc/logs": "^2.3.0"
+    "@ts-ioc/aop": "^2.4.17",
+    "@ts-ioc/core": "^2.4.17",
+    "@ts-ioc/logs": "^2.4.17"
   },
   "directories": {
     "lib": "lib"
+  },
+  "devDependencies": {
   }
 }

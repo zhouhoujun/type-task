@@ -5,7 +5,11 @@ import { Src, OnTaskInit } from '@taskp/core';
 import { ISourceConfigure } from './IPipeConfigure';
 import { PipeComponent } from './PipeComponent';
 import { IPipeComponent } from './IPipeComponent';
+import { PipeToken } from './IPipeTask';
+import { Registration } from '@ts-ioc/core';
 
+
+export const SourceToken = new Registration(PipeToken, 'src');
 
 
 /**
@@ -32,10 +36,8 @@ export interface IPipeSource extends IPipeComponent {
     srcOptions?: SrcOptions;
 }
 
-@PipeTask
+@PipeTask(SourceToken)
 export class PipeSource extends PipeComponent<IPipeSource> implements IPipeSource, OnTaskInit {
-
-
     /**
      * source
      *

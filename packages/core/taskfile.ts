@@ -1,33 +1,42 @@
-import { TaskElement } from '@taskp/core';
-import { PipeTask, PipeModule, PipeElement, TsCompile } from '@taskp/pipes';
+import { PipeModule, PackageTask, PipeElement, AssetPipe } from '@taskp/pipes';
 import { TaskContainer } from '@taskp/platform-server';
-
-import * as mocha from 'gulp-mocha';
-const del = require('del');
-
-
-@PipeTask({
-    name: 'test',
-    src: 'test/**/*.spec.ts',
-    awaitPiped: true,
-    pipes: [() => mocha()],
-    task: PipeElement
-})
-class TestTask extends TaskElement {
-    execute(data?: any): Promise<any> {
-        return del(['lib/**', 'bin/**']);
-    }
-}
+const rollup = require('gulp-rollup');
+const resolve = require('rollup-plugin-node-resolve');
+const rollupSourcemaps = require('rollup-plugin-sourcemaps');
+const commonjs = require('rollup-plugin-commonjs');
 
 TaskContainer.create(__dirname)
     .use(PipeModule)
-    .bootstrap([
-        TestTask,
+    .bootstrap(
         {
-            name: 'tscompLIB',
-            src: ['src/**/*.ts', '!src/cli/**'],
-            dest: 'lib',
-            uglify: true,
-            task: TsCompile
-        }
-    ]);
+            test: 'test/**/*.spec.ts',
+            clean: 'lib',
+            assets: {
+                ts: {
+                    src: 'src/**/*.ts',
+                    dest: 'lib',
+                    uglify: true
+                }
+            },
+            task: PackageTask,
+        });
+        // {
+        //     src: 'lib/**/*.js',
+        //     pipes: [
+        //         () => rollup({
+        //             name: 'core.umd.js',
+        //             format: 'umd',
+        //             plugins: [
+        //                 resolve(),
+        //                 commonjs(),
+        //                 rollupSourcemaps()
+        //             ],
+        //             external: [
+        //                 'reflect-metadata',
+        //                 'tslib'
+        //             ]
+        //         })
+        //     ],
+        //     dest: 'bundles',
+        //     task: AssetPipe
+        // });
