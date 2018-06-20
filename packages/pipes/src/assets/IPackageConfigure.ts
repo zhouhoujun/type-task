@@ -5,6 +5,14 @@ import { IAssetConfigure, DestType } from './IAssetConfigure';
 
 export interface IPackageConfigure extends IPipeConfigure {
     /**
+     * src path.
+     *
+     * @type {CtxType<string>}
+     * @memberof IPackageConfigure
+     */
+    src?: CtxType<string>;
+
+    /**
      * clean task config.
      *
      * @type {(CtxType<Src | ICleanConfigure>)}

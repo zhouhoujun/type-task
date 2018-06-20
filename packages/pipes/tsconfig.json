@@ -12,11 +12,11 @@
       ],
       "@taskp/platform-server": [
         "../platform-server/src"
-      ],
+      ]
     }
   },
   "exclude": [
     "lib",
-    "node_modules"    
+    "node_modules"
   ]
 }

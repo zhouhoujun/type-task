@@ -20,11 +20,11 @@ export class PackageBuilder extends DestTaskBuilder {
 
     async beforeBindConfig(taskInst: IPipeComponent, config: IConfigure): Promise<ITask> {
         await super.beforeBindConfig(taskInst, config);
-        let assetCfg = config as IPackageConfigure;
+        let packCfg = config as IPackageConfigure;
         let subs: IConfigure[] = [];
 
-        if (assetCfg.test && !(taskInst instanceof PipeTest)) {
-            let test = taskInst.context.to(assetCfg.test);
+        if (packCfg.test && !(taskInst instanceof PipeTest)) {
+            let test = taskInst.context.to(packCfg.test);
             let testCfg;
             if (isBoolean(test)) {
                 testCfg = {};
@@ -37,19 +37,23 @@ export class PackageBuilder extends DestTaskBuilder {
             subs.push(testCfg);
         }
 
-        if (assetCfg.clean && !(taskInst instanceof PipeClean)) {
-            let val = assetCfg.clean;
+        if (packCfg.clean && !(taskInst instanceof PipeClean)) {
+            let val = packCfg.clean;
             let assCfg: ICleanConfigure = (isArray(val) || isString(val)) ? { clean: val } : val;
             if (!assCfg.task) {
                 assCfg.task = CleanToken;
             }
         }
 
-        if (assetCfg.assets) {
-            lang.forIn(assetCfg.assets, (val, key: string) => {
+        if (packCfg.assets) {
+            let srcRoot = taskInst.context.to(packCfg.src);
+            lang.forIn(packCfg.assets, (val, key: string) => {
                 let assCfg = (isArray(val) || isString(val)) ? { src: val } : val;
                 if (!assCfg.task) {
                     assCfg.task = new Registration(AssetToken, key);
+                }
+                if (srcRoot && !assCfg.src) {
+                    assCfg.src = `${srcRoot}/**/*.${key}`;
                 }
                 subs.push(assCfg);
             });
