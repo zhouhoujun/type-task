@@ -9,7 +9,7 @@ TaskContainer.create(__dirname)
     .use(PipeModule)
     .bootstrap(
         {
-            test: 'test/**/*.spec.ts',
+            // test: 'test/**/*.spec.ts',
             clean: 'lib',
             assets: {
                 ts: {
@@ -18,7 +18,7 @@ TaskContainer.create(__dirname)
                     uglify: true
                 }
             },
-            task: PackageTask,
+            task: PackageTask
         });
         // {
         //     src: 'lib/**/*.js',

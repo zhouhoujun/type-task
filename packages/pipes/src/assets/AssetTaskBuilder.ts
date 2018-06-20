@@ -1,9 +1,8 @@
 import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskp/core';
-import { Inject, ContainerToken, IContainer, Singleton, lang } from '@ts-ioc/core';
-import { IPipeConfigure, IPipeComponent } from '../core/index';
+import { Inject, ContainerToken, IContainer, Singleton, lang, isArray, isString } from '@ts-ioc/core';
+import { IPipeConfigure, IPipeComponent, PipeSource, SourceToken, PipeClean, ICleanConfigure, CleanToken } from '../core/index';
 import { IAssetConfigure } from './IAssetConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
-import { AssetPipe } from './AssetPipe';
 
 /**
  * Asset task builder
@@ -23,9 +22,17 @@ export class AssetTaskBuilder extends DestTaskBuilder {
         let assetCfg = config as IAssetConfigure;
         let subs: IConfigure[] = [];
 
-        if (assetCfg.src && !(taskInst instanceof AssetPipe)) {
+        if (assetCfg.clean && !(taskInst instanceof PipeClean)) {
+            let val = assetCfg.clean;
+            let assCfg: ICleanConfigure = (isArray(val) || isString(val)) ? { clean: val } : val;
+            if (!assCfg.task) {
+                assCfg.task = CleanToken;
+            }
+        }
+
+        if (assetCfg.src && !(taskInst instanceof PipeSource)) {
             let srcCfg: IPipeConfigure = lang.assign({}, assetCfg);
-            srcCfg.task = AssetPipe;
+            srcCfg.task = SourceToken;
             assetCfg.pipes = [];
             taskInst.pipes = [];
             subs.push(srcCfg);

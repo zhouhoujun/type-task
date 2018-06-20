@@ -1,7 +1,7 @@
 import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskp/core';
 import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean } from '@ts-ioc/core';
 import { IPipeComponent, PipeTest, PipeClean, ICleanConfigure, TestToken, CleanToken } from '../core/index';
-import { IAssetsConfigure } from './IAssetConfigure';
+import { IPackageConfigure } from './IPackageConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
 import { AssetToken } from './IAssetPipe';
 
@@ -20,7 +20,7 @@ export class PackageBuilder extends DestTaskBuilder {
 
     async beforeBindConfig(taskInst: IPipeComponent, config: IConfigure): Promise<ITask> {
         await super.beforeBindConfig(taskInst, config);
-        let assetCfg = config as IAssetsConfigure;
+        let assetCfg = config as IPackageConfigure;
         let subs: IConfigure[] = [];
 
         if (assetCfg.test && !(taskInst instanceof PipeTest)) {
@@ -39,7 +39,7 @@ export class PackageBuilder extends DestTaskBuilder {
 
         if (assetCfg.clean && !(taskInst instanceof PipeClean)) {
             let val = assetCfg.clean;
-            let assCfg: ICleanConfigure = (isArray(val) || isString(val)) ? { src: val } : val;
+            let assCfg: ICleanConfigure = (isArray(val) || isString(val)) ? { clean: val } : val;
             if (!assCfg.task) {
                 assCfg.task = CleanToken;
             }

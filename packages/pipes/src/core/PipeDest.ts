@@ -7,11 +7,11 @@ import { TransformType } from './pipeTypes';
 import { OnTaskInit } from '@taskp/core';
 import { IDestConfigure } from './IPipeConfigure';
 import { Registration } from '@ts-ioc/core';
-import { PipeToken } from './IPipeTask';
+import { PipeToken, IPipeTask } from './IPipeTask';
 
 
 
-export const DestToken = new Registration(PipeToken, 'dest');
+export const DestToken = new Registration<IPipeTask>(PipeToken, 'dest');
 
 /**
  * pipe dest provider.

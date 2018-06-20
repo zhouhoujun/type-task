@@ -1,7 +1,7 @@
 import { AssetTask } from '../../decorators/index';
 import { ITransform, IDestConfigure } from '../../core/index';
 import { isBoolean, ObjectMap, isString, isArray } from '@ts-ioc/core';
-import { OnTaskInit } from '@taskp/core';
+import { OnTaskInit, CtxType } from '@taskp/core';
 import * as uglify from 'gulp-uglify';
 import * as sourcemaps from 'gulp-sourcemaps';
 import { IAssetConfigure, DestType, AssetPipe } from '../../assets/index';
@@ -15,10 +15,10 @@ import * as ts from 'gulp-typescript';
  * @extends {IAssetConfigure}
  */
 export interface TsConfigure extends IAssetConfigure {
-    uglify?: boolean | ObjectMap<any>;
-    tds?: boolean | string;
-    tsconfig?: string | ObjectMap<any>;
-    sourcempas?: boolean | string;
+    uglify?: CtxType<boolean | ObjectMap<any>>;
+    tds?: CtxType<boolean | string>;
+    tsconfig?: CtxType<string | ObjectMap<any>>;
+    sourcempas?: CtxType<boolean | string>;
 }
 
 @AssetTask('ts')
@@ -75,8 +75,9 @@ export class TsCompile extends AssetPipe implements OnTaskInit {
 
         if (cfg.uglify) {
             pipes.unshift((ctx, config) => {
-                if (config.uglify) {
-                    return isBoolean(config.uglify) ? uglify() : uglify(config.uglify);
+                let uglifyCfg = this.context.to(config.uglify);
+                if (uglifyCfg) {
+                    return isBoolean(uglifyCfg) ? uglify() : uglify(uglifyCfg);
                 }
                 return null;
             });
@@ -95,12 +96,15 @@ export class TsCompile extends AssetPipe implements OnTaskInit {
         });
 
         dest.pipes = pipes;
-        if (!cfg.tds && cfg.tds !== false) {
+        let tds = this.context.to(cfg.tds)
+        if (tds !== false) {
             cfg.tds = destPath;
         }
 
         if (cfg.tds) {
+            dest.name = 'dest-js';
             dest = [dest, {
+                name: 'dest-tds',
                 dest: cfg.tds,
                 pipes: [
                     (ctx, config, transform) => {

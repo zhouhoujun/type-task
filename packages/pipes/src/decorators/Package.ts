@@ -7,16 +7,16 @@ import { AssetToken } from '../assets/IAssetPipe';
  * asset task metadata.
  *
  * @export
- * @interface PackagerMetadata
+ * @interface PackageMetadata
  * @extends {IAssetConfigure}
  */
-export interface PackagerMetadata extends IAssetConfigure {
+export interface PackageMetadata extends IAssetConfigure {
 
 }
 
 /**
- * Asset task decorator, use to define class is a asset task element.
+ * package task decorator, use to define class is a asset task element.
  *
  * @Package
  */
-export const Packager: ITaskDecorator<PackagerMetadata> = createTaskDecorator<PackagerMetadata>('Packager', new Registration(TaskBuilderToken, 'package'), AssetToken);
+export const Package: ITaskDecorator<PackageMetadata> = createTaskDecorator<PackageMetadata>('Package', new Registration(TaskBuilderToken, 'package'), AssetToken);

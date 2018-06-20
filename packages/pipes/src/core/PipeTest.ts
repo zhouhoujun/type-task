@@ -7,10 +7,10 @@ import { OnTaskInit, Src } from '@taskp/core';
 import { src, SrcOptions } from 'vinyl-fs';
 import * as mocha from 'gulp-mocha';
 import { isArray, Registration } from '@ts-ioc/core';
-import { PipeToken } from './IPipeTask';
+import { PipeToken, IPipeTask } from './IPipeTask';
 
 
-export const TestToken = new Registration(PipeToken, 'test');
+export const TestToken = new Registration<IPipeTask>(PipeToken, 'test');
 
 @PipeTask(TestToken)
 export class PipeTest extends PipeComponent<IPipeComponent> implements OnTaskInit {

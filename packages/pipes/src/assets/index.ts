@@ -1,4 +1,5 @@
 export * from './IAssetConfigure';
+export * from './IPackageConfigure';
 export * from './IAssetPipe';
 export * from './AssetPipe';
 export * from './DestTaskBuilder';

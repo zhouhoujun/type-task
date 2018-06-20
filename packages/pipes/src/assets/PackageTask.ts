@@ -1,7 +1,7 @@
 import { PipeElement } from '../core/index';
-import { Packager } from '../decorators/index';
+import { Package } from '../decorators/index';
 
-@Packager
+@Package
 export class PackageTask extends PipeElement {
     constructor(name?: string) {
         super(name);

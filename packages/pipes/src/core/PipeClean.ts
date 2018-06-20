@@ -3,12 +3,12 @@ import { PipeTask } from '../decorators/index';
 import { OnTaskInit, Src } from '@taskp/core';
 import { ICleanConfigure } from './IPipeConfigure';
 import { Registration } from '@ts-ioc/core';
-import { PipeToken } from './IPipeTask';
+import { PipeToken, IPipeTask } from './IPipeTask';
 const del = require('del');
 
 
 
-export const CleanToken = new Registration(PipeToken, 'clean');
+export const CleanToken = new Registration<IPipeTask>(PipeToken, 'clean');
 
 @PipeTask(CleanToken)
 export class PipeClean extends PipeElement implements OnTaskInit {

@@ -1,6 +1,5 @@
-import { IPipeConfigure, ISourceConfigure, IDestConfigure, ITestConfigure, ICleanConfigure } from '../core/index';
+import { ISourceConfigure, IDestConfigure, ICleanConfigure } from '../core/index';
 import { CtxType, Src } from '@taskp/core';
-import { ObjectMap } from '@ts-ioc/core';
 
 
 /**
@@ -17,41 +16,13 @@ export type DestType = string | IDestConfigure;
  * @extends {IDestConfigure}
  */
 export interface IAssetConfigure extends ISourceConfigure {
-
-    /**
-     * dest.
-     *
-     * @type {CtxType<DestType | DestType[]>}
-     * @memberof IAssetConfigure
-     */
-    dest?: CtxType<DestType | DestType[]>;
-
-}
-
-export interface IAssetsConfigure extends IPipeConfigure {
     /**
      * clean task config.
      *
      * @type {(CtxType<Src | ICleanConfigure>)}
-     * @memberof IAssetsConfigure
+     * @memberof IAssetConfigure
      */
     clean?: CtxType<Src | ICleanConfigure>;
-    /**
-     * assets.
-     *
-     * @type {(ObjectMap<Src | IAssetConfigure>)}
-     * @memberof IAssetsConfigure
-     */
-    assets: ObjectMap<Src | IAssetConfigure>;
-
-    /**
-     * test config.
-     *
-     * @type {(CtxType<Src | ITestConfigure>)}
-     * @memberof IAssetsConfigure
-     */
-    test?: CtxType<Src | ITestConfigure>;
-
     /**
      * dest.
      *
@@ -59,4 +30,5 @@ export interface IAssetsConfigure extends IPipeConfigure {
      * @memberof IAssetConfigure
      */
     dest?: CtxType<DestType | DestType[]>;
+
 }

@@ -5,11 +5,11 @@ import { Src, OnTaskInit } from '@taskp/core';
 import { ISourceConfigure } from './IPipeConfigure';
 import { PipeComponent } from './PipeComponent';
 import { IPipeComponent } from './IPipeComponent';
-import { PipeToken } from './IPipeTask';
+import { PipeToken, IPipeTask } from './IPipeTask';
 import { Registration } from '@ts-ioc/core';
 
 
-export const SourceToken = new Registration(PipeToken, 'src');
+export const SourceToken = new Registration<IPipeTask>(PipeToken, 'src');
 
 
 /**
