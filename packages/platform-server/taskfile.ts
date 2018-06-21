@@ -1,33 +1,17 @@
-import { TaskElement } from '@taskfr/core';
-import { PipeTask, PipeModule, PipeElement, TsCompile } from '@taskfr/pipes';
+import { PipeModule, Package, PipeElement } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 
-import * as mocha from 'gulp-mocha';
-const del = require('del');
-
-
-@PipeTask({
-    name: 'test',
-    src: 'test/**/*.spec.ts',
-    awaitPiped: true,
-    pipes: [() => mocha()],
-    task: PipeElement
-})
-class TestTask extends TaskElement {
-    execute(data?: any): Promise<any> {
-        return del(['lib/**', 'bin/**']);
+@Package({
+    src: 'src',
+    clean: 'lib',
+    test: 'test/**/*.spec.ts',
+    assets: {
+        ts: { dest: 'lib', uglify: true }
     }
+})
+export class Builder extends PipeElement {
 }
 
 TaskContainer.create(__dirname)
     .use(PipeModule)
-    .bootstrap([
-        TestTask,
-        {
-            name: 'tscompLIB',
-            src: ['src/**/*.ts', '!src/cli/**'],
-            dest: 'lib',
-            uglify: true,
-            task: TsCompile
-        }
-    ]);
+    .bootstrap(Builder);

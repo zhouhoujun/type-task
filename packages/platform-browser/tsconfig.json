@@ -9,6 +9,9 @@
       ],
       "@taskfr/pipes": [
         "../pipes/src"
+      ],
+      "@taskfr/platform-server": [
+        "../platform-server/src"
       ]
     }
   },
