@@ -1,4 +1,4 @@
-import { PipeModule, PipeElement, Packager } from '@taskp/pipes';
+import { PipeModule, PipeElement, Package } from '@taskp/pipes';
 import { TaskContainer } from '@taskp/platform-server';
 const del = require('del');
 
@@ -24,7 +24,7 @@ const del = require('del');
 //     }
 // }
 
-@Packager({
+@Package({
     // test: 'test/**/*.spec.ts',
     clean: 'bin',
     assets: {

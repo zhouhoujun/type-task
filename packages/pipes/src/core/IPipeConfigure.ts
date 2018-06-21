@@ -99,7 +99,20 @@ export interface IDestConfigure extends IPipeConfigure {
 
 }
 
-export interface ICleanConfigure extends IPipeConfigure {
+/**
+ * clean configure
+ *
+ * @export
+ * @interface ICleanConfigure
+ * @extends {IConfigure}
+ */
+export interface ICleanConfigure extends IConfigure {
+    /**
+     * clean match.
+     *
+     * @type {CtxType<Src>}
+     * @memberof ICleanConfigure
+     */
     clean?: CtxType<Src>;
 }
 

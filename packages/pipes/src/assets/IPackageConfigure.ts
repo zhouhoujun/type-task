@@ -1,7 +1,8 @@
 import { IPipeConfigure, ITestConfigure, ICleanConfigure } from '../core/index';
 import { CtxType, Src } from '@taskp/core';
-import { ObjectMap } from '@ts-ioc/core';
+import { ObjectMap, Token } from '@ts-ioc/core';
 import { IAssetConfigure, DestType } from './IAssetConfigure';
+import { IAssetPipe } from './IAssetPipe';
 
 export interface IPackageConfigure extends IPipeConfigure {
     /**
@@ -22,10 +23,10 @@ export interface IPackageConfigure extends IPipeConfigure {
     /**
      * assets.
      *
-     * @type {(ObjectMap<Src | IAssetConfigure>)}
+     * @type {(ObjectMap<Src | IAssetConfigure | Token<IAssetPipe>>)}
      * @memberof IAssetsConfigure
      */
-    assets: ObjectMap<Src | IAssetConfigure>;
+    assets: ObjectMap<Src | IAssetConfigure | Token<IAssetPipe>>;
 
     /**
      * test config.

@@ -24,7 +24,7 @@
     "suppressImplicitAnyIndexErrors": true
   },
   "exclude": [
-    "lib" 
+    "lib"
   ],
   "compileOnSave": false
 }

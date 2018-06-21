@@ -1,16 +1,16 @@
 import { ITaskDecorator, createTaskDecorator, TaskBuilderToken } from '@taskp/core';
-import { IAssetConfigure } from '../assets/IAssetConfigure';
 import { Registration } from '@ts-ioc/core';
 import { AssetToken } from '../assets/IAssetPipe';
+import { IPackageConfigure } from '../assets/IPackageConfigure';
 
 /**
  * asset task metadata.
  *
  * @export
  * @interface PackageMetadata
- * @extends {IAssetConfigure}
+ * @extends {IPackageConfigure}
  */
-export interface PackageMetadata extends IAssetConfigure {
+export interface PackageMetadata extends IPackageConfigure {
 
 }
 

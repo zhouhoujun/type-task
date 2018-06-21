@@ -15,10 +15,21 @@ import * as ts from 'gulp-typescript';
  * @extends {IAssetConfigure}
  */
 export interface TsConfigure extends IAssetConfigure {
-    uglify?: CtxType<boolean | ObjectMap<any>>;
+    /**
+     * tds config.
+     *
+     * @type {(CtxType<boolean | string>)}
+     * @memberof TsConfigure
+     */
     tds?: CtxType<boolean | string>;
+    /**
+     * set tsconfig to compile.
+     *
+     * @type {(CtxType<string | ObjectMap<any>>)}
+     * @memberof TsConfigure
+     */
     tsconfig?: CtxType<string | ObjectMap<any>>;
-    sourcempas?: CtxType<boolean | string>;
+
 }
 
 @AssetTask('ts')
@@ -27,7 +38,7 @@ export class TsCompile extends AssetPipe implements OnTaskInit {
     onTaskInit(cfg: TsConfigure) {
         super.onTaskInit(cfg);
         let pipes = this.context.to(cfg.pipes) || [];
-        if (this.context.to(cfg.sourcempas) !== false) {
+        if (this.context.to(cfg.sourcemaps) !== false) {
             pipes.unshift(() => sourcemaps.init());
         }
         pipes.push(() => this.getTsCompilePipe(cfg));
@@ -74,20 +85,20 @@ export class TsCompile extends AssetPipe implements OnTaskInit {
         let pipes = this.context.to(dest.pipes) || [];
 
         if (cfg.uglify) {
-            pipes.unshift((ctx, config) => {
-                let uglifyCfg = this.context.to(config.uglify);
+            let uglifyCfg = this.context.to(cfg.uglify)
+            pipes.unshift((ctx) => {
                 if (uglifyCfg) {
                     return isBoolean(uglifyCfg) ? uglify() : uglify(uglifyCfg);
                 }
                 return null;
             });
         }
-        if (cfg.sourcemaps) {
-            let smaps = this.context.to(cfg.sourcempas);
-            if (smaps !== false) {
-                pipes.push((ctx) => sourcemaps.write(isString(smaps) ? smaps : './sourcemaps'))
-            }
+
+        let smaps = this.context.to(cfg.sourcemaps);
+        if (smaps !== false) {
+            pipes.push((ctx) => sourcemaps.write(isString(smaps) ? smaps : './sourcemaps'))
         }
+
 
         pipes.unshift((ctx, config, transform) => {
             let trans: ITransform = transform.js;

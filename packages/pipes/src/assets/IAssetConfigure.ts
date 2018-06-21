@@ -1,5 +1,6 @@
 import { ISourceConfigure, IDestConfigure, ICleanConfigure } from '../core/index';
 import { CtxType, Src } from '@taskp/core';
+import { ObjectMap } from '@ts-ioc/core';
 
 
 /**
@@ -24,11 +25,27 @@ export interface IAssetConfigure extends ISourceConfigure {
      */
     clean?: CtxType<Src | ICleanConfigure>;
     /**
-     * dest.
+     * asset pipe dest.
      *
      * @type {CtxType<DestType | DestType[]>}
      * @memberof IAssetConfigure
      */
     dest?: CtxType<DestType | DestType[]>;
+
+    /**
+     * uglify asset or not.
+     *
+     * @type {(CtxType<boolean | ObjectMap<any>>)}
+     * @memberof IAssetConfigure
+     */
+    uglify?: CtxType<boolean | ObjectMap<any>>;
+
+    /**
+     * create source map or not. default create source map at  `./sourcemaps` for js asset and ts asset.
+     *
+     * @type {(CtxType<boolean | string>)}
+     * @memberof IAssetConfigure
+     */
+    sourcemaps?: CtxType<boolean | string>;
 
 }

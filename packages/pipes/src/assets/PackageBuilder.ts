@@ -1,9 +1,10 @@
 import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskp/core';
-import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean } from '@ts-ioc/core';
+import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean, isToken } from '@ts-ioc/core';
 import { IPipeComponent, PipeTest, PipeClean, ICleanConfigure, TestToken, CleanToken } from '../core/index';
 import { IPackageConfigure } from './IPackageConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
 import { AssetToken } from './IAssetPipe';
+import { IAssetConfigure } from './IAssetConfigure';
 
 /**
  * Asset task builder
@@ -39,16 +40,25 @@ export class PackageBuilder extends DestTaskBuilder {
 
         if (packCfg.clean && !(taskInst instanceof PipeClean)) {
             let val = packCfg.clean;
-            let assCfg: ICleanConfigure = (isArray(val) || isString(val)) ? { clean: val } : val;
-            if (!assCfg.task) {
-                assCfg.task = CleanToken;
+            let cleanCfg: ICleanConfigure = (isArray(val) || isString(val)) ? { clean: val } : val;
+            if (!cleanCfg.task) {
+                cleanCfg.task = CleanToken;
             }
+            subs.push(cleanCfg);
         }
 
         if (packCfg.assets) {
             let srcRoot = taskInst.context.to(packCfg.src);
             lang.forIn(packCfg.assets, (val, key: string) => {
-                let assCfg = (isArray(val) || isString(val)) ? { src: val } : val;
+                let assCfg: IAssetConfigure;
+                if ((isArray(val) || isString(val))) {
+                    assCfg = { src: val };
+                } else if (isToken(val)) {
+                    assCfg = { task: val };
+                } else {
+                    assCfg = val;
+                }
+
                 if (!assCfg.task) {
                     assCfg.task = new Registration(AssetToken, key);
                 }

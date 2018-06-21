@@ -24,10 +24,11 @@ export class AssetTaskBuilder extends DestTaskBuilder {
 
         if (assetCfg.clean && !(taskInst instanceof PipeClean)) {
             let val = assetCfg.clean;
-            let assCfg: ICleanConfigure = (isArray(val) || isString(val)) ? { clean: val } : val;
-            if (!assCfg.task) {
-                assCfg.task = CleanToken;
+            let cleanCfg: ICleanConfigure = (isArray(val) || isString(val)) ? { clean: val } : val;
+            if (!cleanCfg.task) {
+                cleanCfg.task = CleanToken;
             }
+            subs.push(cleanCfg);
         }
 
         if (assetCfg.src && !(taskInst instanceof PipeSource)) {
