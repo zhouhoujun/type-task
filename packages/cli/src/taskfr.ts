@@ -3,8 +3,8 @@
 import { isUndefined } from 'util';
 import chalk from 'chalk';
 
-const timestamp = require('time-stamp');
-const prettyTime = require('pretty-hrtime');
+// const timestamp = require('time-stamp');
+// const prettyTime = require('pretty-hrtime');
 const Liftoff = require('liftoff');
 // import program from 'commander';
 // program

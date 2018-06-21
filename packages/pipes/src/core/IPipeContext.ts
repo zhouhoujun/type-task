@@ -23,14 +23,6 @@ export interface IPipeContext extends IContext {
     packageFile: string;
 
     /**
-     * get task evn args.
-     *
-     * @returns {ObjectMap<any>}
-     * @memberof IPipeContext
-     */
-    getEnvArgs(): ObjectMap<any>;
-
-    /**
      * get run tasks.
      *
      * @returns {string[]}

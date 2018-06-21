@@ -1,10 +1,9 @@
 import { TaskBuilder, ITask, IConfigure, TaskBuilderToken, TaskType, IContext } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObject, isUndefined } from '@ts-ioc/core';
+import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObject, isUndefined, Token, Registration } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { IPipeComponent } from './IPipeComponent';
 import { TransformMergerExpress, TransformMerger, TransformType, TransformExpress } from './pipeTypes';
-import { IPipeContext } from './IPipeContext';
-import { IPipeTask } from './IPipeTask';
+import { IPipeTask, PipeToken } from './IPipeTask';
 
 /**
  * pipe task builder.
@@ -33,6 +32,14 @@ export class PipeTaskBuilder extends TaskBuilder {
             comp.merger = this.translateMerger(taskInst.context, pipeCfg.merger);
         }
         return taskInst;
+    }
+
+    protected traslateStrToken(token: string): Token<ITask> {
+        let taskToken = new Registration(PipeToken, token);
+        if (this.container.has(token)) {
+            return taskToken;
+        }
+        return super.traslateStrToken(token);
     }
 
     protected translatePipes(context: IContext, pipes: TransformExpress): TransformType[] {

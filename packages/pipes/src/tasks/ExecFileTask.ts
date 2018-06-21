@@ -1,7 +1,9 @@
 import { isString, isArray } from '@ts-ioc/core';
 import { existsSync } from 'fs';
-import { AbstractTask, Task, RunWay, Src } from '@taskfr/core';
+import { RunWay, Src } from '@taskfr/core';
 import * as execa from 'execa';
+import { PipeTask } from '../decorators/index';
+import { AbstractPipe } from '../core/AbstractPipe';
 
 
 /**
@@ -10,8 +12,8 @@ import * as execa from 'execa';
  * @class ExecFileTask
  * @implements {ITask}
  */
-@Task('execfile')
-export class ExecFileTask extends AbstractTask {
+@PipeTask('execfile')
+export class ExecFileTask extends AbstractPipe {
     files: Src;
     args?: string[];
     options?: execa.Options;

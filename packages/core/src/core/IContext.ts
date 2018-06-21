@@ -2,7 +2,7 @@ import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
 import { ITaskRunner } from './ITaskRunner';
 import { ITaskBuilder } from './ITaskBuilder';
-import { InjectToken, IContainer, Type, Token } from '@ts-ioc/core';
+import { InjectToken, IContainer, Type, Token, ObjectMap } from '@ts-ioc/core';
 import { ITaskContainer } from '../ITaskContainer';
 
 /**
@@ -57,6 +57,14 @@ export interface IContext {
      * @memberof IContext
      */
     getRootPath(): string;
+
+       /**
+     * get task evn args.
+     *
+     * @returns {ObjectMap<any>}
+     * @memberof IContext
+     */
+    getEnvArgs(): ObjectMap<any>;
 
     /**
      *convert to finally type via context.

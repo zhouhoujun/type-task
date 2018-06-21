@@ -51,6 +51,7 @@
         "execa": "^0.10.0",
         "globby": "^7.1.1",
         "gulp-cached": "^1.1.0",
+        "gulp-json-editor": "^2.4.1",
         "gulp-mocha": "^3.0.1",
         "gulp-rollup": "^2.16.2",
         "gulp-sourcemaps": "^2.1.1",

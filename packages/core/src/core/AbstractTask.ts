@@ -36,7 +36,7 @@ export abstract class AbstractTask implements ITask {
      *
      * @memberof AbstractTask
      */
-    runWay = RunWay.seqFirst;
+    runWay = RunWay.sequence;
 
     constructor(public name: string) {
 

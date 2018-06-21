@@ -1,8 +1,8 @@
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { ITaskComponent } from './ITaskComponent';
-import { Type, isFunction, Inject, IContainer, Singleton, isClass, ContainerToken, isToken, isMetadataObject, Token, ModuleBuilder, lang } from '@ts-ioc/core';
+import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, isToken, isMetadataObject, Token, ModuleBuilder, Registration } from '@ts-ioc/core';
 import { IConfigure, TaskType } from './IConfigure';
-import { ITask } from './ITask';
+import { ITask, TaskToken } from './ITask';
 import { TaskElement } from './TaskElement';
 import { TaskComponent } from './TaskComponent';
 import { Task } from './decorators/index';
@@ -62,7 +62,7 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
     }
 
 
-    async buildChildren<T extends ITaskComponent>(parent: T, configs: IConfigure[]) {
+    async buildChildren<T extends ITaskComponent>(parent: T, configs: (IConfigure | Token<ITask>)[]) {
         if (!isFunction(parent.add)) {
             return;
         }
@@ -73,14 +73,14 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
             }
             parent.add(node);
             if (node instanceof TaskComponent) {
-                if (cfg.children && cfg.children.length) {
+                if (!isToken(cfg) && cfg.children && cfg.children.length) {
                     await this.buildChildren(node, cfg.children);
                 }
             }
         }));
     }
 
-    async buildComponent<T extends ITask>(child: IConfigure | T): Promise<T> {
+    async buildComponent<T extends ITask>(child: IConfigure | Token<T>): Promise<T> {
         let component: T;
         if (isToken(child)) {
             component = await this.build(child)
@@ -119,7 +119,18 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
 
     protected getBootstrapToken(cfg: IConfigure, token?: Token<ITask> | Type<any>): Token<ITask> {
         let bootstrapToken = cfg.task || cfg.bootstrap || token;
+        if (isString(bootstrapToken)) {
+            bootstrapToken = this.traslateStrToken(bootstrapToken);
+        }
         return bootstrapToken;
+    }
+
+    protected traslateStrToken(token: string): Token<ITask> {
+        let taskToken = new Registration(TaskToken, token);
+        if (this.container.has(taskToken)) {
+            return taskToken;
+        }
+        return token;
     }
 
     protected getConfigBuilder(cfg: IConfigure) {

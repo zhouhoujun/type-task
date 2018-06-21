@@ -20,7 +20,7 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
     * context tasks name.
     *
     * @type {string}
-    * @memberof IContext
+    * @memberof ITaskConfigure
     */
     name?: string;
 
@@ -28,7 +28,7 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
      * root dir.
      *
      * @type {string}
-     * @memberof IConfigure
+     * @memberof ITaskConfigure
      */
     rootdir?: string;
 
@@ -36,7 +36,7 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
      * run way.
      *
      * @type {RunWay}
-     * @memberof IContext
+     * @memberof ITaskConfigure
      */
     runWay?: RunWay;
 
@@ -44,7 +44,7 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
      * task module.
      *
      * @type {Token<T>}
-     * @memberof IConfigure
+     * @memberof ITaskConfigure
      */
     task?: Token<T>;
 
@@ -59,10 +59,10 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
     /**
      * children
      *
-     * @type {(ITaskConfigure<T> | Type<T>)[]}
+     * @type {(ITaskConfigure<T> | Token<T>)[]}
      * @memberof IConfigure
      */
-    children?: (ITaskConfigure<T> | Type<T>)[];
+    children?: (ITaskConfigure<T> | Token<T>)[];
 }
 
 /**

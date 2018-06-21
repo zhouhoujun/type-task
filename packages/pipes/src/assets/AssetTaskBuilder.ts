@@ -1,8 +1,9 @@
 import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, lang, isArray, isString } from '@ts-ioc/core';
+import { Inject, ContainerToken, IContainer, Singleton, lang, isArray, isString, Token, Registration } from '@ts-ioc/core';
 import { IPipeConfigure, IPipeComponent, PipeSource, SourceToken, PipeClean, ICleanConfigure, CleanToken } from '../core/index';
 import { IAssetConfigure } from './IAssetConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
+import { AssetToken } from './IAssetPipe';
 
 /**
  * Asset task builder
@@ -43,5 +44,13 @@ export class AssetTaskBuilder extends DestTaskBuilder {
             await this.buildChildren(taskInst as ITaskComponent, subs);
         }
         return taskInst;
+    }
+
+    protected traslateStrToken(token: string): Token<ITask> {
+        let taskToken = new Registration(AssetToken, token);
+        if (this.container.has(token)) {
+            return taskToken;
+        }
+        return super.traslateStrToken(token);
     }
 }

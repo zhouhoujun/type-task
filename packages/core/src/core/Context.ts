@@ -1,4 +1,4 @@
-import { isFunction, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata, Token, isToken } from '@ts-ioc/core';
+import { isFunction, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata, Token, isToken, ObjectMap } from '@ts-ioc/core';
 import { IContext, ContextToken, CtxType } from './IContext';
 import { ITaskContainer, TaskContainerToken } from '../ITaskContainer';
 import { IConfigure, TaskType } from './IConfigure';
@@ -47,6 +47,10 @@ export class Context implements IContext {
             builderInst = builder;
         }
         return this.container.resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: builderInst })
+    }
+
+    getEnvArgs(): ObjectMap<any> {
+        return {};
     }
 
     to<T>(target: CtxType<T>, config?: IConfigure): T {
