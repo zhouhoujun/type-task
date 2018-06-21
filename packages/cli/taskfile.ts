@@ -1,31 +1,8 @@
 import { PipeModule, PipeElement, Package } from '@taskp/pipes';
 import { TaskContainer } from '@taskp/platform-server';
-const del = require('del');
-
-
-// @AssetTask({
-//     children: [{
-//         name: 'tsAssets',
-//         src: 'src/**/*.ts',
-//         // test: 'test/**/*.spec.ts',
-//         dest: 'bin',
-//         uglify: true,
-//         task: TsCompile
-//     }]
-// })
-// class BuildTask extends PipeElement {
-//     constructor() {
-//         super()
-//         this.awaitPiped = true;
-//     }
-//     execute(data?: any): Promise<any> {
-//         console.log('execute del');
-//         return del(['lib/**', 'bin/**']);
-//     }
-// }
 
 @Package({
-    // test: 'test/**/*.spec.ts',
+    test: 'test/**/*.spec.ts',
     clean: 'bin',
     assets: {
         ts: {
@@ -37,9 +14,6 @@ const del = require('del');
     }
 })
 class BuildTask extends PipeElement {
-    constructor() {
-        super()
-    }
 }
 
 TaskContainer.create(__dirname)

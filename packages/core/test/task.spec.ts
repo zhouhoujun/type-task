@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { ITaskContainer, DefaultTaskContainer, TaskElement, IConfigure } from '../src';
+import { ITaskContainer, DefaultTaskContainer, TaskElement, IConfigure, TaskRunner } from '../src';
 
 import { SimpleTask, SimpleCTask, TaskModuleTest } from './simples.task';
 
@@ -12,7 +12,9 @@ describe('auto register with build', () => {
     });
 
     it('should bootstrap with single task.', async () => {
-        let result = await container.bootstrap(SimpleTask);
+        let runner = await container.bootstrap(SimpleTask);
+        expect(runner instanceof TaskRunner).eq(true);
+        let result = await runner.start();
         expect(result).eq('simple task');
     });
 

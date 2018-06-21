@@ -44,7 +44,7 @@
     "chai": "^3.5.0",
     "chalk": "^2.3.1",
     "gulp-cached": "^1.1.0",
-    "gulp-mocha": "^6.0.0",
+    "gulp-mocha": "^3.0.1",
     "gulp-sourcemaps": "^2.1.1",
     "gulp-typescript": "^4.0.1",
     "gulp-uglify": "^3.0.0",

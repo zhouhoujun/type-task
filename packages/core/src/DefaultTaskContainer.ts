@@ -5,7 +5,6 @@ import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
 import { TaskType } from './core/index';
-import { RunAspect } from './aop/RunAspect';
 import { PipeElement } from '@taskp/pipes';
 
 

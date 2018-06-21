@@ -1,4 +1,3 @@
-import { Src } from '@taskp/core';
 import { IPipeComponent } from './IPipeComponent';
 import { PipeTask } from '../decorators/index';
 import { PipeComponent } from './PipeComponent';
