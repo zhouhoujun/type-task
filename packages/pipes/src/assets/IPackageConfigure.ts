@@ -1,5 +1,5 @@
 import { IPipeConfigure, ITestConfigure, ICleanConfigure } from '../core/index';
-import { CtxType, Src } from '@taskp/core';
+import { CtxType, Src } from '@taskfr/core';
 import { ObjectMap, Token } from '@ts-ioc/core';
 import { IAssetConfigure, DestType } from './IAssetConfigure';
 import { IAssetPipe } from './IAssetPipe';

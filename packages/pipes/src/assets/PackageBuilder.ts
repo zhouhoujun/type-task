@@ -1,4 +1,4 @@
-import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskp/core';
+import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean, isToken } from '@ts-ioc/core';
 import { IPipeComponent, PipeTest, PipeClean, ICleanConfigure, TestToken, CleanToken } from '../core/index';
 import { IPackageConfigure } from './IPackageConfigure';

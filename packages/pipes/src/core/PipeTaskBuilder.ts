@@ -1,4 +1,4 @@
-import { TaskBuilder, ITask, IConfigure, TaskBuilderToken, TaskType, IContext } from '@taskp/core';
+import { TaskBuilder, ITask, IConfigure, TaskBuilderToken, TaskType, IContext } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObject, isUndefined } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { IPipeComponent } from './IPipeComponent';

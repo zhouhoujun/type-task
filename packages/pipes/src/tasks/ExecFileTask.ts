@@ -1,6 +1,6 @@
 import { isString, isArray } from '@ts-ioc/core';
 import { existsSync } from 'fs';
-import { AbstractTask, Task, RunWay, Src } from '@taskp/core';
+import { AbstractTask, Task, RunWay, Src } from '@taskfr/core';
 import * as execa from 'execa';
 
 

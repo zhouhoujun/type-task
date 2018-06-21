@@ -1,5 +1,5 @@
-import { PipeModule, PipeElement, Package } from '@taskp/pipes';
-import { TaskContainer } from '@taskp/platform-server';
+import { PipeModule, PipeElement, Package } from '@taskfr/pipes';
+import { TaskContainer } from '@taskfr/platform-server';
 
 @Package({
     test: 'test/**/*.spec.ts',

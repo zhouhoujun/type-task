@@ -4,13 +4,13 @@
     "baseUrl": ".",
     "rootDir": "../../packages",
     "paths": {
-      "@taskp/core": [
+      "@taskfr/core": [
         "../core/src"
       ],
-      "@taskp/pipes": [
+      "@taskfr/pipes": [
         "../pipes/src"
       ],
-      "@taskp/platform-server": [
+      "@taskfr/platform-server": [
         "../platform-server/src"
       ]
     }

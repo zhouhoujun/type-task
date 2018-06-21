@@ -1,5 +1,5 @@
-import { PipeModule, Package, PipeElement } from '@taskp/pipes';
-import { TaskContainer } from '@taskp/platform-server';
+import { PipeModule, Package, PipeElement } from '@taskfr/pipes';
+import { TaskContainer } from '@taskfr/platform-server';
 
 @Package({
     src: 'src',

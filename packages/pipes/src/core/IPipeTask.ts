@@ -1,4 +1,4 @@
-import { ITask } from '@taskp/core';
+import { ITask } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { InjectToken } from '@ts-ioc/core';
 

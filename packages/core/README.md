@@ -1,9 +1,9 @@
-# packaged @taskp/core
+# packaged @taskfr/core
 
 This repo is for distribution on `npm`. The source for this module is in the
 [main repo](https://github.com/zhouhoujun/type-task).
 
-`@taskp/core` is Task manager, base on AOP, Ioc container, via [@ts-ioc/core](https://www.npmjs.com/package/@ts-ioc/core).
+`@taskfr/core` is Task manager, base on AOP, Ioc container, via [@ts-ioc/core](https://www.npmjs.com/package/@ts-ioc/core).
 
 
 ## Install
@@ -11,7 +11,7 @@ This repo is for distribution on `npm`. The source for this module is in the
 1. install cil:
 
 ```shell
-npm install -g @taskp/cil
+npm install -g @taskfr/cil
 ```
 
 use command: `taskp [task names] [--param param]`
@@ -21,28 +21,28 @@ taskname: decorator class with `@Task('taskname')` or `@TaskModule({name:'taskna
 2. install modules:
 
 ```shell
-npm install @taskp/core
+npm install @taskfr/core
 
 //in borwser
-npm install @taskp/platform-browser
+npm install @taskfr/platform-browser
 
 //in server
-npm install @taskp/platform-server
+npm install @taskfr/platform-server
 ```
 
 * use pipes task
 
 ```shell
-npm install @taskp/pipes
+npm install @taskfr/pipes
 ```
 
 ```ts
 //in borwser
-import { TaskContainer } from '@taskp/platform-browser';
+import { TaskContainer } from '@taskfr/platform-browser';
 //in server
-import { TaskContainer } from '@taskp/platform-server';
+import { TaskContainer } from '@taskfr/platform-server';
 
-import { PipeModule, PipeTask, PipeElement } from '@taskp/pipes';
+import { PipeModule, PipeTask, PipeElement } from '@taskfr/pipes';
 
 let container = new TaskContainer(__dirname);
 container
@@ -153,7 +153,7 @@ TaskContainer.create(__dirname)
 
 
 Documentation is available on the
-[@taskp/core docs site](https://github.com/zhouhoujun/type-task).
+[@taskfr/core docs site](https://github.com/zhouhoujun/type-task).
 
 ## License
 

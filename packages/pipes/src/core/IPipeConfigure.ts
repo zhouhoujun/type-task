@@ -1,4 +1,4 @@
-import { IConfigure, Src, CtxType } from '@taskp/core';
+import { IConfigure, Src, CtxType } from '@taskfr/core';
 import { TransformExpress, TransformMergerExpress } from './pipeTypes';
 import { SrcOptions, DestOptions } from 'vinyl-fs';
 

@@ -37,9 +37,9 @@ if (tsregister.indexOf('tsconfig-paths/register') < 0) {
 }
 
 export const cli = new Liftoff({
-  name: 'taskp',
-  processTitle: 'taskp',
-  moduleName: 'taskp',
+  name: 'tfr',
+  processTitle: 'tfr',
+  moduleName: 'tfr',
   configName: 'taskfile',
   extensions: jsVariants,
   v8flags: ['--harmony']
@@ -63,7 +63,7 @@ cli.launch({
 }, (env) => {
 
   if (versionFlag) {
-    console.log('taskp CLI version', cliPackage.version);
+    console.log('task framework CLI version', cliPackage.version);
     if (env.modulePackage && !isUndefined(env.modulePackage.version)) {
       console.log('Local version', env.modulePackage.version);
     }

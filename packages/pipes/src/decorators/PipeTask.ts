@@ -1,4 +1,4 @@
-import { createTaskDecorator, TaskMetadata, ITaskDecorator, TaskBuilderToken } from '@taskp/core';
+import { createTaskDecorator, TaskMetadata, ITaskDecorator, TaskBuilderToken } from '@taskfr/core';
 import { IPipeConfigure } from '../core/IPipeConfigure';
 import { Registration } from '@ts-ioc/core';
 import { PipeToken } from '../core/IPipeTask';

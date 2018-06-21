@@ -3,7 +3,7 @@ import { PipeComponent } from './PipeComponent';
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
 import { ITestConfigure } from './IPipeConfigure';
-import { OnTaskInit, Src } from '@taskp/core';
+import { OnTaskInit, Src } from '@taskfr/core';
 import { src, SrcOptions } from 'vinyl-fs';
 import * as mocha from 'gulp-mocha';
 import { isArray, Registration } from '@ts-ioc/core';

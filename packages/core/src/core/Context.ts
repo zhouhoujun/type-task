@@ -6,7 +6,7 @@ import { ITask } from './ITask';
 import { Task } from './decorators/index';
 import { ITaskBuilder } from './ITaskBuilder';
 import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
-import { TaskBuilder } from '@taskp/core';
+import { TaskBuilder } from '@taskfr/core';
 
 
 /**

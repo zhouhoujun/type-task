@@ -1,11 +1,11 @@
 {
-  "name": "@taskp/cli",
+  "name": "@taskfr/cli",
   "version": "2.0.5",
   "description": "tsioc is AOP, Ioc container, via typescript decorator",
-  "main": "./lib/taskp.js",
-  "typings": "./lib/taskp.d.ts",
+  "main": "./bin/taskfr.js",
+  "typings": "./lib/taskfr.d.ts",
   "bin": {
-    "taskp": "./bin/taskp.js"
+    "taskp": "./bin/taskfr.js"
   },
   "scripts": {
     "postinstall": "npm prune",

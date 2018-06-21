@@ -2,7 +2,7 @@ import { toAbsolutePath } from '@ts-ioc/platform-server';
 import { readdirSync, lstatSync } from 'fs';
 import { join } from 'path';
 import { ObjectMap, Express2, Singleton } from '@ts-ioc/core';
-import { Context } from '@taskp/core';
+import { Context } from '@taskfr/core';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 const minimist = require('minimist');
 

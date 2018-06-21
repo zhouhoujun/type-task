@@ -1,5 +1,5 @@
 {
-  "name": "@taskp/pipes",
+  "name": "@taskfr/pipes",
   "version": "2.0.5",
   "description": "tsioc is AOP, Ioc container, via typescript decorator",
   "main": "./bundles/core.umd.js",
@@ -53,7 +53,7 @@
     "execa":"^0.10.0"
   },
   "peerDependencies": {
-    "@taskp/core": "^2.0.13"
+    "@taskfr/core": "^2.0.13"
   },
   "directories": {
     "lib": "lib",

@@ -1,5 +1,5 @@
-import { PipeModule, PackageTask, PipeElement, AssetPipe } from '@taskp/pipes';
-import { TaskContainer } from '@taskp/platform-server';
+import { PipeModule, PackageTask, PipeElement, AssetPipe } from '@taskfr/pipes';
+import { TaskContainer } from '@taskfr/platform-server';
 const rollup = require('gulp-rollup');
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');

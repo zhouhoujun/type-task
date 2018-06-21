@@ -1,4 +1,4 @@
-import { ITaskDecorator, createTaskDecorator, TaskBuilderToken } from '@taskp/core';
+import { ITaskDecorator, createTaskDecorator, TaskBuilderToken } from '@taskfr/core';
 import { IAssetConfigure } from '../assets/IAssetConfigure';
 import { Registration } from '@ts-ioc/core';
 import { AssetToken } from '../assets/IAssetPipe';

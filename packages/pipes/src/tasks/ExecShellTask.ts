@@ -1,6 +1,6 @@
 import { ExecOptions, exec } from 'child_process';
 import { isString, isArray } from '@ts-ioc/core';
-import { Task, AbstractTask, RunWay, Src } from '@taskp/core';
+import { Task, AbstractTask, RunWay, Src } from '@taskfr/core';
 
 /**
  * Shell Task

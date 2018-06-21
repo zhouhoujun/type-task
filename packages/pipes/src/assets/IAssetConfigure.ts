@@ -1,5 +1,5 @@
 import { ISourceConfigure, IDestConfigure, ICleanConfigure } from '../core/index';
-import { CtxType, Src } from '@taskp/core';
+import { CtxType, Src } from '@taskfr/core';
 import { ObjectMap } from '@ts-ioc/core';
 
 

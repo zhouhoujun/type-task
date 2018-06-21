@@ -1,6 +1,6 @@
-import { TaskElement } from '@taskp/core';
-import { PipeTask, PipeModule, PipeElement, TsCompile } from '@taskp/pipes';
-import { TaskContainer } from '@taskp/platform-server';
+import { TaskElement } from '@taskfr/core';
+import { PipeTask, PipeModule, PipeElement, TsCompile } from '@taskfr/pipes';
+import { TaskContainer } from '@taskfr/platform-server';
 
 import * as mocha from 'gulp-mocha';
 const del = require('del');

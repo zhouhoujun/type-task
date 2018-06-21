@@ -1,4 +1,4 @@
-import { ITaskRunner, TaskType, CtxType, ITask } from '@taskp/core';
+import { ITaskRunner, TaskType, CtxType, ITask } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { ObjectMap, isMetadataObject, isObservable, isBaseType } from '@ts-ioc/core';
 import { IPipeContext } from './IPipeContext';

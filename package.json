@@ -1,7 +1,7 @@
 {
-    "name": "taskp-srcs",
+    "name": "taskfr-srcs",
     "version": "0.3.1",
-    "description": "type-task is task manager via AOP, IOC.",
+    "description": "taskfr is task framework via AOP, IOC.",
     "main": "./lib/index.js",
     "typings": "./lib/index.d.ts",
     "scripts": {

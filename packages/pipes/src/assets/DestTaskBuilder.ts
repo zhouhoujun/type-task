@@ -1,4 +1,4 @@
-import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskp/core';
+import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskfr/core';
 import { Singleton, isArray, isString, Inject, ContainerToken, IContainer } from '@ts-ioc/core';
 import { PipeTaskBuilder, PipeDest, DestToken } from '../core/index';
 import { IAssetConfigure } from './IAssetConfigure';

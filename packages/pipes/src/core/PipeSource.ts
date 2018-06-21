@@ -1,7 +1,7 @@
 import { src, SrcOptions } from 'vinyl-fs';
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
-import { Src, OnTaskInit } from '@taskp/core';
+import { Src, OnTaskInit } from '@taskfr/core';
 import { ISourceConfigure } from './IPipeConfigure';
 import { PipeComponent } from './PipeComponent';
 import { IPipeComponent } from './IPipeComponent';

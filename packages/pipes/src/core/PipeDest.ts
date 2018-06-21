@@ -4,7 +4,7 @@ import { IPipeComponent } from './IPipeComponent';
 import { PipeComponent } from './PipeComponent';
 import { ITransform } from './ITransform';
 import { TransformType } from './pipeTypes';
-import { OnTaskInit } from '@taskp/core';
+import { OnTaskInit } from '@taskfr/core';
 import { IDestConfigure } from './IPipeConfigure';
 import { Registration } from '@ts-ioc/core';
 import { PipeToken, IPipeTask } from './IPipeTask';
