@@ -1,5 +1,5 @@
 import { ExecOptions, exec } from 'child_process';
-import { isString, isArray } from '@ts-ioc/core';
+import { isString, isArray, lang, ObjectMap } from '@ts-ioc/core';
 import { Task, AbstractTask, RunWay, Src, IConfigure, CtxType, OnTaskInit } from '@taskfr/core';
 import { isBoolean } from 'util';
 import { AbstractPipe } from '../core';
@@ -19,14 +19,14 @@ export interface ShellTaskConfig extends IConfigure {
      * @type {CtxType<Src>}
      * @memberof ShellTaskConfig
      */
-    cmd: CtxType<Src>;
+    shell: CtxType<Src>;
     /**
      * shell args.
      *
-     * @type {CtxType<string[]>}
+     * @type {CtxType<string[] | ObjectMap<string | boolean>>}
      * @memberof ShellTaskConfig
      */
-    args?: CtxType<string[]>;
+    args?: CtxType<string[] | ObjectMap<string | boolean>>;
     /**
      * shell exec options.
      *
@@ -53,12 +53,12 @@ export interface ShellTaskConfig extends IConfigure {
 @PipeTask('shell')
 export class ExecShellTask extends AbstractPipe implements OnTaskInit {
     /**
-     * cmd.
+     * shell cmd.
      *
      * @type {Src}
      * @memberof ExecShellTask
      */
-    cmd: Src;
+    shell: Src;
     /**
      * shell args.
      *
@@ -85,8 +85,9 @@ export class ExecShellTask extends AbstractPipe implements OnTaskInit {
     }
 
     onTaskInit(config: ShellTaskConfig) {
-        this.cmd = this.context.to(config.cmd);
-        this.args = this.context.to(config.args);
+        this.shell = this.context.to(config.shell);
+        let args = this.context.to(config.args);
+        this.args = isArray(args) ? args : this.formatArgs(args);
         this.options = this.context.to(config.options);
         this.allowError = this.context.to(config.allowError);
         if (!isBoolean(this.allowError)) {
@@ -95,7 +96,7 @@ export class ExecShellTask extends AbstractPipe implements OnTaskInit {
     }
 
     run(): Promise<any> {
-        return Promise.resolve(this.cmd)
+        return Promise.resolve(this.shell)
             .then(cmds => {
                 let allowError = this.allowError;
                 let options = this.options;
@@ -117,10 +118,35 @@ export class ExecShellTask extends AbstractPipe implements OnTaskInit {
             });
     }
 
+    protected formatShell(shell: string): string {
+        if (this.args && this.args.length) {
+            return shell + ' ' + this.args.join(' ');
+        }
+        return shell;
+    }
+
+    protected formatArgs(env: ObjectMap<string | boolean>): string[] {
+        let args = [];
+        lang.forIn(env, (val, k: string) => {
+            if (k === 'root' || !/^[a-zA-Z]/.test(k)) {
+                return;
+            }
+            if (isBoolean(val)) {
+                if (val) {
+                    args.push(`--${k}`);
+                }
+            } else if (val) {
+                args.push(`--${k} ${val}`);
+            }
+        });
+        return args;
+    }
+
     protected execShell(cmd: string, options?: ExecOptions, allowError = true): Promise<any> {
         if (!cmd) {
             return Promise.resolve();
         }
+        cmd = this.formatShell(cmd);
         return new Promise((resolve, reject) => {
             let shell = exec(cmd, options, (err, stdout, stderr) => {
                 if (err) {

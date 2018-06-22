@@ -1,4 +1,4 @@
-import { Task, IConfigure, RunWay } from '@taskfr/core';
+import { RunWay } from '@taskfr/core';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 import { Inject, Abstract } from '@ts-ioc/core';
 import { IPipeTask } from './IPipeTask';

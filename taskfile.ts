@@ -1,4 +1,4 @@
-import { PipeModule, Package, PipeElement, IPipeContext, SourceToken, PipeTask } from '@taskfr/pipes';
+import { PipeModule, PipeElement, IPipeContext, SourceToken, PipeTask } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const jeditor = require('gulp-json-editor');
 
@@ -43,9 +43,13 @@ let versionSetting = (ctx: IPipeContext) => {
             task: SourceToken
         },
         {
-            cmd: (ctx: IPipeContext) => {
+            shell: (ctx: IPipeContext) => {
                 let envArgs = ctx.getEnvArgs();
-                return envArgs.deploy ? 'npm publish' : 'npm test';
+                let packages = ctx.getFolders('packages');
+                let cmd = envArgs.deploy ? 'npm publish' : 'npm test';
+                return packages.map(fd => {
+                    return `cd ${fd} && ${cmd}`;
+                });
             },
             args: argFactory,
             task: 'shell'
