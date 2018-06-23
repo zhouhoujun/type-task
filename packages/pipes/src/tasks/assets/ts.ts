@@ -100,7 +100,7 @@ export class TsCompile extends AssetPipe implements OnTaskInit {
         }
 
 
-        pipes.unshift((ctx, config, transform) => {
+        pipes.unshift((ctx, task, transform) => {
             let trans: ITransform = transform.js;
             trans.changeAsOrigin = true;
             return trans;
@@ -118,7 +118,7 @@ export class TsCompile extends AssetPipe implements OnTaskInit {
                 name: 'dest-tds',
                 dest: cfg.tds,
                 pipes: [
-                    (ctx, config, transform) => {
+                    (ctx, task, transform) => {
                         let tans: ITransform = transform.dts;
                         tans.changeAsOrigin = true;
                         return tans;

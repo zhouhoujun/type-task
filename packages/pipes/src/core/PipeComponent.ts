@@ -161,7 +161,7 @@ export class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> im
             if (transform) {
                 pstream = pstream
                     .then(stream => {
-                        return this.executePipe(stream, transform, this.config);
+                        return this.executePipe(stream, transform);
                     });
             }
         });
@@ -175,18 +175,17 @@ export class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> im
      * @protected
      * @param {ITransform} stream
      * @param {TransformType} transform
-     * @param {IConfigure} config
      * @returns {Promise<ITransform>}
      * @memberof PipeComponent
      */
-    protected executePipe(stream: ITransform, transform: TransformType, config: IConfigure): Promise<ITransform> {
+    protected executePipe(stream: ITransform, transform: TransformType): Promise<ITransform> {
         let pstf: Promise<ITransform>;
         if (transform instanceof TaskRunner) {
             pstf = transform.start(stream);
         } else if (isTransform(stream)) {
             if (!isClass(transform) && isFunction(transform)) {
                 let pex = transform as PipeExpress;
-                pstf = Promise.resolve(pex(this.context, config, stream, this));
+                pstf = Promise.resolve(pex(this.context, this, stream));
             } else if (isTransform(transform)) {
                 pstf = Promise.resolve(transform as ITransform);
             }

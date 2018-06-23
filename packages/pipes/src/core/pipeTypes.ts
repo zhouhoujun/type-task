@@ -1,24 +1,23 @@
 import { ITaskRunner, TaskType, CtxType, ITask } from '@taskfr/core';
 import { ITransform } from './ITransform';
-import { ObjectMap, isMetadataObject, isObservable, isBaseType } from '@ts-ioc/core';
+import { ObjectMap, isMetadataObject, isObservable, isBaseType, Token } from '@ts-ioc/core';
 import { IPipeContext } from './IPipeContext';
 import { IPipeTask } from './IPipeTask';
 import { isFunction } from '@ts-ioc/core';
 import { Stream } from 'stream';
 import { ITransformMerger } from './ITransformMerger';
-import { IPipeConfigure } from './IPipeConfigure';
 
 
 
 /**
  * pipe express
  */
-export type PipeExpress = (context?: IPipeContext, config?: IPipeConfigure, transform?: ITransform, taskInstance?: ITask) => ITransform | Promise<ITransform>;
+export type PipeExpress = (context?: IPipeContext, taskInstance?: ITask, transform?: ITransform) => ITransform | Promise<ITransform>;
 
 /**
  * transform type.
  */
-export type TransformType = ITransform | PipeExpress | ITaskRunner;
+export type TransformType = ITransform | PipeExpress | ITaskRunner | Token<IPipeTask>;
 
 /**
  * task transform express.

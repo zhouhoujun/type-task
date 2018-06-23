@@ -17,6 +17,15 @@ export type DestType = string | IDestConfigure;
  * @extends {IDestConfigure}
  */
 export interface IAssetConfigure extends ISourceConfigure {
+
+    /**
+     * watch source change to run pipe task.
+     *
+     * @type {CtxType<Src | boolean>}
+     * @memberof IPipeConfigure
+     */
+    watch?: CtxType<Src | boolean>;
+
     /**
      * clean task config.
      *

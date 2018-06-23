@@ -1,5 +1,5 @@
-import { IPipeConfigure, ITestConfigure, ICleanConfigure } from '../core/index';
-import { CtxType, Src } from '@taskfr/core';
+import { IPipeConfigure, ITestConfigure, ICleanConfigure, PipeTest } from '../core/index';
+import { CtxType, Src, ITask } from '@taskfr/core';
 import { ObjectMap, Token } from '@ts-ioc/core';
 import { IAssetConfigure, DestType } from './IAssetConfigure';
 import { IAssetPipe } from './IAssetPipe';
@@ -14,12 +14,20 @@ export interface IPackageConfigure extends IPipeConfigure {
     src?: CtxType<string>;
 
     /**
+     * watch source change to run pipe task.
+     *
+     * @type {CtxType<Src | boolean>}
+     * @memberof IPackageConfigure
+     */
+    watch?: CtxType<Src | boolean>;
+
+    /**
      * clean task config.
      *
-     * @type {(CtxType<Src | ICleanConfigure>)}
+     * @type {(CtxType<Src | ICleanConfigure | Token<ITask>>)}
      * @memberof IAssetsConfigure
      */
-    clean?: CtxType<Src | ICleanConfigure>;
+    clean?: CtxType<Src | ICleanConfigure | Token<ITask>>;
     /**
      * assets.
      *
@@ -34,7 +42,7 @@ export interface IPackageConfigure extends IPipeConfigure {
      * @type {(CtxType<Src | ITestConfigure>)}
      * @memberof IAssetsConfigure
      */
-    test?: CtxType<Src | ITestConfigure>;
+    test?: CtxType<Src | ITestConfigure | Token<PipeTest>>;
 
     /**
      * dest.

@@ -29,8 +29,10 @@ export class PackageBuilder extends DestTaskBuilder {
             let testCfg;
             if (isBoolean(test)) {
                 testCfg = {};
-            } else if (isString(test)) {
+            } else if (isArray(test) || isString(test)) {
                 testCfg = { test: test };
+            } else if (isToken(test)) {
+                testCfg = { task: test };
             } else {
                 testCfg = test;
             }
@@ -40,7 +42,14 @@ export class PackageBuilder extends DestTaskBuilder {
 
         if (packCfg.clean && !(taskInst instanceof PipeClean)) {
             let val = packCfg.clean;
-            let cleanCfg: ICleanConfigure = (isArray(val) || isString(val)) ? { clean: val } : val;
+            let cleanCfg: ICleanConfigure
+            if (isArray(val) || isString(val)) {
+                cleanCfg = { clean: val };
+            } else if (isToken(val)) {
+                cleanCfg = { task: val };
+            } else {
+                cleanCfg = val;
+            }
             if (!cleanCfg.task) {
                 cleanCfg.task = CleanToken;
             }
@@ -51,7 +60,7 @@ export class PackageBuilder extends DestTaskBuilder {
             let srcRoot = taskInst.context.to(packCfg.src);
             lang.forIn(packCfg.assets, (val, key: string) => {
                 let assCfg: IAssetConfigure;
-                if ((isArray(val) || isString(val))) {
+                if (isArray(val) || isString(val)) {
                     assCfg = { src: val };
                 } else if (isToken(val)) {
                     assCfg = { task: val };

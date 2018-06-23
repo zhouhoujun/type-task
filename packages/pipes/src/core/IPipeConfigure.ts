@@ -1,5 +1,5 @@
 import { IConfigure, Src, CtxType } from '@taskfr/core';
-import { TransformExpress, TransformMergerExpress } from './pipeTypes';
+import { TransformExpress, TransformMergerExpress, TransformType } from './pipeTypes';
 import { SrcOptions, DestOptions } from 'vinyl-fs';
 
 /**
@@ -62,14 +62,6 @@ export interface ISourceConfigure extends IPipeConfigure {
      */
     srcOptions?: CtxType<SrcOptions>;
 
-    /**
-     * watch source change to run pipe task.
-     *
-     * @type {CtxType<Src | boolean>}
-     * @memberof IPipeConfigure
-     */
-    watch?: CtxType<Src | boolean>;
-
 }
 
 /**
@@ -114,22 +106,4 @@ export interface ICleanConfigure extends IConfigure {
      * @memberof ICleanConfigure
      */
     clean?: CtxType<Src>;
-}
-
-export interface ITestConfigure extends IPipeConfigure {
-    /**
-     * source for test.
-     *
-     * @type {CtxType<Src>}
-     * @memberof ITestConfigure
-     */
-    test?: CtxType<Src>;
-
-    /**
-     * dest options.
-     *
-     * @type {CtxType<SrcOptions>}
-     * @memberof IPipeConfigure
-     */
-    testSrcOptions?: CtxType<SrcOptions>;
 }

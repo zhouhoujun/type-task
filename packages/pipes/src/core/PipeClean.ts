@@ -12,12 +12,12 @@ export const CleanToken = new Registration<IPipeTask>(PipeToken, 'clean');
 
 @PipeTask(CleanToken)
 export class PipeClean extends AbstractPipe implements OnTaskInit {
-    cleanSrc: Src;
+    clean: Src;
     onTaskInit(config: ICleanConfigure) {
-        this.cleanSrc = this.context.to(config.clean);
+        this.clean = this.context.to(config.clean);
     }
 
     run(data?: any): Promise<any> {
-        return del(this.cleanSrc);
+        return del(this.clean);
     }
 }
