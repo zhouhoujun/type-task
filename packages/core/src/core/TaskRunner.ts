@@ -1,4 +1,4 @@
-import { Token, Inject, IContainer, Type, ContainerToken } from '@ts-ioc/core';
+import { Token, Inject, IContainer, Type, ContainerToken, OnInit, isToken } from '@ts-ioc/core';
 import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
@@ -6,6 +6,7 @@ import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
 import * as uuid from 'uuid/v1';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Runner } from './decorators/index';
+import { Joinpoint } from '@ts-ioc/aop';
 
 /**
  * task runner.
@@ -15,7 +16,7 @@ import { Runner } from './decorators/index';
  * @implements {ITaskRunner}
  */
 @Runner(TaskRunnerToken)
-export class TaskRunner implements ITaskRunner {
+export class TaskRunner implements ITaskRunner, OnInit {
 
     get task(): TaskType<ITask> {
         return this.work;
@@ -28,9 +29,9 @@ export class TaskRunner implements ITaskRunner {
 
     state: RunState;
     stateChanged: BehaviorSubject<RunState>;
-    currNode: ITask;
-    uuid: string;
 
+    @Inject(ContainerToken)
+    container: IContainer;
 
     /**
      * Creates an instance of TaskRunner.
@@ -41,12 +42,20 @@ export class TaskRunner implements ITaskRunner {
      */
     constructor(
         private work: Token<ITask> | Type<any> | IConfigure,
-        @Inject(ContainerToken) private container: IContainer,
+        public uuid?: string,
         private instance?: ITask,
         private taskBuilder?: ITaskBuilder) {
-        this.uuid = uuid();
         this.stateChanged = new BehaviorSubject(RunState.init);
+    }
 
+    onInit() {
+        if (!this.uuid) {
+            if (isToken(this.work)) {
+                this.uuid = uuid();
+            } else {
+                this.uuid = this.work.uuid || uuid();
+            }
+        }
         this.container.bindProvider(this.uuid, this);
     }
 
@@ -78,8 +87,9 @@ export class TaskRunner implements ITaskRunner {
             });
     }
 
-    saveState(state: any) {
-
+    _currState: Joinpoint;
+    saveState(state: Joinpoint) {
+        this._currState = state;
     }
 
     stop(): void {

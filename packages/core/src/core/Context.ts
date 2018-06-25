@@ -39,14 +39,14 @@ export class Context implements IContext {
         return this.getTaskContiner().getRootPath();
     }
 
-    getRunner(task: TaskType<ITask>, builder?: ITaskBuilder | Token<ITaskBuilder>, instance?: any): ITaskRunner {
+    getRunner(task: TaskType<ITask>, uuid?: string, builder?: ITaskBuilder | Token<ITaskBuilder>, instance?: any): ITaskRunner {
         let builderInst: ITaskBuilder;
         if (isToken(builder)) {
             builderInst = this.container.resolve(builder);
         } else if (builder instanceof TaskBuilder) {
             builderInst = builder;
         }
-        return this.container.resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: builderInst })
+        return this.container.resolve(TaskRunnerToken, { work: task, uuid: uuid, instance: instance, taskBuilder: builderInst })
     }
 
     getEnvArgs(): ObjectMap<any> {

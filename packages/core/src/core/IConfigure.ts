@@ -17,6 +17,14 @@ export type TaskType<T> = Token<T> | Type<any> | ITaskConfigure<T>;
 export interface ITaskConfigure<T> extends AppConfiguration<T> {
 
     /**
+     * task uuid.
+     *
+     * @type {string}
+     * @memberof ITaskConfigure
+     */
+    uuid?: string;
+
+    /**
     * context tasks name.
     *
     * @type {string}

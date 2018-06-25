@@ -3,6 +3,7 @@ import { InjectToken } from '@ts-ioc/core';
 import { ITask } from './ITask';
 import { ITaskBuilder } from './ITaskBuilder';
 import { Observable } from 'rxjs/Observable';
+import { Joinpoint } from '@ts-ioc/aop';
 
 /**
  * task runner token.
@@ -78,13 +79,6 @@ export interface ITaskRunner {
      */
     readonly stateChanged: Observable<RunState>;
 
-    /**
-     * current run task node.
-     *
-     * @type {ITask}
-     * @memberof ITaskRunner
-     */
-    readonly currNode: ITask;
 
     /**
      * get task builder.
@@ -120,9 +114,9 @@ export interface ITaskRunner {
     /**
      * save state.
      *
-     * @param {*} state
+     * @param {Joinpoint} state
      * @memberof ITaskRunner
      */
-    saveState(state: any);
+    saveState(state: Joinpoint);
 
 }

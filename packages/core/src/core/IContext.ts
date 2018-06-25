@@ -43,12 +43,13 @@ export interface IContext {
      * get task runner;
      *
      * @param {TaskType<ITask>} task
+     * @param {string} uuid
      * @param {(ITaskBuilder | Token<ITaskBuilder>)} [builder]
      * @param {*} [instance]
      * @returns {ITaskRunner}
      * @memberof IContext
      */
-    getRunner(task: TaskType<ITask>, builder?: ITaskBuilder | Token<ITaskBuilder>, instance?: any): ITaskRunner;
+    getRunner(task: TaskType<ITask>, uuid?: string, builder?: ITaskBuilder | Token<ITaskBuilder>, instance?: any): ITaskRunner;
 
     /**
      * get task run root path.
@@ -58,12 +59,12 @@ export interface IContext {
      */
     getRootPath(): string;
 
-       /**
-     * get task evn args.
-     *
-     * @returns {ObjectMap<any>}
-     * @memberof IContext
-     */
+    /**
+  * get task evn args.
+  *
+  * @returns {ObjectMap<any>}
+  * @memberof IContext
+  */
     getEnvArgs(): ObjectMap<any>;
 
     /**
