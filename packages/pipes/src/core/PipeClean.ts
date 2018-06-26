@@ -2,7 +2,7 @@ import { PipeTask } from '../decorators/index';
 import { OnTaskInit, Src } from '@taskfr/core';
 import { ICleanConfigure } from './IPipeConfigure';
 import { Registration } from '@ts-ioc/core';
-import { PipeToken, IPipeTask } from './IPipeTask';
+import { PipeToken, IPipeTask } from '../IPipeTask';
 import { AbstractPipe } from './AbstractPipe';
 const del = require('del');
 

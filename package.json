@@ -6,10 +6,7 @@
     "typings": "./lib/index.d.ts",
     "scripts": {
         "reinstall": "npm cache clean && npm install",
-        "test": "ts-node -r tsconfig-paths/register taskfile.ts",
-        "prepublish": "ts-node -r tsconfig-paths/register taskfile.ts",
-        "e2e": "protractor",
-        "e2e.live": "protractor --elementExplorer"
+        "test": "ts-node -r tsconfig-paths/register taskfile.ts"
     },
     "keywords": [
         "task",

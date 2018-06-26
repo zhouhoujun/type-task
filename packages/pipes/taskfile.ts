@@ -6,7 +6,7 @@ import { TaskContainer } from '@taskfr/platform-server';
     clean: 'lib',
     test: 'test/**/*.spec.ts',
     assets: {
-        ts: { dest: 'lib', uglify: true }
+        ts: { dest: 'lib', uglify: true, task: 'ts' }
     }
 })
 export class Builder extends PipeElement {

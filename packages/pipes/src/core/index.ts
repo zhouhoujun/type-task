@@ -1,6 +1,4 @@
 export * from './IPipeComponent';
-export * from './IPipeTask';
-export * from './ITransform';
 export * from './ITransformMerger';
 export * from './pipeTypes';
 

@@ -23,14 +23,18 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
 
     async build<T extends ITask>(task: TaskType<ITask>): Promise<T> {
         let taskInst = await super.build(task) as T;
+
         if (!taskInst) {
             throw new Error('builder task instance failed.');
         }
+
         let config = this.getConfigure(task) as IConfigure;
+        let ctxbuider = this.getConfigBuilder(config);
+
         if (isFunction(taskInst['onTaskInit'])) {
             taskInst['onTaskInit'](config);
         }
-        let ctxbuider = this.getConfigBuilder(config);
+
         await ctxbuider.buildWithConfigure(taskInst, config);
         return taskInst;
     }
@@ -133,7 +137,7 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
         return token;
     }
 
-    protected getConfigBuilder(cfg: IConfigure) {
+    protected getConfigBuilder(cfg: IConfigure): ITaskBuilder {
         if (cfg.builder) {
             if (isToken(cfg.builder)) {
                 return this.container.resolve(cfg.builder);

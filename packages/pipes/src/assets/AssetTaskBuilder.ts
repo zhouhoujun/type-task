@@ -1,9 +1,10 @@
-import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskfr/core';
+import { ITask, IConfigure, ITaskComponent } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, lang, isArray, isString, Token, Registration } from '@ts-ioc/core';
 import { IPipeConfigure, IPipeComponent, PipeSource, SourceToken, PipeClean, ICleanConfigure, CleanToken } from '../core/index';
 import { IAssetConfigure } from './IAssetConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
 import { AssetToken } from './IAssetPipe';
+import { AssetTaskBuilderToken } from '../IPipeTask';
 
 /**
  * Asset task builder
@@ -12,7 +13,7 @@ import { AssetToken } from './IAssetPipe';
  * @class AssetTaskBuilder
  * @extends {DestTaskBuilder}
  */
-@Singleton(TaskBuilderToken, 'Asset')
+@Singleton(AssetTaskBuilderToken)
 export class AssetTaskBuilder extends DestTaskBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {
         super(container)
@@ -46,11 +47,11 @@ export class AssetTaskBuilder extends DestTaskBuilder {
         return taskInst;
     }
 
-    protected traslateStrToken(token: string): Token<ITask> {
-        let taskToken = new Registration(AssetToken, token);
-        if (this.container.has(token)) {
-            return taskToken;
-        }
-        return super.traslateStrToken(token);
-    }
+    // protected traslateStrToken(token: string): Token<ITask> {
+    //     let taskToken = new Registration(AssetToken, token);
+    //     if (this.container.has(taskToken)) {
+    //         return taskToken;
+    //     }
+    //     return super.traslateStrToken(token);
+    // }
 }

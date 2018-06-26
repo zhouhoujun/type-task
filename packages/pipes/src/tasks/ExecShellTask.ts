@@ -1,7 +1,6 @@
 import { ExecOptions, exec } from 'child_process';
-import { isString, isArray, lang, ObjectMap } from '@ts-ioc/core';
-import { Task, AbstractTask, RunWay, Src, IConfigure, CtxType, OnTaskInit } from '@taskfr/core';
-import { isBoolean } from 'util';
+import { isString, isBoolean, isArray, lang, ObjectMap } from '@ts-ioc/core';
+import { RunWay, Src, IConfigure, CtxType, OnTaskInit } from '@taskfr/core';
 import { AbstractPipe } from '../core';
 import { PipeTask } from '../decorators';
 

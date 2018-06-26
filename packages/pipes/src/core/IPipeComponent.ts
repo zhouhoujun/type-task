@@ -1,6 +1,6 @@
-import { IPipeTask } from './IPipeTask';
+import { IPipeTask } from '../IPipeTask';
 import { ITaskComponent } from '@taskfr/core';
-import { ITransform } from './ITransform';
+import { ITransform } from '../ITransform';
 import { TransformType, TransformMerger } from './pipeTypes';
 import { IPipeContext } from './IPipeContext';
 

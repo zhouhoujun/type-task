@@ -1,10 +1,10 @@
 import { src, SrcOptions } from 'vinyl-fs';
-import { ITransform } from './ITransform';
+import { ITransform } from '../ITransform';
 import { PipeTask } from '../decorators';
 import { Src, OnTaskInit } from '@taskfr/core';
 import { ISourceConfigure } from './IPipeConfigure';
 import { IPipeComponent } from './IPipeComponent';
-import { PipeToken, IPipeTask } from './IPipeTask';
+import { PipeToken, IPipeTask } from '../IPipeTask';
 import { Registration } from '@ts-ioc/core';
 import { PipeElement } from './PipeElement';
 

@@ -3,7 +3,8 @@ import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObjec
 import { IPipeConfigure } from './IPipeConfigure';
 import { IPipeComponent } from './IPipeComponent';
 import { TransformMergerExpress, TransformMerger, TransformType, TransformExpress } from './pipeTypes';
-import { IPipeTask, PipeToken } from './IPipeTask';
+import { IPipeTask, PipeToken, PipeTaskBuilderToken } from '../IPipeTask';
+import { AssetToken } from '../assets/IAssetPipe';
 
 /**
  * pipe task builder.
@@ -12,7 +13,7 @@ import { IPipeTask, PipeToken } from './IPipeTask';
  * @class PipeTaskBuilder
  * @extends {TaskBuilder}
  */
-@Singleton(TaskBuilderToken, 'pipe')
+@Singleton(PipeTaskBuilderToken)
 export class PipeTaskBuilder extends TaskBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {
         super(container)
@@ -35,8 +36,13 @@ export class PipeTaskBuilder extends TaskBuilder {
     }
 
     protected traslateStrToken(token: string): Token<ITask> {
-        let taskToken = new Registration(PipeToken, token);
-        if (this.container.has(token)) {
+        let taskToken: Token<ITask> = new Registration(AssetToken, token);
+        if (this.container.has(taskToken)) {
+            return taskToken;
+        }
+
+        taskToken = new Registration(PipeToken, token);
+        if (this.container.has(taskToken)) {
             return taskToken;
         }
         return super.traslateStrToken(token);

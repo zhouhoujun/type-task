@@ -1,10 +1,11 @@
-import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskfr/core';
+import { ITask, IConfigure, ITaskComponent } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean, isToken } from '@ts-ioc/core';
 import { IPipeComponent, PipeTest, PipeClean, ICleanConfigure, TestToken, CleanToken } from '../core/index';
 import { IPackageConfigure } from './IPackageConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
 import { AssetToken } from './IAssetPipe';
 import { IAssetConfigure } from './IAssetConfigure';
+import { PackageBuilderToken, AssetTaskBuilderToken } from '../IPipeTask';
 
 /**
  * Asset task builder
@@ -13,7 +14,7 @@ import { IAssetConfigure } from './IAssetConfigure';
  * @class AssetsBuilder
  * @extends {DestTaskBuilder}
  */
-@Singleton(TaskBuilderToken, 'package')
+@Singleton(PackageBuilderToken)
 export class PackageBuilder extends DestTaskBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {
         super(container)
@@ -70,7 +71,10 @@ export class PackageBuilder extends DestTaskBuilder {
 
                 if (!assCfg.task) {
                     assCfg.task = new Registration(AssetToken, key);
+                } else if (isString(assCfg.task)) {
+                    assCfg.builder = AssetTaskBuilderToken;
                 }
+
                 if (srcRoot && !assCfg.src) {
                     assCfg.src = `${srcRoot}/**/*.${key}`;
                 }

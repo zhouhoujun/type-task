@@ -1,5 +1,5 @@
 import { TaskComponent, IConfigure, TaskRunner, OnTaskInit } from '@taskfr/core';
-import { ITransform } from './ITransform';
+import { ITransform } from '../ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { Abstract, isArray, isClass, isFunction, Inject, Injectable } from '@ts-ioc/core';
 import { TransformMerger, TransformType, PipeExpress, isTransform } from './pipeTypes';
