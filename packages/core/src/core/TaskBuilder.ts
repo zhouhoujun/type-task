@@ -139,14 +139,17 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
     }
 
     protected getBuilderToken(cfg: IConfigure): ITaskBuilder {
-        let builder = this.getBuilderTokenViaConfig(cfg.builder);
+        let builder: ITaskBuilder;
+        if (cfg.builder) {
+            builder = this.getBuilderTokenViaConfig(cfg.builder);
+        }
         if (!builder && cfg.task) {
             builder = this.getBuilderTokenViaTask(cfg.task);
         }
         return builder || this;
     }
 
-    getBuilderTokenViaConfig(builder: Token<ITaskBuilder> | ITaskBuilder): ITaskBuilder {
+    protected getBuilderTokenViaConfig(builder: Token<ITaskBuilder> | ITaskBuilder): ITaskBuilder {
         if (isToken(builder)) {
             return this.container.resolve(builder);
         } else if (builder instanceof TaskBuilder) {
@@ -155,7 +158,7 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
         return null;
     }
 
-    getBuilderTokenViaTask(task: Token<ITask>): ITaskBuilder {
+    protected getBuilderTokenViaTask(task: Token<ITask>): ITaskBuilder {
         if (isToken(task)) {
             let taskType = isClass(task) ? task : this.container.getTokenImpl(task);
             if (taskType) {

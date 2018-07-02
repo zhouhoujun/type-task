@@ -10,6 +10,7 @@ TaskContainer.create(__dirname)
     .bootstrap(
         {
             // test: 'test/**/*.spec.ts',
+            test: false,
             clean: 'lib',
             src: 'src',
             assets: {
