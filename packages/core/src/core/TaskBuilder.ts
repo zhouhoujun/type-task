@@ -1,11 +1,12 @@
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { ITaskComponent } from './ITaskComponent';
-import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, isToken, isMetadataObject, Token, ModuleBuilder, Registration } from '@ts-ioc/core';
+import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, isToken, isMetadataObject, Token, ModuleBuilder, Registration, isClass, getTypeMetadata, lang } from '@ts-ioc/core';
 import { IConfigure, TaskType } from './IConfigure';
 import { ITask, TaskToken } from './ITask';
 import { TaskElement } from './TaskElement';
 import { TaskComponent } from './TaskComponent';
 import { Task } from './decorators/index';
+import { TaskMetadata } from './metadatas';
 
 /**
  * builder.
@@ -29,7 +30,7 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
         }
 
         let config = this.getConfigure(task) as IConfigure;
-        let ctxbuider = this.getConfigBuilder(config);
+        let ctxbuider = this.getBuilderToken(config);
 
         if (isFunction(taskInst['onTaskInit'])) {
             taskInst['onTaskInit'](config);
@@ -137,15 +138,34 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
         return token;
     }
 
-    protected getConfigBuilder(cfg: IConfigure): ITaskBuilder {
-        if (cfg.builder) {
-            if (isToken(cfg.builder)) {
-                return this.container.resolve(cfg.builder);
-            } else if (cfg.builder instanceof TaskBuilder) {
-                return cfg.builder;
+    protected getBuilderToken(cfg: IConfigure): ITaskBuilder {
+        let builder = this.getBuilderTokenViaConfig(cfg.builder);
+        if (!builder && cfg.task) {
+            builder = this.getBuilderTokenViaTask(cfg.task);
+        }
+        return builder || this;
+    }
+
+    getBuilderTokenViaConfig(builder: Token<ITaskBuilder> | ITaskBuilder): ITaskBuilder {
+        if (isToken(builder)) {
+            return this.container.resolve(builder);
+        } else if (builder instanceof TaskBuilder) {
+            return builder;
+        }
+        return null;
+    }
+
+    getBuilderTokenViaTask(task: Token<ITask>): ITaskBuilder {
+        if (isToken(task)) {
+            let taskType = isClass(task) ? task : this.container.getTokenImpl(task);
+            if (taskType) {
+                let meta = lang.first(getTypeMetadata<TaskMetadata>(Task, taskType));
+                if (meta && meta.builder) {
+                    return isToken(meta.builder) ? this.container.resolve(meta.builder) : meta.builder;
+                }
             }
         }
-        return this;
+        return null;
     }
 
 }

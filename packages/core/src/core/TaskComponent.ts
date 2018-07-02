@@ -35,7 +35,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
         super(name);
     }
 
-    async run(data?: any): Promise<any> {
+    run(data?: any): Promise<any> {
         let execPromise: Promise<any>;
 
         if (this.runWay & RunWay.nodeFirst) {
@@ -58,8 +58,7 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
             execPromise = execPromise.then(data => this.execute(data));
         }
 
-        let result = await execPromise;
-        return result;
+        return execPromise;
     }
 
     getRoot(): ITaskComponent {

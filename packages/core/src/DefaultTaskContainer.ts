@@ -1,11 +1,10 @@
 import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang } from '@ts-ioc/core';
-import { ITaskRunner, IConfigure, TaskRunnerToken, ITask, TaskBuilderToken, ITaskBuilder } from './core/index';
+import { ITaskRunner, IConfigure, TaskRunnerToken, ITask, TaskBuilderToken, ITaskBuilder, TaskElement } from './core/index';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
 import { TaskType } from './core/index';
-import { PipeElement } from '@taskfr/pipes';
 
 
 /**
@@ -38,7 +37,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
      * @memberof ApplicationBuilder
      */
     bootstrap(...tasks: TaskType<ITask>[]): Promise<ITaskRunner> {
-        let task = (tasks.length > 1) ? { children: tasks, task: PipeElement } : lang.first(tasks);
+        let task = (tasks.length > 1) ? { children: tasks, task: TaskElement } : lang.first(tasks);
         return super.bootstrap(task)
             .then(instance => {
                 let runner = this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });

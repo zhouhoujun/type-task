@@ -9,31 +9,32 @@ TaskContainer.create(__dirname)
     .use(PipeModule)
     .bootstrap(
         {
-            test: 'test/**/*.spec.ts',
+            // test: 'test/**/*.spec.ts',
             clean: 'lib',
             src: 'src',
             assets: {
-                ts: {  src: 'src/**/*.ts', dest: 'lib', uglify: true }
+                ts: {  src: 'src/**/*.ts', dest: 'lib', uglify: false }
             },
             task: PackageTask
+        },
+        {
+            src: 'lib/**/*.js',
+            pipes: [
+                () => rollup({
+                    input: 'lib/index.js',
+                    name: 'core.umd.js',
+                    format: 'umd',
+                    plugins: [
+                        resolve(),
+                        commonjs(),
+                        rollupSourcemaps()
+                    ],
+                    external: [
+                        'reflect-metadata',
+                        'tslib'
+                    ]
+                })
+            ],
+            dest: 'bundles',
+            task: AssetPipe
         });
-        // {
-        //     src: 'lib/**/*.js',
-        //     pipes: [
-        //         () => rollup({
-        //             name: 'core.umd.js',
-        //             format: 'umd',
-        //             plugins: [
-        //                 resolve(),
-        //                 commonjs(),
-        //                 rollupSourcemaps()
-        //             ],
-        //             external: [
-        //                 'reflect-metadata',
-        //                 'tslib'
-        //             ]
-        //         })
-        //     ],
-        //     dest: 'bundles',
-        //     task: AssetPipe
-        // });
