@@ -1,5 +1,5 @@
 import { ITask, IConfigure, ITaskComponent } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, lang, isArray, isString, Token, Registration } from '@ts-ioc/core';
+import { Inject, ContainerToken, IContainer, Singleton, lang, isArray, isString, Token, Registration, isUndefined } from '@ts-ioc/core';
 import { IPipeConfigure, IPipeComponent, PipeSource, SourceToken, PipeClean, ICleanConfigure, CleanToken } from '../core/index';
 import { IAssetConfigure } from './IAssetConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
@@ -23,6 +23,10 @@ export class AssetTaskBuilder extends DestTaskBuilder {
         await super.beforeBindConfig(taskInst, config);
         let assetCfg = config as IAssetConfigure;
         let subs: IConfigure[] = [];
+
+        if (isUndefined(assetCfg.awaitPiped)) {
+            assetCfg.awaitPiped = true;
+        }
 
         if (assetCfg.clean && !(taskInst instanceof PipeClean)) {
             let val = assetCfg.clean;

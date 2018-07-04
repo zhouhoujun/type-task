@@ -24,14 +24,14 @@ export interface IPackageConfigure extends IPipeConfigure {
     /**
      * clean task config.
      *
-     * @type {(CtxType<Src | ICleanConfigure | Token<ITask>>)}
+     * @type {CtxType<Src | ICleanConfigure | Token<ITask>>}
      * @memberof IAssetsConfigure
      */
     clean?: CtxType<Src | ICleanConfigure | Token<ITask>>;
     /**
      * assets.
      *
-     * @type {(ObjectMap<Src | IAssetConfigure | Token<IAssetPipe>>)}
+     * @type {ObjectMap<Src | IAssetConfigure | Token<IAssetPipe>>}
      * @memberof IAssetsConfigure
      */
     assets: ObjectMap<Src | IAssetConfigure | Token<IAssetPipe>>;
@@ -39,10 +39,10 @@ export interface IPackageConfigure extends IPipeConfigure {
     /**
      * test config.
      *
-     * @type {(CtxType<Src | ITestConfigure>)}
+     * @type {CtxType<boolean | Src | ITestConfigure | Token<PipeTest>>}
      * @memberof IAssetsConfigure
      */
-    test?: CtxType<Src | ITestConfigure | Token<PipeTest>>;
+    test?: CtxType<boolean | Src | ITestConfigure | Token<PipeTest>>;
 
     /**
      * dest.
