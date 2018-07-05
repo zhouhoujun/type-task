@@ -7,6 +7,8 @@ import * as uuid from 'uuid/v1';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Runner } from './decorators/index';
 import { Joinpoint } from '@ts-ioc/aop';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/filter';
 
 /**
  * task runner.
@@ -24,6 +26,16 @@ export class TaskRunner implements ITaskRunner, OnInit {
 
     get taskInstance(): ITask {
         return this.instance;
+    }
+
+    private _result = new BehaviorSubject<any>(null);
+    get result(): Observable<any> {
+        return this._result.filter(a => !a);
+    }
+
+    private _resultValue: any;
+    get resultValue(): any {
+        return this._resultValue;
     }
 
 
@@ -52,7 +64,7 @@ export class TaskRunner implements ITaskRunner, OnInit {
         if (!this.uuid) {
             if (isToken(this.work)) {
                 this.uuid = uuid();
-            } else {
+            } else if (this.work) {
                 this.uuid = this.work.uuid || uuid();
             }
         }
@@ -83,6 +95,8 @@ export class TaskRunner implements ITaskRunner, OnInit {
             .then(data => {
                 this.state = RunState.complete;
                 this.stateChanged.next(this.state);
+                this._resultValue = data;
+                this._result.next(data);
                 return data;
             });
     }

@@ -41,8 +41,10 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
         return super.bootstrap(task)
             .then(instance => {
                 let runner = this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });
-                runner.start();
-                return runner;
+                return runner.start()
+                    .then(() => {
+                        return runner;
+                    });
             });
     }
 

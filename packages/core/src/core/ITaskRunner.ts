@@ -72,6 +72,22 @@ export interface ITaskRunner {
     readonly state: RunState;
 
     /**
+     * run result, observable data.
+     *
+     * @type {Observable<any>}
+     * @memberof ITaskRunner
+     */
+    readonly result: Observable<any>;
+
+    /**
+     * run result value
+     *
+     * @type {*}
+     * @memberof ITaskRunner
+     */
+    readonly resultValue: any
+
+    /**
      *state changed.
      *
      * @type {Observable<RunState>}

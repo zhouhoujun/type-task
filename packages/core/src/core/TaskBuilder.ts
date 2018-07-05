@@ -71,18 +71,23 @@ export class TaskBuilder extends ModuleBuilder<ITask> implements ITaskBuilder {
         if (!isFunction(parent.add)) {
             return;
         }
-        await Promise.all(configs.map(async cfg => {
+        let children = await Promise.all(configs.map(async cfg => {
             let node = await this.build(cfg) as T;
             if (!node) {
-                return;
+                return null;
             }
-            parent.add(node);
             if (node instanceof TaskComponent) {
                 if (!isToken(cfg) && cfg.children && cfg.children.length) {
                     await this.buildChildren(node, cfg.children);
                 }
             }
+            return node;
         }));
+
+        children.forEach(c => {
+            c && parent.add(c);
+        });
+
     }
 
     async buildComponent<T extends ITask>(child: IConfigure | Token<T>): Promise<T> {

@@ -9,8 +9,8 @@ TaskContainer.create(__dirname)
     .use(PipeModule)
     .bootstrap(
         <IPackageConfigure>{
-            // test: 'test/**/*.spec.ts',
-            test: false,
+            test: 'test/**/*.spec.ts',
+            // test: false,
             clean: 'lib',
             src: 'src',
             assets: {
@@ -32,7 +32,12 @@ TaskContainer.create(__dirname)
                     ],
                     external: [
                         'reflect-metadata',
-                        'tslib'
+                        'tslib',
+                        '@ts-ioc/core',
+                        '@ts-ioc/aop',
+                        '@ts-ioc/logs',
+                        'rxjs',
+                        'rxjs/**'
                     ]
                 })
             ],

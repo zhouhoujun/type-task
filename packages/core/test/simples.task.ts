@@ -18,7 +18,7 @@ export class SimpleTask extends AbstractTask implements ITask {
 }
 
 @Task('comptest')
-export class SimpleCTask extends TaskComponent<ITaskComponent> {
+export class SimpleCTask extends TaskElement {
 
     constructor(name: string) {
         super(name);
