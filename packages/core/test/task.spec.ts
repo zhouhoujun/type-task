@@ -19,17 +19,18 @@ describe('auto register with build', () => {
     });
 
     it('should bootstrap with single task via name or provider.', async () => {
-        let result = await container.useModules(SimpleTask).bootstrap('test');
+        let result = await container.use(SimpleTask).bootstrap('test');
         expect(result.resultValue).eq('simple task');
     });
 
     it('should bootstrap with component task.', async () => {
         let result = await container.bootstrap(SimpleCTask);
+        console.log('task type:', result.task);
         expect(result.resultValue).eq('component task');
     });
 
     it('should bootstrap with component task via name or provider.', async () => {
-        let result = await container.useModules(SimpleCTask).bootstrap('comptest');
+        let result = await container.use(SimpleCTask).bootstrap('comptest');
         expect(result.resultValue).eq('component task');
     });
 

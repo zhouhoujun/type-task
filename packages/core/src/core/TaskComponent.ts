@@ -1,6 +1,5 @@
 import { GComposite, Inject, Mode, Abstract } from '@ts-ioc/core';
 import { ITaskComponent } from './ITaskComponent';
-import { ITaskConfigure } from './IConfigure';
 import { RunWay } from './RunWay';
 import { ContextToken, IContext } from './IContext';
 
@@ -14,6 +13,10 @@ import { ContextToken, IContext } from './IContext';
  */
 @Abstract()
 export abstract class TaskComponent<T extends ITaskComponent> extends GComposite<T> implements ITaskComponent {
+
+    constructor(name?: string) {
+        super(name);
+    }
 
     /**
      * task context.
@@ -31,9 +34,6 @@ export abstract class TaskComponent<T extends ITaskComponent> extends GComposite
      */
     runWay = RunWay.seqFirst;
 
-    constructor(name?: string) {
-        super(name);
-    }
 
     run(data?: any): Promise<any> {
         let execPromise: Promise<any>;

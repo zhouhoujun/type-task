@@ -68,11 +68,11 @@
         "rxjs": "^5.5.11",
         "through2": "^2.0.1",
         "time-stamp": "^2.0.0",
-        "ts-node": "^5.0.1",
+        "ts-node": "^6.2.0",
         "tsconfig-paths": "^3.3.1",
         "tslib": "^1.9.2",
         "tslint": "^5.4.3",
-        "typescript": "^2.7.2",
+        "typescript": "^2.8.4",
         "uuid": "^3.2.1",
         "vinyl-fs": "^3.0.3",
         "zone.js": "^0.8.12"
