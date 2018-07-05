@@ -14,7 +14,7 @@ TaskContainer.create(__dirname)
             clean: 'lib',
             src: 'src',
             assets: {
-                ts: {  src: 'src/**/*.ts', dest: 'lib', uglify: false }
+                ts: { src: 'src/**/*.ts', dest: 'lib', uglify: false }
             },
             task: PackageTask
         },
@@ -36,9 +36,33 @@ TaskContainer.create(__dirname)
                         '@ts-ioc/core',
                         '@ts-ioc/aop',
                         '@ts-ioc/logs',
-                        'rxjs',
-                        'rxjs/**'
-                    ]
+                        'rxjs/Observer',
+                        'rxjs/util',
+                        'rxjs/util/ObjectUnsubscribedError',
+                        'rxjs/util/UnsubscriptionError',
+                        'rxjs/Subject',
+                        'rxjs/Observable',
+                        'rxjs/Subscriber',
+                        'rxjs/Subscription',
+                        'rxjs/BehaviorSubject',
+                        'rxjs/add/operator/map',
+                        'rxjs/add/operator/mergeMap',
+                        'rxjs/add/operator/delay',
+                        'rxjs/add/operator/distinct',
+                        'rxjs/add/operator/catch',
+                        'rxjs/add/operator/distinctUntilChanged',
+                        'rxjs/add/operator/timeout',
+                        'rxjs/add/operator/filter',
+                        'rxjs/add/observable/of',
+                        'rxjs/add/observable/throw',
+                        'rxjs/add/observable/fromPromise',
+                        'rxjs/add/operator/toPromise',
+                        'rxjs/add/observable/forkJoin',
+                        'rxjs/add/observable/empty'
+                    ],
+                    globals: {
+                        'reflect-metadata': 'Reflect'
+                    },
                 })
             ],
             dest: 'bundles',
