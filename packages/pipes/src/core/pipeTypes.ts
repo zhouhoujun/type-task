@@ -17,12 +17,17 @@ export type PipeExpress = (context?: IPipeContext, taskInstance?: ITask, transfo
 /**
  * transform type.
  */
-export type TransformType = ITransform | PipeExpress | ITaskRunner | Token<IPipeTask>;
+export type TransformType = ITransform | PipeExpress | ITaskRunner;
+
+/**
+ * transform config type.
+ */
+export type TransformConfig = TransformType | TaskType<IPipeTask>;
 
 /**
  * task transform express.
  */
-export type TransformExpress = CtxType<(TransformType | TaskType<IPipeTask>)[]>;
+export type TransformExpress = CtxType<TransformConfig[]>;
 
 /**
  * transform dest express
@@ -35,9 +40,13 @@ export type DestExpress = ObjectMap<TransformExpress> | TransformExpress;
 export type TransformMerger = ((transforms: ITransform[]) => ITransform | Promise<ITransform>) | ITransformMerger | ITaskRunner;
 
 /**
+ * transform merger config.
+ */
+export type TransMergerConfig = TransformMerger | TaskType<IPipeTask>;
+/**
  * task transform express.
  */
-export type TransformMergerExpress = CtxType<(TransformMerger | TaskType<IPipeTask>)[]>;
+export type TransformMergerExpress = CtxType<TransMergerConfig[]>;
 
 
 /**

@@ -2,7 +2,7 @@ import { TaskBuilder, ITask, IConfigure, TaskBuilderToken, TaskType, IContext } 
 import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObject, isUndefined, Token, Registration } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { IPipeComponent } from './IPipeComponent';
-import { TransformMergerExpress, TransformMerger, TransformType, TransformExpress } from './pipeTypes';
+import { TransformMergerExpress, TransMergerConfig, TransformConfig, TransformMerger, TransformType, TransformExpress } from './pipeTypes';
 import { IPipeTask, PipeToken, PipeTaskBuilderToken } from '../IPipeTask';
 import { AssetToken } from '../assets/IAssetPipe';
 
@@ -49,7 +49,7 @@ export class PipeTaskBuilder extends TaskBuilder {
     }
 
     protected translatePipes(context: IContext, pipes: TransformExpress): TransformType[] {
-        let trsfs: (TransformType | TaskType<IPipeTask>)[] = context.to(pipes);
+        let trsfs: TransformConfig[] = context.to(pipes);
         if (!trsfs || trsfs.length < 1) {
             return [];
         }
@@ -70,7 +70,7 @@ export class PipeTaskBuilder extends TaskBuilder {
     }
 
     protected translateMerger(context: IContext, mergerExp: TransformMergerExpress): TransformMerger {
-        let mt: (TransformMerger | TaskType<IPipeTask>) = context.to(mergerExp);
+        let mt: TransMergerConfig = context.to(mergerExp);
         if (!mt) {
             return null;
         }

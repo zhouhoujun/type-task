@@ -13,6 +13,7 @@ TaskContainer.create(__dirname)
             // test: false,
             clean: 'lib',
             src: 'src',
+            awaitPiped: true,
             assets: {
                 ts: { src: 'src/**/*.ts', dest: 'lib', uglify: false }
             },
