@@ -102,7 +102,7 @@ export class ExecShellTask extends AbstractPipe implements OnTaskInit {
                 if (isString(cmds)) {
                     return this.execShell(cmds, options, allowError !== false);
                 } else if (isArray(cmds)) {
-                    if (this.runWay === RunWay.sequence) {
+                    if (this.runWay & RunWay.sequence) {
                         let pip = Promise.resolve();
                         cmds.forEach(cmd => {
                             pip = pip.then(() => this.execShell(cmd, options));
@@ -160,16 +160,17 @@ export class ExecShellTask extends AbstractPipe implements OnTaskInit {
             });
 
             shell.stderr.on('data', err => {
-                console.log(err);
+                console.error(err);
                 if (!allowError) {
                     reject(err);
                 }
             });
 
             shell.on('exit', (code) => {
-                console.log(`exit child process with code：${code}`);
+                let msg = `exit child process with code：${code}`;
+                console.log(msg);
                 if (code > 0) {
-                    reject(code);
+                    reject(new Error(msg));
                 }
             });
         });

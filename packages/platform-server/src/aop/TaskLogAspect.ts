@@ -53,6 +53,7 @@ export class TaskLogAspect extends LoggerAspect {
             end = prettyTime(process.hrtime(start));
             delete this.startHrts[name];
             logger.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Finished', taskname, chalk.red('errored after'), chalk.magenta(end));
+            process.exit(1);
         }
     }
 }

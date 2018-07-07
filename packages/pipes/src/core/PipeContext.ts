@@ -25,7 +25,7 @@ export class PipeContext extends Context implements IPipeContext {
 
     private args: ObjectMap<any>;
     getEnvArgs(): ObjectMap<any> {
-        if (this.args) {
+        if (!this.args) {
             this.args = minimist(process.argv.slice(2));
         }
         return this.args;

@@ -32,7 +32,7 @@ export class ExecFileTask extends AbstractPipe {
                 if (isString(files)) {
                     return this.execFile(files, args, options, allowError !== false);
                 } else if (isArray(files)) {
-                    if (this.runWay === RunWay.sequence) {
+                    if (this.runWay & RunWay.sequence) {
                         let pip = Promise.resolve();
                         files.forEach(file => {
                             pip = pip.then(() => this.execFile(file, args, options, allowError !== false));
@@ -42,7 +42,7 @@ export class ExecFileTask extends AbstractPipe {
                         return Promise.all(files.map(file => this.execFile(file, args, options, allowError !== false)));
                     }
                 } else {
-                    return Promise.reject('exec file task config error');
+                    return Promise.reject(new Error('exec file task config error'));
                 }
             });
     }
