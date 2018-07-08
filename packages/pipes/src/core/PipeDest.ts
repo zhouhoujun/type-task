@@ -10,7 +10,9 @@ import { Registration } from '@ts-ioc/core';
 import { PipeToken, IPipeTask } from '../IPipeTask';
 
 
-
+/**
+ * dest task token.
+ */
 export const DestToken = new Registration<IPipeTask>(PipeToken, 'dest');
 
 /**
@@ -38,7 +40,15 @@ export interface IPipeDest extends IPipeComponent {
     destOptions?: DestOptions;
 }
 
-
+/**
+ * pipe dest.
+ *
+ * @export
+ * @class PipeDest
+ * @extends {PipeComponent<IPipeDest>}
+ * @implements {IPipeDest}
+ * @implements {OnTaskInit}
+ */
 @PipeTask(DestToken)
 export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest, OnTaskInit {
 

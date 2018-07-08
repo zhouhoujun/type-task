@@ -7,9 +7,14 @@ import { AbstractPipe } from './AbstractPipe';
 const del = require('del');
 
 
-
+/**
+ * clean task token.
+ */
 export const CleanToken = new Registration<IPipeTask>(PipeToken, 'clean');
 
+/**
+ * clean task.
+ */
 @PipeTask(CleanToken)
 export class PipeClean extends AbstractPipe implements OnTaskInit {
     clean: Src;
