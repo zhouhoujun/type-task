@@ -3,6 +3,9 @@ import { Singleton, isArray, isString, Inject, ContainerToken, IContainer } from
 import { PipeTaskBuilder, PipeDest, DestToken } from '../core/index';
 import { IAssetConfigure } from './IAssetConfigure';
 
+/**
+ * dest task builder.
+ */
 @Singleton(TaskBuilderToken, 'dest')
 export class DestTaskBuilder extends PipeTaskBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {
