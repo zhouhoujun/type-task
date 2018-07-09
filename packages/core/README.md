@@ -1,4 +1,4 @@
-# packaged @taskfr
+# packaged @taskfr/core
 
 This repo is for distribution on `npm`. The source for this module is in the
 [main repo](https://github.com/zhouhoujun/type-task).
@@ -11,13 +11,13 @@ Please file issues and pull requests against that repo.
 1. install modules:
 
 ```shell
-npm install -g @taskfr/core
+npm install @taskfr/core
 ```
 
 2. install cil:
 
 ```shell
-npm install @taskfr/cil
+npm install -g @taskfr/cil
 ```
 
 use command: `tkf [task names] [--param param]`
@@ -75,8 +75,6 @@ class DelComponentTask extends TaskElement {
 
 ### Run task
 
-see [interface](https://github.com/zhouhoujun/type-task/blob/master/src/ITaskContainer.ts)
-
 ```ts
 1.
 let container = new TaskContainer(__dirname, moudles)
@@ -99,8 +97,6 @@ TaskContainer.create(__dirname)
 ```
 
 ## Simples
-
-more simples [see](https://github.com/zhouhoujun/type-task/blob/master/test/simples.task.ts)
 
 ```ts
 import { PipeModule, PackageTask, PipeAsset, IPackageConfigure, IAssetConfigure } from '@taskfr/pipes';

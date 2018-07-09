@@ -1,6 +1,6 @@
 {
     "name": "taskfr-srcs",
-    "version": "1.0.0-beta",
+    "version": "1.0.0-beta1",
     "description": "taskfr is task framework via AOP, IOC.",
     "main": "./lib/index.js",
     "typings": "./lib/index.d.ts",

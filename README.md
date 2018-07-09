@@ -11,13 +11,13 @@ Please file issues and pull requests against that repo.
 1. install modules:
 
 ```shell
-npm install -g @taskfr/core
+npm install @taskfr/core
 ```
 
 2. install cil:
 
 ```shell
-npm install @taskfr/cil
+npm install -g @taskfr/cil
 ```
 
 use command: `tkf [task names] [--param param]`
@@ -175,6 +175,14 @@ TaskContainer.create(__dirname)
 ```
 
 ## Documentation [github](https://github.com/zhouhoujun/type-task.git)
+
+### builde
+
+1. build test: `npm test`
+
+2. build with version: `npm test -- --setvs=1.0.0`;
+
+3. deploy: `./deploy.cmd` or `npm test -- --deploy=true`;
 
 Documentation is available on the
 [type-task docs site](https://github.com/zhouhoujun/type-task).

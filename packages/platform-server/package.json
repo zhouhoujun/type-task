@@ -1,8 +1,8 @@
 {
   "name": "@taskfr/platform-server",
-  "version": "1.0.0-beta",
-  "description": "tsioc is AOP, Ioc container, via typescript decorator",
-  "main": "./bundles/core.umd.js",
+  "version": "1.0.0-beta1",
+  "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
+  "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "scripts": {
     "postinstall": "npm prune",
@@ -14,13 +14,13 @@
   "author": "houjun",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zhouhoujun/tsioc/issues"
+    "url": "https://github.com/zhouhoujun/type-task/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zhouhoujun/tsioc.git"
+    "url": "https://github.com/zhouhoujun/type-task.git"
   },
-  "homepage": "https://github.com/zhouhoujun/tsioc#readme",
+  "homepage": "https://github.com/zhouhoujun/type-task#readme",
   "dependencies": {
     "@types/chalk": "^2.2.0",
     "@ts-ioc/platform-server": "^2.4.17",
@@ -39,7 +39,7 @@
     "zone.js": "^0.8.12"
   },
   "peerDependencies": {
-    "@taskfr/core": "1.0.0-beta"
+    "@taskfr/core": "1.0.0-beta1"
   },
   "directories": {
     "lib": "lib",
