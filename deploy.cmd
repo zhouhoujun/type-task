@@ -1,1 +1,1 @@
-ts-node -r tsconfig-paths/register taskfile.ts --deploy
+npm test -- --deploy=true
