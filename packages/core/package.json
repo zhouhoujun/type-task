@@ -1,0 +1,40 @@
+{
+  "name": "@taskfr/core",
+  "version": "1.0.0-beta",
+  "description": "tsioc is AOP, Ioc container, via typescript decorator",
+  "main": "./bundles/core.umd.js",
+  "typings": "./lib/index.d.ts",
+  "scripts": {
+    "postinstall": "npm prune",
+    "reinstall": "npm cache clean && npm install",
+    "test": "ts-node -r tsconfig-paths/register taskfile.ts",
+    "prepublish": "ts-node -r tsconfig-paths/register taskfile.ts"
+  },
+  "keywords": ["IoC", "AOP", "dependency", "injection", "framework", "container", "decorator", "autofac", "Inject", "type", "typescript"],
+  "author": "houjun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zhouhoujun/tsioc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhouhoujun/tsioc.git"
+  },
+  "homepage": "https://github.com/zhouhoujun/tsioc#readme",
+  "dependencies": {
+    "reflect-metadata": "^0.1.12",
+    "tslib": "^1.9.2",
+    "uuid": "^3.2.1"
+  },
+  "peerDependencies": {
+    "@ts-ioc/aop": "^2.4.17",
+    "@ts-ioc/core": "^2.4.17",
+    "@ts-ioc/logs": "^2.4.17"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {
+    "rollup-plugin-node-builtins": "^2.1.2"
+  }
+}
