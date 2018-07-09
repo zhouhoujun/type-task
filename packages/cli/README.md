@@ -1,67 +1,31 @@
-# packaged @taskfr/core
+# packaged @taskfr
 
 This repo is for distribution on `npm`. The source for this module is in the
 [main repo](https://github.com/zhouhoujun/type-task).
+Please file issues and pull requests against that repo.
 
-`@taskfr/core` is Task manager, base on AOP, Ioc container, via [@ts-ioc/core](https://www.npmjs.com/package/@ts-ioc/core).
-
+`@taskfr` is task manager via AOP, IOC.
 
 ## Install
 
-1. install cil:
+1. install modules:
 
 ```shell
-npm install -g @taskfr/cil
+npm install -g @taskfr/core
 ```
 
-use command: `taskp [task names] [--param param]`
+2. install cil:
+
+```shell
+npm install @taskfr/cil
+```
+
+use command: `tkf [task names] [--param param]`
 
 taskname: decorator class with `@Task('taskname')` or `@TaskModule({name:'taskname'})`.
 
-2. install modules:
 
-```shell
-npm install @taskfr/core
-
-//in borwser
-npm install @taskfr/platform-browser
-
-//in server
-npm install @taskfr/platform-server
-```
-
-* use pipes task
-
-```shell
-npm install @taskfr/pipes
-```
-
-```ts
-//in borwser
-import { TaskContainer } from '@taskfr/platform-browser';
-//in server
-import { TaskContainer } from '@taskfr/platform-server';
-
-import { PipeModule, PipeTask, PipeElement } from '@taskfr/pipes';
-
-let container = new TaskContainer(__dirname);
-container
-    .use(PipeModule)
-    .bootstrap(([TestTask, TsCompile, <IConfigure>{
-        ...
-        task: ...
-    }])
-
-//or --------------
-TaskContainer.create(__dirname, PipeModule)
-    // .use(PipeModule)
-    .bootstrap([TestTask, TsCompile, <IConfigure>{
-        ...
-        task: ...
-    }]);
-
-```
-
+You can `import` modules:
 
 
 ## Doc
@@ -105,22 +69,7 @@ class DelComponentTask extends TaskElement {
 * Task module
 
 ```ts
-@TaskModule({
-    providers: <IPipeElementProvider>{
-        name: 'tscomplie',
-        src: 'src/**/*.ts',
-        dest: 'lib',
-        pipes: [
-            (ctx) => cache('typescript'),
-            (ctx) => classAnnotations(),
-            sourcemaps.init,
-            (ctx) => tsProject()
-        ]
-    },
-    task: PipeElement
-})
-class TsCompile extends PipeTask {
-}
+
 
 ```
 
@@ -130,7 +79,7 @@ see [interface](https://github.com/zhouhoujun/type-task/blob/master/src/ITaskCon
 
 ```ts
 1.
-let container = new TaskContainer(__dirname, container)
+let container = new TaskContainer(__dirname, moudles)
 2.
 TaskContainer.create(__dirname, moudles)
     .bootstrap(<IConfigure>{
@@ -142,7 +91,6 @@ TaskContainer.create(__dirname, moudles)
     .bootstrap(TestTask);
 4.
 TaskContainer.create(__dirname)
-    .use(PipeModule)
     .bootstrap([TestTask, TsCompile, <IConfigure>{
         ...
         task: ...
@@ -150,10 +98,86 @@ TaskContainer.create(__dirname)
 
 ```
 
+## Simples
 
+more simples [see](https://github.com/zhouhoujun/type-task/blob/master/test/simples.task.ts)
+
+```ts
+import { PipeModule, PackageTask, PipeAsset, IPackageConfigure, IAssetConfigure } from '@taskfr/pipes';
+import { TaskContainer } from '@taskfr/platform-server';
+const rename = require('gulp-rename');
+const rollup = require('gulp-rollup');
+const resolve = require('rollup-plugin-node-resolve');
+const rollupSourcemaps = require('rollup-plugin-sourcemaps');
+const commonjs = require('rollup-plugin-commonjs');
+const builtins = require('rollup-plugin-node-builtins');
+
+//demo1
+@Package({
+    src: 'src',
+    clean: 'lib',
+    test: 'test/**/*.spec.ts',
+    assets: {
+        ts: { dest: 'lib', uglify: true, task: 'ts' }
+    }
+})
+export class Builder extends PipeElement {
+}
+
+TaskContainer.create(__dirname)
+    .use(PipeModule)
+    .bootstrap(Builder);
+
+//demo2
+
+TaskContainer.create(__dirname)
+    .use(PipeModule)
+    .bootstrap(
+        <IPackageConfigure>{
+            test: 'test/**/*.spec.ts',
+            clean: 'lib',
+            src: 'src',
+            assets: {
+                ts: { src: 'src/**/*.ts', dest: 'lib', /*uglify: true*/ }
+            },
+            task: PackageTask
+        },
+        <IAssetConfigure>{
+            src: 'lib/**/*.js',
+            pipes: [
+                () => rollup({
+                    name: 'core.umd.js',
+                    format: 'umd',
+                    plugins: [
+                        resolve(),
+                        commonjs(),
+                        builtins(),
+                        rollupSourcemaps()
+                    ],
+                    external: [
+                        'reflect-metadata',
+                        'tslib',
+                        '@ts-ioc/core',
+                        '@ts-ioc/aop',
+                        '@ts-ioc/logs'
+                    ],
+                    globals: {
+                        'reflect-metadata': 'Reflect'
+                    },
+                    input: 'lib/index.js'
+                }),
+                () => rename('core.umd.js')
+            ],
+            dest: 'bundles',
+            task: PipeAsset
+        });
+
+```
+
+## Documentation [github](https://github.com/zhouhoujun/type-task.git)
 
 Documentation is available on the
-[@taskfr/core docs site](https://github.com/zhouhoujun/type-task).
+[type-task docs site](https://github.com/zhouhoujun/type-task).
 
 ## License
 
