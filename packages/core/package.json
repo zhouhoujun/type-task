@@ -47,5 +47,6 @@
     "lib": "lib"
   },
   "devDependencies": {
+    "rollup-plugin-node-builtins": "^2.1.2"
   }
 }

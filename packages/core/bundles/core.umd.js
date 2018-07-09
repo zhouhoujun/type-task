@@ -1,13 +1,11 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('tslib'), require('@ts-ioc/core'), require('@taskfr/core'), require('crypto'), require('rxjs/BehaviorSubject'), require('rxjs/add/operator/filter'), require('@ts-ioc/aop'), require('@ts-ioc/logs')) :
-	typeof define === 'function' && define.amd ? define(['tslib', '@ts-ioc/core', '@taskfr/core', 'crypto', 'rxjs/BehaviorSubject', 'rxjs/add/operator/filter', '@ts-ioc/aop', '@ts-ioc/logs'], factory) :
-	(global.core = global.core || {}, global.core.umd = global.core.umd || {}, global.core.umd.js = factory(global.tslib_1,global.core_1,global.core,global.crypto,global.BehaviorSubject_1,global.filter,global.aop_1,global.logs_1));
-}(this, (function (tslib_1,core_1,core,crypto,BehaviorSubject_1,filter,aop_1,logs_1) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('tslib'), require('@ts-ioc/core'), require('rxjs/BehaviorSubject'), require('rxjs/add/operator/filter'), require('@ts-ioc/aop'), require('@ts-ioc/logs')) :
+	typeof define === 'function' && define.amd ? define(['tslib', '@ts-ioc/core', 'rxjs/BehaviorSubject', 'rxjs/add/operator/filter', '@ts-ioc/aop', '@ts-ioc/logs'], factory) :
+	(global.core = global.core || {}, global.core.umd = global.core.umd || {}, global.core.umd.js = factory(global.tslib_1,global.core_1,global.BehaviorSubject_1,global.filter,global.aop_1,global.logs_1));
+}(this, (function (tslib_1,core_1,BehaviorSubject_1,filter,aop_1,logs_1) { 'use strict';
 
 tslib_1 = tslib_1 && tslib_1.hasOwnProperty('default') ? tslib_1['default'] : tslib_1;
 core_1 = core_1 && core_1.hasOwnProperty('default') ? core_1['default'] : core_1;
-core = core && core.hasOwnProperty('default') ? core['default'] : core;
-crypto = crypto && crypto.hasOwnProperty('default') ? crypto['default'] : crypto;
 BehaviorSubject_1 = BehaviorSubject_1 && BehaviorSubject_1.hasOwnProperty('default') ? BehaviorSubject_1['default'] : BehaviorSubject_1;
 filter = filter && filter.hasOwnProperty('default') ? filter['default'] : filter;
 aop_1 = aop_1 && aop_1.hasOwnProperty('default') ? aop_1['default'] : aop_1;
@@ -110,7 +108,7 @@ unwrapExports(TaskBuilder_1);
 var TaskBuilder_2 = TaskBuilder_1.TaskBuilder;
 
 var AbstractTask_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var AbstractTask=function(){function t(t){this.name=t, this.runWay=core.RunWay.sequence;}return tslib_1.__decorate([core_1.Inject(IContext.ContextToken),tslib_1.__metadata("design:type",Object)],t.prototype,"context",void 0), t=tslib_1.__decorate([core_1.Abstract(),tslib_1.__metadata("design:paramtypes",[String])],t)}();exports.AbstractTask=AbstractTask;
+Object.defineProperty(exports,"__esModule",{value:!0});var AbstractTask=function(){function t(t){this.name=t, this.runWay=RunWay_1.RunWay.sequence;}return tslib_1.__decorate([core_1.Inject(IContext.ContextToken),tslib_1.__metadata("design:type",Object)],t.prototype,"context",void 0), t=tslib_1.__decorate([core_1.Abstract(),tslib_1.__metadata("design:paramtypes",[String])],t)}();exports.AbstractTask=AbstractTask;
 
 });
 
@@ -127,12 +125,21 @@ var ITaskRunner_1 = ITaskRunner.TaskRunnerToken;
 var ITaskRunner_2 = ITaskRunner.RunState;
 
 var Context_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var Context=function(){function e(){}return e.prototype.getContainer=function(){return this.container}, e.prototype.getTaskContiner=function(){return this.container.resolve(ITaskContainer.TaskContainerToken)}, e.prototype.getRootPath=function(){return this.getTaskContiner().getRootPath()}, e.prototype.getRunner=function(e,t,r,n){var o;return core_1.isToken(r)?o=this.container.resolve(r):r instanceof core.TaskBuilder&&(o=r), this.container.resolve(ITaskRunner.TaskRunnerToken,{work:e,uuid:t,instance:n,taskBuilder:o})}, e.prototype.getEnvArgs=function(){return{}}, e.prototype.to=function(e,t){return core_1.isFunction(e)?e(this,t):e}, e.prototype.isTask=function(e){return core_1.hasOwnClassMetadata(decorators.Task,e)}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],e.prototype,"container",void 0), e=tslib_1.__decorate([core_1.Singleton(IContext.ContextToken),tslib_1.__metadata("design:paramtypes",[])],e)}();exports.Context=Context;
+Object.defineProperty(exports,"__esModule",{value:!0});var Context=function(){function e(){}return e.prototype.getContainer=function(){return this.container}, e.prototype.getTaskContiner=function(){return this.container.resolve(ITaskContainer.TaskContainerToken)}, e.prototype.getRootPath=function(){return this.getTaskContiner().getRootPath()}, e.prototype.getRunner=function(e,t,r,n){var o;return core_1.isToken(r)?o=this.container.resolve(r):r instanceof TaskBuilder_1.TaskBuilder&&(o=r), this.container.resolve(ITaskRunner.TaskRunnerToken,{work:e,uuid:t,instance:n,taskBuilder:o})}, e.prototype.getEnvArgs=function(){return{}}, e.prototype.to=function(e,t){return core_1.isFunction(e)?e(this,t):e}, e.prototype.isTask=function(e){return core_1.hasOwnClassMetadata(decorators.Task,e)}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],e.prototype,"container",void 0), e=tslib_1.__decorate([core_1.Singleton(IContext.ContextToken),tslib_1.__metadata("design:paramtypes",[])],e)}();exports.Context=Context;
 
 });
 
 unwrapExports(Context_1);
 var Context_2 = Context_1.Context;
+
+var empty = {};
+
+
+var empty$1 = Object.freeze({
+	default: empty
+});
+
+var crypto = ( empty$1 && empty ) || empty$1;
 
 // Unique ID creation requires a high quality random # generator.  In node.js
 // this is pretty straight-forward - we use the crypto API.
@@ -283,15 +290,15 @@ Object.defineProperty(exports,"__esModule",{value:!0});var TaskRunner=function()
 unwrapExports(TaskRunner_1);
 var TaskRunner_2 = TaskRunner_1.TaskRunner;
 
-var core$1 = createCommonjsModule(function (module, exports) {
+var core = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(ITaskBuilder,exports), tslib_1.__exportStar(TaskBuilder_1,exports), tslib_1.__exportStar(ITask,exports), tslib_1.__exportStar(AbstractTask_1,exports), tslib_1.__exportStar(TaskComponent_1,exports), tslib_1.__exportStar(TaskElement_1,exports), tslib_1.__exportStar(decorators,exports), tslib_1.__exportStar(RunWay_1,exports), tslib_1.__exportStar(IContext,exports), tslib_1.__exportStar(Context_1,exports), tslib_1.__exportStar(ITaskRunner,exports), tslib_1.__exportStar(TaskRunner_1,exports);
 
 });
 
-unwrapExports(core$1);
+unwrapExports(core);
 
 var RunAspect_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var RunAspect=function(){function t(){}return t.prototype.beforeRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core$1.RunState.pause:throw new Error("workflow paused!");case core$1.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.afterRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core$1.RunState.pause:throw new Error("workflow paused!");case core$1.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.getRunner=function(t){if(t instanceof core$1.TaskComponent){var e=t.getRoot();if(e.workflowId&&this.container.has(e.workflowId))return this.container.resolve(e.workflowId)}return null}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), tslib_1.__decorate([aop_1.Before("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"beforeRun",null), tslib_1.__decorate([aop_1.AfterReturning("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"afterRun",null), t=tslib_1.__decorate([aop_1.Aspect({annotation:core$1.Task,singleton:!0}),tslib_1.__metadata("design:paramtypes",[])],t)}();exports.RunAspect=RunAspect;
+Object.defineProperty(exports,"__esModule",{value:!0});var RunAspect=function(){function t(){}return t.prototype.beforeRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core.RunState.pause:throw new Error("workflow paused!");case core.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.afterRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core.RunState.pause:throw new Error("workflow paused!");case core.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.getRunner=function(t){if(t instanceof core.TaskComponent){var e=t.getRoot();if(e.workflowId&&this.container.has(e.workflowId))return this.container.resolve(e.workflowId)}return null}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), tslib_1.__decorate([aop_1.Before("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"beforeRun",null), tslib_1.__decorate([aop_1.AfterReturning("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"afterRun",null), t=tslib_1.__decorate([aop_1.Aspect({annotation:core.Task,singleton:!0}),tslib_1.__metadata("design:paramtypes",[])],t)}();exports.RunAspect=RunAspect;
 
 });
 
@@ -306,7 +313,7 @@ Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(RunA
 unwrapExports(aop);
 
 var CoreModule_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var CoreModule=function(){function e(e){this.container=e;}return e.prototype.setup=function(){var e=this.container,o=e.getLifeScope();o.registerDecorator(core$1.Runner,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), o.registerDecorator(core$1.Task,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), e.register(core$1.TaskElement), e.register(core$1.TaskBuilder), e.register(core$1.TaskRunner), e.register(aop.RunAspect);}, e=tslib_1.__decorate([core_1.IocExt("setup"),tslib_1.__param(0,core_1.Inject(core_1.ContainerToken)),tslib_1.__metadata("design:paramtypes",[Object])],e)}();exports.CoreModule=CoreModule;
+Object.defineProperty(exports,"__esModule",{value:!0});var CoreModule=function(){function e(e){this.container=e;}return e.prototype.setup=function(){var e=this.container,o=e.getLifeScope();o.registerDecorator(core.Runner,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), o.registerDecorator(core.Task,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), e.register(core.TaskElement), e.register(core.TaskBuilder), e.register(core.TaskRunner), e.register(aop.RunAspect);}, e=tslib_1.__decorate([core_1.IocExt("setup"),tslib_1.__param(0,core_1.Inject(core_1.ContainerToken)),tslib_1.__metadata("design:paramtypes",[Object])],e)}();exports.CoreModule=CoreModule;
 
 });
 
@@ -314,7 +321,7 @@ unwrapExports(CoreModule_1);
 var CoreModule_2 = CoreModule_1.CoreModule;
 
 var DefaultTaskContainer_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var DefaultTaskContainer=function(i){function e(e){var t=i.call(this,e)||this;return t.rootPath=e, t}return tslib_1.__extends(e,i), e.prototype.useLog=function(e){return core_1.hasClassMetadata(aop_1.Aspect,e)?this.logAspect=e:console.error("logAspect param is not right aspect"), this}, e.prototype.bootstrap=function(){for(var r=this,e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];var o=1<e.length?{children:e,task:core$1.TaskElement}:core_1.lang.first(e);return i.prototype.bootstrap.call(this,o).then(function(e){var t=r.getContainer().resolve(core$1.TaskRunnerToken,{work:o,instance:e,taskBuilder:r.getModuleBuilder()});return t.start().then(function(){return t})})}, e.prototype.getRootPath=function(){return this.rootPath}, e.prototype.createModuleBuilder=function(){return this.getContainer().get(core$1.TaskBuilderToken)}, e.prototype.registerExts=function(t){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(e){switch(e.label){case 0:return t.has(aop_1.AopModule)||t.register(aop_1.AopModule), t.has(logs_1.LogModule)||t.register(logs_1.LogModule), t.bindProvider(ITaskContainer.TaskContainerToken,this), t.has(CoreModule_1.CoreModule)||t.register(CoreModule_1.CoreModule), t.register(this.logAspect), [4,i.prototype.registerExts.call(this,t)];case 1:return e.sent(), [2,t]}})})}, e.prototype.setConfigRoot=function(e){e.rootdir=this.rootPath;}, e}(core_1.ApplicationBuilder);exports.DefaultTaskContainer=DefaultTaskContainer;
+Object.defineProperty(exports,"__esModule",{value:!0});var DefaultTaskContainer=function(i){function e(e){var t=i.call(this,e)||this;return t.rootPath=e, t}return tslib_1.__extends(e,i), e.prototype.useLog=function(e){return core_1.hasClassMetadata(aop_1.Aspect,e)?this.logAspect=e:console.error("logAspect param is not right aspect"), this}, e.prototype.bootstrap=function(){for(var r=this,e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];var o=1<e.length?{children:e,task:core.TaskElement}:core_1.lang.first(e);return i.prototype.bootstrap.call(this,o).then(function(e){var t=r.getContainer().resolve(core.TaskRunnerToken,{work:o,instance:e,taskBuilder:r.getModuleBuilder()});return t.start().then(function(){return t})})}, e.prototype.getRootPath=function(){return this.rootPath}, e.prototype.createModuleBuilder=function(){return this.getContainer().get(core.TaskBuilderToken)}, e.prototype.registerExts=function(t){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(e){switch(e.label){case 0:return t.has(aop_1.AopModule)||t.register(aop_1.AopModule), t.has(logs_1.LogModule)||t.register(logs_1.LogModule), t.bindProvider(ITaskContainer.TaskContainerToken,this), t.has(CoreModule_1.CoreModule)||t.register(CoreModule_1.CoreModule), t.register(this.logAspect), [4,i.prototype.registerExts.call(this,t)];case 1:return e.sent(), [2,t]}})})}, e.prototype.setConfigRoot=function(e){e.rootdir=this.rootPath;}, e}(core_1.ApplicationBuilder);exports.DefaultTaskContainer=DefaultTaskContainer;
 
 });
 
@@ -337,7 +344,7 @@ Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(obje
 unwrapExports(utils);
 
 var D__workspace_github_typeTask_packages_core_lib = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(ITaskContainer,exports), tslib_1.__exportStar(DefaultTaskContainer_1,exports), tslib_1.__exportStar(utils,exports), tslib_1.__exportStar(core$1,exports), tslib_1.__exportStar(aop,exports);
+Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(ITaskContainer,exports), tslib_1.__exportStar(DefaultTaskContainer_1,exports), tslib_1.__exportStar(utils,exports), tslib_1.__exportStar(core,exports), tslib_1.__exportStar(aop,exports);
 
 });
 

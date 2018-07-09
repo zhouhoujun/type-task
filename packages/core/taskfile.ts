@@ -5,6 +5,7 @@ const rollup = require('gulp-rollup');
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');
 const commonjs = require('rollup-plugin-commonjs');
+const builtins = require('rollup-plugin-node-builtins');
 
 TaskContainer.create(__dirname)
     .use(PipeModule)
@@ -30,6 +31,7 @@ TaskContainer.create(__dirname)
                     plugins: [
                         resolve(),
                         commonjs(),
+                        builtins(),
                         rollupSourcemaps()
                     ],
                     external: [
