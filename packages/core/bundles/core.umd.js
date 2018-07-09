@@ -162,15 +162,14 @@ for (var i = 0; i < 256; ++i) {
 function bytesToUuid(buf, offset) {
   var i = offset || 0;
   var bth = byteToHex;
-  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
-  return ([bth[buf[i++]], bth[buf[i++]], 
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]], '-',
-	bth[buf[i++]], bth[buf[i++]],
-	bth[buf[i++]], bth[buf[i++]],
-	bth[buf[i++]], bth[buf[i++]]]).join('');
+  return bth[buf[i++]] + bth[buf[i++]] +
+          bth[buf[i++]] + bth[buf[i++]] + '-' +
+          bth[buf[i++]] + bth[buf[i++]] + '-' +
+          bth[buf[i++]] + bth[buf[i++]] + '-' +
+          bth[buf[i++]] + bth[buf[i++]] + '-' +
+          bth[buf[i++]] + bth[buf[i++]] +
+          bth[buf[i++]] + bth[buf[i++]] +
+          bth[buf[i++]] + bth[buf[i++]];
 }
 
 var bytesToUuid_1 = bytesToUuid;
@@ -343,12 +342,12 @@ Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(obje
 
 unwrapExports(utils);
 
-var D__workspace_github_typeTask_packages_core_lib = createCommonjsModule(function (module, exports) {
+var D__Workspace_Projects_modules_typeTask_packages_core_lib = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(ITaskContainer,exports), tslib_1.__exportStar(DefaultTaskContainer_1,exports), tslib_1.__exportStar(utils,exports), tslib_1.__exportStar(core,exports), tslib_1.__exportStar(aop,exports);
 
 });
 
-var index$4 = unwrapExports(D__workspace_github_typeTask_packages_core_lib);
+var index$4 = unwrapExports(D__Workspace_Projects_modules_typeTask_packages_core_lib);
 
 return index$4;
 

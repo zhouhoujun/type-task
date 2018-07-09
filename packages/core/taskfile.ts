@@ -1,4 +1,4 @@
-import { PipeModule, PackageTask, PipeElement, PipeAsset, IPackageConfigure, IAssetConfigure } from '@taskfr/pipes';
+import { PipeModule, PackageTask, PipeAsset, IPackageConfigure, IAssetConfigure } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const rename = require('gulp-rename');
 const rollup = require('gulp-rollup');

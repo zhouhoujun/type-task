@@ -1,5 +1,6 @@
-import { PipeModule, PipeElement, IPipeContext, SourceToken, PipeTask } from '@taskfr/pipes';
+import { PipeModule, PipeElement, IPipeContext, PipeTask } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
+import { PipeAsset } from 'packages/pipes/lib/assets/PipeAsset';
 const jeditor = require('gulp-json-editor');
 
 
@@ -7,22 +8,21 @@ let argFactory = (ctx: IPipeContext) => {
     let envArgs = ctx.getEnvArgs();
     if (envArgs.deploy) {
         return '--access=public';
-    } else if (envArgs.release) {
-        return '--release';
     } else {
-        return envArgs.test ? '--test' : '';
+        return '';
     }
 }
 
 let versionSetting = (ctx: IPipeContext) => {
     let envArgs = ctx.getEnvArgs();
     return jeditor((json: any) => {
-        let version = envArgs['version'] || '';
+        let version = envArgs['setvs'] || '';
         if (version) {
+            // console.log(version);
             json.version = version;
             if (json.peerDependencies) {
                 Object.keys(json.peerDependencies).forEach(key => {
-                    if (/^@ts-ioc/.test(key)) {
+                    if (/^@taskfr/.test(key)) {
                         json.peerDependencies[key] = version;
                     }
                 })
@@ -39,8 +39,16 @@ let versionSetting = (ctx: IPipeContext) => {
             pipes: [
                 (ctx) => versionSetting(ctx)
             ],
-            dist: 'packages',
-            task: SourceToken
+            dest: 'packages',
+            task: PipeAsset
+        },
+        {
+            src: ['package.json'],
+            pipes: [
+                (ctx) => versionSetting(ctx)
+            ],
+            dest: '.',
+            task: PipeAsset
         },
         {
             shell: (ctx: IPipeContext) => {
