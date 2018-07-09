@@ -2,7 +2,7 @@ import { isString, isArray } from '@ts-ioc/core';
 import { existsSync } from 'fs';
 import { RunWay, Src } from '@taskfr/core';
 import * as execa from 'execa';
-import { PipeTask } from '../decorators/index';
+import { PipeTask } from '../decorators';
 import { AbstractPipe } from '../core/AbstractPipe';
 
 

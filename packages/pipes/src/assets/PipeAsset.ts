@@ -1,6 +1,6 @@
-import { PipeSource } from '../core/index';
-import { AssetTask } from '../decorators/index';
-import { IAssetPipe } from './IAssetPipe';
+import { PipeSource } from '../core';
+import { AssetTask } from '../decorators';
+import { IAsset } from './IAsset';
 
 /**
  * pipe component
@@ -11,7 +11,7 @@ import { IAssetPipe } from './IAssetPipe';
  * @implements {IPipeComponent<ITransform>}
  */
 @AssetTask
-export class AssetPipe extends PipeSource implements IAssetPipe {
+export class PipeAsset extends PipeSource implements IAsset {
     constructor(name?: string) {
         super(name);
     }

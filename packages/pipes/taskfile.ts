@@ -1,4 +1,4 @@
-import { PipeModule, Package, PipeElement } from '@taskfr/pipes';
+import { PipeModule, Package, PipeElement } from 'src';
 import { TaskContainer } from '@taskfr/platform-server';
 
 @Package({

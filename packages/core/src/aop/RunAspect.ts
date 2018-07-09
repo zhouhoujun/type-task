@@ -1,6 +1,6 @@
 import { Inject, IContainer, ContainerToken } from '@ts-ioc/core';
 import { Aspect, Joinpoint, Before, AfterReturning } from '@ts-ioc/aop';
-import { TaskComponent, ITaskRunner, RunState, Task } from '../core/index';
+import { TaskComponent, ITaskRunner, RunState, Task } from '../core';
 
 /**
  * Task Log

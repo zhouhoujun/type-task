@@ -4,7 +4,7 @@ import { IPipeConfigure } from './IPipeConfigure';
 import { IPipeComponent } from './IPipeComponent';
 import { TransformMergerExpress, TransMergerConfig, TransformConfig, TransformMerger, TransformType, TransformExpress } from './pipeTypes';
 import { IPipeTask, PipeToken, PipeTaskBuilderToken } from '../IPipeTask';
-import { AssetToken } from '../assets/IAssetPipe';
+import { AssetToken } from '../assets/IAsset';
 
 /**
  * pipe task builder.

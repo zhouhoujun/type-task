@@ -1,7 +1,7 @@
 import { TaskComponent } from './TaskComponent';
 import { ITask } from './ITask';
 import { ITaskComponent } from './ITaskComponent';
-import { Task } from './decorators/index';
+import { Task } from './decorators';
 
 
 /**

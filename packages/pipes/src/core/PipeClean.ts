@@ -1,4 +1,4 @@
-import { PipeTask } from '../decorators/index';
+import { PipeTask } from '../decorators';
 import { OnTaskInit, Src } from '@taskfr/core';
 import { ICleanConfigure } from './IPipeConfigure';
 import { Registration } from '@ts-ioc/core';

@@ -5,7 +5,7 @@ import { IConfigure, TaskType } from './IConfigure';
 import { ITask, TaskToken } from './ITask';
 import { TaskElement } from './TaskElement';
 import { TaskComponent } from './TaskComponent';
-import { Task } from './decorators/index';
+import { Task } from './decorators';
 import { TaskMetadata } from './metadatas';
 
 /**

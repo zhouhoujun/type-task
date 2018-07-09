@@ -1,9 +1,9 @@
 import { ITask, IConfigure, ITaskComponent } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean, isToken } from '@ts-ioc/core';
-import { IPipeComponent, PipeTest, PipeClean, ICleanConfigure, TestToken, CleanToken } from '../core/index';
+import { IPipeComponent, PipeTest, PipeClean, ICleanConfigure, TestToken, CleanToken } from '../core';
 import { IPackageConfigure } from './IPackageConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
-import { AssetToken } from './IAssetPipe';
+import { AssetToken } from './IAsset';
 import { IAssetConfigure } from './IAssetConfigure';
 import { PackageBuilderToken, AssetTaskBuilderToken } from '../IPipeTask';
 

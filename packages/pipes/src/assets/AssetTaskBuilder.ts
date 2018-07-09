@@ -1,9 +1,9 @@
 import { ITask, IConfigure, ITaskComponent } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, lang, isArray, isString, Token, Registration, isUndefined } from '@ts-ioc/core';
-import { IPipeConfigure, IPipeComponent, PipeSource, SourceToken, PipeClean, ICleanConfigure, CleanToken } from '../core/index';
+import { Inject, ContainerToken, IContainer, Singleton, lang, isArray, isString, Token, Registration, isUndefined, isToken } from '@ts-ioc/core';
+import { IPipeConfigure, IPipeComponent, PipeSource, SourceToken, PipeClean, ICleanConfigure, CleanToken } from '../core';
 import { IAssetConfigure } from './IAssetConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
-import { AssetToken } from './IAssetPipe';
+import { AssetToken } from './IAsset';
 import { AssetTaskBuilderToken } from '../IPipeTask';
 
 /**
@@ -28,15 +28,7 @@ export class AssetTaskBuilder extends DestTaskBuilder {
             assetCfg.awaitPiped = true;
         }
 
-        if (assetCfg.clean && !(taskInst instanceof PipeClean)) {
-            let val = assetCfg.clean;
-            let cleanCfg: ICleanConfigure = (isArray(val) || isString(val)) ? { clean: val } : val;
-            if (!cleanCfg.task) {
-                cleanCfg.task = CleanToken;
-            }
-            subs.push(cleanCfg);
-        }
-
+        // only not pipesource add sub source task
         if (assetCfg.src && !(taskInst instanceof PipeSource)) {
             let srcCfg: IPipeConfigure = lang.assign({}, assetCfg);
             srcCfg.task = SourceToken;
@@ -50,12 +42,4 @@ export class AssetTaskBuilder extends DestTaskBuilder {
         }
         return taskInst;
     }
-
-    // protected traslateStrToken(token: string): Token<ITask> {
-    //     let taskToken = new Registration(AssetToken, token);
-    //     if (this.container.has(taskToken)) {
-    //         return taskToken;
-    //     }
-    //     return super.traslateStrToken(token);
-    // }
 }

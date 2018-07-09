@@ -1,10 +1,10 @@
-import { AssetTask } from '../../decorators/index';
-import { IDestConfigure } from '../../core/index';
+import { AssetTask } from '../../decorators';
+import { IDestConfigure } from '../../core';
 import { isBoolean, ObjectMap, isString, isArray } from '@ts-ioc/core';
 import { OnTaskInit, CtxType } from '@taskfr/core';
 import * as uglify from 'gulp-uglify';
 import * as sourcemaps from 'gulp-sourcemaps';
-import { IAssetConfigure, DestType, AssetPipe } from '../../assets/index';
+import { IAssetConfigure, DestType, PipeAsset } from '../../assets';
 import * as ts from 'gulp-typescript';
 import { ITransform } from '../../ITransform';
 
@@ -34,7 +34,7 @@ export interface TsConfigure extends IAssetConfigure {
 }
 
 @AssetTask('ts')
-export class TsCompile extends AssetPipe implements OnTaskInit {
+export class TsCompile extends PipeAsset implements OnTaskInit {
 
     onTaskInit(cfg: TsConfigure) {
         super.onTaskInit(cfg);

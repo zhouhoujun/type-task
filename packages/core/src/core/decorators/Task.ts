@@ -1,5 +1,5 @@
 import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken, isSymbol, InjectToken } from '@ts-ioc/core';
-import { TaskMetadata } from '../metadatas/index';
+import { TaskMetadata } from '../metadatas';
 import { TaskToken, ITask } from '../ITask';
 import { TaskBuilderToken, ITaskBuilder } from '../ITaskBuilder';
 

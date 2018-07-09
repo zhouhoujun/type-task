@@ -99,7 +99,6 @@ export class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> im
                 }, err => {
                     pipe.removeAllListeners('error');
                     pipe.removeAllListeners('end');
-                    process.exit(1);
                     return Promise.reject(err);
                 });
             });

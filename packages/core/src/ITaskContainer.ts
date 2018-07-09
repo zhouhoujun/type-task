@@ -1,4 +1,4 @@
-import { ITask, ITaskRunner, TaskType } from './core/index';
+import { ITask, ITaskRunner, TaskType } from './core';
 import { Type, InjectToken, IApplicationBuilder } from '@ts-ioc/core';
 
 

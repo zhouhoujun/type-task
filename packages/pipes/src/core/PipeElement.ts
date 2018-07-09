@@ -1,5 +1,5 @@
 import { IPipeComponent } from './IPipeComponent';
-import { PipeTask } from '../decorators/index';
+import { PipeTask } from '../decorators';
 import { PipeComponent } from './PipeComponent';
 
 

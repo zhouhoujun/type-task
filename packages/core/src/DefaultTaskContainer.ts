@@ -1,10 +1,10 @@
 import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang, isClass } from '@ts-ioc/core';
-import { ITaskRunner, IConfigure, TaskRunnerToken, ITask, TaskBuilderToken, ITaskBuilder, TaskElement } from './core/index';
+import { ITaskRunner, IConfigure, TaskRunnerToken, ITask, TaskBuilderToken, ITaskBuilder, TaskElement } from './core';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
-import { TaskType } from './core/index';
+import { TaskType } from './core';
 
 
 /**

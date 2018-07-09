@@ -1,7 +1,7 @@
 import { IContainer, CoreActions, Inject, ContainerToken, IocExt } from '@ts-ioc/core';
-import { TaskBuilder, TaskRunner, Task, TaskElement, Runner } from './core/index';
+import { TaskBuilder, TaskRunner, Task, TaskElement, Runner } from './core';
 // import { InitTaskAction } from './core/actions/InitTaskAction';
-import { RunAspect } from './aop/index';
+import { RunAspect } from './aop';
 
 
 /**

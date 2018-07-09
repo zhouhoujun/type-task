@@ -1,5 +1,6 @@
-import { PipeModule, PackageTask, PipeElement, AssetPipe, IPackageConfigure, IAssetConfigure } from '@taskfr/pipes';
+import { PipeModule, PackageTask, PipeElement, PipeAsset, IPackageConfigure, IAssetConfigure } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
+const rename = require('gulp-rename');
 const rollup = require('gulp-rollup');
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');
@@ -21,9 +22,9 @@ TaskContainer.create(__dirname)
         },
         <IAssetConfigure>{
             src: 'lib/**/*.js',
+            // awaitPiped: true,
             pipes: [
                 () => rollup({
-                    input: 'lib/index.js',
                     name: 'core.umd.js',
                     format: 'umd',
                     plugins: [
@@ -64,8 +65,10 @@ TaskContainer.create(__dirname)
                     globals: {
                         'reflect-metadata': 'Reflect'
                     },
-                })
+                    input: 'lib/index.js'
+                }),
+                () => rename('core.umd.js')
             ],
             dest: 'bundles',
-            task: AssetPipe
+            task: PipeAsset
         });

@@ -1,5 +1,5 @@
 import { ITaskDecorator, createTaskDecorator } from '@taskfr/core';
-import { AssetToken } from '../assets/IAssetPipe';
+import { AssetToken } from '../assets/IAsset';
 import { IPackageConfigure } from '../assets/IPackageConfigure';
 import { PackageBuilderToken } from '../IPipeTask';
 

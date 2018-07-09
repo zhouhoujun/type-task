@@ -1,4 +1,4 @@
-import { ISourceConfigure, IDestConfigure, ICleanConfigure } from '../core/index';
+import { ISourceConfigure, IDestConfigure, ICleanConfigure } from '../core';
 import { CtxType, Src } from '@taskfr/core';
 import { ObjectMap } from '@ts-ioc/core';
 
@@ -26,13 +26,6 @@ export interface IAssetConfigure extends ISourceConfigure {
      */
     watch?: CtxType<Src | boolean>;
 
-    /**
-     * clean task config.
-     *
-     * @type {(CtxType<Src | ICleanConfigure>)}
-     * @memberof IAssetConfigure
-     */
-    clean?: CtxType<Src | ICleanConfigure>;
     /**
      * asset pipe dest.
      *

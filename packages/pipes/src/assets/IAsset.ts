@@ -1,4 +1,4 @@
-import { IPipeSource } from '../core/index';
+import { IPipeSource } from '../core';
 import { InjectToken } from '@ts-ioc/core';
 
 /**
@@ -8,12 +8,12 @@ import { InjectToken } from '@ts-ioc/core';
  * @interface IAssetPipe
  * @extends {IPipeComponent}
  */
-export interface IAssetPipe extends IPipeSource {
+export interface IAsset extends IPipeSource {
 
 }
 
 /**
  * asset task token.
  */
-export const AssetToken = new InjectToken<IAssetPipe>('__Task_Asset');
+export const AssetToken = new InjectToken<IAsset>('__Task_Asset');
 

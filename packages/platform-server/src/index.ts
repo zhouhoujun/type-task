@@ -1,2 +1,2 @@
-export * from './aop/index';
+export * from './aop';
 export * from './TaskContainer';

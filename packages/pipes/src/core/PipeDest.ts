@@ -1,5 +1,5 @@
 import { dest, DestOptions } from 'vinyl-fs';
-import { PipeTask } from '../decorators/index';
+import { PipeTask } from '../decorators';
 import { IPipeComponent } from './IPipeComponent';
 import { PipeComponent } from './PipeComponent';
 import { ITransform } from '../ITransform';

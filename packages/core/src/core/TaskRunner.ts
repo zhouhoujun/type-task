@@ -5,7 +5,7 @@ import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
 import * as uuid from 'uuid/v1';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Runner } from './decorators/index';
+import { Runner } from './decorators';
 import { Joinpoint } from '@ts-ioc/aop';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';

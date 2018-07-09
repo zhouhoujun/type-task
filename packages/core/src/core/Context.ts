@@ -3,7 +3,7 @@ import { IContext, ContextToken, CtxType } from './IContext';
 import { ITaskContainer, TaskContainerToken } from '../ITaskContainer';
 import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
-import { Task } from './decorators/index';
+import { Task } from './decorators';
 import { ITaskBuilder } from './ITaskBuilder';
 import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
 import { TaskBuilder } from '@taskfr/core';

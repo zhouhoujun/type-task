@@ -1,5 +1,5 @@
-import { PipeElement } from '../core/index';
-import { Package } from '../decorators/index';
+import { PipeElement } from '../core';
+import { Package } from '../decorators';
 import { Src } from '@taskfr/core';
 
 @Package
