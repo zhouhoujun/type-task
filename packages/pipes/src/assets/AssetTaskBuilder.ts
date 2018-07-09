@@ -24,10 +24,6 @@ export class AssetTaskBuilder extends DestTaskBuilder {
         let assetCfg = config as IAssetConfigure;
         let subs: IConfigure[] = [];
 
-        if (isUndefined(assetCfg.awaitPiped)) {
-            assetCfg.awaitPiped = true;
-        }
-
         // only not pipesource add sub source task
         if (assetCfg.src && !(taskInst instanceof PipeSource)) {
             let srcCfg: IPipeConfigure = lang.assign({}, assetCfg);

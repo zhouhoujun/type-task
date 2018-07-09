@@ -1,7 +1,7 @@
-import { TaskComponent, IConfigure, TaskRunner, OnTaskInit } from '@taskfr/core';
+import { TaskComponent, TaskRunner, OnTaskInit } from '@taskfr/core';
 import { ITransform } from '../ITransform';
 import { IPipeComponent } from './IPipeComponent';
-import { Abstract, isArray, isClass, isFunction, Inject, Injectable } from '@ts-ioc/core';
+import { isArray, isClass, isFunction, Inject, Injectable } from '@ts-ioc/core';
 import { TransformMerger, TransformType, PipeExpress, isTransform } from './pipeTypes';
 import { ITransformMerger } from './ITransformMerger';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
@@ -38,12 +38,6 @@ export class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> im
      * @memberof PipeComponent
      */
     merger: TransformMerger;
-    /**
-     * await pipe compileted.
-     *
-     * @memberof PipeComponent
-     */
-    awaitPiped = false;
 
     private config: IPipeConfigure;
 
@@ -79,31 +73,7 @@ export class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> im
      * @memberof PipeComponent
      */
     protected pipe(stream: ITransform): Promise<ITransform> {
-        let pStream = this.pipesToPromise(stream, this.pipes);
-        if (this.awaitPiped) {
-            pStream = pStream.then(pipe => {
-                if (!pipe) {
-                    return null;
-                }
-
-                return new Promise((resolve, reject) => {
-                    pipe
-                        .once('end', () => {
-                            resolve();
-                        })
-                        .once('error', reject);
-                }).then(() => {
-                    pipe.removeAllListeners('error');
-                    pipe.removeAllListeners('end');
-                    return pipe;
-                }, err => {
-                    pipe.removeAllListeners('error');
-                    pipe.removeAllListeners('end');
-                    return Promise.reject(err);
-                });
-            });
-        }
-        return pStream;
+        return this.pipesToPromise(stream, this.pipes);
     }
 
     /**

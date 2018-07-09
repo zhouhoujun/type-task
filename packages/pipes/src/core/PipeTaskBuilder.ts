@@ -1,9 +1,9 @@
-import { TaskBuilder, ITask, IConfigure, TaskBuilderToken, TaskType, IContext } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObject, isUndefined, Token, Registration } from '@ts-ioc/core';
+import { TaskBuilder, ITask, IConfigure, IContext } from '@taskfr/core';
+import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObject, Token, Registration } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { IPipeComponent } from './IPipeComponent';
 import { TransformMergerExpress, TransMergerConfig, TransformConfig, TransformMerger, TransformType, TransformExpress } from './pipeTypes';
-import { IPipeTask, PipeToken, PipeTaskBuilderToken } from '../IPipeTask';
+import { PipeToken, PipeTaskBuilderToken } from '../IPipeTask';
 import { AssetToken } from '../assets/IAsset';
 
 /**
@@ -23,9 +23,6 @@ export class PipeTaskBuilder extends TaskBuilder {
         await super.beforeBindConfig(taskInst, config);
         let comp = taskInst as IPipeComponent;
         let pipeCfg = config as IPipeConfigure;
-        if (!isUndefined(pipeCfg.awaitPiped)) {
-            comp.awaitPiped = taskInst.context.to(pipeCfg.awaitPiped);
-        }
         if (pipeCfg.pipes) {
             comp.pipes = this.translatePipes(taskInst.context, pipeCfg.pipes);
         }

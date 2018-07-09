@@ -23,7 +23,6 @@ TaskContainer.create(__dirname)
         },
         <IAssetConfigure>{
             src: 'lib/**/*.js',
-            // awaitPiped: true,
             pipes: [
                 () => rollup({
                     name: 'core.umd.js',

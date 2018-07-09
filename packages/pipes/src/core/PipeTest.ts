@@ -3,7 +3,7 @@ import { PipeTask } from '../decorators';
 import { IPipeConfigure } from './IPipeConfigure';
 import { OnTaskInit, Src, CtxType } from '@taskfr/core';
 import { src, SrcOptions } from 'vinyl-fs';
-import { isArray, Registration } from '@ts-ioc/core';
+import { isArray, Registration, isUndefined } from '@ts-ioc/core';
 import { PipeToken, IPipeTask } from '../IPipeTask';
 import { PipeElement, IPipeElement } from './PipeElement';
 import { TransformType } from './pipeTypes';
@@ -13,6 +13,15 @@ export const TestToken = new Registration<IPipeTask>(PipeToken, 'test');
 
 
 export interface ITestConfigure extends IPipeConfigure {
+
+    /**
+     * await piped complete.
+     *
+     * @type {CtxType<boolean>}
+     * @memberof IPipeConfigure
+     */
+    awaitPiped?: CtxType<boolean>;
+
     /**
      * set match test file source.
      *
@@ -56,6 +65,14 @@ export interface ITestConfigure extends IPipeConfigure {
  */
 export interface IPipeTest extends IPipeElement {
     /**
+     * await pipe completed.
+     *
+     * @type {boolean}
+     * @memberof IPipeComponent
+     */
+    awaitPiped: boolean;
+
+    /**
      * set match test file source.
      *
      * @type {Src}
@@ -88,6 +105,12 @@ export interface IPipeTest extends IPipeElement {
 @PipeTask(TestToken)
 export class PipeTest extends PipeElement implements IPipeTest, OnTaskInit {
 
+    /**
+     * await pipe compileted.
+     *
+     * @memberof PipeComponent
+     */
+    awaitPiped = true;
     /**
      * source.
      *
@@ -127,6 +150,9 @@ export class PipeTest extends PipeElement implements IPipeTest, OnTaskInit {
 
     onTaskInit(config: ITestConfigure) {
         super.onTaskInit(config);
+        if (!isUndefined(config.awaitPiped)) {
+            this.awaitPiped = this.context.to(config.awaitPiped);
+        }
         this.test = this.context.to(config.test);
         this.srcOptions = this.context.to(config.srcOptions);
         this.options = this.context.to(config.options);
@@ -155,6 +181,43 @@ export class PipeTest extends PipeElement implements IPipeTest, OnTaskInit {
 
     protected source(): ITransform {
         return src(this.test, this.srcOptions);
+    }
+
+    /**
+     * pipe transform.
+     *
+     * @protected
+     * @param {ITransform} transform
+     * @returns {Promise<ITransform>}
+     * @memberof PipeComponent
+     */
+    protected pipe(stream: ITransform): Promise<ITransform> {
+        let pStream = super.pipe(stream);
+        if (this.awaitPiped) {
+            pStream = pStream.then(pipe => {
+                if (!pipe) {
+                    return null;
+                }
+
+                return new Promise((resolve, reject) => {
+                    pipe
+                        .once('end', () => {
+                            console.log('awit pipe end.')
+                            resolve();
+                        })
+                        .once('error', reject);
+                }).then(() => {
+                    pipe.removeAllListeners('error');
+                    pipe.removeAllListeners('end');
+                    return pipe;
+                }, err => {
+                    pipe.removeAllListeners('error');
+                    pipe.removeAllListeners('end');
+                    return Promise.reject(err);
+                });
+            });
+        }
+        return pStream;
     }
 
 }

@@ -20,14 +20,6 @@ export interface IPipeConfigure extends IConfigure {
     pipes?: TransformExpress;
 
     /**
-     * await piped complete.
-     *
-     * @type {CtxType<boolean>}
-     * @memberof IPipeConfigure
-     */
-    awaitPiped?: CtxType<boolean>;
-
-    /**
      * streams merger.
      *
      * @type {TransformMergerExpress}

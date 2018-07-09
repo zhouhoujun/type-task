@@ -24,14 +24,6 @@ export interface IPipeComponent extends ITaskComponent, IPipeTask {
     context: IPipeContext;
 
     /**
-     * await pipe completed.
-     *
-     * @type {boolean}
-     * @memberof IPipeComponent
-     */
-    awaitPiped: boolean;
-
-    /**
     * task pipes.
     *
     * @returns {TransformType[]}
