@@ -4,14 +4,6 @@ import { PipeAsset } from 'packages/pipes/lib/assets/PipeAsset';
 const jeditor = require('gulp-json-editor');
 
 
-let argFactory = (ctx: IPipeContext) => {
-    let envArgs = ctx.getEnvArgs();
-    if (envArgs.deploy) {
-        return '--access=public';
-    } else {
-        return '';
-    }
-}
 
 let versionSetting = (ctx: IPipeContext) => {
     let envArgs = ctx.getEnvArgs();
@@ -54,12 +46,13 @@ let versionSetting = (ctx: IPipeContext) => {
             shell: (ctx: IPipeContext) => {
                 let envArgs = ctx.getEnvArgs();
                 let packages = ctx.getFolders('packages');
-                let cmd = envArgs.deploy ? 'npm publish' : 'npm test';
-                return packages.map(fd => {
+                let cmd = envArgs.deploy ? 'npm publish --access=public' : 'npm test';
+                let cmds = packages.map(fd => {
                     return `cd ${fd} && ${cmd}`;
                 });
+                console.log(cmds);
+                return cmds;
             },
-            args: argFactory,
             task: 'shell'
         }
     ]
