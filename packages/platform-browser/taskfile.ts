@@ -12,7 +12,7 @@ const builtins = require('rollup-plugin-node-builtins');
     clean: 'lib',
     test: 'test/**/*.spec.ts',
     assets: {
-        ts: { dest: 'lib', uglify: true }
+        ts: { dest: 'lib', annotation: true, uglify: true }
     },
     children: [
         <IAssetConfigure>{

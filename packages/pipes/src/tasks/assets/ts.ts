@@ -1,6 +1,7 @@
 import { AssetTask } from '../../decorators';
-import { IDestConfigure } from '../../core';
+import { IDestConfigure, TransformType } from '../../core';
 import { isBoolean, ObjectMap, isString, isArray } from '@ts-ioc/core';
+import { classAnnotations } from '@ts-ioc/annotations';
 import { OnTaskInit, CtxType } from '@taskfr/core';
 import * as uglify from 'gulp-uglify';
 import * as sourcemaps from 'gulp-sourcemaps';
@@ -23,6 +24,14 @@ export interface TsConfigure extends IAssetConfigure {
      * @memberof TsConfigure
      */
     tds?: CtxType<boolean | string>;
+
+    /**
+     * class annotation.
+     *
+     * @type {(CtxType<boolean | TransformType>)}
+     * @memberof TsConfigure
+     */
+    annotation?: CtxType<boolean | TransformType>;
     /**
      * set tsconfig to compile.
      *
@@ -42,6 +51,15 @@ export class TsCompile extends PipeAsset implements OnTaskInit {
         if (this.context.to(cfg.sourcemaps) !== false) {
             pipes.unshift(() => sourcemaps.init());
         }
+        let annotation = this.context.to(cfg.annotation);
+        if (annotation) {
+            if (isBoolean(annotation)) {
+                pipes.push(() => classAnnotations());
+            } else {
+                pipes.push(annotation);
+            }
+        }
+
         pipes.push(() => this.getTsCompilePipe(cfg));
         cfg.pipes = pipes;
 

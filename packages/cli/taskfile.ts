@@ -9,7 +9,7 @@ import { TaskContainer } from '@taskfr/platform-server';
             name: 'tscompile',
             src: 'src/**/*.ts',
             dest: 'bin',
-            uglify: true
+            uglify: false
         }
     }
 })

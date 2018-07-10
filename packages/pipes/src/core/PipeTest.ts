@@ -213,7 +213,12 @@ export class PipeTest extends PipeElement implements IPipeTest, OnTaskInit {
                 }, err => {
                     pipe.removeAllListeners('error');
                     pipe.removeAllListeners('end');
-                    return Promise.reject(err);
+                    if (!isUndefined(process)) {
+                        process.exit(1);
+                        return err;
+                    } else {
+                        return Promise.reject(new Error(err));
+                    }
                 });
             });
         }

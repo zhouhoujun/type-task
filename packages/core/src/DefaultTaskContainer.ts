@@ -1,10 +1,9 @@
-import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang, isClass } from '@ts-ioc/core';
-import { ITaskRunner, IConfigure, TaskRunnerToken, ITask, TaskBuilderToken, ITaskBuilder, TaskElement } from './core';
+import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang } from '@ts-ioc/core';
+import { ITaskRunner, IConfigure, TaskRunnerToken, ITask, TaskBuilderToken, ITaskBuilder, TaskElement, TaskBuilder, TaskType } from './core/index';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
-import { TaskType } from './core';
 
 
 /**
@@ -30,6 +29,10 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
         return this;
     }
 
+    protected createRunner(task: TaskType<ITask>, instance: ITask) {
+        return this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });
+    }
+
     /**
      * create workflow
      *
@@ -41,8 +44,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
         let task = (tasks.length > 1) ? { children: tasks, task: TaskElement } : lang.first(tasks);
         return super.bootstrap(task)
             .then(instance => {
-                let runner = this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });
-                return runner;
+                return this.createRunner(task, instance);
             });
     }
 
@@ -53,14 +55,10 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
      * @returns {Promise<T>}
      * @memberof ApplicationBuilder
      */
-    bootstrap(...tasks: TaskType<ITask>[]): Promise<ITaskRunner> {
-        return this.createWorkflow(...tasks)
-            .then(runner => {
-                return runner.start()
-                    .then(() => {
-                        return runner;
-                    });
-            })
+    async bootstrap(...tasks: TaskType<ITask>[]): Promise<ITaskRunner> {
+        let runner = await this.createWorkflow(...tasks);
+        await runner.start();
+        return runner;
     }
 
     getRootPath() {

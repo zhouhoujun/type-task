@@ -3,12 +3,12 @@ import { IConfigure, TaskType } from './IConfigure';
 import { ITask } from './ITask';
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
-import * as uuid from 'uuid/v1';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Runner } from './decorators/index';
 import { Joinpoint } from '@ts-ioc/aop';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
+import { UUIDToken, RandomUUIDFactory } from './uuid';
 
 /**
  * task runner.
@@ -63,12 +63,19 @@ export class TaskRunner implements ITaskRunner, OnInit {
     onInit() {
         if (!this.uuid) {
             if (isToken(this.work)) {
-                this.uuid = uuid();
+                this.uuid = this.createUUID();
             } else if (this.work) {
-                this.uuid = this.work.uuid || uuid();
+                this.uuid = this.work.uuid || this.createUUID();
             }
         }
         this.container.bindProvider(this.uuid, this);
+    }
+
+    createUUID() {
+        if (!this.container.has(UUIDToken)) {
+            this.container.register(RandomUUIDFactory);
+        }
+        return this.container.get(UUIDToken).generate();
     }
 
     getBuilder(): ITaskBuilder {

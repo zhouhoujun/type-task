@@ -39,7 +39,7 @@ if (tsregister.indexOf('tsconfig-paths/register') < 0) {
 export const cli = new Liftoff({
   name: 'tkf',
   processTitle: 'tkf',
-  moduleName: 'tkf',
+  moduleName: '@taskfr/cli',
   configName: 'taskfile',
   extensions: jsVariants,
   v8flags: ['--harmony']

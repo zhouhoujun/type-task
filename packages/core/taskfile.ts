@@ -1,11 +1,11 @@
-import { PipeModule, PackageTask, PipeAsset, IPackageConfigure, IAssetConfigure } from '@taskfr/pipes';
+import { PipeModule, PackageTask, PipeAsset, IPackageConfigure, IAssetConfigure, TsConfigure } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const rename = require('gulp-rename');
 const rollup = require('gulp-rollup');
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');
 const commonjs = require('rollup-plugin-commonjs');
-const builtins = require('rollup-plugin-node-builtins');
+// const builtins = require('rollup-plugin-node-builtins');
 
 TaskContainer.create(__dirname)
     .use(PipeModule)
@@ -17,7 +17,7 @@ TaskContainer.create(__dirname)
             src: 'src',
             // awaitPiped: true,
             assets: {
-                ts: { src: 'src/**/*.ts', dest: 'lib', uglify: true }
+                ts: <TsConfigure>{ src: 'src/**/*.ts', dest: 'lib', annotation: true,  uglify: true }
             },
             task: PackageTask
         },
@@ -30,7 +30,7 @@ TaskContainer.create(__dirname)
                     plugins: [
                         resolve(),
                         commonjs(),
-                        builtins(),
+                        // builtins(),
                         rollupSourcemaps()
                     ],
                     external: [
