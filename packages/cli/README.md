@@ -1,4 +1,4 @@
-# packaged @taskfr/cil
+# packaged @taskfr/cli
 
 This repo is for distribution on `npm`. The source for this module is in the
 [main repo](https://github.com/zhouhoujun/type-task).
@@ -8,10 +8,10 @@ Please file issues and pull requests against that repo.
 
 ## Install
 
-1. install cil:
+1. install cli:
 
 ```shell
-npm install  -g @taskfr/cil
+npm install  -g @taskfr/cli
 ```
 
 use command: `tkf [task names] [--param param]`

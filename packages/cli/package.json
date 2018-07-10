@@ -1,11 +1,11 @@
 {
   "name": "@taskfr/cli",
-  "version": "1.0.0-beta1",
+  "version": "1.0.0-beta2",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
   "main": "./bin/taskfr.js",
   "typings": "./lib/taskfr.d.ts",
   "bin": {
-    "taskp": "./bin/taskfr.js"
+    "tkf": "./bin/taskfr.js"
   },
   "scripts": {
     "postinstall": "npm prune",

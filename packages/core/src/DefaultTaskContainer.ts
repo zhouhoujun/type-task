@@ -15,18 +15,35 @@ import { TaskType } from './core';
  */
 export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements ITaskContainer {
 
-    protected logAspect: Type<any>;
+    protected logAspects: Type<any>[];
     constructor(public rootPath: string) {
         super(rootPath)
+        this.logAspects = [];
     }
 
     useLog(logAspect: Type<any>): this {
         if (hasClassMetadata(Aspect, logAspect)) {
-            this.logAspect = logAspect;
+            this.logAspects.push(logAspect);
         } else {
             console.error('logAspect param is not right aspect');
         }
         return this;
+    }
+
+    /**
+     * create workflow
+     *
+     * @param {...TaskType<ITask>[]} tasks
+     * @returns {Promise<ITaskRunner>}
+     * @memberof ITaskContainer
+     */
+    createWorkflow(...tasks: TaskType<ITask>[]): Promise<ITaskRunner> {
+        let task = (tasks.length > 1) ? { children: tasks, task: TaskElement } : lang.first(tasks);
+        return super.bootstrap(task)
+            .then(instance => {
+                let runner = this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });
+                return runner;
+            });
     }
 
     /**
@@ -37,15 +54,13 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
      * @memberof ApplicationBuilder
      */
     bootstrap(...tasks: TaskType<ITask>[]): Promise<ITaskRunner> {
-        let task = (tasks.length > 1) ? { children: tasks, task: TaskElement } : lang.first(tasks);
-        return super.bootstrap(task)
-            .then(instance => {
-                let runner = this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });
+        return this.createWorkflow(...tasks)
+            .then(runner => {
                 return runner.start()
                     .then(() => {
                         return runner;
                     });
-            });
+            })
     }
 
     getRootPath() {
@@ -70,10 +85,16 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
             container.register(CoreModule);
         }
 
-        container.register(this.logAspect);
+        this.beforRegister(container);
 
         await super.registerExts(container);
         return container;
+    }
+
+    protected beforRegister(container: IContainer) {
+        this.logAspects.forEach(logger => {
+            logger && container.register(logger);
+        });
     }
 
     protected setConfigRoot(config: IConfigure) {

@@ -1,6 +1,5 @@
-import { PipeModule, PipeElement, IPipeContext, PipeTask } from '@taskfr/pipes';
+import { PipeModule, PipeElement, IPipeContext, PipeTask, PipeAsset } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
-import { PipeAsset } from 'packages/pipes/lib/assets/PipeAsset';
 const jeditor = require('gulp-json-editor');
 
 

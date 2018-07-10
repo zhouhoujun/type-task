@@ -33,6 +33,15 @@ export interface ITaskContainer extends IApplicationBuilder<ITask> {
     useLog(logAspect: Type<any>): this;
 
     /**
+     * create workflow
+     *
+     * @param {...TaskType<ITask>[]} tasks
+     * @returns {Promise<ITaskRunner>}
+     * @memberof ITaskContainer
+     */
+    createWorkflow(...tasks: TaskType<ITask>[]): Promise<ITaskRunner>;
+
+    /**
      * bootstrap app via main module.
      *
      * @param {...TaskType<ITask>[]} tasks bootstrap tasks.
