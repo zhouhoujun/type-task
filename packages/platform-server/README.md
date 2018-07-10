@@ -14,10 +14,10 @@ Please file issues and pull requests against that repo.
 npm install @taskfr/platform-server
 ```
 
-2. install cil:
+2. install cli:
 
 ```shell
-npm install -g @taskfr/cil
+npm install -g @taskfr/cli
 ```
 
 use command: `tkf [task names] [--param param]`
