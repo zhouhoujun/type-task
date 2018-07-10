@@ -3,10 +3,9 @@ import { ITaskComponent } from './ITaskComponent';
 import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, isToken, isMetadataObject, Token, ModuleBuilder, Registration, isClass, getTypeMetadata, lang } from '@ts-ioc/core';
 import { IConfigure, TaskType } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
-import { TaskElement } from './TaskElement';
-import { TaskComponent } from './TaskComponent';
 import { Task } from './decorators';
 import { TaskMetadata } from './metadatas';
+import { Activity } from '../activities';
 
 /**
  * builder.
@@ -22,12 +21,14 @@ export class TaskBuilder extends ModuleBuilder<IActivity> implements ITaskBuilde
         super(container)
     }
 
-    async build<T extends IActivity>(task: TaskType<IActivity>): Promise<T> {
+    async build<T extends IActivity>(task: TaskType<IActivity>, uuid: string): Promise<T> {
         let taskInst = await super.build(task) as T;
 
-        if (!taskInst) {
+        if (!taskInst || !(taskInst instanceof Activity)) {
             throw new Error('builder task instance failed.');
         }
+
+        taskInst.id = uuid;
 
         let config = this.getConfigure(task) as IConfigure;
         let ctxbuider = this.getBuilderToken(config);

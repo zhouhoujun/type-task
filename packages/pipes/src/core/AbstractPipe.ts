@@ -1,6 +1,8 @@
 import { IPipeContext, PipeContextToken } from './IPipeContext';
-import { Inject, Abstract } from '@ts-ioc/core';
+import { Inject } from '@ts-ioc/core';
 import { IPipeTask } from '../IPipeTask';
+import { Activity } from '@taskfr/core';
+import { PipeTask } from '../decorators';
 
 /**
  * base task.
@@ -9,17 +11,8 @@ import { IPipeTask } from '../IPipeTask';
  * @class BaseTask
  * @implements {ITask}
  */
-@Abstract()
-export abstract class AbstractPipe implements IPipeTask {
-
-    /**
-     * task name.
-     *
-     * @type {string}
-     * @memberof AbstractPipe
-     */
-    name: string;
-
+@PipeTask
+export class AbstractPipe extends Activity implements IPipeTask {
     /**
      * context.
      *
@@ -28,17 +21,4 @@ export abstract class AbstractPipe implements IPipeTask {
      */
     @Inject(PipeContextToken)
     context: IPipeContext;
-
-    constructor(name?: string) {
-        this.name = name;
-    }
-
-    /**
-     * run task.
-     *
-     * @param {*} [data]
-     * @returns {Promise<any>}
-     * @memberof BaseTask
-     */
-    abstract run(data?: any): Promise<any>;
 }

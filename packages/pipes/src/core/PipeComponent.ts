@@ -1,4 +1,4 @@
-import { TaskComponent, TaskRunner, OnTaskInit } from '@taskfr/core';
+import { TaskRunner, OnTaskInit, SequenceActivity } from '@taskfr/core';
 import { ITransform } from '../ITransform';
 import { IPipeComponent } from './IPipeComponent';
 import { isArray, isClass, isFunction, Inject, Injectable } from '@ts-ioc/core';
@@ -19,7 +19,7 @@ import { IPipeConfigure } from './IPipeConfigure';
  * @template T
  */
 @Injectable()
-export class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> implements IPipeComponent, OnTaskInit {
+export class PipeComponent<T extends IPipeComponent> extends SequenceActivity implements IPipeComponent, OnTaskInit {
 
     @Inject(PipeContextToken)
     context: IPipeContext;
@@ -39,10 +39,10 @@ export class PipeComponent<T extends IPipeComponent> extends TaskComponent<T> im
      */
     merger: TransformMerger;
 
-    private config: IPipeConfigure;
+    config: IPipeConfigure;
 
-    constructor(name?: string) {
-        super(name);
+    constructor() {
+        super();
         this.pipes = [];
     }
 

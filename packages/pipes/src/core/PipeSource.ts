@@ -54,11 +54,6 @@ export class PipeSource extends PipeElement implements IPipeSource, OnTaskInit {
      */
     srcOptions: SrcOptions;
 
-
-    constructor(name?: string) {
-        super(name);
-    }
-
     onTaskInit(config: ISourceConfigure) {
         this.src = this.context.to(config.src);
         this.srcOptions = this.context.to(config.srcOptions);

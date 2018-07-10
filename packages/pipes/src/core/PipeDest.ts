@@ -68,10 +68,6 @@ export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest, OnT
      */
     destOptions: DestOptions;
 
-    constructor(name?: string) {
-        super(name);
-    }
-
     onTaskInit(config: IDestConfigure) {
         super.onTaskInit(config);
         this.dest = this.context.to(config.dest);

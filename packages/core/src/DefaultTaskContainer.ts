@@ -1,9 +1,10 @@
 import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang } from '@ts-ioc/core';
-import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, TaskBuilderToken, ITaskBuilder, TaskElement, TaskBuilder, TaskType } from './core';
+import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, TaskBuilderToken, ITaskBuilder, TaskType } from './core';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
+import * as activites from './activities';
 
 
 /**
@@ -41,7 +42,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity> implemen
      * @memberof ITaskContainer
      */
     createWorkflow(...tasks: TaskType<IActivity>[]): Promise<ITaskRunner> {
-        let task = (tasks.length > 1) ? { children: tasks, task: TaskElement } : lang.first(tasks);
+        let task = (tasks.length > 1) ? { children: tasks, task: activites.SequenceActivity } : lang.first(tasks);
         return super.bootstrap(task)
             .then(instance => {
                 return this.createRunner(task, instance);
@@ -83,6 +84,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity> implemen
             container.register(CoreModule);
         }
 
+        this.use(activites);
         this.beforRegister(container);
 
         await super.registerExts(container);

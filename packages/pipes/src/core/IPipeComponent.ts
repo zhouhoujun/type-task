@@ -1,8 +1,8 @@
 import { IPipeTask } from '../IPipeTask';
-import { ITaskComponent } from '@taskfr/core';
 import { ITransform } from '../ITransform';
 import { TransformType, TransformMerger } from './pipeTypes';
 import { IPipeContext } from './IPipeContext';
+import { IActivity } from 'src';
 
 
 /**
@@ -13,7 +13,7 @@ import { IPipeContext } from './IPipeContext';
  * @extends {ITaskComponent}
  * @template T
  */
-export interface IPipeComponent extends ITaskComponent, IPipeTask {
+export interface IPipeComponent extends IActivity, IPipeTask {
 
     /**
      * context.

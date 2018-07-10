@@ -143,11 +143,6 @@ export class PipeTest extends PipeElement implements IPipeTest, OnTaskInit {
      */
     options: any;
 
-
-    constructor(name?: string) {
-        super(name);
-    }
-
     onTaskInit(config: ITestConfigure) {
         super.onTaskInit(config);
         if (!isUndefined(config.awaitPiped)) {

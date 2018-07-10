@@ -25,9 +25,6 @@ export interface IPipeElement extends IPipeComponent {
  * @implements {IPipeComponent<ITransform>}
  */
 @PipeTask
-export class PipeElement extends PipeComponent<IPipeElement> implements IPipeElement {
+export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeElement {
 
-    constructor(name?: string) {
-        super(name);
-    }
 }
