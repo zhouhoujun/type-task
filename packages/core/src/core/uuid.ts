@@ -16,9 +16,18 @@ export interface UUIDFactory {
     generate(): string;
 }
 
+/**
+ * uuid factory token.
+ */
 export const UUIDToken = new InjectToken<UUIDFactory>('uuid_factory');
 
-
+/**
+ * random uuid factory.
+ *
+ * @export
+ * @class RandomUUIDFactory
+ * @implements {UUIDFactory}
+ */
 @Singleton(UUIDToken)
 export class RandomUUIDFactory implements UUIDFactory {
     constructor() {

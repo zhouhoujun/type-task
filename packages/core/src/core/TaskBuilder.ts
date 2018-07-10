@@ -1,5 +1,4 @@
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
-import { ITaskComponent } from './ITaskComponent';
 import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, isToken, isMetadataObject, Token, ModuleBuilder, Registration, isClass, getTypeMetadata, lang } from '@ts-ioc/core';
 import { IConfigure, TaskType } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
@@ -31,13 +30,13 @@ export class TaskBuilder extends ModuleBuilder<IActivity> implements ITaskBuilde
         taskInst.id = uuid;
 
         let config = this.getConfigure(task) as IConfigure;
-        let ctxbuider = this.getBuilderToken(config);
-
         if (isFunction(taskInst['onTaskInit'])) {
             taskInst['onTaskInit'](config);
         }
+        let ctxbuider = this.getBuilder(config);
 
         await ctxbuider.buildWithConfigure(taskInst, config);
+
         return taskInst;
     }
 
@@ -65,12 +64,12 @@ export class TaskBuilder extends ModuleBuilder<IActivity> implements ITaskBuilde
     }
 
 
-    async buildChildren<T extends ITaskComponent>(parent: T, configs: (IConfigure | Token<IActivity>)[]) {
+    async buildChildren<T extends IActivity>(parent: T, configs: (IConfigure | Token<IActivity>)[]) {
         if (!isFunction(parent.add)) {
             return;
         }
         let children = await Promise.all(configs.map(async cfg => {
-            let node = await this.build(cfg) as T;
+            let node = await this.build(cfg, parent.id) as T;
             if (!node) {
                 return null;
             }
@@ -85,39 +84,6 @@ export class TaskBuilder extends ModuleBuilder<IActivity> implements ITaskBuilde
         children.forEach(c => {
             c && parent.add(c);
         });
-
-    }
-
-    async buildComponent<T extends IActivity>(child: IConfigure | Token<T>): Promise<T> {
-        let component: T;
-        if (isToken(child)) {
-            component = await this.build(child)
-                .catch(err => {
-                    console.error(err);
-                    return null;
-                });
-        } else if (isMetadataObject(child)) {
-            let config = child as IConfigure;
-            if (config.imports) {
-                await this.container.loadModule(...config.imports);
-            }
-            if (!config.children && !(config.task || config.bootstrap)) {
-                return null;
-            }
-            if (!config.bootstrap) {
-                config.task = config.task || TaskElement;
-            }
-
-            component = await this.build(config)
-                .catch(err => {
-                    console.error(err);
-                    return null;
-                });
-        } else {
-            component = null;
-        }
-
-        return component;
 
     }
 
@@ -141,18 +107,18 @@ export class TaskBuilder extends ModuleBuilder<IActivity> implements ITaskBuilde
         return token;
     }
 
-    protected getBuilderToken(cfg: IConfigure): ITaskBuilder {
+    protected getBuilder(cfg: IConfigure): ITaskBuilder {
         let builder: ITaskBuilder;
         if (cfg.builder) {
-            builder = this.getBuilderTokenViaConfig(cfg.builder);
+            builder = this.getBuilderViaConfig(cfg.builder);
         }
         if (!builder && cfg.task) {
-            builder = this.getBuilderTokenViaTask(cfg.task);
+            builder = this.getBuilderViaTask(cfg.task);
         }
         return builder || this;
     }
 
-    protected getBuilderTokenViaConfig(builder: Token<ITaskBuilder> | ITaskBuilder): ITaskBuilder {
+    protected getBuilderViaConfig(builder: Token<ITaskBuilder> | ITaskBuilder): ITaskBuilder {
         if (isToken(builder)) {
             return this.container.resolve(builder);
         } else if (builder instanceof TaskBuilder) {
@@ -161,7 +127,7 @@ export class TaskBuilder extends ModuleBuilder<IActivity> implements ITaskBuilde
         return null;
     }
 
-    protected getBuilderTokenViaTask(task: Token<IActivity>): ITaskBuilder {
+    protected getBuilderViaTask(task: Token<IActivity>): ITaskBuilder {
         if (isToken(task)) {
             let taskType = isClass(task) ? task : this.container.getTokenImpl(task);
             if (taskType) {

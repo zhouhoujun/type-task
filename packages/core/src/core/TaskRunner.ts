@@ -61,22 +61,22 @@ export class TaskRunner implements ITaskRunner, OnInit {
     }
 
     onInit() {
-        if (!this.uuid) {
-            if (isToken(this.work)) {
-                this.uuid = this.createUUID();
-            } else if (this.work) {
-                this.uuid = this.work.uuid || this.createUUID();
-            }
-        }
-        this.container.bindProvider(this.uuid, this);
+        this.container.bindProvider(this.getUUID(), this);
     }
 
-    createUUID() {
-        if (!this.container.has(UUIDToken)) {
-            this.container.register(RandomUUIDFactory);
+    getUUID() {
+        if (!this.uuid) {
+            if (this.instance) {
+                this.uuid = this.instance.id;
+            } else if (isToken(this.work)) {
+                this.uuid = this.createUUID();
+            } else {
+                this.uuid = this.uuid || this.createUUID()
+            }
         }
-        return this.container.get(UUIDToken).generate();
+        return this.uuid;
     }
+
 
     getBuilder(): ITaskBuilder {
         if (!this.taskBuilder) {
@@ -87,10 +87,7 @@ export class TaskRunner implements ITaskRunner, OnInit {
 
     async getInstance() {
         if (!this.instance) {
-            this.instance = await this.getBuilder().build(this.task);
-        }
-        if (!this.instance.id) {
-            this.instance.id = this.uuid;
+            this.instance = await this.getBuilder().build(this.task, this.uuid);
         }
         return this.instance;
     }
@@ -120,6 +117,13 @@ export class TaskRunner implements ITaskRunner, OnInit {
     pause(): void {
         this.state = RunState.pause;
         this.stateChanged.next(this.state);
+    }
+
+    protected createUUID() {
+        if (!this.container.has(UUIDToken)) {
+            this.container.register(RandomUUIDFactory);
+        }
+        return this.container.get(UUIDToken).generate();
     }
 
 }

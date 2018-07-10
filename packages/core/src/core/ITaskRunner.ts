@@ -95,6 +95,13 @@ export interface ITaskRunner {
      */
     readonly stateChanged: Observable<RunState>;
 
+    /**
+     * get workflow instance uuid.
+     *
+     * @returns {string}
+     * @memberof ITaskRunner
+     */
+    getUUID(): string;
 
     /**
      * get task builder.
