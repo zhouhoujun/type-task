@@ -1,4 +1,4 @@
-import { ITask, ITaskBuilder, TaskBuilderToken } from '@taskfr/core';
+import { IActivity, ITaskBuilder, TaskBuilderToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { InjectToken, Registration } from '@ts-ioc/core';
 
@@ -8,10 +8,10 @@ import { InjectToken, Registration } from '@ts-ioc/core';
  *
  * @export
  * @interface IPipeTask
- * @extends {ITask}
+ * @extends {IActivity}
  * @template T
  */
-export interface IPipeTask extends ITask {
+export interface IPipeTask extends IActivity {
 
     /**
      * pipe task

@@ -1,10 +1,10 @@
 import { Token, Inject, IContainer, Type, ContainerToken, OnInit, isToken } from '@ts-ioc/core';
 import { IConfigure, TaskType } from './IConfigure';
-import { ITask } from './ITask';
+import { IActivity } from './IActivity';
 import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
 import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Runner } from './decorators/index';
+import { Runner } from './decorators';
 import { Joinpoint } from '@ts-ioc/aop';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
@@ -20,11 +20,11 @@ import { UUIDToken, RandomUUIDFactory } from './uuid';
 @Runner(TaskRunnerToken)
 export class TaskRunner implements ITaskRunner, OnInit {
 
-    get task(): TaskType<ITask> {
+    get task(): TaskType<IActivity> {
         return this.work;
     }
 
-    get taskInstance(): ITask {
+    get taskInstance(): IActivity {
         return this.instance;
     }
 
@@ -47,15 +47,15 @@ export class TaskRunner implements ITaskRunner, OnInit {
 
     /**
      * Creates an instance of TaskRunner.
-     * @param {(Token<ITask> | Type<any> | IConfigure)} workflow
-     * @param {ITask} [instance] workflow instance
+     * @param {(Token<IActivity> | Type<any> | IConfigure)} workflow
+     * @param {IActivity} [instance] workflow instance
      * @param {ITaskBuilder} [taskBuilder]
      * @memberof TaskRunner
      */
     constructor(
-        private work: Token<ITask> | Type<any> | IConfigure,
+        private work: Token<IActivity> | Type<any> | IConfigure,
         public uuid?: string,
-        private instance?: ITask,
+        private instance?: IActivity,
         private taskBuilder?: ITaskBuilder) {
         this.stateChanged = new BehaviorSubject(RunState.init);
     }
@@ -89,8 +89,8 @@ export class TaskRunner implements ITaskRunner, OnInit {
         if (!this.instance) {
             this.instance = await this.getBuilder().build(this.task);
         }
-        if (!this.instance.workflowId) {
-            this.instance.workflowId = this.uuid;
+        if (!this.instance.id) {
+            this.instance.id = this.uuid;
         }
         return this.instance;
     }

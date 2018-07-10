@@ -2,7 +2,7 @@ import { isFunction, IContainer, Inject, ContainerToken, Singleton, Type, hasOwn
 import { IContext, ContextToken, CtxType } from './IContext';
 import { ITaskContainer, TaskContainerToken } from '../ITaskContainer';
 import { IConfigure, TaskType } from './IConfigure';
-import { ITask } from './ITask';
+import { IActivity } from './IActivity';
 import { Task } from './decorators';
 import { ITaskBuilder } from './ITaskBuilder';
 import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
@@ -38,7 +38,7 @@ export class Context implements IContext {
         return this.getTaskContiner().getRootPath();
     }
 
-    getRunner(task: TaskType<ITask>, uuid?: string, builder?: ITaskBuilder | Token<ITaskBuilder>, instance?: any): ITaskRunner {
+    getRunner(task: TaskType<IActivity>, uuid?: string, builder?: ITaskBuilder | Token<ITaskBuilder>, instance?: any): ITaskRunner {
         let builderInst: ITaskBuilder;
         if (isToken(builder)) {
             builderInst = this.container.resolve(builder);
@@ -56,7 +56,7 @@ export class Context implements IContext {
         return isFunction(target) ? target(this, config) : target;
     }
 
-    isTask(task: Type<ITask>): boolean {
+    isTask(task: Type<IActivity>): boolean {
         return hasOwnClassMetadata(Task, task);
     }
 }

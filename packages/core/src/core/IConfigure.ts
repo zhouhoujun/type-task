@@ -1,6 +1,5 @@
-import { ITask } from './ITask';
+import { IActivity } from './IActivity';
 import { Token, Type, AppConfiguration } from '@ts-ioc/core';
-import { RunWay } from './RunWay';
 import { ITaskBuilder } from './ITaskBuilder';
 
 /**
@@ -41,14 +40,6 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
     rootdir?: string;
 
     /**
-     * run way.
-     *
-     * @type {RunWay}
-     * @memberof ITaskConfigure
-     */
-    runWay?: RunWay;
-
-    /**
      * task module.
      *
      * @type {Token<T>}
@@ -78,8 +69,8 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
  *
  * @export
  * @interface IConfigure
- * @extends {ITaskConfigure<ITask>}
+ * @extends {ITaskConfigure<IActivity>}
  */
-export interface IConfigure extends ITaskConfigure<ITask> {
+export interface IConfigure extends ITaskConfigure<IActivity> {
 
 }

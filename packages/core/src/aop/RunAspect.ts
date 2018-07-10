@@ -56,8 +56,8 @@ export class RunAspect {
     getRunner(task: any) {
         if (task instanceof TaskComponent) {
             let ins = task.getRoot();
-            if (ins.workflowId && this.container.has(ins.workflowId)) {
-                return this.container.resolve<ITaskRunner>(ins.workflowId);
+            if (ins.id && this.container.has(ins.id)) {
+                return this.container.resolve<ITaskRunner>(ins.id);
             }
         }
         return null;

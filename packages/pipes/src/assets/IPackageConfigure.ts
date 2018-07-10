@@ -1,5 +1,5 @@
 import { IPipeConfigure, ITestConfigure, ICleanConfigure, PipeTest } from '../core';
-import { CtxType, Src, ITask } from '@taskfr/core';
+import { CtxType, Src, IActivity } from '@taskfr/core';
 import { ObjectMap, Token } from '@ts-ioc/core';
 import { IAssetConfigure, DestType } from './IAssetConfigure';
 import { IAsset } from './IAsset';
@@ -24,10 +24,10 @@ export interface IPackageConfigure extends IPipeConfigure {
     /**
      * clean task config.
      *
-     * @type {CtxType<Src | ICleanConfigure | Token<ITask>>}
+     * @type {CtxType<Src | ICleanConfigure | Token<IActivity>>}
      * @memberof IAssetsConfigure
      */
-    clean?: CtxType<Src | ICleanConfigure | Token<ITask>>;
+    clean?: CtxType<Src | ICleanConfigure | Token<IActivity>>;
     /**
      * assets.
      *

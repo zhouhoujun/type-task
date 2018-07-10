@@ -1,18 +1,17 @@
 export * from './ITaskBuilder';
 export * from './TaskBuilder';
-export * from './ITask';
+export * from './IActivity';
 export * from './IConfigure';
 export * from './ITaskProvider';
 
 export * from './uuid';
-export * from './AbstractTask';
+export * from './AbstractActivity';
 export * from './ITaskComponent';
 export * from './TaskComponent';
 export * from './TaskElement';
 
 export * from './decorators';
 export * from './metadatas';
-export * from './RunWay';
 export * from './IContext';
 export * from './Context';
 export * from './ITaskRunner';

@@ -1,4 +1,4 @@
-import { ITask, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskfr/core';
+import { IActivity, IConfigure, TaskBuilderToken, ITaskComponent } from '@taskfr/core';
 import { Singleton, isArray, isString, Inject, ContainerToken, IContainer } from '@ts-ioc/core';
 import { PipeTaskBuilder, PipeDest, DestToken } from '../core';
 import { IAssetConfigure } from './IAssetConfigure';
@@ -12,7 +12,7 @@ export class DestTaskBuilder extends PipeTaskBuilder {
         super(container)
     }
 
-    async afterBindConfig(taskInst: ITask, config: IConfigure): Promise<ITask> {
+    async afterBindConfig(taskInst: IActivity, config: IConfigure): Promise<IActivity> {
         await super.afterBindConfig(taskInst, config);
         if (config.dest && !(taskInst instanceof PipeDest)) {
             let assetCfg = config as IAssetConfigure;

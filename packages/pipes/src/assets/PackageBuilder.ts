@@ -1,4 +1,4 @@
-import { ITask, IConfigure, ITaskComponent } from '@taskfr/core';
+import { IActivity, IConfigure, ITaskComponent } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean, isToken } from '@ts-ioc/core';
 import { IPipeComponent, PipeTest, PipeClean, ICleanConfigure, TestToken, CleanToken } from '../core';
 import { IPackageConfigure } from './IPackageConfigure';
@@ -20,7 +20,7 @@ export class PackageBuilder extends DestTaskBuilder {
         super(container)
     }
 
-    async beforeBindConfig(taskInst: IPipeComponent, config: IConfigure): Promise<ITask> {
+    async beforeBindConfig(taskInst: IPipeComponent, config: IConfigure): Promise<IActivity> {
         await super.beforeBindConfig(taskInst, config);
         let packCfg = config as IPackageConfigure;
         let subs: IConfigure[] = [];

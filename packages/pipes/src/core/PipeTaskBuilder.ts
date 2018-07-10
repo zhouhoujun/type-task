@@ -1,4 +1,4 @@
-import { TaskBuilder, ITask, IConfigure, IContext } from '@taskfr/core';
+import { TaskBuilder, IActivity, IConfigure, IContext } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObject, Token, Registration } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { IPipeComponent } from './IPipeComponent';
@@ -19,7 +19,7 @@ export class PipeTaskBuilder extends TaskBuilder {
         super(container)
     }
 
-    async beforeBindConfig(taskInst: ITask, config: IConfigure): Promise<ITask> {
+    async beforeBindConfig(taskInst: IActivity, config: IConfigure): Promise<IActivity> {
         await super.beforeBindConfig(taskInst, config);
         let comp = taskInst as IPipeComponent;
         let pipeCfg = config as IPipeConfigure;
@@ -32,8 +32,8 @@ export class PipeTaskBuilder extends TaskBuilder {
         return taskInst;
     }
 
-    protected traslateStrToken(token: string): Token<ITask> {
-        let taskToken: Token<ITask> = new Registration(AssetToken, token);
+    protected traslateStrToken(token: string): Token<IActivity> {
+        let taskToken: Token<IActivity> = new Registration(AssetToken, token);
         if (this.container.has(taskToken)) {
             return taskToken;
         }

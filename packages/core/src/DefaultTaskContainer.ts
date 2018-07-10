@@ -1,5 +1,5 @@
 import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang } from '@ts-ioc/core';
-import { ITaskRunner, IConfigure, TaskRunnerToken, ITask, TaskBuilderToken, ITaskBuilder, TaskElement, TaskBuilder, TaskType } from './core/index';
+import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, TaskBuilderToken, ITaskBuilder, TaskElement, TaskBuilder, TaskType } from './core';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
@@ -12,7 +12,7 @@ import { CoreModule } from './CoreModule';
  * @export
  * @class DefaultTaskContainer
  */
-export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements ITaskContainer {
+export class DefaultTaskContainer extends ApplicationBuilder<IActivity> implements ITaskContainer {
 
     protected logAspects: Type<any>[];
     constructor(public rootPath: string) {
@@ -29,18 +29,18 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
         return this;
     }
 
-    protected createRunner(task: TaskType<ITask>, instance: ITask) {
+    protected createRunner(task: TaskType<IActivity>, instance: IActivity) {
         return this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });
     }
 
     /**
      * create workflow
      *
-     * @param {...TaskType<ITask>[]} tasks
+     * @param {...TaskType<IActivity>[]} tasks
      * @returns {Promise<ITaskRunner>}
      * @memberof ITaskContainer
      */
-    createWorkflow(...tasks: TaskType<ITask>[]): Promise<ITaskRunner> {
+    createWorkflow(...tasks: TaskType<IActivity>[]): Promise<ITaskRunner> {
         let task = (tasks.length > 1) ? { children: tasks, task: TaskElement } : lang.first(tasks);
         return super.bootstrap(task)
             .then(instance => {
@@ -55,7 +55,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<ITask> implements I
      * @returns {Promise<T>}
      * @memberof ApplicationBuilder
      */
-    async bootstrap(...tasks: TaskType<ITask>[]): Promise<ITaskRunner> {
+    async bootstrap(...tasks: TaskType<IActivity>[]): Promise<ITaskRunner> {
         let runner = await this.createWorkflow(...tasks);
         await runner.start();
         return runner;

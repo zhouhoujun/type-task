@@ -1,7 +1,7 @@
-import { Task, ITask, TaskElement, TaskComponent, ITaskComponent, AbstractTask } from '../src';
+import { Task, IActivity, TaskElement, TaskComponent, ITaskComponent, AbstractActivity } from 'src';
 
 @Task('test')
-export class SimpleTask extends AbstractTask implements ITask {
+export class SimpleTask extends AbstractActivity implements IActivity {
 
     constructor(name: string) {
         super(name);

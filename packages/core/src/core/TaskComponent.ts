@@ -1,6 +1,5 @@
 import { GComposite, Inject, Mode, Abstract } from '@ts-ioc/core';
 import { ITaskComponent } from './ITaskComponent';
-import { RunWay } from './RunWay';
 import { ContextToken, IContext } from './IContext';
 
 /**

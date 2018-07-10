@@ -1,4 +1,4 @@
-import { ITask } from './ITask';
+import { IActivity } from './IActivity';
 import { GComponent, ComponentLifecycle } from '@ts-ioc/core';
 
 /**
@@ -8,7 +8,7 @@ import { GComponent, ComponentLifecycle } from '@ts-ioc/core';
  * @interface ITaskComponent
  * @extends {GComponent<TaskComponent>}
  */
-export interface ITaskComponent extends GComponent<ITaskComponent>, ITask, ComponentLifecycle {
+export interface ITaskComponent extends GComponent<ITaskComponent>, IActivity, ComponentLifecycle {
 
     /**
      * get root.

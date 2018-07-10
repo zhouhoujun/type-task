@@ -1,4 +1,4 @@
-import { ITaskRunner, TaskType, CtxType, ITask } from '@taskfr/core';
+import { ITaskRunner, TaskType, CtxType, IActivity } from '@taskfr/core';
 import { ITransform } from '../ITransform';
 import { ObjectMap, isMetadataObject, isObservable, isBaseType, Token } from '@ts-ioc/core';
 import { IPipeContext } from './IPipeContext';
@@ -12,7 +12,7 @@ import { ITransformMerger } from './ITransformMerger';
 /**
  * pipe express
  */
-export type PipeExpress = (context?: IPipeContext, taskInstance?: ITask, transform?: ITransform) => ITransform | Promise<ITransform>;
+export type PipeExpress = (context?: IPipeContext, taskInstance?: IActivity, transform?: ITransform) => ITransform | Promise<ITransform>;
 
 /**
  * transform type.

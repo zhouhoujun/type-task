@@ -1,6 +1,6 @@
 import { TaskType } from './IConfigure';
 import { InjectToken } from '@ts-ioc/core';
-import { ITask } from './ITask';
+import { IActivity } from './IActivity';
 import { ITaskBuilder } from './ITaskBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
@@ -50,18 +50,18 @@ export interface ITaskRunner {
     /**
      * runner task
      *
-     * @type {(Token<ITask> | Type<any> | IConfigure)}
+     * @type {(Token<IActivity> | Type<any> | IConfigure)}
      * @memberof ITaskRunner
      */
-    readonly task: TaskType<ITask>;
+    readonly task: TaskType<IActivity>;
 
     /**
      * task instance
      *
-     * @type {ITask}
+     * @type {IActivity}
      * @memberof ITaskRunner
      */
-    readonly taskInstance: ITask;
+    readonly taskInstance: IActivity;
 
     /**
      * current run task data.

@@ -1,5 +1,5 @@
 import { InjectToken, IModuleBuilder } from '@ts-ioc/core';
-import { ITask } from './ITask';
+import { IActivity } from './IActivity';
 import { IConfigure } from './IConfigure';
 
 /**
@@ -13,14 +13,14 @@ export const TaskBuilderToken = new InjectToken<ITaskBuilder>('__TASK_Builder');
  * @export
  * @interface ITaskBuilder
  */
-export interface ITaskBuilder extends IModuleBuilder<ITask> {
+export interface ITaskBuilder extends IModuleBuilder<IActivity> {
     /**
      * bundle task config.
      *
-     * @param {ITask} taskInst
+     * @param {IActivity} taskInst
      * @param {IConfigure} config
-     * @returns {Promise<ITask>}
+     * @returns {Promise<IActivity>}
      * @memberof ITaskBuilder
      */
-    buildWithConfigure(taskInst: ITask, config: IConfigure): Promise<ITask>
+    buildWithConfigure(taskInst: IActivity, config: IConfigure): Promise<IActivity>
 }

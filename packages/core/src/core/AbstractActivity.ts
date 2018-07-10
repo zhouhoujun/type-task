@@ -1,8 +1,7 @@
 import { Inject, Abstract } from '@ts-ioc/core';
 import { IContext, ContextToken } from './IContext';
-import { ITask } from './ITask';
+import { IActivity } from './IActivity';
 import { IConfigure } from './IConfigure';
-import { RunWay } from './RunWay';
 
 
 /**
@@ -14,8 +13,21 @@ import { RunWay } from './RunWay';
  * @implements {ITask}
  */
 @Abstract()
-export abstract class AbstractTask implements ITask {
-
+export abstract class AbstractActivity implements IActivity {
+    /**
+     * workflow instance uuid.
+     *
+     * @type {string}
+     * @memberof IActivity
+     */
+    id: string;
+    /**
+     * activity display name.
+     *
+     * @type {string}
+     * @memberof AbstractActivity
+     */
+    name: string;
     /**
      * config.
      *
@@ -33,14 +45,7 @@ export abstract class AbstractTask implements ITask {
     @Inject(ContextToken)
     context: IContext;
 
-    /**
-     * run way.
-     *
-     * @memberof AbstractTask
-     */
-    runWay = RunWay.sequence;
-
-    constructor(public name: string) {
+    constructor() {
 
     }
 

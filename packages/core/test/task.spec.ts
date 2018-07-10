@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { ITaskContainer, DefaultTaskContainer, TaskElement, IConfigure, TaskRunner } from '../src';
+import { ITaskContainer, DefaultTaskContainer, TaskElement, IConfigure, TaskRunner } from 'src';
 
 import { SimpleTask, SimpleCTask, TaskModuleTest } from './simples.task';
 

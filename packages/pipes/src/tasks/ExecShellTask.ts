@@ -1,6 +1,6 @@
 import { ExecOptions, exec } from 'child_process';
 import { isString, isBoolean, isArray, lang, ObjectMap } from '@ts-ioc/core';
-import { RunWay, Src, IConfigure, CtxType, OnTaskInit } from '@taskfr/core';
+import { Src, IConfigure, CtxType, OnTaskInit } from '@taskfr/core';
 import { AbstractPipe } from '../core';
 import { PipeTask } from '../decorators';
 
@@ -102,15 +102,15 @@ export class ExecShellTask extends AbstractPipe implements OnTaskInit {
                 if (isString(cmds)) {
                     return this.execShell(cmds, options, allowError !== false);
                 } else if (isArray(cmds)) {
-                    if (this.runWay & RunWay.sequence) {
+                    // if (this.runWay & RunWay.sequence) {
                         let pip = Promise.resolve();
                         cmds.forEach(cmd => {
                             pip = pip.then(() => this.execShell(cmd, options));
                         });
                         return pip;
-                    } else {
-                        return Promise.all(cmds.map(cmd => this.execShell(cmd, options, allowError !== false)));
-                    }
+                    // } else {
+                    //     return Promise.all(cmds.map(cmd => this.execShell(cmd, options, allowError !== false)));
+                    // }
                 } else {
                     return Promise.reject('shell task config error');
                 }

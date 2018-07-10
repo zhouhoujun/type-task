@@ -1,4 +1,3 @@
-import { RunWay } from '@taskfr/core';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 import { Inject, Abstract } from '@ts-ioc/core';
 import { IPipeTask } from '../IPipeTask';
@@ -20,13 +19,6 @@ export abstract class AbstractPipe implements IPipeTask {
      * @memberof AbstractPipe
      */
     name: string;
-
-    /**
-     * run wary.
-     *
-     * @memberof BaseTask
-     */
-    runWay = RunWay.seqFirst;
 
     /**
      * context.

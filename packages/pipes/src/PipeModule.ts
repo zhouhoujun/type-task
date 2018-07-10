@@ -1,8 +1,8 @@
 import { IContainer, CoreActions, IocModule, Inject, ContainerToken } from '@ts-ioc/core';
-import { PipeTask, AssetTask, Package } from './decorators/index';
-import * as tasks from './tasks/index';
-import * as cores from './core/index';
-import * as assets from './assets/index';
+import { PipeTask, AssetTask, Package } from './decorators';
+import * as tasks from './tasks';
+import * as cores from './core';
+import * as assets from './assets';
 
 /**
  * register task decorators.
