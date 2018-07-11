@@ -1,4 +1,4 @@
-import { IActivity, ITaskBuilder, TaskBuilderToken } from '@taskfr/core';
+import { IActivity, IActivityBuilder, ActivityBuilderToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { InjectToken, Registration } from '@ts-ioc/core';
 
@@ -11,7 +11,7 @@ import { InjectToken, Registration } from '@ts-ioc/core';
  * @extends {IActivity}
  * @template T
  */
-export interface IPipeTask extends IActivity {
+export interface IPipeActivity extends IActivity<ITransform> {
 
     /**
      * pipe task
@@ -23,20 +23,20 @@ export interface IPipeTask extends IActivity {
     run(data?: any): Promise<ITransform>;
 }
 
-export const PipeToken = new InjectToken<IPipeTask>('__Task_Pipe');
+export const PipeToken = new InjectToken<IPipeActivity>('__Task_Pipe');
 
 /**
  * pipe task builder token.
  */
-export const PipeTaskBuilderToken = new Registration<ITaskBuilder>(TaskBuilderToken, 'pipe');
+export const PipeTaskBuilderToken = new Registration<IActivityBuilder>(ActivityBuilderToken, 'pipe');
 
 /**
  * asset task builder token.
  */
-export const AssetTaskBuilderToken = new Registration<ITaskBuilder>(TaskBuilderToken, 'Asset');
+export const AssetTaskBuilderToken = new Registration<IActivityBuilder>(ActivityBuilderToken, 'Asset');
 
 
 /**
  * package task builder token.
  */
-export const PackageBuilderToken = new Registration<ITaskBuilder>(TaskBuilderToken, 'package');
+export const PackageBuilderToken = new Registration<IActivityBuilder>(ActivityBuilderToken, 'package');

@@ -1,11 +1,10 @@
-export * from './ITaskBuilder';
-export * from './TaskBuilder';
+export * from './IActivityBuilder';
+export * from './ActivityBuilder';
 export * from './IActivity';
+export * from './Activity'
 export * from './IConfigure';
-export * from './ITaskProvider';
 
 export * from './uuid';
-export * from './AbstractActivity';
 
 export * from './decorators';
 export * from './metadatas';

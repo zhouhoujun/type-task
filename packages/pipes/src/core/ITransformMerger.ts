@@ -1,4 +1,4 @@
-import { IPipeTask } from '../IPipeTask';
+import { IPipeActivity } from '../IPipeTask';
 
 /**
  * transforms merger task.
@@ -6,6 +6,6 @@ import { IPipeTask } from '../IPipeTask';
  * @export
  * @interface ITransformMerger
  */
-export interface ITransformMerger extends IPipeTask {
+export interface ITransformMerger extends IPipeActivity {
 
 }

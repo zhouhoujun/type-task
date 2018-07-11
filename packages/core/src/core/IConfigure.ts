@@ -1,11 +1,33 @@
 import { IActivity } from './IActivity';
-import { Token, Type, AppConfiguration } from '@ts-ioc/core';
-import { ITaskBuilder } from './ITaskBuilder';
+import { Token, Type, AppConfiguration, isToken, isMetadataObject } from '@ts-ioc/core';
+import { IActivityBuilder } from './IActivityBuilder';
 
 /**
  * task type
  */
-export type TaskType<T> = Token<T> | Type<any> | ITaskConfigure<T>;
+export type ActivityType<T> = Token<IActivity<T>> | Type<any> | IActivityConfigure<IActivity<T>>;
+
+/**
+ * check is activity type or not.
+ *
+ * @export
+ * @param {*} target
+ * @returns {target is ActivityType<any>}
+ */
+export function isActivityType(target: any): target is ActivityType<any> {
+    if (!target) {
+        return false;
+    }
+    if (isToken(target)) {
+        return true;
+    }
+
+    if (isMetadataObject(target)) {
+        return true;
+    }
+
+    return false;
+}
 
 /**
  * task config.
@@ -13,15 +35,15 @@ export type TaskType<T> = Token<T> | Type<any> | ITaskConfigure<T>;
  * @export
  * @interface ITaskConfigure
  */
-export interface ITaskConfigure<T> extends AppConfiguration<T> {
+export interface IActivityConfigure<T> extends AppConfiguration<T> {
 
     /**
-     * task uuid.
+     * workflow uuid.
      *
      * @type {string}
      * @memberof ITaskConfigure
      */
-    uuid?: string;
+    id?: string;
 
     /**
     * context tasks name.
@@ -50,18 +72,11 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
     /**
      * the task builder.
      *
-     * @type {(Token<ITaskBuilder> | ITaskBuilder)}
+     * @type {(Token<IActivityBuilder> | IActivityBuilder)}
      * @memberof ITaskConfigure
      */
-    builder?: Token<ITaskBuilder> | ITaskBuilder;
+    builder?: Token<IActivityBuilder> | IActivityBuilder;
 
-    /**
-     * children
-     *
-     * @type {(ITaskConfigure<T> | Token<T>)[]}
-     * @memberof IConfigure
-     */
-    children?: (ITaskConfigure<T> | Token<T>)[];
 }
 
 /**
@@ -69,8 +84,8 @@ export interface ITaskConfigure<T> extends AppConfiguration<T> {
  *
  * @export
  * @interface IConfigure
- * @extends {ITaskConfigure<IActivity>}
+ * @extends {IActivityConfigure<IActivity<any>>}
  */
-export interface IConfigure extends ITaskConfigure<IActivity> {
+export interface IConfigure extends IActivityConfigure<IActivity<any>> {
 
 }

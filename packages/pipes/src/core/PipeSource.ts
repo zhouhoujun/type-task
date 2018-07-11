@@ -3,13 +3,12 @@ import { ITransform } from '../ITransform';
 import { PipeTask } from '../decorators';
 import { Src, OnTaskInit } from '@taskfr/core';
 import { ISourceConfigure } from './IPipeConfigure';
-import { IPipeComponent } from './IPipeComponent';
-import { PipeToken, IPipeTask } from '../IPipeTask';
+import { PipeToken, IPipeActivity } from '../IPipeTask';
 import { Registration } from '@ts-ioc/core';
 import { PipeElement } from './PipeElement';
 
 
-export const SourceToken = new Registration<IPipeTask>(PipeToken, 'src');
+export const SourceToken = new Registration<IPipeActivity>(PipeToken, '@taskfr/core');
 
 
 /**
@@ -17,9 +16,9 @@ export const SourceToken = new Registration<IPipeTask>(PipeToken, 'src');
  *
  * @export
  * @interface IPipeSource
- * @extends {IPipeTask}
+ * @extends {IPipeActivity}
  */
-export interface IPipeSource extends IPipeComponent {
+export interface IPipeSource extends IPipeActivity {
     /**
      * source
      *

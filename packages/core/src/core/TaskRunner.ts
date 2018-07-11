@@ -1,7 +1,7 @@
 import { Token, Inject, IContainer, Type, ContainerToken, OnInit, isToken } from '@ts-ioc/core';
-import { IConfigure, TaskType } from './IConfigure';
+import { IConfigure, ActivityType } from './IConfigure';
 import { IActivity } from './IActivity';
-import { ITaskBuilder, TaskBuilderToken } from './ITaskBuilder';
+import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Runner } from './decorators';
@@ -20,11 +20,11 @@ import { UUIDToken, RandomUUIDFactory } from './uuid';
 @Runner(TaskRunnerToken)
 export class TaskRunner implements ITaskRunner, OnInit {
 
-    get task(): TaskType<IActivity> {
+    get task(): ActivityType<IActivity<any>> {
         return this.work;
     }
 
-    get taskInstance(): IActivity {
+    get taskInstance(): IActivity<any> {
         return this.instance;
     }
 
@@ -47,16 +47,16 @@ export class TaskRunner implements ITaskRunner, OnInit {
 
     /**
      * Creates an instance of TaskRunner.
-     * @param {(Token<IActivity> | Type<any> | IConfigure)} workflow
+     * @param {(Token<IActivity<any>> | Type<any> | IConfigure)} workflow
      * @param {IActivity} [instance] workflow instance
-     * @param {ITaskBuilder} [taskBuilder]
+     * @param {IActivityBuilder} [taskBuilder]
      * @memberof TaskRunner
      */
     constructor(
-        private work: Token<IActivity> | Type<any> | IConfigure,
+        private work: Token<IActivity<any>> | Type<any> | IConfigure,
         public uuid?: string,
-        private instance?: IActivity,
-        private taskBuilder?: ITaskBuilder) {
+        private instance?: IActivity<any>,
+        private taskBuilder?: IActivityBuilder) {
         this.stateChanged = new BehaviorSubject(RunState.init);
     }
 
@@ -78,9 +78,9 @@ export class TaskRunner implements ITaskRunner, OnInit {
     }
 
 
-    getBuilder(): ITaskBuilder {
+    getBuilder(): IActivityBuilder {
         if (!this.taskBuilder) {
-            this.taskBuilder = this.container.resolve(TaskBuilderToken);
+            this.taskBuilder = this.container.resolve(ActivityBuilderToken);
         }
         return this.taskBuilder;
     }

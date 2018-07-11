@@ -1,10 +1,7 @@
-import { ComponentLifecycle, InjectToken, Registration } from '@ts-ioc/core';
+import { Registration } from '@ts-ioc/core';
 import { IContext } from './IContext';
+import { IConfigure } from './IConfigure';
 
-/**
- * task token.
- */
-export const ActivityToken = new InjectToken<IActivity>('Activity');
 
 /**
  * Inject AcitityToken
@@ -16,18 +13,24 @@ export const ActivityToken = new InjectToken<IActivity>('Activity');
  */
 export class InjectAcitityToken<T> extends Registration<T> {
     constructor(desc: string) {
-        super(ActivityToken.toString(), desc);
+        super('Activity', desc);
     }
-
 }
+
+/**
+ * task token.
+ */
+export const ActivityToken = new InjectAcitityToken<IActivity<any>>('');
+
 
 /**
  * activity interface.
  *
  * @export
  * @interface IActivity
+ * @template T
  */
-export interface IActivity {
+export interface IActivity<T> {
 
     /**
      * workflow instance uuid.
@@ -53,15 +56,22 @@ export interface IActivity {
      */
     context: IContext;
 
+    /**
+     * config.
+     *
+     * @type {IConfigure}
+     * @memberof Activity
+     */
+    config: IConfigure;
 
     /**
      * run task.
      *
      * @param {*} [data]
+     * @param {IActivity<any>} [target]
      * @returns {Promise<any>}
      * @memberof IActivity
      */
-    run(data?: any): Promise<any>;
+    run(data?: any, target?: IActivity<any>): Promise<T>;
 
 }
-

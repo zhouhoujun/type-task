@@ -1,4 +1,4 @@
-import { IActivity, ITaskRunner, TaskType } from './core';
+import { IActivity, ITaskRunner, ActivityType } from './core';
 import { Type, InjectToken, IApplicationBuilder } from '@ts-ioc/core';
 
 
@@ -14,7 +14,7 @@ export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskCo
  * @interface ITaskContainer
  * @extends {TaskComponent}
  */
-export interface ITaskContainer extends IApplicationBuilder<IActivity> {
+export interface ITaskContainer extends IApplicationBuilder<IActivity<any>> {
 
     /**
      * get root path.
@@ -35,18 +35,18 @@ export interface ITaskContainer extends IApplicationBuilder<IActivity> {
     /**
      * create workflow
      *
-     * @param {...TaskType<IActivity>[]} tasks
+     * @param {...ActivityType<IActivity>[]} tasks
      * @returns {Promise<ITaskRunner>}
      * @memberof ITaskContainer
      */
-    createWorkflow(...tasks: TaskType<IActivity>[]): Promise<ITaskRunner>;
+    createWorkflow(...tasks: ActivityType<IActivity<any>>[]): Promise<ITaskRunner>;
 
     /**
      * bootstrap app via main module.
      *
-     * @param {...TaskType<IActivity>[]} tasks bootstrap tasks.
+     * @param {...ActivityType<IActivity>[]} tasks bootstrap tasks.
      * @returns {Promise<ITaskRunner>}
      * @memberof IApplicationBuilder
      */
-    bootstrap(...tasks: TaskType<IActivity>[]): Promise<ITaskRunner>;
+    bootstrap(...tasks: ActivityType<IActivity<any>>[]): Promise<ITaskRunner>;
 }

@@ -1,4 +1,4 @@
-export * from './IPipeComponent';
+
 export * from './ITransformMerger';
 export * from './pipeTypes';
 
@@ -11,6 +11,6 @@ export * from './PipeDest';
 export * from './PipeSource';
 export * from './PipeTest';
 export * from './PipeClean';
-export * from './AbstractPipe';
+export * from './PipeActivity';
 export * from './PipeTaskBuilder';
 

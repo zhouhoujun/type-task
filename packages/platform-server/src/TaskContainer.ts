@@ -1,10 +1,6 @@
 import { DefaultTaskContainer, ITaskContainer } from '@taskfr/core';
-import { Type, Token, LoadType } from '@ts-ioc/core';
-import chalk from 'chalk';
+import { LoadType } from '@ts-ioc/core';
 import { TaskLogAspect, RunnerLogAspect } from './aop';
-// import { TaskContext } from './TaskContext';
-const timestamp = require('time-stamp');
-const prettyTime = require('pretty-hrtime');
 
 
 /**

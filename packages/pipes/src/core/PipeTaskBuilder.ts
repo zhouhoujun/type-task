@@ -1,39 +1,40 @@
-import { TaskBuilder, IActivity, IConfigure, IContext } from '@taskfr/core';
+import { ActivityBuilder, IActivity, IConfigure, IContext } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObject, Token, Registration } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
-import { IPipeComponent } from './IPipeComponent';
 import { TransformMergerExpress, TransMergerConfig, TransformConfig, TransformMerger, TransformType, TransformExpress } from './pipeTypes';
-import { PipeToken, PipeTaskBuilderToken } from '../IPipeTask';
+import { PipeToken, PipeTaskBuilderToken, IPipeActivity } from '../IPipeTask';
 import { AssetToken } from '../assets/IAsset';
+import { PipeActivity } from './PipeActivity';
 
 /**
  * pipe task builder.
  *
  * @export
  * @class PipeTaskBuilder
- * @extends {TaskBuilder}
+ * @extends {ActivityBuilder}
  */
 @Singleton(PipeTaskBuilderToken)
-export class PipeTaskBuilder extends TaskBuilder {
+export class PipeTaskBuilder extends ActivityBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {
         super(container)
     }
 
-    async beforeBindConfig(taskInst: IActivity, config: IConfigure): Promise<IActivity> {
-        await super.beforeBindConfig(taskInst, config);
-        let comp = taskInst as IPipeComponent;
-        let pipeCfg = config as IPipeConfigure;
-        if (pipeCfg.pipes) {
-            comp.pipes = this.translatePipes(taskInst.context, pipeCfg.pipes);
+    async buildStrategy(activity: IPipeActivity, config: IPipeConfigure): Promise<IPipeActivity> {
+        await super.buildStrategy(activity, config);
+        if (activity instanceof PipeActivity) {
+            if (config.pipes) {
+                activity.pipes = await this.translatePipes(activity.context, config.pipes);
+            }
+            if (config.merger) {
+                activity.merger = await this.translateMerger(activity.context, config.merger);
+            }
         }
-        if (pipeCfg.merger) {
-            comp.merger = this.translateMerger(taskInst.context, pipeCfg.merger);
-        }
-        return taskInst;
+        return activity;
     }
 
-    protected traslateStrToken(token: string): Token<IActivity> {
-        let taskToken: Token<IActivity> = new Registration(AssetToken, token);
+
+    protected traslateStrToken(token: string): Token<IPipeActivity> {
+        let taskToken: Token<IPipeActivity> = new Registration(AssetToken, token);
         if (this.container.has(taskToken)) {
             return taskToken;
         }

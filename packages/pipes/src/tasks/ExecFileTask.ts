@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import { Src } from '@taskfr/core';
 import * as execa from 'execa';
 import { PipeTask } from '../decorators';
-import { AbstractPipe } from '../core/AbstractPipe';
+import { PipeActivity } from '../core/PipeActivity';
 
 
 /**
@@ -13,7 +13,7 @@ import { AbstractPipe } from '../core/AbstractPipe';
  * @implements {ITask}
  */
 @PipeTask('execfile')
-export class ExecFileTask extends AbstractPipe {
+export class ExecFileTask extends PipeActivity {
     files: Src;
     args?: string[];
     options?: execa.Options;

@@ -4,12 +4,12 @@ import { IPipeConfigure } from './IPipeConfigure';
 import { OnTaskInit, Src, CtxType } from '@taskfr/core';
 import { src, SrcOptions } from 'vinyl-fs';
 import { isArray, Registration, isUndefined } from '@ts-ioc/core';
-import { PipeToken, IPipeTask } from '../IPipeTask';
+import { PipeToken, IPipeActivity } from '../IPipeTask';
 import { PipeElement, IPipeElement } from './PipeElement';
 import { TransformType } from './pipeTypes';
 
 
-export const TestToken = new Registration<IPipeTask>(PipeToken, 'test');
+export const TestToken = new Registration<IPipeActivity>(PipeToken, 'test');
 
 
 export interface ITestConfigure extends IPipeConfigure {

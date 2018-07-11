@@ -1,5 +1,4 @@
-import { IActivity, Task, InjectAcitityToken, Condition } from '../core';
-import { Activity } from './Activity';
+import { Task, InjectAcitityToken, Activity } from '../core';
 import { Token, ObjectMap } from '@ts-ioc/core';
 
 /**
@@ -15,7 +14,7 @@ export const InvokeActivityToken = new InjectAcitityToken<InvokeActivity>('invok
  * @extends {Activity}
  */
 @Task(InvokeActivityToken)
-export class InvokeActivity extends Activity {
+export class InvokeActivity extends Activity<any> {
     /**
      * while condition.
      *
@@ -40,6 +39,6 @@ export class InvokeActivity extends Activity {
     targetType: Token<any>;
 
     async run(data?: any): Promise<any> {
-        return this.context.getContainer().invoke(this.targetType, this.target, this.args);
+        return this.context.getContainer().invoke(this.targetType, this.target, this.args, { data: data });
     }
 }

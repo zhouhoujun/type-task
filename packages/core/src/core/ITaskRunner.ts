@@ -1,14 +1,29 @@
-import { TaskType } from './IConfigure';
-import { InjectToken } from '@ts-ioc/core';
+import { ActivityType } from './IConfigure';
+import { InjectToken, Registration } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
-import { ITaskBuilder } from './ITaskBuilder';
+import { IActivityBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
+
+
+/**
+ * Inject AcitityToken
+ *
+ * @export
+ * @class InjectAcitityToken
+ * @extends {Registration<T>}
+ * @template T
+ */
+export class InjectTaskRunnerToken<T extends ITaskRunner> extends Registration<T> {
+    constructor(desc: string) {
+        super('TaskRunner', desc);
+    }
+}
 
 /**
  * task runner token.
  */
-export const TaskRunnerToken = new InjectToken<ITaskRunner>('__TASK_TaskRunner');
+export const TaskRunnerToken = new InjectTaskRunnerToken<ITaskRunner>('');
 
 /**
  *run state.
@@ -50,18 +65,18 @@ export interface ITaskRunner {
     /**
      * runner task
      *
-     * @type {(Token<IActivity> | Type<any> | IConfigure)}
+     * @type {(Token<IActivity<any>> | Type<any> | IConfigure)}
      * @memberof ITaskRunner
      */
-    readonly task: TaskType<IActivity>;
+    readonly task: ActivityType<IActivity<any>>;
 
     /**
      * task instance
      *
-     * @type {IActivity}
+     * @type {IActivity<any>}
      * @memberof ITaskRunner
      */
-    readonly taskInstance: IActivity;
+    readonly taskInstance: IActivity<any>;
 
     /**
      * current run task data.
@@ -106,10 +121,10 @@ export interface ITaskRunner {
     /**
      * get task builder.
      *
-     * @returns {ITaskBuilder}
+     * @returns {IActivityBuilder}
      * @memberof ITaskRunner
      */
-    getBuilder(): ITaskBuilder;
+    getBuilder(): IActivityBuilder;
 
     /**
      * start task.

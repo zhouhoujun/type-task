@@ -1,7 +1,7 @@
 import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken, isSymbol, InjectToken } from '@ts-ioc/core';
 import { TaskMetadata } from '../metadatas';
 import { ActivityToken, IActivity } from '../IActivity';
-import { TaskBuilderToken, ITaskBuilder } from '../ITaskBuilder';
+import { ActivityBuilderToken, IActivityBuilder } from '../IActivityBuilder';
 
 
 /**
@@ -29,10 +29,21 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
      * task decorator, use to define class as task element.
      *
      * @Task
-     * @param {string} [provide] task name or provide.
-     * @param {string} [provide] task alias name.
+     * @param {string} provide task name or provide.
+     * @param {string} [alias] task alias name.
      */
-    (provide?: Registration<any> | symbol | string, alias?: string): ClassDecorator;
+    (provide: Registration<any> | symbol | string, alias?: string): ClassDecorator;
+
+    /**
+     * task decorator, use to define class as task element.
+     *
+     * @Task
+     * @param {string} provide task name or provide.
+     * @param {string} builder task builder token.
+     * @param {string} [alias]  task alias name
+     */
+    (provide: Registration<any> | symbol | string, builder?: Token<IActivityBuilder>, alias?: string): ClassDecorator;
+
     /**
      * task decorator, use to define class as task element.
      *
@@ -43,8 +54,8 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
 
 export function createTaskDecorator<T extends TaskMetadata>(
     taskType: string,
-    builder: Token<ITaskBuilder> | ITaskBuilder,
-    provideType: InjectToken<IActivity>,
+    builder: Token<IActivityBuilder> | IActivityBuilder,
+    provideType: InjectToken<IActivity<any>>,
     adapter?: MetadataAdapter,
     metadataExtends?: MetadataExtends<T>): ITaskDecorator<T> {
 
@@ -68,7 +79,18 @@ export function createTaskDecorator<T extends TaskMetadata>(
             });
 
             args.next<TaskMetadata>({
-                match: (arg) => arg && isString(arg),
+                match: (arg) => isString(arg) || isToken(arg),
+                setMetadata: (metadata, arg) => {
+                    if (isString) {
+                        metadata.name = arg;
+                    } else {
+                        metadata.builder = arg;
+                    }
+                }
+            });
+
+            args.next<TaskMetadata>({
+                match: (arg) => isString(arg),
                 setMetadata: (metadata, arg) => {
                     metadata.name = arg;
                 }
@@ -104,5 +126,5 @@ export function createTaskDecorator<T extends TaskMetadata>(
  *
  * @Task
  */
-export const Task: ITaskDecorator<TaskMetadata> = createTaskDecorator('Task', TaskBuilderToken, ActivityToken);
+export const Task: ITaskDecorator<TaskMetadata> = createTaskDecorator('Task', ActivityBuilderToken, ActivityToken);
 

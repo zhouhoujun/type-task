@@ -1,19 +1,13 @@
-import { Inject, Abstract } from '@ts-ioc/core';
-import { IContext, ContextToken } from './IContext';
+import { Inject } from '@ts-ioc/core';
+import { Task } from './decorators';
 import { IActivity } from './IActivity';
 import { IConfigure } from './IConfigure';
+import { ContextToken, IContext } from './IContext';
 
 
-/**
- * abstract task.
- *
- * @export
- * @abstract
- * @class AbstractTask
- * @implements {ITask}
- */
-@Abstract()
-export abstract class AbstractActivity implements IActivity {
+@Task
+export class Activity<T> implements IActivity<T> {
+
     /**
      * workflow instance uuid.
      *
@@ -25,14 +19,14 @@ export abstract class AbstractActivity implements IActivity {
      * activity display name.
      *
      * @type {string}
-     * @memberof AbstractActivity
+     * @memberof Activity
      */
     name: string;
     /**
      * config.
      *
      * @type {IConfigure}
-     * @memberof AbstractTask
+     * @memberof Activity
      */
     config: IConfigure;
 
@@ -40,7 +34,7 @@ export abstract class AbstractActivity implements IActivity {
      * task context.
      *
      * @type {IContext}
-     * @memberof AbstractTask
+     * @memberof Activity
      */
     @Inject(ContextToken)
     context: IContext;
@@ -52,10 +46,13 @@ export abstract class AbstractActivity implements IActivity {
     /**
      * run task.
      *
-     * @abstract
      * @param {*} [data]
-     * @returns {Promise<any>}
-     * @memberof AbstractTask
+     * @param {IActivity<any>} [target]
+     * @returns {Promise<T>}
+     * @memberof Activity
      */
-    abstract run(data?: any): Promise<any>;
+    run(data?: any, target?: IActivity<any>): Promise<T> {
+        return Promise.resolve(data);
+    }
+
 }

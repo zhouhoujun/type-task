@@ -2,7 +2,7 @@ import { AssetTask } from '../../decorators';
 import { IDestConfigure, TransformType } from '../../core';
 import { isBoolean, ObjectMap, isString, isArray } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
-import { OnTaskInit, CtxType } from '@taskfr/core';
+import { OnTaskInit, CtxType } from '../..';
 import * as uglify from 'gulp-uglify';
 import * as sourcemaps from 'gulp-sourcemaps';
 import { IAssetConfigure, DestType, PipeAsset } from '../../assets';

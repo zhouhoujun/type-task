@@ -1,7 +1,7 @@
 import { ExecOptions, exec } from 'child_process';
 import { isString, isBoolean, isArray, lang, ObjectMap } from '@ts-ioc/core';
 import { Src, IConfigure, CtxType, OnTaskInit } from '@taskfr/core';
-import { AbstractPipe } from '../core';
+import { PipeActivity } from '../core';
 import { PipeTask } from '../decorators';
 
 /**
@@ -50,7 +50,7 @@ export interface ShellTaskConfig extends IConfigure {
  * @implements {ITask}
  */
 @PipeTask('shell')
-export class ExecShellTask extends AbstractPipe implements OnTaskInit {
+export class ExecShellTask extends PipeActivity implements OnTaskInit {
     /**
      * shell cmd.
      *

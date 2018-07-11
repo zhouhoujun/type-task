@@ -1,7 +1,7 @@
-import { IConfigure, TaskType } from './IConfigure';
+import { IConfigure, ActivityType } from './IConfigure';
 import { IActivity } from './IActivity';
 import { ITaskRunner } from './ITaskRunner';
-import { ITaskBuilder } from './ITaskBuilder';
+import { IActivityBuilder } from './IActivityBuilder';
 import { InjectToken, IContainer, Type, Token, ObjectMap } from '@ts-ioc/core';
 import { ITaskContainer } from '../ITaskContainer';
 
@@ -10,11 +10,30 @@ import { ITaskContainer } from '../ITaskContainer';
 /**
  * context type.
  */
-export type CtxType<T> = T | ((context?: IContext, config?: IConfigure) => T)
+export type CtxType<T> = T | ((context?: IContext, config?: IConfigure) => T);
 
-export type Condition = IActivity | boolean | ((IActivity) => boolean);
+export type AsyncResult<T> = (activity?: IActivity<T>, data?: any) => Promise<T>;
 
-export type Expression<T> = IActivity | T | ((IActivity) => T);
+export type ActivityResult<T> = Promise<T> | AsyncResult<T> | IActivity<T>;
+
+export type Expression<T> = T | ActivityResult<T>;
+
+export type Condition = Expression<boolean>;
+
+/**
+ * key value pair.
+ *
+ * @export
+ * @interface KeyValue
+ * @template TKey
+ * @template TVal
+ */
+export interface KeyValue<TKey, TVal> {
+  key: TKey;
+  value: TVal;
+}
+
+
 
 /**
  * task context token.
@@ -49,14 +68,14 @@ export interface IContext {
   /**
    * get task runner;
    *
-   * @param {TaskType<IActivity>} task
+   * @param {ActivityType<IActivity>} task
    * @param {string} uuid
-   * @param {(ITaskBuilder | Token<ITaskBuilder>)} [builder]
+   * @param {(IActivityBuilder | Token<IActivityBuilder>)} [builder]
    * @param {*} [instance]
    * @returns {ITaskRunner}
    * @memberof IContext
    */
-  getRunner(task: TaskType<IActivity>, uuid?: string, builder?: ITaskBuilder | Token<ITaskBuilder>, instance?: any): ITaskRunner;
+  getRunner(task: ActivityType<IActivity<any>>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner;
 
   /**
    * get task run root path.
@@ -74,15 +93,15 @@ export interface IContext {
 */
   getEnvArgs(): ObjectMap<any>;
 
-  /**
-   * validate condition.
-   *
-   * @param {Condition} condition
-   * @param {*} data
-   * @returns {Promise<boolean>}
-   * @memberof IContext
-   */
-  validate(condition: Condition, data: any): Promise<boolean>;
+  // /**
+  //  * validate condition.
+  //  *
+  //  * @param {Condition} condition
+  //  * @param {*} data
+  //  * @returns {Promise<boolean>}
+  //  * @memberof IContext
+  //  */
+  // validate(condition: Condition, data: any): Promise<boolean>;
 
   /**
    *convert to finally type via context.
@@ -96,11 +115,23 @@ export interface IContext {
   to<T>(target: CtxType<T>, config?: IConfigure): T;
 
   /**
+   * exec activity result.
+   *
+   * @template T
+   * @param {IActivity<any>} target
+   * @param {Expression<T>} expression
+   * @param {IConfigure} [data]
+   * @returns {Promise<T>}
+   * @memberof IContext
+   */
+  exec<T>(target: IActivity<any>, expression: Expression<T>, data?: any): Promise<T>;
+
+  /**
    * check is task or not.
    *
    * @param {Type<IActivity>} task
    * @returns {boolean}
    * @memberof IContext
    */
-  isTask(task: Type<IActivity>): boolean;
+  isTask(task: Type<IActivity<any>>): boolean;
 }
