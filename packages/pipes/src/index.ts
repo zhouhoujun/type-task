@@ -1,5 +1,5 @@
-export * from './ITransform';
-export * from './IPipeTask';
+export * from './core/ITransform';
+export * from './core/IPipeActivity';
 export * from './decorators';
 export * from './assets';
 export * from './core';

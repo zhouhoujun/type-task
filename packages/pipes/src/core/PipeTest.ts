@@ -1,24 +1,24 @@
-import { ITransform } from '../ITransform';
+import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
 import { IPipeConfigure } from './IPipeConfigure';
-import { OnTaskInit, Src, CtxType } from '@taskfr/core';
+import { OnTaskInit, Src, CtxType, InjectAcitityToken } from '@taskfr/core';
 import { src, SrcOptions } from 'vinyl-fs';
 import { isArray, Registration, isUndefined } from '@ts-ioc/core';
-import { PipeToken, IPipeActivity } from '../IPipeTask';
-import { PipeElement, IPipeElement } from './PipeElement';
+import { PipeActivityToken, IPipeActivity } from './IPipeActivity';
 import { TransformType } from './pipeTypes';
+import { PipeActivity } from './PipeActivity';
 
 
-export const TestToken = new Registration<IPipeActivity>(PipeToken, 'test');
+export const TestToken = new InjectAcitityToken<PipeTestActivity>('test');
 
 
-export interface ITestConfigure extends IPipeConfigure {
+export interface TestConfigure extends IPipeConfigure {
 
     /**
      * await piped complete.
      *
      * @type {CtxType<boolean>}
-     * @memberof IPipeConfigure
+     * @memberof TestConfigure
      */
     awaitPiped?: CtxType<boolean>;
 
@@ -26,7 +26,7 @@ export interface ITestConfigure extends IPipeConfigure {
      * set match test file source.
      *
      * @type {CtxType<Src>}
-     * @memberof ITestConfigure
+     * @memberof TestConfigure
      */
     test?: CtxType<Src>;
 
@@ -34,7 +34,7 @@ export interface ITestConfigure extends IPipeConfigure {
      * test src options.
      *
      * @type {CtxType<SrcOptions>}
-     * @memberof IPipeConfigure
+     * @memberof TestConfigure
      */
     srcOptions?: CtxType<SrcOptions>;
 
@@ -42,7 +42,7 @@ export interface ITestConfigure extends IPipeConfigure {
      * test framewok. default use gulp-mocha to test.
      *
      * @type {CtxType<TransformType>}
-     * @memberof ITestConfigure
+     * @memberof TestConfigure
      */
     framework: CtxType<TransformType>;
 
@@ -50,61 +50,15 @@ export interface ITestConfigure extends IPipeConfigure {
      * test options.
      *
      * @type {CtxType<any>}
-     * @memberof IPipeTest
+     * @memberof TestConfigure
      */
     options: CtxType<any>;
 }
 
 
-/**
- * pipe test work.
- *
- * @export
- * @interface IPipeTest
- * @extends {IPipeElement}
- */
-export interface IPipeTest extends IPipeElement {
-    /**
-     * await pipe completed.
-     *
-     * @type {boolean}
-     * @memberof IPipeComponent
-     */
-    awaitPiped: boolean;
-
-    /**
-     * set match test file source.
-     *
-     * @type {Src}
-     * @memberof IPipeTest
-     */
-    test: Src;
-    /**
-     * test src options.
-     *
-     * @type {SrcOptions}
-     * @memberof PipeTest
-     */
-    srcOptions: SrcOptions;
-    /**
-     * test framwork
-     *
-     * @type {TransformType}
-     * @memberof IPipeTest
-     */
-    framework: TransformType;
-    /**
-     * test options.
-     *
-     * @type {*}
-     * @memberof IPipeTest
-     */
-    options: any;
-}
 
 @PipeTask(TestToken)
-export class PipeTest extends PipeElement implements IPipeTest, OnTaskInit {
-
+export class PipeTestActivity extends PipeActivity implements OnTaskInit {
     /**
      * await pipe compileted.
      *
@@ -143,8 +97,7 @@ export class PipeTest extends PipeElement implements IPipeTest, OnTaskInit {
      */
     options: any;
 
-    onTaskInit(config: ITestConfigure) {
-        super.onTaskInit(config);
+    onTaskInit(config: TestConfigure) {
         if (!isUndefined(config.awaitPiped)) {
             this.awaitPiped = this.context.to(config.awaitPiped);
         }

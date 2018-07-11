@@ -1,4 +1,4 @@
-import { IPipeConfigure, ITestConfigure, ICleanConfigure, PipeTest } from '../core';
+import { IPipeConfigure, TestConfigure, ICleanConfigure, PipeTestActivity } from '../core';
 import { CtxType, Src, IActivity } from '@taskfr/core';
 import { ObjectMap, Token } from '@ts-ioc/core';
 import { IAssetConfigure, DestType } from './IAssetConfigure';
@@ -39,10 +39,10 @@ export interface IPackageConfigure extends IPipeConfigure {
     /**
      * test config.
      *
-     * @type {CtxType<boolean | Src | ITestConfigure | Token<PipeTest>>}
+     * @type {CtxType<boolean | Src | TestConfigure | Token<PipeTestActivity>>}
      * @memberof IAssetsConfigure
      */
-    test?: CtxType<boolean | Src | ITestConfigure | Token<PipeTest>>;
+    test?: CtxType<boolean | Src | TestConfigure | Token<PipeTestActivity>>;
 
     /**
      * dest.

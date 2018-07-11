@@ -10,7 +10,6 @@ import { SrcOptions, DestOptions } from 'vinyl-fs';
  * @extends {IConfigure}
  */
 export interface IPipeConfigure extends IConfigure {
-
     /**
      * transform pipes
      *
@@ -26,35 +25,8 @@ export interface IPipeConfigure extends IConfigure {
      * @memberof IPipeConfigure
      */
     merger?: TransformMergerExpress
-
 }
 
-/**
- * source pipe configure.
- *
- * @export
- * @interface IPipeSourceConfigure
- * @extends {IPipeConfigure}
- */
-export interface ISourceConfigure extends IPipeConfigure {
-
-    /**
-     * transform source.
-     *
-     * @type {TransformSource}
-     * @memberof IPipeConfigure
-     */
-    src?: CtxType<Src>;
-
-    /**
-     * src options.
-     *
-     * @type {CtxType<SrcOptions>}
-     * @memberof IPipeConfigure
-     */
-    srcOptions?: CtxType<SrcOptions>;
-
-}
 
 /**
  * dest pipe configure.

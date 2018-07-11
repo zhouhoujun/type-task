@@ -1,8 +1,8 @@
 import { ITaskRunner, ActivityType, CtxType, IActivity } from '@taskfr/core';
-import { ITransform } from '../ITransform';
+import { ITransform } from './ITransform';
 import { ObjectMap, isMetadataObject, isObservable, isBaseType, Token } from '@ts-ioc/core';
 import { IPipeContext } from './IPipeContext';
-import { IPipeActivity } from '../IPipeTask';
+import { IPipeActivity } from './IPipeActivity';
 import { isFunction } from '@ts-ioc/core';
 import { Stream } from 'stream';
 import { ITransformMerger } from './ITransformMerger';

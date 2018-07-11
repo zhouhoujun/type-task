@@ -2,7 +2,7 @@ import { IConfigure, ActivityType } from './IConfigure';
 import { IActivity } from './IActivity';
 import { ITaskRunner } from './ITaskRunner';
 import { IActivityBuilder } from './IActivityBuilder';
-import { InjectToken, IContainer, Type, Token, ObjectMap } from '@ts-ioc/core';
+import { InjectToken, IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
 import { ITaskContainer } from '../ITaskContainer';
 
 
@@ -33,12 +33,26 @@ export interface KeyValue<TKey, TVal> {
   value: TVal;
 }
 
+/**
+ * Inject Acitity context Token
+ *
+ * @export
+ * @class InjectContextToken
+ * @extends {Registration<T>}
+ * @template T
+ */
+export class InjectContextToken<T> extends Registration<T> {
+  constructor(desc: string) {
+      super('ActivityContext', desc);
+  }
+}
+
 
 
 /**
  * task context token.
  */
-export const ContextToken = new InjectToken<IContext>('__TASK_Context');
+export const ContextToken = new InjectContextToken<IContext>('');
 
 
 /**

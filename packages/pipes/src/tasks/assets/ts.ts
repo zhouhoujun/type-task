@@ -7,7 +7,7 @@ import * as uglify from 'gulp-uglify';
 import * as sourcemaps from 'gulp-sourcemaps';
 import { IAssetConfigure, DestType, PipeAsset } from '../../assets';
 import * as ts from 'gulp-typescript';
-import { ITransform } from '../../ITransform';
+import { ITransform } from '../../core/ITransform';
 
 /**
  * ts task configure.

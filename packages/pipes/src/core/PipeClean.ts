@@ -2,7 +2,7 @@ import { PipeTask } from '../decorators';
 import { OnTaskInit, Src } from '@taskfr/core';
 import { ICleanConfigure } from './IPipeConfigure';
 import { Registration } from '@ts-ioc/core';
-import { PipeToken, IPipeActivity } from '../IPipeTask';
+import { PipeActivityToken, IPipeActivity } from './IPipeActivity';
 import { PipeActivity } from './PipeActivity';
 const del = require('del');
 
@@ -10,7 +10,9 @@ const del = require('del');
 /**
  * clean task token.
  */
-export const CleanToken = new Registration<IPipeActivity>(PipeToken, 'clean');
+export const CleanToken = new Registration<IPipeActivity>(PipeActivityToken, 'clean');
+
+
 
 /**
  * clean task.

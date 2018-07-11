@@ -1,4 +1,4 @@
-import { IPipeActivity } from '../IPipeTask';
+import { IPipeActivity } from './IPipeActivity';
 
 /**
  * transforms merger task.

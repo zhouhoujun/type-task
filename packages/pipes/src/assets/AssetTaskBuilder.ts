@@ -1,10 +1,10 @@
-import { IActivity, IConfigure, ITaskComponent } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, lang, isArray, isString, Token, Registration, isUndefined, isToken } from '@ts-ioc/core';
-import { IPipeConfigure, IPipeComponent, PipeSource, SourceToken, PipeClean, ICleanConfigure, CleanToken } from '../core';
+import { IActivity, IConfigure } from '@taskfr/core';
+import { Inject, ContainerToken, IContainer, Singleton, lang } from '@ts-ioc/core';
+import { IPipeConfigure, PipeSourceActivity, SourceAcitvityToken, InjectPipeAcitityBuilderToken } from '../core';
 import { IAssetConfigure } from './IAssetConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
-import { AssetToken } from './IAsset';
-import { AssetTaskBuilderToken } from '../IPipeTask';
+
+export const AssetTaskBuilderToken = new InjectPipeAcitityBuilderToken<AssetTaskBuilder>('asset')
 
 /**
  * Asset task builder
@@ -25,9 +25,9 @@ export class AssetTaskBuilder extends DestTaskBuilder {
         let subs: IConfigure[] = [];
 
         // only not pipesource add sub source task
-        if (assetCfg.src && !(taskInst instanceof PipeSource)) {
+        if (assetCfg.src && !(taskInst instanceof PipeSourceActivity)) {
             let srcCfg: IPipeConfigure = lang.assign({}, assetCfg);
-            srcCfg.task = SourceToken;
+            srcCfg.task = SourceAcitvityToken;
             assetCfg.pipes = [];
             taskInst.pipes = [];
             subs.push(srcCfg);

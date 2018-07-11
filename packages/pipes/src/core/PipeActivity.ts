@@ -1,9 +1,9 @@
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 import { Inject, isFunction, isClass, isArray } from '@ts-ioc/core';
-import { IPipeActivity } from '../IPipeTask';
+import { IPipeActivity } from './IPipeActivity';
 import { Activity, TaskRunner, IActivity } from '@taskfr/core';
 import { PipeTask } from '../decorators';
-import { ITransform } from '../ITransform';
+import { ITransform } from './ITransform';
 import { TransformType, isTransform, PipeExpress, TransformMerger } from './pipeTypes';
 import { IPipeConfigure } from './IPipeConfigure';
 import { ITransformMerger } from './ITransformMerger';
@@ -41,6 +41,12 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      */
     merger: TransformMerger;
 
+    /**
+     * pipe config.
+     *
+     * @type {IPipeConfigure}
+     * @memberof PipeActivity
+     */
     config: IPipeConfigure;
 
 

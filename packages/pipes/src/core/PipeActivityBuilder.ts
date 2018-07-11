@@ -1,10 +1,29 @@
-import { ActivityBuilder, IActivity, IConfigure, IContext } from '@taskfr/core';
+import { ActivityBuilder, IActivity, IConfigure, IContext, InjectAcitityBuilderToken, IActivityBuilder } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObject, Token, Registration } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { TransformMergerExpress, TransMergerConfig, TransformConfig, TransformMerger, TransformType, TransformExpress } from './pipeTypes';
-import { PipeToken, PipeTaskBuilderToken, IPipeActivity } from '../IPipeTask';
-import { AssetToken } from '../assets/IAsset';
+import { PipeActivityToken, IPipeActivity, InjectAssetActivityToken } from './IPipeActivity';
 import { PipeActivity } from './PipeActivity';
+
+
+/**
+ * Inject PipeAcitityBuilder Token
+ *
+ * @export
+ * @class InjectPipeAcitityBuilderToken
+ * @extends {Registration<T>}
+ * @template T
+ */
+export class InjectPipeAcitityBuilderToken<T extends IActivityBuilder> extends Registration<T> {
+    constructor(desc: string) {
+        super('PipeActivityBuilder', desc);
+    }
+}
+
+/**
+ * pipe activity builder token.
+ */
+export const PipeActivityBuilderToken = new InjectPipeAcitityBuilderToken<PipeActivityBuilder>('')
 
 /**
  * pipe task builder.
@@ -13,13 +32,13 @@ import { PipeActivity } from './PipeActivity';
  * @class PipeTaskBuilder
  * @extends {ActivityBuilder}
  */
-@Singleton(PipeTaskBuilderToken)
-export class PipeTaskBuilder extends ActivityBuilder {
+@Singleton(PipeActivityBuilderToken)
+export class PipeActivityBuilder extends ActivityBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {
         super(container)
     }
 
-    async buildStrategy(activity: IPipeActivity, config: IPipeConfigure): Promise<IPipeActivity> {
+    async buildStrategy<T>(activity: IActivity<T>, config: IPipeConfigure): Promise<IActivity<T>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof PipeActivity) {
             if (config.pipes) {
@@ -34,12 +53,12 @@ export class PipeTaskBuilder extends ActivityBuilder {
 
 
     protected traslateStrToken(token: string): Token<IPipeActivity> {
-        let taskToken: Token<IPipeActivity> = new Registration(AssetToken, token);
+        let taskToken: Token<IPipeActivity> = new InjectAssetActivityToken(token);
         if (this.container.has(taskToken)) {
             return taskToken;
         }
 
-        taskToken = new Registration(PipeToken, token);
+        taskToken = new Registration(PipeActivityToken, token);
         if (this.container.has(taskToken)) {
             return taskToken;
         }

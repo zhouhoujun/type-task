@@ -1,4 +1,4 @@
-import { ISourceConfigure, IDestConfigure, ICleanConfigure } from '../core';
+import { SourceConfigure, IDestConfigure, ICleanConfigure } from '../core';
 import { CtxType, Src } from '@taskfr/core';
 import { ObjectMap } from '@ts-ioc/core';
 
@@ -13,10 +13,10 @@ export type DestType = string | IDestConfigure;
  *
  * @export
  * @interface IAssetConfigure
- * @extends {ISourceConfigure}
+ * @extends {SourceConfigure}
  * @extends {IDestConfigure}
  */
-export interface IAssetConfigure extends ISourceConfigure {
+export interface IAssetConfigure extends SourceConfigure {
 
     /**
      * watch source change to run pipe task.

@@ -1,7 +1,7 @@
 import { ITaskDecorator, createTaskDecorator } from '@taskfr/core';
 import { AssetToken } from '../assets/IAsset';
 import { IPackageConfigure } from '../assets/IPackageConfigure';
-import { PackageBuilderToken } from '../IPipeTask';
+import { PackageBuilderToken } from '../core/IPipeActivity';
 
 /**
  * asset task metadata.

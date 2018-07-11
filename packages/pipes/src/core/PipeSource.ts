@@ -1,49 +1,51 @@
 import { src, SrcOptions } from 'vinyl-fs';
-import { ITransform } from '../ITransform';
+import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
-import { Src, OnTaskInit } from '@taskfr/core';
-import { ISourceConfigure } from './IPipeConfigure';
-import { PipeToken, IPipeActivity } from '../IPipeTask';
-import { Registration } from '@ts-ioc/core';
-import { PipeElement } from './PipeElement';
+import { Src, CtxType, IActivity, Expression } from '@taskfr/core';
+import { IPipeConfigure } from './IPipeConfigure';
+import { PipeActivity } from './PipeActivity';
+import { InjectPipeActivityToken } from './IPipeActivity';
+import { Singleton } from '@ts-ioc/core';
+import { PipeActivityBuilder, InjectPipeAcitityBuilderToken } from './PipeActivityBuilder';
 
 
-export const SourceToken = new Registration<IPipeActivity>(PipeToken, '@taskfr/core');
+export const SourceAcitvityToken = new InjectPipeActivityToken<PipeSourceActivity>('source');
 
-
+export const SourceAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<PipeSourceActivityBuilder>('source')
 /**
- * source provider.
+ * source pipe configure.
  *
  * @export
- * @interface IPipeSource
- * @extends {IPipeActivity}
+ * @interface IPipeSourceConfigure
+ * @extends {IPipeConfigure}
  */
-export interface IPipeSource extends IPipeActivity {
+export interface SourceConfigure extends IPipeConfigure {
     /**
-     * source
+     * transform source.
      *
      * @type {TransformSource}
-     * @memberof IPipeSource
+     * @memberof IPipeConfigure
      */
-    src: Src;
+    src?: Expression<Src>;
+
     /**
-     * source options.
+     * src options.
      *
-     * @type {SrcOptions}
-     * @memberof IPipeSource
+     * @type {CtxType<SrcOptions>}
+     * @memberof IPipeConfigure
      */
-    srcOptions?: SrcOptions;
+    srcOptions?: Expression<SrcOptions>;
 }
 
-@PipeTask(SourceToken)
-export class PipeSource extends PipeElement implements IPipeSource, OnTaskInit {
+@PipeTask(SourceAcitvityToken, SourceAcitvityBuilderToken)
+export class PipeSourceActivity extends PipeActivity {
     /**
      * source
      *
      * @type {TransformSource}
      * @memberof IPipeSource
      */
-    src: Src;
+    src: Expression<Src>;
 
     /**
      * source options.
@@ -51,12 +53,7 @@ export class PipeSource extends PipeElement implements IPipeSource, OnTaskInit {
      * @type {SrcOptions}
      * @memberof PipeSource
      */
-    srcOptions: SrcOptions;
-
-    onTaskInit(config: ISourceConfigure) {
-        this.src = this.context.to(config.src);
-        this.srcOptions = this.context.to(config.srcOptions);
-    }
+    srcOptions: Expression<SrcOptions>;
 
     protected merge(...data: ITransform[]): Promise<ITransform> {
         if (!this.merger) {
@@ -70,5 +67,17 @@ export class PipeSource extends PipeElement implements IPipeSource, OnTaskInit {
     source(): ITransform {
         return src(this.src, this.srcOptions);
     }
+}
 
+@Singleton(SourceAcitvityBuilderToken)
+export class PipeSourceActivityBuilder extends PipeActivityBuilder {
+
+    async buildStrategy<T>(activity: IActivity<T>, config: SourceConfigure): Promise<IActivity<T>> {
+        await super.buildStrategy(activity, config);
+        if (activity instanceof PipeSourceActivity) {
+            activity.src = activity.context.to(config.src);
+            activity.srcOptions = activity.context.to(config.srcOptions);
+        }
+        return activity;
+    }
 }

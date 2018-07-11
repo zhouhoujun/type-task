@@ -1,11 +1,12 @@
-import { IActivity, IConfigure, ITaskComponent } from '@taskfr/core';
+import { IActivity, IConfigure } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean, isToken } from '@ts-ioc/core';
-import { IPipeComponent, PipeTest, PipeClean, ICleanConfigure, TestToken, CleanToken } from '../core';
+import { PipeTestActivity, PipeClean, ICleanConfigure, TestToken, CleanToken, InjectPipeAcitityBuilderToken } from '../core';
 import { IPackageConfigure } from './IPackageConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
 import { AssetToken } from './IAsset';
 import { IAssetConfigure } from './IAssetConfigure';
-import { PackageBuilderToken, AssetTaskBuilderToken } from '../IPipeTask';
+
+export const PipeAcitityBuilderToken = new InjectPipeAcitityBuilderToken<PackageBuilder>('package');
 
 /**
  * Asset task builder
@@ -14,7 +15,7 @@ import { PackageBuilderToken, AssetTaskBuilderToken } from '../IPipeTask';
  * @class AssetsBuilder
  * @extends {DestTaskBuilder}
  */
-@Singleton(PackageBuilderToken)
+@Singleton(PipeAcitityBuilderToken)
 export class PackageBuilder extends DestTaskBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {
         super(container)
@@ -25,7 +26,7 @@ export class PackageBuilder extends DestTaskBuilder {
         let packCfg = config as IPackageConfigure;
         let subs: IConfigure[] = [];
 
-        if (packCfg.test && !(taskInst instanceof PipeTest)) {
+        if (packCfg.test && !(taskInst instanceof PipeTestActivity)) {
             let test = taskInst.context.to(packCfg.test);
             let testCfg;
             if (isBoolean(test)) {

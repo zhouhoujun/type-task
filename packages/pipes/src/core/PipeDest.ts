@@ -1,18 +1,17 @@
 import { dest, DestOptions } from 'vinyl-fs';
 import { PipeTask } from '../decorators';
-import { PipeComponent } from './PipeComponent';
-import { ITransform } from '../ITransform';
+import { ITransform } from './ITransform';
 import { TransformType } from './pipeTypes';
 import { OnTaskInit } from '@taskfr/core';
 import { IDestConfigure } from './IPipeConfigure';
 import { Registration } from '@ts-ioc/core';
-import { PipeToken, IPipeActivity } from '../IPipeTask';
+import { PipeActivityToken, IPipeActivity } from './IPipeActivity';
 
 
 /**
  * dest task token.
  */
-export const DestToken = new Registration<IPipeActivity>(PipeToken, 'dest');
+export const DestToken = new Registration<IPipeActivity>(PipeActivityToken, 'dest');
 
 /**
  * pipe dest provider.

@@ -1,10 +1,10 @@
 import { ObjectMap, Express2, InjectToken } from '@ts-ioc/core';
-import { IContext } from '@taskfr/core';
+import { IContext, InjectContextToken } from '@taskfr/core';
 
 /**
  * task context token.
  */
-export const PipeContextToken = new InjectToken<IPipeContext>('__TASK_TaskContext');
+export const PipeContextToken = new InjectContextToken<IPipeContext>('pipe');
 
 /**
  * task context.

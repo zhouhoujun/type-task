@@ -1,13 +1,13 @@
-import { IActivity, IConfigure, ActivityBuilderToken, ITaskComponent } from '@taskfr/core';
+import { IActivity, IConfigure, ActivityBuilderToken } from '@taskfr/core';
 import { Singleton, isArray, isString, Inject, ContainerToken, IContainer } from '@ts-ioc/core';
-import { PipeTaskBuilder, PipeDest, DestToken } from '../core';
+import { PipeActivityBuilder, PipeDest, DestToken } from '../core';
 import { IAssetConfigure } from './IAssetConfigure';
 
 /**
  * dest task builder.
  */
 @Singleton(ActivityBuilderToken, 'dest')
-export class DestTaskBuilder extends PipeTaskBuilder {
+export class DestTaskBuilder extends PipeActivityBuilder {
     constructor(@Inject(ContainerToken) container: IContainer) {
         super(container)
     }

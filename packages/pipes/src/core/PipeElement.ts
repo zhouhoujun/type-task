@@ -1,30 +1,30 @@
-import { IPipeComponent } from './IPipeComponent';
-import { PipeTask } from '../decorators';
-import { PipeComponent } from './PipeComponent';
+// import { IPipeComponent } from './IPipeComponent';
+// import { PipeTask } from '../decorators';
+// import { PipeComponent } from './PipeComponent';
 
 
 
-/**
- * source provider.
- *
- * @export
- * @interface IPipeElement
- * @extends {IPipeComponent}
- */
-export interface IPipeElement extends IPipeComponent {
+// /**
+//  * source provider.
+//  *
+//  * @export
+//  * @interface IPipeElement
+//  * @extends {IPipeComponent}
+//  */
+// export interface IPipeElement extends IPipeComponent {
 
-}
+// }
 
 
-/**
- * pipe component
- *
- * @export
- * @class PipeComponent
- * @extends {TaskElement}
- * @implements {IPipeComponent<ITransform>}
- */
-@PipeTask
-export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeElement {
+// /**
+//  * pipe component
+//  *
+//  * @export
+//  * @class PipeComponent
+//  * @extends {TaskElement}
+//  * @implements {IPipeComponent<ITransform>}
+//  */
+// @PipeTask
+// export class PipeElement extends PipeComponent<IPipeComponent> implements IPipeElement {
 
-}
+// }
