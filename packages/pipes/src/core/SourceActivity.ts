@@ -1,7 +1,7 @@
 import { src, SrcOptions } from 'vinyl-fs';
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
-import { Src, CtxType, IActivity, Expression, ActivityType, isActivityType } from '@taskfr/core';
+import { Src, IActivity, Expression, ActivityResultType } from '@taskfr/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
 import { InjectPipeActivityToken } from './IPipeActivity';
@@ -9,7 +9,7 @@ import { Singleton } from '@ts-ioc/core';
 import { PipeActivityBuilder, InjectPipeAcitityBuilderToken } from './PipeActivityBuilder';
 
 
-export const SourceAcitvityToken = new InjectPipeActivityToken<PipeSourceActivity>('source');
+export const SourceAcitvityToken = new InjectPipeActivityToken<SourceActivity>('source');
 
 export const SourceAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<PipeSourceActivityBuilder>('source')
 /**
@@ -26,7 +26,7 @@ export interface SourceConfigure extends IPipeConfigure {
      * @type {TransformSource}
      * @memberof IPipeConfigure
      */
-    src: Expression<Src> | ActivityType<Src>;
+    src: Expression<Src> | ActivityResultType<Src>;
 
     /**
      * src options.
@@ -34,11 +34,11 @@ export interface SourceConfigure extends IPipeConfigure {
      * @type {CtxType<SrcOptions>}
      * @memberof IPipeConfigure
      */
-    srcOptions?: Expression<SrcOptions> | ActivityType<SrcOptions>;
+    srcOptions?: Expression<SrcOptions> | ActivityResultType<SrcOptions>;
 }
 
 @PipeTask(SourceAcitvityToken, SourceAcitvityBuilderToken)
-export class PipeSourceActivity extends PipeActivity {
+export class SourceActivity extends PipeActivity {
     /**
      * source
      *
@@ -76,7 +76,7 @@ export class PipeSourceActivityBuilder extends PipeActivityBuilder {
 
     async buildStrategy<T>(activity: IActivity<T>, config: SourceConfigure): Promise<IActivity<T>> {
         await super.buildStrategy(activity, config);
-        if (activity instanceof PipeSourceActivity) {
+        if (activity instanceof SourceActivity) {
 
             activity.src = await this.toExpression(config.src, activity);
 

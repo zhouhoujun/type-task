@@ -1,4 +1,4 @@
-import { ITaskRunner, ActivityType, CtxType, IActivity, Expression, ExpressionType } from '@taskfr/core';
+import { ITaskRunner, ActivityResultType, CtxType, IActivity, Expression, ExpressionType } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { ObjectMap, isMetadataObject, isObservable, isBaseType } from '@ts-ioc/core';
 import { isFunction } from '@ts-ioc/core';

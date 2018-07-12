@@ -1,4 +1,4 @@
-import { IConfigure, ActivityType } from './IConfigure';
+import { IConfigure, ActivityResultType } from './IConfigure';
 import { IActivity } from './IActivity';
 import { ITaskRunner } from './ITaskRunner';
 import { IActivityBuilder } from './IActivityBuilder';
@@ -20,7 +20,7 @@ export type Expression<T> = T | ActivityResult<T>;
 
 export type Condition = Expression<boolean>;
 
-export type ExpressionType<T> = Expression<T> | ActivityType<T>;
+export type ExpressionType<T> = Expression<T> | ActivityResultType<T>;
 
 /**
  * key value pair.
@@ -84,14 +84,14 @@ export interface IContext {
   /**
    * get task runner;
    *
-   * @param {ActivityType<any>} task
+   * @param {ActivityResultType<any>} task
    * @param {string} uuid
    * @param {(IActivityBuilder | Token<IActivityBuilder>)} [builder]
    * @param {*} [instance]
    * @returns {ITaskRunner}
    * @memberof IContext
    */
-  getRunner(task: ActivityType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner<any>;
+  getRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner<any>;
 
   /**
    * get task run root path.

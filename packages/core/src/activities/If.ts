@@ -1,4 +1,4 @@
-import { IActivity, Task, InjectAcitityToken, Activity, Condition, ActivityBuilder, isActivityType, ActivityType, IConfigure, InjectAcitityBuilderToken, ExpressionType } from '../core';
+import { IActivity, Task, InjectAcitityToken, Activity, Condition, ActivityBuilder, ActivityResultType, IConfigure, InjectAcitityBuilderToken, ExpressionType } from '../core';
 import { Singleton } from '@ts-ioc/core';
 
 /**
@@ -30,18 +30,18 @@ export interface IfConfigure extends IConfigure {
     /**
      * if body
      *
-     * @type {ActivityType<any>}
+     * @type {ActivityResultType<any>}
      * @memberof IfConfigure
      */
-    ifBody: ActivityType<any>;
+    ifBody: ActivityResultType<any>;
 
     /**
      * else body
      *
-     * @type {ActivityType<any>}
+     * @type {ActivityResultType<any>}
      * @memberof IfConfigure
      */
-    elseBody?: ActivityType<any>;
+    elseBody?: ActivityResultType<any>;
 
 }
 
@@ -86,12 +86,7 @@ export class IfActivityBuilder extends ActivityBuilder {
         await super.buildStrategy(activity, config);
         if (activity instanceof IfActivity) {
             activity.ifBody = await this.build<T>(config.ifBody, activity.id);
-            if (isActivityType(config.if)) {
-                activity.condition = await this.build<boolean>(config.if, activity.id);
-            } else {
-                activity.condition = config.if;
-            }
-
+            activity.condition = await this.toExpression(config.if, activity);
             if (config.elseBody) {
                 activity.elseBody = await this.build<T>(config.elseBody, activity.id);
             }

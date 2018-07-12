@@ -1,5 +1,5 @@
 import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang } from '@ts-ioc/core';
-import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, ActivityBuilderToken, IActivityBuilder, ActivityType } from './core';
+import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, ActivityBuilderToken, IActivityBuilder, ActivityResultType } from './core';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
@@ -30,18 +30,18 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> imp
         return this;
     }
 
-    protected createRunner(task: ActivityType<IActivity<any>>, instance: IActivity<any>) {
+    protected createRunner(task: ActivityResultType<IActivity<any>>, instance: IActivity<any>) {
         return this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });
     }
 
     /**
      * create workflow
      *
-     * @param {...ActivityType<IActivity>[]} tasks
+     * @param {...ActivityResultType<IActivity>[]} tasks
      * @returns {Promise<ITaskRunner>}
      * @memberof ITaskContainer
      */
-    createWorkflow(...tasks: ActivityType<IActivity<any>>[]): Promise<ITaskRunner> {
+    createWorkflow(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner> {
         let task = (tasks.length > 1) ? { children: tasks, task: activites.SequenceActivity } : lang.first(tasks);
         return super.bootstrap(task)
             .then(instance => {
@@ -56,7 +56,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> imp
      * @returns {Promise<T>}
      * @memberof ApplicationBuilder
      */
-    async bootstrap(...tasks: ActivityType<IActivity<any>>[]): Promise<ITaskRunner> {
+    async bootstrap(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner> {
         let runner = await this.createWorkflow(...tasks);
         await runner.start();
         return runner;

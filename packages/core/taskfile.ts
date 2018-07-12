@@ -1,4 +1,4 @@
-import { PipeModule, PackageTask, PipeAsset, IPackageConfigure, AssetConfigure, TsConfigure } from '@taskfr/pipes';
+import { PipeModule, PackageTask, PipeAsset, PackageConfigure, AssetConfigure, TsConfigure } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const rename = require('gulp-rename');
 const rollup = require('gulp-rollup');
@@ -10,7 +10,7 @@ const commonjs = require('rollup-plugin-commonjs');
 TaskContainer.create(__dirname)
     .use(PipeModule)
     .bootstrap(
-        <IPackageConfigure>{
+        <PackageConfigure>{
             test: 'test/**/*.spec.ts',
             // test: false,
             clean: 'lib',

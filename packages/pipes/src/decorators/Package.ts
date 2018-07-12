@@ -1,16 +1,15 @@
 import { ITaskDecorator, createTaskDecorator } from '@taskfr/core';
-import { AssetToken } from '../assets/IAsset';
-import { IPackageConfigure } from '../assets/IPackageConfigure';
-import { PackageBuilderToken } from '../core/IPipeActivity';
+import { PackageConfigure } from '../core/PackageConfigure';
+import { PackageBuilderToken, PackageToken } from '../core/PackageBuilder';
 
 /**
  * asset task metadata.
  *
  * @export
  * @interface PackageMetadata
- * @extends {IPackageConfigure}
+ * @extends {PackageConfigure}
  */
-export interface PackageMetadata extends IPackageConfigure {
+export interface PackageMetadata extends PackageConfigure {
 
 }
 
@@ -19,4 +18,4 @@ export interface PackageMetadata extends IPackageConfigure {
  *
  * @Package
  */
-export const Package: ITaskDecorator<PackageMetadata> = createTaskDecorator<PackageMetadata>('Package', PackageBuilderToken, AssetToken);
+export const Package: ITaskDecorator<PackageMetadata> = createTaskDecorator<PackageMetadata>('Package', PackageBuilderToken, PackageToken);

@@ -1,6 +1,6 @@
 import {
     IActivity, Activity, Task, InjectAcitityToken, Condition, IConfigure,
-    ActivityType, ActivityBuilder, InjectAcitityBuilderToken, isActivityType, ExpressionType
+    ActivityResultType, ActivityBuilder, InjectAcitityBuilderToken, ExpressionType
 } from '../core';
 import { Singleton } from '@ts-ioc/core';
 
@@ -34,10 +34,10 @@ export interface WhileConfigure extends IConfigure {
     /**
      * while body.
      *
-     * @type {ActivityType<any>}
+     * @type {ActivityResultType<any>}
      * @memberof WhileConfigure
      */
-    body: ActivityType<any>;
+    body: ActivityResultType<any>;
 }
 
 /**
@@ -83,12 +83,7 @@ export class WhileActivityBuilder extends ActivityBuilder {
         await super.buildStrategy(activity, config);
         if (activity instanceof WhileActivity) {
             activity.body = await this.build<any>(config.body, activity.id);
-            if (isActivityType(config.while)) {
-                activity.condition = await this.build(config.while, activity.id);
-            } else {
-                activity.condition = config.while;
-            }
-
+            activity.condition = await this.toExpression(config.while, activity);
         }
         return activity;
     }

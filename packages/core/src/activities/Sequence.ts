@@ -1,4 +1,4 @@
-import { Task, IActivity, IConfigure, InjectAcitityToken, InjectAcitityBuilderToken, ActivityBuilder, Activity, ActivityType } from '../core';
+import { Task, IActivity, IConfigure, InjectAcitityToken, InjectAcitityBuilderToken, ActivityBuilder, Activity, ActivityResultType } from '../core';
 import { Singleton, Token, isToken } from '@ts-ioc/core';
 
 
@@ -17,10 +17,10 @@ export interface SequenceConfigure extends IConfigure {
     /**
      * sequence activities.
      *
-     * @type {ActivityType<any>[]}
+     * @type {ActivityResultType<any>[]}
      * @memberof IConfigure
      */
-    sequence?: ActivityType<any>[];
+    sequence?: ActivityResultType<any>[];
 }
 
 /**
@@ -36,12 +36,20 @@ export class SequenceActivity extends Activity<any> {
     activites: IActivity<any>[] = [];
 
     run(data?: any): Promise<any> {
-        let execPromise = Promise.resolve(data);
+        let execPromise = this.begin(data);
         this.activites.forEach(task => {
             execPromise = execPromise.then(pdata => task.run(pdata));
         });
 
-        return execPromise;
+        return execPromise.then(result => this.end(result));
+    }
+
+    protected begin(data?: any): Promise<any> {
+        return Promise.resolve(data);
+    }
+
+    protected end(data?: any): Promise<any> {
+        return Promise.resolve(data);
     }
 }
 

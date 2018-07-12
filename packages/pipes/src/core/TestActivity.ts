@@ -1,14 +1,15 @@
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
-import { OnTaskInit, Src, CtxType, InjectAcitityToken, Condition, IActivity, isActivityType, ExpressionType } from '@taskfr/core';
+import { Src, CtxType, Condition, IActivity, ExpressionType } from '@taskfr/core';
 import { isUndefined, Singleton } from '@ts-ioc/core';
 import { TransformType, TransformConfig } from './pipeTypes';
 import { InjectPipeAcitityBuilderToken, PipeActivityBuilder } from './PipeActivityBuilder';
-import { SourceConfigure, PipeSourceActivity } from './PipeSource';
+import { SourceConfigure, SourceActivity } from './SourceActivity';
+import { InjectPipeActivityToken } from './IPipeActivity';
 
 
-export const TestToken = new InjectAcitityToken<PipeTestActivity>('test');
-export const TestAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<PipeTestActivityBuilder>('source')
+export const TestAcitvityToken = new InjectPipeActivityToken<TestActivity>('test');
+export const TestAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<TestActivityBuilder>('test')
 
 
 export interface TestConfigure extends SourceConfigure {
@@ -40,8 +41,8 @@ export interface TestConfigure extends SourceConfigure {
 
 
 
-@PipeTask(TestToken)
-export class PipeTestActivity extends PipeSourceActivity implements OnTaskInit {
+@PipeTask(TestAcitvityToken, TestAcitvityBuilderToken)
+export class TestActivity extends SourceActivity {
 
     /**
      * task framework
@@ -60,21 +61,6 @@ export class PipeTestActivity extends PipeSourceActivity implements OnTaskInit {
     options: any;
 
     test: Condition;
-
-    onTaskInit(config: TestConfigure) {
-
-        this.options = this.context.to(config.options);
-        this.framework = this.context.to(config.framework);
-        if (!this.framework) {
-            this.framework = () => {
-                let mocha = require('gulp-mocha');
-                return mocha(this.options);
-            };
-        }
-
-        this.pipes = this.pipes || [];
-        this.pipes.push(this.framework);
-    }
 
     async run(data?: any): Promise<ITransform> {
         let test = await this.context.exec(this, this.test, data);
@@ -115,32 +101,23 @@ export class PipeTestActivity extends PipeSourceActivity implements OnTaskInit {
 
 
 @Singleton(TestAcitvityBuilderToken)
-export class PipeTestActivityBuilder extends PipeActivityBuilder {
+export class TestActivityBuilder extends PipeActivityBuilder {
 
     async buildStrategy<T>(activity: IActivity<T>, config: TestConfigure): Promise<IActivity<T>> {
         await super.buildStrategy(activity, config);
-        if (activity instanceof PipeTestActivity) {
-
-            if (isActivityType(config.test)) {
-                activity.src = await this.build(config.test, activity.id);
-            } else {
-                activity.src = config.test;
-            }
-
+        if (activity instanceof TestActivity) {
+            activity.src = await this.toExpression(config.test, activity);
             if (config.srcOptions) {
-                if (isActivityType(config.srcOptions)) {
-                    activity.srcOptions = await this.build(config.srcOptions, activity.id);
-                } else {
-                    activity.srcOptions = config.srcOptions;
-                }
+                activity.srcOptions = await this.toExpression(config.srcOptions, activity);
             }
 
             if (config.framework) {
-                if (isActivityType(config.framework)) {
-                    activity.framework = await this.build(config.framework, activity.id);
-                } else {
-                    activity.framework = config.framework;
-                }
+                activity.framework = await this.toExpression(config.framework, activity);
+            } else {
+                activity.framework = () => {
+                    let mocha = require('gulp-mocha');
+                    return mocha(activity.options);
+                };
             }
         }
         return activity;

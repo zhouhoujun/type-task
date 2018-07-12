@@ -1,4 +1,4 @@
-import { Task, InjectAcitityToken, Activity, Expression, IConfigure, ActivityResult, ActivityType, ActivityBuilder, IActivity, isActivityType, InjectAcitityBuilderToken } from '../core';
+import { Task, InjectAcitityToken, Activity, Expression, IConfigure, ActivityResultType, ActivityBuilder, IActivity, isActivityType, InjectAcitityBuilderToken } from '../core';
 import { Singleton } from '@ts-ioc/core';
 
 /**
@@ -24,7 +24,7 @@ export interface ThrowConfigure extends IConfigure {
      * @type {CtxType<number>}
      * @memberof ThrowConfigure
      */
-    exception?: Expression<Error> | ActivityType<Error>;
+    exception?: Expression<Error> | ActivityResultType<Error>;
 }
 /**
  * throw control activity.
@@ -56,11 +56,7 @@ export class ThrowActivityBuilder extends ActivityBuilder {
     async buildStrategy<T>(activity: IActivity<T>, config: ThrowConfigure): Promise<IActivity<T>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof ThrowActivity) {
-            if (isActivityType(config.exception)) {
-                activity.exception = await this.build(config.exception, activity.id);
-            } else {
-                activity.exception = config.exception;
-            }
+            activity.exception = await this.toExpression(config.exception, activity);
         }
 
         return activity;

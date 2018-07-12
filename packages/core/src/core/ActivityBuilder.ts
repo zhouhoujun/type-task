@@ -1,6 +1,6 @@
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, isToken, isMetadataObject, Token, ModuleBuilder, Registration, isClass, getTypeMetadata, lang } from '@ts-ioc/core';
-import { IConfigure, ActivityType, isActivityType } from './IConfigure';
+import { IConfigure, ActivityResultType, isActivityType } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Task } from './decorators';
 import { TaskMetadata } from './metadatas';
@@ -21,7 +21,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         super(container)
     }
 
-    async build<T>(task: ActivityType<T>, uuid: string): Promise<IActivity<T>> {
+    async build<T>(task: ActivityResultType<T>, uuid: string): Promise<IActivity<T>> {
         let taskInst = await super.build(task);
 
         if (!taskInst || !(taskInst instanceof Activity)) {

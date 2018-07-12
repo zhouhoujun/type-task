@@ -1,5 +1,5 @@
 import { Token, Inject, IContainer, Type, ContainerToken, OnInit, isToken } from '@ts-ioc/core';
-import { IConfigure, ActivityType } from './IConfigure';
+import { IConfigure, ActivityResultType } from './IConfigure';
 import { IActivity } from './IActivity';
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
@@ -20,7 +20,7 @@ import { UUIDToken, RandomUUIDFactory } from './uuid';
 @Runner(TaskRunnerToken)
 export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
 
-    get task(): ActivityType<T> {
+    get task(): ActivityResultType<T> {
         return this.work;
     }
 
@@ -47,14 +47,14 @@ export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
 
     /**
      * Creates an instance of TaskRunner.
-     * @param {ActivityType<T>} work
+     * @param {ActivityResultType<T>} work
      * @param {string} [uuid]
      * @param {IActivity<T>} [instance]
      * @param {IActivityBuilder} [taskBuilder]
      * @memberof TaskRunner
      */
     constructor(
-        private work: ActivityType<T>,
+        private work: ActivityResultType<T>,
         public uuid?: string,
         private instance?: IActivity<T>,
         private taskBuilder?: IActivityBuilder) {

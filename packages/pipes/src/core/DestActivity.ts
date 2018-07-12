@@ -2,18 +2,18 @@ import { dest, DestOptions } from 'vinyl-fs';
 import { PipeTask } from '../decorators';
 import { ITransform } from './ITransform';
 import { TransformType } from './pipeTypes';
-import { Expression, IActivity, ExpressionType, isActivityType } from '@taskfr/core';
-import { Registration, Singleton } from '@ts-ioc/core';
-import { PipeActivityToken, IPipeActivity } from './IPipeActivity';
+import { Expression, IActivity, ExpressionType } from '@taskfr/core';
+import { Singleton } from '@ts-ioc/core';
+import { InjectPipeActivityToken } from './IPipeActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
 import { InjectPipeAcitityBuilderToken, PipeActivityBuilder } from './PipeActivityBuilder';
 /**
- * dest task token.
+ * dest activity token.
  */
-export const DestToken = new Registration<IPipeActivity>(PipeActivityToken, 'dest');
+export const DestAcitvityToken = new InjectPipeActivityToken('dest');
 
-export const DestAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<PipeDestActivityBuilder>('dest')
+export const DestAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<DestActivityBuilder>('dest')
 
 /**
  * dest pipe configure.
@@ -51,8 +51,8 @@ export interface DestConfigure extends IPipeConfigure {
  * @implements {IPipeDest}
  * @implements {OnTaskInit}
  */
-@PipeTask(DestToken, DestAcitvityBuilderToken)
-export class PipeDestActivity extends PipeActivity {
+@PipeTask(DestAcitvityToken, DestAcitvityBuilderToken)
+export class DestActivity extends PipeActivity {
 
     /**
      * source
@@ -114,24 +114,16 @@ export class PipeDestActivity extends PipeActivity {
 
 
 @Singleton(DestAcitvityBuilderToken)
-export class PipeDestActivityBuilder extends PipeActivityBuilder {
+export class DestActivityBuilder extends PipeActivityBuilder {
 
     async buildStrategy<T>(activity: IActivity<T>, config: DestConfigure): Promise<IActivity<T>> {
         await super.buildStrategy(activity, config);
-        if (activity instanceof PipeDestActivity) {
+        if (activity instanceof DestActivity) {
 
-            if (isActivityType(config.dest)) {
-                activity.dest = await this.build(config.dest, activity.id);
-            } else {
-                activity.dest = config.dest;
-            }
+            activity.dest = await this.toExpression(config.dest, activity);
 
             if (config.destOptions) {
-                if (isActivityType(config.destOptions)) {
-                    activity.destOptions = await this.build(config.destOptions, activity.id);
-                } else {
-                    activity.destOptions = config.destOptions;
-                }
+                activity.destOptions = await this.toExpression(config.destOptions, activity);
             }
         }
         return activity;

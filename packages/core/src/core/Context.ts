@@ -1,7 +1,7 @@
-import { isFunction, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata, Token, isToken, ObjectMap, isPromise, isUndefined } from '@ts-ioc/core';
+import { isFunction, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata, Token, isToken, ObjectMap, isPromise, isUndefined, isClass } from '@ts-ioc/core';
 import { IContext, ContextToken, CtxType, Condition, ActivityResult, Expression } from './IContext';
 import { ITaskContainer, TaskContainerToken } from '../ITaskContainer';
-import { IConfigure, ActivityType } from './IConfigure';
+import { IConfigure, ActivityResultType } from './IConfigure';
 import { IActivity } from './IActivity';
 import { Task } from './decorators';
 import { IActivityBuilder } from './IActivityBuilder';
@@ -40,7 +40,7 @@ export class Context implements IContext {
         return this.getTaskContiner().getRootPath();
     }
 
-    getRunner(task: ActivityType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner<any> {
+    getRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner<any> {
         let builderInst: IActivityBuilder;
         if (isToken(builder)) {
             builderInst = this.container.resolve(builder);
@@ -56,7 +56,14 @@ export class Context implements IContext {
     }
 
     to<T>(target: CtxType<T>, config?: IConfigure): T {
-        return isFunction(target) ? target(this, config) : target;
+        if (isFunction(target)) {
+            if (isClass(target)) {
+                return target as any;
+            }
+            return target(this, config);
+        } else {
+            return target;
+        }
     }
 
     /**

@@ -1,7 +1,6 @@
 import {
     IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
-    ActivityBuilder, IConfigure, Activity,
-    isActivityType, Expression, ExpressionType
+    ActivityBuilder, IConfigure, Activity, Expression, ExpressionType
 } from '../core';
 import { Defer, Singleton } from '@ts-ioc/core';
 
@@ -68,11 +67,7 @@ export class DelayActivityBuilder extends ActivityBuilder {
     async buildStrategy<T>(activity: IActivity<T>, config: DelayConfigure): Promise<IActivity<T>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof DelayActivity) {
-            if (isActivityType(config.delay)) {
-                activity.delay = await this.build(config.delay, activity.id);
-            } else {
-                activity.delay = config.delay;
-            }
+            activity.delay = await this.toExpression(config.delay, activity);
         }
 
         return activity;

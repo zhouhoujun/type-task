@@ -3,9 +3,14 @@ import { Token, Type, AppConfiguration, isToken, isMetadataObject } from '@ts-io
 import { IActivityBuilder } from './IActivityBuilder';
 
 /**
- * task type
+ * ActivityResult type
  */
-export type ActivityType<T> = Token<IActivity<T>> | Type<any> | IActivityConfigure<IActivity<T>>;
+export type ActivityResultType<T> = Token<IActivity<T>> | IActivityConfigure<IActivity<T>>;
+
+/**
+ * activity type.
+ */
+export type ActivityType<T extends IActivity<any>> = Token<T> | Type<any> | IActivityConfigure<T>;
 
 /**
  * check target is activity type or not.
@@ -14,7 +19,7 @@ export type ActivityType<T> = Token<IActivity<T>> | Type<any> | IActivityConfigu
  * @param {*} target
  * @returns {target is ActivityType<any>}
  */
-export function isActivityType(target: any): target is ActivityType<any> {
+export function isActivityType(target: any): target is ActivityResultType<any> {
     if (!target) {
         return false;
     }

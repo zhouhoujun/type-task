@@ -1,6 +1,6 @@
 import { InjectToken, IModuleBuilder, Registration } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
-import { IConfigure, ActivityType } from './IConfigure';
+import { IConfigure, ActivityResultType } from './IConfigure';
 
 
 /**
@@ -34,12 +34,12 @@ export interface IActivityBuilder extends IModuleBuilder<IActivity<any>> {
      * build
      *
      * @template T
-     * @param {ActivityType<T>} task
+     * @param {ActivityResultType<T>} task
      * @param {string} uuid
      * @returns {Promise<IActivity<T>>}
      * @memberof ITaskBuilder
      */
-    build<T>(task: ActivityType<T>, uuid: string): Promise<IActivity<T>>;
+    build<T>(task: ActivityResultType<T>, uuid: string): Promise<IActivity<T>>;
     /**
      * bundle task config.
      *

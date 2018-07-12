@@ -1,5 +1,5 @@
-import { IActivity, Task, InjectAcitityToken, IConfigure, Activity, InjectAcitityBuilderToken, ActivityBuilder, isActivityType, ActivityType, Expression, KeyValue, ExpressionType } from '../core';
-import { MapSet, Express, isUndefined, Singleton } from '@ts-ioc/core';
+import { IActivity, Task, InjectAcitityToken, IConfigure, Activity, InjectAcitityBuilderToken, ActivityBuilder, ActivityResultType, Expression, KeyValue, ExpressionType } from '../core';
+import { MapSet, isUndefined, Singleton } from '@ts-ioc/core';
 
 /**
  * Switch activity token.
@@ -30,18 +30,18 @@ export interface SwitchConfigure extends IConfigure {
     /**
      * if body
      *
-     * @type {KeyValue<any, ActivityType<any>>[]}
+     * @type {KeyValue<any, ActivityResultType<any>>[]}
      * @memberof SwitchConfigure
      */
-    cases: KeyValue<any, ActivityType<any>>[];
+    cases: KeyValue<any, ActivityResultType<any>>[];
 
     /**
      * default body
      *
-     * @type {ActivityType<any>}
+     * @type {ActivityResultType<any>}
      * @memberof SwitchConfigure
      */
-    defaultBody?: ActivityType<any>;
+    defaultBody?: ActivityResultType<any>;
 
 }
 /**
@@ -94,12 +94,7 @@ export class SwitchActivityBuilder extends ActivityBuilder {
     async buildStrategy<T>(activity: IActivity<T>, config: SwitchConfigure): Promise<IActivity<T>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof SwitchActivity) {
-            if (isActivityType(config.expression)) {
-                activity.expression = await this.build<boolean>(config.expression, activity.id);
-            } else {
-                activity.expression = config.expression;
-            }
-
+            activity.expression = await this.toExpression(config.expression, activity);
             if (config.cases && config.cases.length) {
                 await Promise.all(config.cases.map(async (cs) => {
                     let val = await this.build(cs.value, activity.id);

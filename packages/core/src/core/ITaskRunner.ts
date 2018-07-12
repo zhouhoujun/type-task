@@ -1,4 +1,4 @@
-import { ActivityType } from './IConfigure';
+import { ActivityResultType } from './IConfigure';
 import { InjectToken, Registration } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
 import { IActivityBuilder } from './IActivityBuilder';
@@ -65,10 +65,10 @@ export interface ITaskRunner<T> {
     /**
      * runner task
      *
-     * @type {ActivityType<T>}
+     * @type {ActivityResultType<T>}
      * @memberof ITaskRunner
      */
-    readonly task: ActivityType<T>;
+    readonly task: ActivityResultType<T>;
 
     /**
      * task instance

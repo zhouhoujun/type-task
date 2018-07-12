@@ -1,6 +1,6 @@
 import {
     Src, Activity, InjectAcitityToken, Task, IConfigure,
-    Expression, ActivityType, InjectAcitityBuilderToken, ActivityBuilder,
+    Expression, InjectAcitityBuilderToken, ActivityBuilder,
     IActivity, isActivityType, ExpressionType
 } from '@taskfr/core';
 import { Singleton } from '@ts-ioc/core';
@@ -10,7 +10,7 @@ const del = require('del');
 /**
  * clean task token.
  */
-export const CleanToken = new InjectAcitityToken<PipeClean>('clean');
+export const CleanToken = new InjectAcitityToken<CleanActivity>('clean');
 /**
  * clean activity builder token
  */
@@ -38,7 +38,7 @@ export interface CleanConfigure extends IConfigure {
  * clean task.
  */
 @Task(CleanToken, CleanActivityBuilderToken)
-export class PipeClean extends Activity<any> {
+export class CleanActivity extends Activity<any> {
     clean: Expression<Src>;
 
     async run(data?: any): Promise<any> {
@@ -52,12 +52,8 @@ export class CleanActivityBuilder extends ActivityBuilder {
 
     async buildStrategy<T>(activity: IActivity<T>, config: CleanConfigure): Promise<IActivity<T>> {
         await super.buildStrategy(activity, config);
-        if (activity instanceof PipeClean) {
-            if (isActivityType(config.clean)) {
-                activity.clean = await this.build(config.clean, activity.id);
-            } else {
-                activity.clean = config.clean;
-            }
+        if (activity instanceof CleanActivity) {
+            activity.clean = await this.toExpression(config.clean, activity);
         }
 
         return activity;

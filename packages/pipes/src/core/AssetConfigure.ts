@@ -1,11 +1,16 @@
-import { CtxType, Src } from '@taskfr/core';
+import { Src, ExpressionType, ActivityResultType, ActivityType } from '@taskfr/core';
 import { ObjectMap } from '@ts-ioc/core';
+import { DestConfigure, DestActivity } from './DestActivity';
+import { IPipeConfigure } from './IPipeConfigure';
+import { SourceActivity } from './SourceActivity';
+import { WatchActivity } from './WatchActivity';
+
 
 
 /**
  * dest type.
  */
-export type DestType = string | IDestConfigure;
+export type DestType = string | DestConfigure;
 
 /**
  *
@@ -15,15 +20,22 @@ export type DestType = string | IDestConfigure;
  * @extends {SourceConfigure}
  * @extends {IDestConfigure}
  */
-export interface AssetConfigure extends SourceConfigure {
+export interface AssetConfigure extends IPipeConfigure {
 
+    /**
+     * src config.
+     *
+     * @type {(ExpressionType<Src> | ActivityType<SourceActivity>)}
+     * @memberof AssetConfigure
+     */
+    src: ExpressionType<Src> | ActivityType<SourceActivity>;
     /**
      * watch source change to run pipe task.
      *
      * @type {CtxType<Src | boolean>}
      * @memberof IPipeConfigure
      */
-    watch?: CtxType<Src | boolean>;
+    watch?: ExpressionType<Src | boolean> | ActivityType<WatchActivity>;
 
     /**
      * asset pipe dest.
@@ -31,7 +43,7 @@ export interface AssetConfigure extends SourceConfigure {
      * @type {CtxType<DestType | DestType[]>}
      * @memberof AssetConfigure
      */
-    dest?: CtxType<DestType | DestType[]>;
+    dest?: ExpressionType<string> | ActivityType<DestActivity>;
 
     /**
      * uglify asset or not.
@@ -39,7 +51,7 @@ export interface AssetConfigure extends SourceConfigure {
      * @type {(CtxType<boolean | ObjectMap<any>>)}
      * @memberof AssetConfigure
      */
-    uglify?: CtxType<boolean | ObjectMap<any>>;
+    uglify?: ExpressionType<boolean | ObjectMap<any>>;
 
     /**
      * create source map or not. default create source map at  `./sourcemaps` for js asset and ts asset.
@@ -47,6 +59,6 @@ export interface AssetConfigure extends SourceConfigure {
      * @type {(CtxType<boolean | string>)}
      * @memberof AssetConfigure
      */
-    sourcemaps?: CtxType<boolean | string>;
+    sourcemaps?: ExpressionType<boolean | string>;
 
 }

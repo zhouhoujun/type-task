@@ -1,4 +1,4 @@
-import { IActivity, Task, InjectAcitityToken, Condition, InjectAcitityBuilderToken, IConfigure, ActivityType, ActivityBuilder } from '../core';
+import { IActivity, Task, InjectAcitityToken, Condition, InjectAcitityBuilderToken, IConfigure, ActivityResultType, ActivityBuilder } from '../core';
 import { Activity } from '../core/Activity';
 import { Singleton } from '@ts-ioc/core';
 
@@ -25,23 +25,23 @@ export interface TryCatchConfigure extends IConfigure {
      * @type {CtxType<number>}
      * @memberof TryCatchConfigure
      */
-    try: ActivityType<any>;
+    try: ActivityResultType<any>;
 
     /**
      * catchs activities.
      *
-     * @type {ActivityType<any>[]}
+     * @type {ActivityResultType<any>[]}
      * @memberof TryCatchConfigure
      */
-    catchs: ActivityType<any>[];
+    catchs: ActivityResultType<any>[];
 
     /**
      * finally activity.
      *
-     * @type {ActivityType<any>}
+     * @type {ActivityResultType<any>}
      * @memberof TryCatchConfigure
      */
-    finally?: ActivityType<any>;
+    finally?: ActivityResultType<any>;
 }
 /**
  * while control activity.

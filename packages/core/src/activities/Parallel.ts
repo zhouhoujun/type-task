@@ -1,4 +1,4 @@
-import { Task, IActivity, OnTaskInit, IConfigure, InjectAcitityToken, InjectAcitityBuilderToken, ActivityBuilder, Activity, ActivityType } from '../core';
+import { Task, IActivity, OnTaskInit, IConfigure, InjectAcitityToken, InjectAcitityBuilderToken, ActivityBuilder, Activity, ActivityResultType } from '../core';
 import { Singleton, Token, isToken } from '@ts-ioc/core';
 
 
@@ -28,7 +28,7 @@ export interface ParallelConfigure extends IConfigure {
      * @type {CtxType<number>}
      * @memberof ParallelConfigure
      */
-    parallel: ActivityType<any>[];
+    parallel: ActivityResultType<any>[];
 }
 
 
