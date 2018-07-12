@@ -5,6 +5,7 @@ import { DestActivity } from './DestActivity';
 import { isArray } from '@ts-ioc/core';
 import { ITransform } from './ITransform';
 import { IPipeActivity } from './IPipeActivity';
+import { WatchActivity } from './WatchActivity';
 
 export interface IAssetActivity extends IPipeActivity {
     /**
@@ -51,13 +52,19 @@ export class AssetActivity extends SequenceActivity implements IAssetActivity {
      */
     dest: DestActivity | DestActivity[];
 
+    /**
+     * watch activity.
+     *
+     * @type {WatchActivity}
+     * @memberof AssetActivity
+     */
+    watch: WatchActivity;
 
     protected begin(data?: any): Promise<ITransform> {
         return this.src.run(data);
     }
 
     protected async end(data?: ITransform): Promise<ITransform> {
-
         if (isArray(this.dest)) {
             if (this.dest.length === 1) {
                 await this.dest[0].run(data);
@@ -69,8 +76,6 @@ export class AssetActivity extends SequenceActivity implements IAssetActivity {
         } else if (this.dest) {
             await this.dest.run(data);
         }
-
         return data;
     }
-
 }

@@ -10,7 +10,7 @@ export type ActivityResultType<T> = Token<IActivity<T>> | IActivityConfigure<IAc
 /**
  * activity type.
  */
-export type ActivityType<T extends IActivity<any>> = Token<T> | Type<any> | IActivityConfigure<T>;
+export type ActivityType<T extends IActivity<any>> = Token<T> | IActivityConfigure<T>; // | Type<any>
 
 /**
  * check target is activity type or not.

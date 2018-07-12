@@ -1,6 +1,6 @@
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
-import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, isToken, isMetadataObject, Token, ModuleBuilder, Registration, isClass, getTypeMetadata, lang } from '@ts-ioc/core';
-import { IConfigure, ActivityResultType, isActivityType } from './IConfigure';
+import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, Token, ModuleBuilder, Registration, isClass, getTypeMetadata, lang, Express, isToken } from '@ts-ioc/core';
+import { IConfigure, ActivityResultType, isActivityType, ActivityType } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Task } from './decorators';
 import { TaskMetadata } from './metadatas';
@@ -64,12 +64,29 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         return builder || this;
     }
 
-    protected async toExpression<T>(exptype: ExpressionType<T>, activity: IActivity<any>): Promise<Expression<T>> {
+    protected async toExpression<T>(exptype: ExpressionType<T>, target: IActivity<any>): Promise<Expression<T>> {
         if (isActivityType(exptype)) {
-            return await this.build(exptype, activity.id);
+            return await this.build(exptype, target.id);
         } else {
             return exptype;
         }
+    }
+
+    protected async toActivity<Tr, Ta extends IActivity<any>>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity<any>, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, IConfigure>): Promise<Ta> {
+        let result;
+        if (isActivityType(exptype)) {
+            result = await this.build(exptype, target.id);
+        } else {
+            result = exptype;
+        }
+
+        if (isRightActivity(result)) {
+            return result;
+        }
+
+        let rt = await target.context.exec(target, result);
+        result = await this.build(toConfig(rt), target.id);
+        return result;
     }
 
     protected getBuilderViaConfig(builder: Token<IActivityBuilder> | IActivityBuilder): IActivityBuilder {
