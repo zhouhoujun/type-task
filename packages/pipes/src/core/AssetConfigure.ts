@@ -1,4 +1,3 @@
-import { SourceConfigure, IDestConfigure, ICleanConfigure } from '../core';
 import { CtxType, Src } from '@taskfr/core';
 import { ObjectMap } from '@ts-ioc/core';
 
@@ -12,11 +11,11 @@ export type DestType = string | IDestConfigure;
  *
  *
  * @export
- * @interface IAssetConfigure
+ * @interface AssetConfigure
  * @extends {SourceConfigure}
  * @extends {IDestConfigure}
  */
-export interface IAssetConfigure extends SourceConfigure {
+export interface AssetConfigure extends SourceConfigure {
 
     /**
      * watch source change to run pipe task.
@@ -30,7 +29,7 @@ export interface IAssetConfigure extends SourceConfigure {
      * asset pipe dest.
      *
      * @type {CtxType<DestType | DestType[]>}
-     * @memberof IAssetConfigure
+     * @memberof AssetConfigure
      */
     dest?: CtxType<DestType | DestType[]>;
 
@@ -38,7 +37,7 @@ export interface IAssetConfigure extends SourceConfigure {
      * uglify asset or not.
      *
      * @type {(CtxType<boolean | ObjectMap<any>>)}
-     * @memberof IAssetConfigure
+     * @memberof AssetConfigure
      */
     uglify?: CtxType<boolean | ObjectMap<any>>;
 
@@ -46,7 +45,7 @@ export interface IAssetConfigure extends SourceConfigure {
      * create source map or not. default create source map at  `./sourcemaps` for js asset and ts asset.
      *
      * @type {(CtxType<boolean | string>)}
-     * @memberof IAssetConfigure
+     * @memberof AssetConfigure
      */
     sourcemaps?: CtxType<boolean | string>;
 

@@ -1,10 +1,10 @@
 import { IActivity, IConfigure } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean, isToken } from '@ts-ioc/core';
-import { PipeTestActivity, PipeClean, ICleanConfigure, TestToken, CleanToken, InjectPipeAcitityBuilderToken } from '../core';
+import { PipeTestActivity, PipeClean, CleanConfigure, TestToken, CleanToken, InjectPipeAcitityBuilderToken } from '../core';
 import { IPackageConfigure } from './IPackageConfigure';
 import { DestTaskBuilder } from './DestTaskBuilder';
 import { AssetToken } from './IAsset';
-import { IAssetConfigure } from './IAssetConfigure';
+import { AssetConfigure } from '../core/AssetConfigure';
 
 export const PipeAcitityBuilderToken = new InjectPipeAcitityBuilderToken<PackageBuilder>('package');
 
@@ -44,7 +44,7 @@ export class PackageBuilder extends DestTaskBuilder {
 
         if (packCfg.clean && !(taskInst instanceof PipeClean)) {
             let val = packCfg.clean;
-            let cleanCfg: ICleanConfigure
+            let cleanCfg: CleanConfigure
             if (isArray(val) || isString(val)) {
                 cleanCfg = { clean: val };
             } else if (isToken(val)) {
@@ -61,7 +61,7 @@ export class PackageBuilder extends DestTaskBuilder {
         if (packCfg.assets) {
             let srcRoot = taskInst.context.to(packCfg.src);
             lang.forIn(packCfg.assets, (val, key: string) => {
-                let assCfg: IAssetConfigure;
+                let assCfg: AssetConfigure;
                 if (isArray(val) || isString(val)) {
                     assCfg = { src: val };
                 } else if (isToken(val)) {

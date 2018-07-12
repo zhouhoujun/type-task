@@ -1,30 +1,65 @@
-import { PipeTask } from '../decorators';
-import { OnTaskInit, Src } from '@taskfr/core';
-import { ICleanConfigure } from './IPipeConfigure';
-import { Registration } from '@ts-ioc/core';
-import { PipeActivityToken, IPipeActivity } from './IPipeActivity';
-import { PipeActivity } from './PipeActivity';
+import {
+    Src, Activity, InjectAcitityToken, Task, IConfigure,
+    Expression, ActivityType, InjectAcitityBuilderToken, ActivityBuilder,
+    IActivity, isActivityType, ExpressionType
+} from '@taskfr/core';
+import { Singleton } from '@ts-ioc/core';
 const del = require('del');
 
 
 /**
  * clean task token.
  */
-export const CleanToken = new Registration<IPipeActivity>(PipeActivityToken, 'clean');
+export const CleanToken = new InjectAcitityToken<PipeClean>('clean');
+/**
+ * clean activity builder token
+ */
+export const CleanActivityBuilderToken = new InjectAcitityBuilderToken<CleanActivityBuilder>('clean');
 
+/**
+ * clean configure
+ *
+ * @export
+ * @interface ICleanConfigure
+ * @extends {IConfigure}
+ */
+export interface CleanConfigure extends IConfigure {
+    /**
+     * clean match.
+     *
+     * @type {ExpressionType<Src>}
+     * @memberof ICleanConfigure
+     */
+    clean?: ExpressionType<Src>;
+}
 
 
 /**
  * clean task.
  */
-@PipeTask(CleanToken)
-export class PipeClean extends PipeActivity implements OnTaskInit {
-    clean: Src;
-    onTaskInit(config: ICleanConfigure) {
-        this.clean = this.context.to(config.clean);
-    }
+@Task(CleanToken, CleanActivityBuilderToken)
+export class PipeClean extends Activity<any> {
+    clean: Expression<Src>;
 
-    run(data?: any): Promise<any> {
-        return del(this.clean);
+    async run(data?: any): Promise<any> {
+        let clean = await this.context.exec(this, this.clean, data);
+        return await del(clean);
+    }
+}
+
+@Singleton(CleanActivityBuilderToken)
+export class CleanActivityBuilder extends ActivityBuilder {
+
+    async buildStrategy<T>(activity: IActivity<T>, config: CleanConfigure): Promise<IActivity<T>> {
+        await super.buildStrategy(activity, config);
+        if (activity instanceof PipeClean) {
+            if (isActivityType(config.clean)) {
+                activity.clean = await this.build(config.clean, activity.id);
+            } else {
+                activity.clean = config.clean;
+            }
+        }
+
+        return activity;
     }
 }

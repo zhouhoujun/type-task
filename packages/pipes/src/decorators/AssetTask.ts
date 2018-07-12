@@ -1,16 +1,16 @@
 import { ITaskDecorator, createTaskDecorator } from '@taskfr/core';
-import { IAssetConfigure } from '../assets/IAssetConfigure';
-import { AssetToken } from '../assets/IAsset';
-import { AssetTaskBuilderToken } from '../core/IPipeActivity';
+import { AssetConfigure } from '../core/AssetConfigure';
+import { PipeActivityToken } from '../core/IPipeActivity';
+import { AssetTaskBuilderToken } from '../core/AssetTaskBuilder';
 
 /**
  * asset task metadata.
  *
  * @export
  * @interface AssetTaskMetadata
- * @extends {IAssetConfigure}
+ * @extends {AssetConfigure}
  */
-export interface AssetTaskMetadata extends IAssetConfigure {
+export interface AssetTaskMetadata extends AssetConfigure {
 
 }
 
@@ -19,4 +19,4 @@ export interface AssetTaskMetadata extends IAssetConfigure {
  *
  * @AssetTask
  */
-export const AssetTask: ITaskDecorator<AssetTaskMetadata> = createTaskDecorator<AssetTaskMetadata>('AssetTask', AssetTaskBuilderToken, AssetToken);
+export const AssetTask: ITaskDecorator<AssetTaskMetadata> = createTaskDecorator<AssetTaskMetadata>('AssetTask', AssetTaskBuilderToken, PipeActivityToken);

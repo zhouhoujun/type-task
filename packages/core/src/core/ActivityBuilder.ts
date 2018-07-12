@@ -1,10 +1,11 @@
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, isToken, isMetadataObject, Token, ModuleBuilder, Registration, isClass, getTypeMetadata, lang } from '@ts-ioc/core';
-import { IConfigure, ActivityType } from './IConfigure';
+import { IConfigure, ActivityType, isActivityType } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Task } from './decorators';
 import { TaskMetadata } from './metadatas';
 import { Activity } from '../activities';
+import { ExpressionType, Expression } from './IContext';
 
 /**
  * builder.
@@ -61,6 +62,14 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
             builder = this.getBuilderViaTask(cfg.task);
         }
         return builder || this;
+    }
+
+    protected async toExpression<T>(exptype: ExpressionType<T>, activity: IActivity<any>): Promise<Expression<T>> {
+        if (isActivityType(exptype)) {
+            return await this.build(exptype, activity.id);
+        } else {
+            return exptype;
+        }
     }
 
     protected getBuilderViaConfig(builder: Token<IActivityBuilder> | IActivityBuilder): IActivityBuilder {

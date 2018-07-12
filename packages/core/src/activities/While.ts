@@ -1,4 +1,7 @@
-import { IActivity, Activity, Task, InjectAcitityToken, Condition, IConfigure, ActivityType, ActivityBuilder, InjectAcitityBuilderToken, isActivityType } from '../core';
+import {
+    IActivity, Activity, Task, InjectAcitityToken, Condition, IConfigure,
+    ActivityType, ActivityBuilder, InjectAcitityBuilderToken, isActivityType, ExpressionType
+} from '../core';
 import { Singleton } from '@ts-ioc/core';
 
 
@@ -23,10 +26,10 @@ export interface WhileConfigure extends IConfigure {
     /**
      * while condition
      *
-     * @type {(Condition | ActivityType<any>)}
+     * @type {(ExpressionType<boolean>)}
      * @memberof WhileConfigure
      */
-    while: Condition | ActivityType<any>;
+    while: ExpressionType<boolean>;
 
     /**
      * while body.

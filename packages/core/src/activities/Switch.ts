@@ -1,4 +1,4 @@
-import { IActivity, Task, InjectAcitityToken, IConfigure, Activity, InjectAcitityBuilderToken, ActivityBuilder, isActivityType, ActivityType, Expression, KeyValue } from '../core';
+import { IActivity, Task, InjectAcitityToken, IConfigure, Activity, InjectAcitityBuilderToken, ActivityBuilder, isActivityType, ActivityType, Expression, KeyValue, ExpressionType } from '../core';
 import { MapSet, Express, isUndefined, Singleton } from '@ts-ioc/core';
 
 /**
@@ -22,10 +22,10 @@ export interface SwitchConfigure extends IConfigure {
     /**
      * while condition
      *
-     * @type {(Condition | ActivityType<any>)}
+     * @type {ExpressionType<any>}
      * @memberof SwitchConfigure
      */
-    expression: Expression<any> | ActivityType<any>;
+    expression: ExpressionType<any>;
 
     /**
      * if body
@@ -56,14 +56,14 @@ export class SwitchActivity extends Activity<any> {
     /**
      * Switch condition.
      *
-     * @type {Expression}
+     * @type {Expression<any>}
      * @memberof SwitchActivity
      */
     expression: Expression<any>;
     /**
      * Switch body.
      *
-     * @type {IActivity}
+     * @type {MapSet<any, IActivity<any>>}
      * @memberof SwitchActivity
      */
     cases: MapSet<any, IActivity<any>> = new MapSet();
@@ -71,7 +71,7 @@ export class SwitchActivity extends Activity<any> {
     /**
      * default activity.
      *
-     * @type {IActivity}
+     * @type {IActivity<any>}
      * @memberof SwitchActivity
      */
     defaultBody?: IActivity<any>;

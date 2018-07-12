@@ -1,7 +1,7 @@
-import { ActivityBuilder, IActivity, IConfigure, IContext, InjectAcitityBuilderToken, IActivityBuilder } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, isClass, isMetadataObject, Token, Registration } from '@ts-ioc/core';
+import { ActivityBuilder, IActivity, IConfigure, IActivityBuilder, isActivityType, TaskRunner } from '@taskfr/core';
+import { Inject, ContainerToken, IContainer, Singleton, isMetadataObject, Token, Registration, isToken, isPromise } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
-import { TransformMergerExpress, TransMergerConfig, TransformConfig, TransformMerger, TransformType, TransformExpress } from './pipeTypes';
+import { TransformConfig, TransformType, TransformExpress } from './pipeTypes';
 import { PipeActivityToken, IPipeActivity, InjectAssetActivityToken } from './IPipeActivity';
 import { PipeActivity } from './PipeActivity';
 
@@ -42,10 +42,11 @@ export class PipeActivityBuilder extends ActivityBuilder {
         await super.buildStrategy(activity, config);
         if (activity instanceof PipeActivity) {
             if (config.pipes) {
-                activity.pipes = await this.translatePipes(activity.context, config.pipes);
+                activity.pipes = await this.translate(activity, config.pipes);
             }
+
             if (config.merger) {
-                activity.merger = await this.translateMerger(activity.context, config.merger);
+                activity.merger = await this.translateConfig(activity, config.merger);
             }
         }
         return activity;
@@ -65,48 +66,28 @@ export class PipeActivityBuilder extends ActivityBuilder {
         return super.traslateStrToken(token);
     }
 
-    protected translatePipes(context: IContext, pipes: TransformExpress): TransformType[] {
-        let trsfs: TransformConfig[] = context.to(pipes);
+    protected translate(activity: PipeActivity, pipes: TransformExpress): Promise<TransformType[]> {
+        let trsfs: TransformConfig[] = activity.context.to(pipes);
         if (!trsfs || trsfs.length < 1) {
-            return [];
+            return Promise.resolve([]);
         }
-        return trsfs.map(p => {
-            if (isClass(p) && context.isTask(p)) {
-                return context.getRunner(p);
-            }
-            if (isMetadataObject(p)) {
-                let cfg = p as IConfigure;
-                if (cfg.task || cfg.bootstrap) {
-                    return context.getRunner(cfg);
-                } else {
-                    throw new Error('pipe configure error');
-                }
-            }
-            return p as TransformType;
-        });
+        return Promise.all(trsfs.map(p => this.translateConfig(activity, p)));
     }
 
-    protected translateMerger(context: IContext, mergerExp: TransformMergerExpress): TransformMerger {
-        let mt: TransMergerConfig = context.to(mergerExp);
-        if (!mt) {
-            return null;
-        }
-        let merger: TransformMerger;
-
-        if (isClass(mt) && context.isTask(mt)) {
-            merger = context.getRunner(mt);
-        } else if (isMetadataObject(mt)) {
-            let cfg = mt as IConfigure;
-            if (cfg.task || cfg.bootstrap) {
-                merger = context.getRunner(cfg);
-            } else {
-                throw new Error('pipe configure error');
-            }
-        } else {
-            merger = mt as TransformMerger;
+    protected async translateConfig(activity: PipeActivity, tsCfg: TransformConfig): Promise<TransformType> {
+        if (isActivityType(tsCfg)) {
+            return await this.build(tsCfg, activity.id);
         }
 
-        return merger;
+        if (isPromise(tsCfg)) {
+            return await tsCfg;
+        }
+
+        if (isMetadataObject(tsCfg)) {
+            throw new Error('transform configure error');
+        }
+
+        return tsCfg as TransformType;
     }
 
 }

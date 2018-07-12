@@ -18,13 +18,13 @@ import { UUIDToken, RandomUUIDFactory } from './uuid';
  * @implements {ITaskRunner}
  */
 @Runner(TaskRunnerToken)
-export class TaskRunner implements ITaskRunner, OnInit {
+export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
 
-    get task(): ActivityType<IActivity<any>> {
+    get task(): ActivityType<T> {
         return this.work;
     }
 
-    get taskInstance(): IActivity<any> {
+    get taskInstance(): IActivity<T> {
         return this.instance;
     }
 
@@ -47,15 +47,16 @@ export class TaskRunner implements ITaskRunner, OnInit {
 
     /**
      * Creates an instance of TaskRunner.
-     * @param {(Token<IActivity<any>> | Type<any> | IConfigure)} workflow
-     * @param {IActivity} [instance] workflow instance
+     * @param {ActivityType<T>} work
+     * @param {string} [uuid]
+     * @param {IActivity<T>} [instance]
      * @param {IActivityBuilder} [taskBuilder]
      * @memberof TaskRunner
      */
     constructor(
-        private work: Token<IActivity<any>> | Type<any> | IConfigure,
+        private work: ActivityType<T>,
         public uuid?: string,
-        private instance?: IActivity<any>,
+        private instance?: IActivity<T>,
         private taskBuilder?: IActivityBuilder) {
         this.stateChanged = new BehaviorSubject(RunState.init);
     }
@@ -87,13 +88,13 @@ export class TaskRunner implements ITaskRunner, OnInit {
 
     async getInstance() {
         if (!this.instance) {
-            this.instance = await this.getBuilder().build(this.task, this.uuid);
+            this.instance = await this.getBuilder().build<T>(this.task, this.uuid);
         }
         return this.instance;
     }
 
 
-    async start(data?: any): Promise<any> {
+    async start(data?: any): Promise<T> {
         let instance = await this.getInstance();
         return instance.run(data)
             .then(data => {

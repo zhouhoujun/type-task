@@ -8,7 +8,7 @@ import { IActivityBuilder } from './IActivityBuilder';
 export type ActivityType<T> = Token<IActivity<T>> | Type<any> | IActivityConfigure<IActivity<T>>;
 
 /**
- * check is activity type or not.
+ * check target is activity type or not.
  *
  * @export
  * @param {*} target
@@ -22,7 +22,7 @@ export function isActivityType(target: any): target is ActivityType<any> {
         return true;
     }
 
-    if (isMetadataObject(target)) {
+    if (isMetadataObject(target) && (target.task || target.bootstrap)) {
         return true;
     }
 

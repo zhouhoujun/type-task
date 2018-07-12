@@ -1,4 +1,4 @@
-import { IActivity, Task, InjectAcitityToken, Activity, Condition, ActivityBuilder, isActivityType, ActivityType, IConfigure, InjectAcitityBuilderToken } from '../core';
+import { IActivity, Task, InjectAcitityToken, Activity, Condition, ActivityBuilder, isActivityType, ActivityType, IConfigure, InjectAcitityBuilderToken, ExpressionType } from '../core';
 import { Singleton } from '@ts-ioc/core';
 
 /**
@@ -22,10 +22,10 @@ export interface IfConfigure extends IConfigure {
     /**
      * while condition
      *
-     * @type {(Condition | ActivityType<any>)}
+     * @type {ExpressionType<boolean>}
      * @memberof IfConfigure
      */
-    if: Condition | ActivityType<any>;
+    if: ExpressionType<boolean>;
 
     /**
      * if body

@@ -8,6 +8,7 @@ import { IActivityBuilder } from './IActivityBuilder';
 import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
 import { ActivityBuilder } from './ActivityBuilder';
 import { Activity } from './Activity';
+import { TaskRunner } from './TaskRunner';
 
 /**
  * task context.
@@ -39,7 +40,7 @@ export class Context implements IContext {
         return this.getTaskContiner().getRootPath();
     }
 
-    getRunner(task: ActivityType<IActivity<any>>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner {
+    getRunner(task: ActivityType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner<any> {
         let builderInst: IActivityBuilder;
         if (isToken(builder)) {
             builderInst = this.container.resolve(builder);
@@ -75,24 +76,14 @@ export class Context implements IContext {
             return expression;
         } else if (expression instanceof Activity) {
             return expression.run(data, target);
+        } else if (expression instanceof TaskRunner) {
+            return expression.start(data);
         } else if (!isUndefined(expression)) {
             return Promise.resolve(expression as T);
         } else {
             return Promise.reject('not right expression');
         }
     }
-
-    //     /**
-    //  * validate condition.
-    //  *
-    //  * @param {Condition} condition
-    //  * @param {*} data
-    //  * @returns {Promise<boolean>}
-    //  * @memberof Context
-    //  */
-    // validate(condition: Condition, data: any): Promise<boolean> {
-    //     return Promise.resolve(true);
-    // }
 
     isTask(task: Type<IActivity<any>>): boolean {
         return hasOwnClassMetadata(Task, task);

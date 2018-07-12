@@ -1,28 +1,20 @@
-import { ITaskRunner, ActivityType, CtxType, IActivity } from '@taskfr/core';
+import { ITaskRunner, ActivityType, CtxType, IActivity, Expression, ExpressionType } from '@taskfr/core';
 import { ITransform } from './ITransform';
-import { ObjectMap, isMetadataObject, isObservable, isBaseType, Token } from '@ts-ioc/core';
-import { IPipeContext } from './IPipeContext';
-import { IPipeActivity } from './IPipeActivity';
+import { ObjectMap, isMetadataObject, isObservable, isBaseType } from '@ts-ioc/core';
 import { isFunction } from '@ts-ioc/core';
 import { Stream } from 'stream';
-import { ITransformMerger } from './ITransformMerger';
 
 
-
-/**
- * pipe express
- */
-export type PipeExpress = (context?: IPipeContext, acitvity?: IActivity<any>, transform?: ITransform) => ITransform | Promise<ITransform>;
 
 /**
  * transform type.
  */
-export type TransformType = ITransform | PipeExpress | ITaskRunner;
+export type TransformType =  Expression<ITransform>;
 
 /**
  * transform config type.
  */
-export type TransformConfig = TransformType | ActivityType<IPipeActivity>;
+export type TransformConfig = ExpressionType<ITransform>;
 
 /**
  * task transform express.
@@ -34,19 +26,6 @@ export type TransformExpress = CtxType<TransformConfig[]>;
  */
 export type DestExpress = ObjectMap<TransformExpress> | TransformExpress;
 
-/**
- * transform merger.
- */
-export type TransformMerger = ((transforms: ITransform[]) => ITransform | Promise<ITransform>) | ITransformMerger | ITaskRunner;
-
-/**
- * transform merger config.
- */
-export type TransMergerConfig = TransformMerger | ActivityType<IPipeActivity>;
-/**
- * task transform express.
- */
-export type TransformMergerExpress = CtxType<TransMergerConfig[]>;
 
 
 /**

@@ -1,11 +1,11 @@
 import { AssetTask } from '../../decorators';
-import { IDestConfigure, TransformType } from '../../core';
+import { DestConfigure, TransformType } from '../../core';
 import { isBoolean, ObjectMap, isString, isArray } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
 import { OnTaskInit, CtxType } from '../..';
 import * as uglify from 'gulp-uglify';
 import * as sourcemaps from 'gulp-sourcemaps';
-import { IAssetConfigure, DestType, PipeAsset } from '../../assets';
+import { AssetConfigure, DestType, PipeAsset } from '../../assets';
 import * as ts from 'gulp-typescript';
 import { ITransform } from '../../core/ITransform';
 
@@ -14,9 +14,9 @@ import { ITransform } from '../../core/ITransform';
  *
  * @export
  * @interface TsConfigure
- * @extends {IAssetConfigure}
+ * @extends {AssetConfigure}
  */
-export interface TsConfigure extends IAssetConfigure {
+export interface TsConfigure extends AssetConfigure {
     /**
      * tds config.
      *
@@ -93,7 +93,7 @@ export class TsCompile extends PipeAsset implements OnTaskInit {
         }
     }
 
-    generateDest(cfg: TsConfigure, dest: DestType): IDestConfigure | IDestConfigure[] {
+    generateDest(cfg: TsConfigure, dest: DestType): DestConfigure | DestConfigure[] {
         let destPath: string;
         if (isString(dest)) {
             destPath = dest;

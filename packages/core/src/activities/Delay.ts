@@ -1,4 +1,8 @@
-import { IActivity, Task, InjectAcitityToken, Condition, InjectAcitityBuilderToken, ActivityBuilder, IConfigure, CtxType, Activity, ActivityResult, ActivityType, isActivityType } from '../core';
+import {
+    IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
+    ActivityBuilder, IConfigure, Activity,
+    isActivityType, Expression, ExpressionType
+} from '../core';
 import { Defer, Singleton } from '@ts-ioc/core';
 
 /**
@@ -22,10 +26,10 @@ export interface DelayConfigure extends IConfigure {
     /**
      * delay ms.
      *
-     * @type {CtxType<number>}
+     * @type {ExpressionType<number>}
      * @memberof DelayConfigure
      */
-    delay?: ActivityResult<number> | ActivityType<number>;
+    delay?: ExpressionType<number>;
 }
 
 /**
@@ -41,10 +45,10 @@ export class DelayActivity extends Activity<any> {
     /**
      * delay time.
      *
-     * @type {ActivityResult<number>}
+     * @type {Expression<number>}
      * @memberof DelayActivity
      */
-    delay: ActivityResult<number>;
+    delay: Expression<number>;
 
     async run(data?: any): Promise<any> {
         let delay = await this.context.exec(this, this.delay, data);

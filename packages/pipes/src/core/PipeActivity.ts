@@ -4,9 +4,8 @@ import { IPipeActivity } from './IPipeActivity';
 import { Activity, TaskRunner, IActivity } from '@taskfr/core';
 import { PipeTask } from '../decorators';
 import { ITransform } from './ITransform';
-import { TransformType, isTransform, PipeExpress, TransformMerger } from './pipeTypes';
+import { TransformType, isTransform } from './pipeTypes';
 import { IPipeConfigure } from './IPipeConfigure';
-import { ITransformMerger } from './ITransformMerger';
 
 /**
  * Pipe activity.
@@ -39,7 +38,7 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @type {TransformMerger}
      * @memberof PipeComponent
      */
-    merger: TransformMerger;
+    merger: TransformType;
 
     /**
      * pipe config.
@@ -59,20 +58,38 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @memberof Activity
      */
     run(data?: any, target?: IActivity<any>): Promise<ITransform> {
-        return this.merge(...isArray(data) ? data : [data])
-            .then(stream => this.pipe(stream));
+        return this.merge(...(isArray(data) ? data : [data]))
+            .then(stream => this.pipe(stream, ...this.pipes));
     }
 
     /**
      * pipe transform.
      *
      * @protected
-     * @param {ITransform} transform
+     * @param {ITransform} stream
+     * @param {...TransformType[]} pipes
      * @returns {Promise<ITransform>}
-     * @memberof PipeComponent
+     * @memberof PipeActivity
      */
-    protected pipe(stream: ITransform): Promise<ITransform> {
-        return this.pipesToPromise(stream, this.pipes);
+    protected pipe(stream: ITransform, ...pipes: TransformType[]): Promise<ITransform> {
+        if (pipes.length < 1) {
+            return Promise.resolve(stream);
+        }
+
+        if (pipes.length === 1) {
+            return this.executePipe(stream, pipes[0]);
+        }
+
+        let pstream = Promise.resolve(stream);
+        pipes.forEach(transform => {
+            if (transform) {
+                pstream = pstream
+                    .then(stm => {
+                        return this.executePipe(stm, transform);
+                    });
+            }
+        });
+        return pstream;
     }
 
     /**
@@ -84,57 +101,12 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @memberof PipeComponent
      */
     protected merge(...data: ITransform[]): Promise<ITransform> {
-        let ptsf: Promise<ITransform>;
         let trans = data.filter(it => !it);
-        if (trans.length > 1) {
-            let merger = this.merger;
-            if (merger) {
-                if (merger instanceof TaskRunner) {
-                    ptsf = merger.start(data);
-                } else if (!isClass(merger) && isFunction(merger)) {
-                    let mergerExp = merger as Function;
-                    ptsf = Promise.resolve(mergerExp(data));
-                } else {
-                    if (isFunction(merger['run'])) {
-                        let tsmerger = merger as ITransformMerger;
-                        ptsf = tsmerger.run(data);
-                    }
-                }
-            }
+        if (trans.length > 1 && this.merger) {
+            return this.context.exec(this, this.merger, data);
+        } else {
+            return Promise.resolve(isArray(data) ? data[0] : data);
         }
-
-        if (!ptsf) {
-            ptsf = Promise.resolve(isArray(data) ? data[0] : data);
-        }
-
-        return ptsf.then(tranform => isTransform(tranform) ? tranform as ITransform : null);
-    }
-
-    /**
-     * pipe to promise.
-     *
-     * @protected
-     * @param {ITransform} source
-     * @param {TransformType[]} pipes
-     * @returns {Promise<ITransform>}
-     * @memberof PipeComponent
-     */
-    protected pipesToPromise(source: ITransform, pipes: TransformType[]): Promise<ITransform> {
-        if (!pipes) {
-            return Promise.resolve(source);
-        }
-
-        let pstream = Promise.resolve(source);
-        pipes.forEach(transform => {
-            if (transform) {
-                pstream = pstream
-                    .then(stream => {
-                        return this.executePipe(stream, transform);
-                    });
-            }
-        });
-        return pstream;
-
     }
 
     /**
@@ -146,33 +118,17 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @returns {Promise<ITransform>}
      * @memberof PipeComponent
      */
-    protected executePipe(stream: ITransform, transform: TransformType): Promise<ITransform> {
-        let pstf: Promise<ITransform>;
-        if (transform instanceof TaskRunner) {
-            pstf = transform.start(stream);
-        } else if (isTransform(stream)) {
-            if (!isClass(transform) && isFunction(transform)) {
-                let pex = transform as PipeExpress;
-                pstf = Promise.resolve(pex(this.context, this, stream));
-            } else if (isTransform(transform)) {
-                pstf = Promise.resolve(transform as ITransform);
+    protected async executePipe(stream: ITransform, transform: TransformType): Promise<ITransform> {
+        let next: ITransform = await this.context.exec(this, transform, stream);
+        if (isTransform(stream)) {
+            if (isTransform(next)) {
+                if (!next.changeAsOrigin) {
+                    next = stream.pipe(next);
+                }
+            } else {
+                next = stream;
             }
-            if (pstf) {
-                pstf = pstf.then(pst => {
-                    if (isTransform(pst)) {
-                        if (pst.changeAsOrigin) {
-                            stream = pst;
-                        } else {
-                            stream = stream.pipe(pst);
-                        }
-                    }
-                    return stream;
-                })
-            }
-        } else {
-            pstf = Promise.resolve(null);
         }
-
-        return pstf;
+        return next;
     }
 }

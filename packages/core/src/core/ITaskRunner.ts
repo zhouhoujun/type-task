@@ -14,7 +14,7 @@ import { Joinpoint } from '@ts-ioc/aop';
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectTaskRunnerToken<T extends ITaskRunner> extends Registration<T> {
+export class InjectTaskRunnerToken<T extends ITaskRunner<any>> extends Registration<T> {
     constructor(desc: string) {
         super('TaskRunner', desc);
     }
@@ -23,7 +23,7 @@ export class InjectTaskRunnerToken<T extends ITaskRunner> extends Registration<T
 /**
  * task runner token.
  */
-export const TaskRunnerToken = new InjectTaskRunnerToken<ITaskRunner>('');
+export const TaskRunnerToken = new InjectTaskRunnerToken<ITaskRunner<any>>('');
 
 /**
  *run state.
@@ -60,15 +60,15 @@ export enum RunState {
  * @export
  * @interface ITaskRunner
  */
-export interface ITaskRunner {
+export interface ITaskRunner<T> {
 
     /**
      * runner task
      *
-     * @type {(Token<IActivity<any>> | Type<any> | IConfigure)}
+     * @type {ActivityType<T>}
      * @memberof ITaskRunner
      */
-    readonly task: ActivityType<IActivity<any>>;
+    readonly task: ActivityType<T>;
 
     /**
      * task instance
@@ -76,7 +76,7 @@ export interface ITaskRunner {
      * @type {IActivity<any>}
      * @memberof ITaskRunner
      */
-    readonly taskInstance: IActivity<any>;
+    readonly taskInstance: IActivity<T>;
 
     /**
      * current run task data.
@@ -130,10 +130,10 @@ export interface ITaskRunner {
      * start task.
      *
      * @param {*} [data]
-     * @returns {Promise<any>}
+     * @returns {Promise<T>}
      * @memberof ITask
      */
-    start(data?: any): Promise<any>;
+    start(data?: any): Promise<T>;
 
     /**
      * stop running task.

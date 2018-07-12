@@ -1,5 +1,4 @@
 
-export * from './ITransformMerger';
 export * from './pipeTypes';
 
 export * from './IPipeContext';

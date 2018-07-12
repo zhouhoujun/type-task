@@ -1,7 +1,7 @@
 import { IActivity, IConfigure, ActivityBuilderToken } from '@taskfr/core';
 import { Singleton, isArray, isString, Inject, ContainerToken, IContainer } from '@ts-ioc/core';
-import { PipeActivityBuilder, PipeDest, DestToken } from '../core';
-import { IAssetConfigure } from './IAssetConfigure';
+import { PipeActivityBuilder, PipeDestActivity, DestToken } from '../core';
+import { AssetConfigure } from '../core/AssetConfigure';
 
 /**
  * dest task builder.
@@ -14,8 +14,8 @@ export class DestTaskBuilder extends PipeActivityBuilder {
 
     async afterBindConfig(taskInst: IActivity, config: IConfigure): Promise<IActivity> {
         await super.afterBindConfig(taskInst, config);
-        if (config.dest && !(taskInst instanceof PipeDest)) {
-            let assetCfg = config as IAssetConfigure;
+        if (config.dest && !(taskInst instanceof PipeDestActivity)) {
+            let assetCfg = config as AssetConfigure;
             let destcfg = taskInst.context.to(assetCfg.dest);
             let destcfgs = isArray(destcfg) ? destcfg : [destcfg];
 

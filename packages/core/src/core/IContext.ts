@@ -2,7 +2,7 @@ import { IConfigure, ActivityType } from './IConfigure';
 import { IActivity } from './IActivity';
 import { ITaskRunner } from './ITaskRunner';
 import { IActivityBuilder } from './IActivityBuilder';
-import { InjectToken, IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
+import { IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
 import { ITaskContainer } from '../ITaskContainer';
 
 
@@ -14,11 +14,13 @@ export type CtxType<T> = T | ((context?: IContext, config?: IConfigure) => T);
 
 export type AsyncResult<T> = (activity?: IActivity<T>, data?: any) => Promise<T>;
 
-export type ActivityResult<T> = Promise<T> | AsyncResult<T> | IActivity<T>;
+export type ActivityResult<T> = Promise<T> | AsyncResult<T> | IActivity<T> | ITaskRunner<T>;
 
 export type Expression<T> = T | ActivityResult<T>;
 
 export type Condition = Expression<boolean>;
+
+export type ExpressionType<T> = Expression<T> | ActivityType<T>;
 
 /**
  * key value pair.
@@ -82,14 +84,14 @@ export interface IContext {
   /**
    * get task runner;
    *
-   * @param {ActivityType<IActivity>} task
+   * @param {ActivityType<any>} task
    * @param {string} uuid
    * @param {(IActivityBuilder | Token<IActivityBuilder>)} [builder]
    * @param {*} [instance]
    * @returns {ITaskRunner}
    * @memberof IContext
    */
-  getRunner(task: ActivityType<IActivity<any>>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner;
+  getRunner(task: ActivityType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner<any>;
 
   /**
    * get task run root path.

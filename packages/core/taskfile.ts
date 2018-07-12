@@ -1,4 +1,4 @@
-import { PipeModule, PackageTask, PipeAsset, IPackageConfigure, IAssetConfigure, TsConfigure } from '@taskfr/pipes';
+import { PipeModule, PackageTask, PipeAsset, IPackageConfigure, AssetConfigure, TsConfigure } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const rename = require('gulp-rename');
 const rollup = require('gulp-rollup');
@@ -21,7 +21,7 @@ TaskContainer.create(__dirname)
             },
             task: PackageTask
         },
-        <IAssetConfigure>{
+        <AssetConfigure>{
             src: 'lib/**/*.js',
             pipes: [
                 () => rollup({

@@ -1,4 +1,4 @@
-import { IActivity, Task, InjectAcitityToken, Condition, Activity, InjectAcitityBuilderToken, ActivityBuilder, IConfigure, ActivityType, isActivityType } from '../core';
+import { IActivity, Task, InjectAcitityToken, Condition, Activity, InjectAcitityBuilderToken, ActivityBuilder, IConfigure, ActivityType, isActivityType, ExpressionType } from '../core';
 import { Singleton } from '@ts-ioc/core';
 
 /**
@@ -30,10 +30,10 @@ export interface DoWhileConfigure extends IConfigure {
     /**
      * while condition
      *
-     * @type {(Condition | ActivityType<any>)}
+     * @type {ExpressionType<boolean>}
      * @memberof DoWhileConfigure
      */
-    while: Condition | ActivityType<any>;
+    while: ExpressionType<boolean>;
 }
 
 /**
@@ -78,7 +78,7 @@ export class DoWhileActivityBuilder extends ActivityBuilder {
         if (activity instanceof DoWhileActivity) {
             activity.body = await this.build<T>(config.do, activity.id);
             if (isActivityType(config.while)) {
-                activity.condition = await this.build<boolean>(config.while, activity.id);
+                activity.condition = await this.build(config.while, activity.id);
             } else {
                 activity.condition = config.while;
             }

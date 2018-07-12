@@ -2,78 +2,76 @@ import { dest, DestOptions } from 'vinyl-fs';
 import { PipeTask } from '../decorators';
 import { ITransform } from './ITransform';
 import { TransformType } from './pipeTypes';
-import { OnTaskInit } from '@taskfr/core';
-import { IDestConfigure } from './IPipeConfigure';
-import { Registration } from '@ts-ioc/core';
+import { Expression, IActivity, ExpressionType, isActivityType } from '@taskfr/core';
+import { Registration, Singleton } from '@ts-ioc/core';
 import { PipeActivityToken, IPipeActivity } from './IPipeActivity';
-
-
+import { IPipeConfigure } from './IPipeConfigure';
+import { PipeActivity } from './PipeActivity';
+import { InjectPipeAcitityBuilderToken, PipeActivityBuilder } from './PipeActivityBuilder';
 /**
  * dest task token.
  */
 export const DestToken = new Registration<IPipeActivity>(PipeActivityToken, 'dest');
 
+export const DestAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<PipeDestActivityBuilder>('dest')
+
 /**
- * pipe dest provider.
+ * dest pipe configure.
  *
  * @export
- * @interface IPipeDest
- * @extends {IPipeComponent}
+ * @interface IPipeDestConfigure
+ * @extends {IPipeConfigure}
  */
-export interface IPipeDest extends IPipeActivity {
-    /**
-     * dest source.
-     *
-     * @type {string}
-     * @memberof IPipeDest
-     */
-    dest?: string;
+export interface DestConfigure extends IPipeConfigure {
 
     /**
-     * source options.
+     * pipe dest.
      *
-     * @type {DestOptions}
-     * @memberof IPipeDestProvider
+     * @type {ExpressionType<string>}
+     * @memberof IPipeConfigure
      */
-    destOptions?: DestOptions;
+    dest?: ExpressionType<string>;
+
+    /**
+     * dest options.
+     *
+     * @type {ExpressionType<DestOptions>}
+     * @memberof IPipeConfigure
+     */
+    destOptions?: ExpressionType<DestOptions>;
+
 }
 
 /**
- * pipe dest.
+ * pipe dest activity.
  *
  * @export
- * @class PipeDest
+ * @class PipeDestActivity
  * @extends {PipeComponent<IPipeDest>}
  * @implements {IPipeDest}
  * @implements {OnTaskInit}
  */
-@PipeTask(DestToken)
-export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest, OnTaskInit {
+@PipeTask(DestToken, DestAcitvityBuilderToken)
+export class PipeDestActivity extends PipeActivity {
 
     /**
      * source
      *
-     * @type {TransformSource}
-     * @memberof IPipeSource
+     * @type {Expression<string>}
+     * @memberof IPipeDest
      */
-    dest: string;
+    dest: Expression<string>;
 
     /**
      * source options.
      *
-     * @type {DestOptions}
-     * @memberof PipeSource
+     * @type {Expression<DestOptions>}
+     * @memberof PipeDest
      */
-    destOptions: DestOptions;
+    destOptions: Expression<DestOptions>;
 
-    onTaskInit(config: IDestConfigure) {
-        super.onTaskInit(config);
-        this.dest = this.context.to(config.dest);
-        this.destOptions = this.context.to(config.destOptions);
-    }
-
-    protected pipesToPromise(source: ITransform, pipes: TransformType[]): Promise<ITransform> {
-        return super.pipesToPromise(source, pipes)
+    protected pipe(source: ITransform, ...pipes: TransformType[]): Promise<ITransform> {
+        return super.pipe(source, ...pipes)
             .then(stream => {
                 return this.writeStream(stream)
             })
@@ -82,13 +80,18 @@ export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest, OnT
             });
     }
 
-    protected writeStream(stream: ITransform): Promise<ITransform> {
-        let output = stream.pipe(dest(this.context.toRootPath(this.dest), this.destOptions));
+    protected async writeStream(stream: ITransform): Promise<ITransform> {
+        let dist = await this.context.exec(this, this.dest, stream);
+        let destOptions = undefined;
+        if (this.destOptions) {
+            destOptions = await this.context.exec(this, this.destOptions, stream);
+        }
+        let output = stream.pipe(dest(this.context.toRootPath(dist), destOptions));
         if (!output) {
             return null;
         }
 
-        return new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
             output
                 .once('end', () => {
                     resolve();
@@ -105,7 +108,32 @@ export class PipeDest extends PipeComponent<IPipeDest> implements IPipeDest, OnT
             process.exit(1);
             return err;
         });
+    }
+}
 
 
+
+@Singleton(DestAcitvityBuilderToken)
+export class PipeDestActivityBuilder extends PipeActivityBuilder {
+
+    async buildStrategy<T>(activity: IActivity<T>, config: DestConfigure): Promise<IActivity<T>> {
+        await super.buildStrategy(activity, config);
+        if (activity instanceof PipeDestActivity) {
+
+            if (isActivityType(config.dest)) {
+                activity.dest = await this.build(config.dest, activity.id);
+            } else {
+                activity.dest = config.dest;
+            }
+
+            if (config.destOptions) {
+                if (isActivityType(config.destOptions)) {
+                    activity.destOptions = await this.build(config.destOptions, activity.id);
+                } else {
+                    activity.destOptions = config.destOptions;
+                }
+            }
+        }
+        return activity;
     }
 }
