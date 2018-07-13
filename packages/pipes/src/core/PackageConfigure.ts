@@ -1,54 +1,60 @@
-import { CtxType, Src, ExpressionType } from '@taskfr/core';
+import { CtxType, Src, ExpressionType, ActivityType } from '@taskfr/core';
 import { ObjectMap } from '@ts-ioc/core';
 import { DestType } from './AssetConfigure';
 import { IPipeConfigure } from './IPipeConfigure';
 import { TransformConfig } from './pipeTypes';
+import { TestActivity } from './TestActivity';
+import { AssetActivity } from './AssetActivity';
+import { CleanActivity } from './CleanActivity';
+import { DestActivity } from './DestActivity';
+import { WatchActivity } from './WatchActivity';
 
 export interface PackageConfigure extends IPipeConfigure {
     /**
-     * src path.
+     * src root path.
      *
-     * @type {ExpressionType<string>}
-     * @memberof IPackageConfigure
+     * @type {CtxType<string>}
+     * @memberof PackageConfigure
      */
-    src?: ExpressionType<string>;
+    src?: CtxType<string>;
 
     /**
-     * watch source change to run pipe task.
+     * watch activity.
      *
-     * @type {ExpressionType<Src | boolean>}
-     * @memberof IPackageConfigure
+     * @type {(ExpressionType<Src> | ActivityType<WatchActivity>)}
+     * @memberof PackageConfigure
      */
-    watch?: ExpressionType<Src | boolean>;
+    watch?: ExpressionType<Src> | ActivityType<WatchActivity>;
+
 
     /**
      * clean task config.
      *
-     * @type {(Src | TransformConfig)}
-     * @memberof IAssetsConfigure
+     * @type {(ExpressionType<Src> | ActivityType<CleanActivity>)}
+     * @memberof PackageConfigure
      */
-    clean?: Src | TransformConfig;
+    clean?: ExpressionType<Src> | ActivityType<CleanActivity>;
     /**
      * assets.
      *
-     * @type {ObjectMap<Src | TransformConfig>}
-     * @memberof IAssetsConfigure
+     * @type {ObjectMap<ExpressionType<Src> | ActivityType<AssetActivity>>}
+     * @memberof PackageConfigure
      */
-    assets: ObjectMap<Src | TransformConfig>;
+    assets: ObjectMap<ExpressionType<Src> | ActivityType<AssetActivity>>;
 
     /**
      * test config.
      *
-     * @type {(Src | TransformConfig)}
-     * @memberof IAssetsConfigure
+     * @type {(ExpressionType<Src> | ActivityType<TestActivity>;)}
+     * @memberof PackageConfigure
      */
-    test?: Src | TransformConfig;
+    test?: ExpressionType<Src> | ActivityType<TestActivity>;
 
     /**
      * dest.
      *
-     * @type {ExpressionType<DestType | DestType[]>}
-     * @memberof IAssetConfigure
+     * @type {(ExpressionType<string> | ActivityType<DestActivity>)}
+     * @memberof PackageConfigure
      */
-    dest?: ExpressionType<DestType | DestType[]>;
+    dest?: ExpressionType<string> | ActivityType<DestActivity>;
 }

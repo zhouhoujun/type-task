@@ -53,13 +53,23 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * run task.
      *
      * @param {*} [data]
-     * @param {IActivity<any>} [target]
+     * @param {IActivity<any>} [execute]
      * @returns {Promise<T>}
      * @memberof Activity
      */
-    run(data?: any, target?: IActivity<any>): Promise<ITransform> {
+    run(data?: any, execute?: IActivity<any>): Promise<ITransform> {
         return this.merge(...(isArray(data) ? data : [data]))
-            .then(stream => this.pipe(stream, ...this.pipes));
+            .then(stream => this.pipe(stream, ...this.getRunPipes(execute)));
+    }
+
+    protected getRunPipes(execute?: IActivity<any>) {
+        let pipes = this.pipes;
+        if (execute) {
+            if (execute instanceof PipeActivity) {
+                pipes = pipes.concat([execute]);
+            }
+        }
+        return pipes;
     }
 
     /**

@@ -4,6 +4,7 @@ import { DestConfigure, DestActivity } from './DestActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { SourceActivity } from './SourceActivity';
 import { WatchActivity } from './WatchActivity';
+import { SourceMapsActivity } from './SourceMapsActivity';
 
 
 
@@ -30,35 +31,35 @@ export interface AssetConfigure extends IPipeConfigure {
      */
     src: ExpressionType<Src> | ActivityType<SourceActivity>;
     /**
-     * watch source change to run pipe task.
+     * watch activity.
      *
-     * @type {CtxType<Src | boolean>}
-     * @memberof IPipeConfigure
+     * @type {(ExpressionType<Src | boolean> | ActivityType<WatchActivity>)}
+     * @memberof AssetConfigure
      */
     watch?: ExpressionType<Src | boolean> | ActivityType<WatchActivity>;
 
     /**
-     * asset pipe dest.
+     * asset dest activity.
      *
-     * @type {CtxType<DestType | DestType[]>}
+     * @type {(ExpressionType<string> | ActivityType<DestActivity>)}
      * @memberof AssetConfigure
      */
     dest?: ExpressionType<string> | ActivityType<DestActivity>;
 
     /**
-     * uglify asset or not.
+     * uglify asset activity.
      *
-     * @type {(CtxType<boolean | ObjectMap<any>>)}
+     * @type {(ExpressionType<boolean | ObjectMap<any>> | ActivityType<WatchActivity>>)}
      * @memberof AssetConfigure
      */
-    uglify?: ExpressionType<boolean | ObjectMap<any>>;
+    uglify?: ExpressionType<boolean | ObjectMap<any>> | ActivityType<WatchActivity>;
 
     /**
      * create source map or not. default create source map at  `./sourcemaps` for js asset and ts asset.
      *
-     * @type {(CtxType<boolean | string>)}
+     * @type {(ExpressionType<boolean | string> | ActivityType<SourceMapsActivity>)}
      * @memberof AssetConfigure
      */
-    sourcemaps?: ExpressionType<boolean | string>;
+    sourcemaps?: ExpressionType<boolean | string> | ActivityType<SourceMapsActivity>;
 
 }

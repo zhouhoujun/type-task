@@ -72,10 +72,14 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         }
     }
 
-    protected async toActivity<Tr, Ta extends IActivity<any>>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity<any>, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, IConfigure>): Promise<Ta> {
+    protected async toActivity<Tr, Ta extends IActivity<any>>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity<any>, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, IConfigure>, valify?: Express<IConfigure, IConfigure>): Promise<Ta> {
         let result;
-        if (isActivityType(exptype)) {
-            result = await this.build(exptype, target.id);
+        if (isActivityType(exptype, !valify)) {
+            if (valify) {
+                result = await this.build(isToken(exptype) ? exptype : valify(exptype), target.id);
+            } else {
+                result = await this.build(exptype, target.id);
+            }
         } else {
             result = exptype;
         }
@@ -85,7 +89,15 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         }
 
         let rt = await target.context.exec(target, result);
-        result = await this.build(toConfig(rt), target.id);
+        let config = toConfig(rt);
+        if (valify) {
+            config = valify(config);
+        }
+        if (config) {
+            result = await this.build(config, target.id);
+        } else {
+            result = null;
+        }
         return result;
     }
 

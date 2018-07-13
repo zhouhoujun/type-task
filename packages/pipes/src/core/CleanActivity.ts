@@ -1,7 +1,7 @@
 import {
     Src, Activity, InjectAcitityToken, Task, IConfigure,
     Expression, InjectAcitityBuilderToken, ActivityBuilder,
-    IActivity, isActivityType, ExpressionType
+    IActivity, ExpressionType
 } from '@taskfr/core';
 import { Singleton } from '@ts-ioc/core';
 const del = require('del');

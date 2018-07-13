@@ -46,12 +46,12 @@ export class Activity<T> implements IActivity<T> {
     /**
      * run task.
      *
-     * @param {*} [data]
-     * @param {IActivity<any>} [target]
+     * @param {*} [data] execut data.
+     * @param {IActivity<any>} [execute] execute activity.
      * @returns {Promise<T>}
      * @memberof Activity
      */
-    run(data?: any, target?: IActivity<any>): Promise<T> {
+    run(data?: any, execute?: IActivity<any>): Promise<T> {
         return Promise.resolve(data);
     }
 

@@ -11,7 +11,7 @@ import { IConfigure } from './IConfigure';
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectAcitityToken<T> extends Registration<T> {
+export class InjectAcitityToken<T extends IActivity<any>> extends Registration<T> {
     constructor(desc: string) {
         super('Activity', desc);
     }

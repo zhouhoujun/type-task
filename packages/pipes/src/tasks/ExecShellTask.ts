@@ -79,10 +79,6 @@ export class ExecShellTask extends PipeActivity implements OnTaskInit {
      */
     allowError: boolean;
 
-    constructor(name?: string) {
-        super(name);
-    }
-
     onTaskInit(config: ShellTaskConfig) {
         this.shell = this.context.to(config.shell);
         let args = this.context.to(config.args);

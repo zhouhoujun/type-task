@@ -1,6 +1,6 @@
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
-import { Src, CtxType, Condition, IActivity, ExpressionType } from '@taskfr/core';
+import { Src, CtxType, Condition, IActivity, ExpressionType, Expression } from '@taskfr/core';
 import { isUndefined, Singleton } from '@ts-ioc/core';
 import { TransformType, TransformConfig } from './pipeTypes';
 import { InjectPipeAcitityBuilderToken, PipeActivityBuilder } from './PipeActivityBuilder';
@@ -17,10 +17,10 @@ export interface TestConfigure extends SourceConfigure {
     /**
      * set match test file source.
      *
-     * @type {ExpressionType<Src>}
+     * @type {ExpressionType<boolean>}
      * @memberof TestConfigure
      */
-    test?: ExpressionType<Src>;
+    enable?: ExpressionType<boolean>;
 
     /**
      * test framewok. default use gulp-mocha to test.
@@ -28,7 +28,7 @@ export interface TestConfigure extends SourceConfigure {
      * @type {TransformConfig}
      * @memberof TestConfigure
      */
-    framework: TransformConfig;
+    framework?: TransformConfig;
 
     /**
      * test options.
@@ -36,7 +36,7 @@ export interface TestConfigure extends SourceConfigure {
      * @type {CtxType<any>}
      * @memberof TestConfigure
      */
-    options: CtxType<any>;
+    options?: CtxType<any>;
 }
 
 
@@ -60,10 +60,16 @@ export class TestActivity extends SourceActivity {
      */
     options: any;
 
-    test: Condition;
+    /**
+     * eanble test or not.
+     *
+     * @type {Expression<boolean>}
+     * @memberof TestActivity
+     */
+    enable: Expression<boolean>;
 
     async run(data?: any): Promise<ITransform> {
-        let test = await this.context.exec(this, this.test, data);
+        let test = await this.context.exec(this, this.enable, data);
         if (test) {
             let source = await super.run(data);
             return await this.pipe(source, this.framework)
@@ -106,11 +112,14 @@ export class TestActivityBuilder extends PipeActivityBuilder {
     async buildStrategy<T>(activity: IActivity<T>, config: TestConfigure): Promise<IActivity<T>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof TestActivity) {
+            activity.options = activity.context.to(config.options);
             activity.src = await this.toExpression(config.test, activity);
+            if (!isUndefined(config.enable)) {
+                activity.enable = await this.toExpression(config.enable, activity);
+            }
             if (config.srcOptions) {
                 activity.srcOptions = await this.toExpression(config.srcOptions, activity);
             }
-
             if (config.framework) {
                 activity.framework = await this.toExpression(config.framework, activity);
             } else {

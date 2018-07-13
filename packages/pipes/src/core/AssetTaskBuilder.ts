@@ -5,6 +5,8 @@ import { IAssetActivity, AssetActivity } from './AssetActivity';
 import { SourceActivity } from './SourceActivity';
 import { DestActivity } from './DestActivity';
 import { WatchActivity } from './WatchActivity';
+import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
+import { SourceMapsActivity } from './SourceMapsActivity';
 
 
 
@@ -68,6 +70,34 @@ export class AssetTaskBuilder extends SequenceActivityBuilder {
                             return null;
                         }
                         return { watch: watch, task: WatchActivity };
+                    });
+            }
+
+            if (config.sourcemaps) {
+                activity.sourcemaps = await this.toActivity<boolean | string, SourceMapsActivity>(config.sourcemaps, activity,
+                    act => act instanceof SourceMapsActivity,
+                    sourcemaps => {
+                        if (isBoolean(sourcemaps)) {
+                            if (sourcemaps) {
+                                return { sourcemaps: '', task: WatchActivity };
+                            }
+                            return null;
+                        }
+                        return { sourcemaps: sourcemaps, task: WatchActivity };
+                    });
+            }
+
+            if (config.uglify) {
+                activity.uglify = await this.toActivity<any, UglifyActivity>(config.uglify, activity,
+                    act => act instanceof UglifyActivity,
+                    uglify => {
+                        if (isBoolean(uglify)) {
+                            if (uglify) {
+                                return { task: UglifyActivity };
+                            }
+                            return null;
+                        }
+                        return <UglifyConfigure>{ uglifyOtions: uglify, task: UglifyActivity };
                     });
             }
         }

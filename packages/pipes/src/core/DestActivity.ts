@@ -3,11 +3,12 @@ import { PipeTask } from '../decorators';
 import { ITransform } from './ITransform';
 import { TransformType } from './pipeTypes';
 import { Expression, IActivity, ExpressionType } from '@taskfr/core';
-import { Singleton } from '@ts-ioc/core';
+import { Singleton, isArray } from '@ts-ioc/core';
 import { InjectPipeActivityToken } from './IPipeActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
 import { InjectPipeAcitityBuilderToken, PipeActivityBuilder } from './PipeActivityBuilder';
+import { SourceMapsActivity } from './SourceMapsActivity';
 /**
  * dest activity token.
  */
@@ -69,6 +70,18 @@ export class DestActivity extends PipeActivity {
      * @memberof PipeDest
      */
     destOptions: Expression<DestOptions>;
+
+    protected getRunPipes(execute?: IActivity<any>) {
+        let pipes = this.pipes;
+        if (execute) {
+            if (execute instanceof SourceMapsActivity) {
+                pipes = pipes.concat([execute]);
+            } else if (execute instanceof PipeActivity) {
+                pipes = pipes.concat([execute]);
+            }
+        }
+        return pipes;
+    }
 
     protected pipe(source: ITransform, ...pipes: TransformType[]): Promise<ITransform> {
         return super.pipe(source, ...pipes)

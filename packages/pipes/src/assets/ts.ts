@@ -6,6 +6,7 @@ import * as uglify from 'gulp-uglify';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as ts from 'gulp-typescript';
 import { ITransform } from '../core/ITransform';
+import { CtxType, OnTaskInit } from '@taskfr/core';
 
 /**
  * ts task configure.
@@ -43,23 +44,27 @@ export interface TsConfigure extends AssetConfigure {
 @AssetTask('ts')
 export class TsCompile extends AssetActivity implements OnTaskInit {
 
-    onTaskInit(cfg: TsConfigure) {
-        super.onTaskInit(cfg);
-        let pipes = this.context.to(cfg.pipes) || [];
-        if (this.context.to(cfg.sourcemaps) !== false) {
-            pipes.unshift(() => sourcemaps.init());
+    annotationFramework: TransformType;
+
+    protected async anntation(data: ITransform): Promise<ITransform> {
+        if (this.annotationFramework) {
+            let next = await this.context.exec(this, this.annotationFramework, data);
+            return data.pipe(next);
         }
+        return data;
+    }
+
+    onTaskInit(cfg: TsConfigure) {
+
+        let pipes = this.context.to(cfg.pipes) || [];
         let annotation = this.context.to(cfg.annotation);
         if (annotation) {
             if (isBoolean(annotation)) {
-                pipes.push(() => classAnnotations());
+                this.annotationFramework = () => classAnnotations();
             } else {
-                pipes.push(annotation);
+                this.annotationFramework = annotation;
             }
         }
-
-        pipes.push(() => this.getTsCompilePipe(cfg));
-        cfg.pipes = pipes;
 
         if (cfg.dest) {
             let dest = this.context.to(cfg.dest);

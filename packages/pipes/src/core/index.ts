@@ -11,6 +11,8 @@ export * from './SourceActivity';
 export * from './TestActivity';
 export * from './CleanActivity';
 export * from './WatchActivity';
+export * from './UglifyActivity';
+export * from './SourceMapsActivity';
 
 export * from './AssetConfigure';
 export * from './AssetTaskBuilder';

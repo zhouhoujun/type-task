@@ -1,12 +1,18 @@
-import { IActivity, IConfigure, SequenceActivityBuilder } from '@taskfr/core';
+import { IActivity, IConfigure, SequenceActivityBuilder, Src, InjectAcitityToken } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean, isToken } from '@ts-ioc/core';
-import { TestActivity, CleanActivity, CleanConfigure, TestAcitvityToken, CleanToken, InjectPipeAcitityBuilderToken } from '.';
 import { PackageConfigure } from './PackageConfigure';
 import { AssetConfigure } from './AssetConfigure';
 import { IPipeActivity } from './IPipeActivity';
+import { PackageActivity } from './PackageActivity';
+import { WatchActivity } from './WatchActivity';
+import { DestActivity } from './DestActivity';
+import { TestActivity, TestConfigure } from './TestActivity';
+import { CleanActivity, CleanConfigure } from './CleanActivity';
+import { AssetActivity } from './AssetActivity';
+import { AssetToken, AssetBuilderToken } from './AssetTaskBuilder';
 
 
-export interface IPackageActivity extends IPipeActivity  {
+export interface IPackageActivity extends IPipeActivity {
 
 }
 
@@ -38,71 +44,74 @@ export class PackageBuilder extends SequenceActivityBuilder {
         super(container)
     }
 
-    async beforeBindConfig(taskInst: IPipeComponent, config: IConfigure): Promise<IActivity> {
-        await super.beforeBindConfig(taskInst, config);
-        let packCfg = config as PackageConfigure;
-        let subs: IConfigure[] = [];
+    async buildStrategy<T>(activity: IActivity<T>, config: PackageConfigure): Promise<IActivity<T>> {
+        await super.buildStrategy(activity, config);
 
-        if (packCfg.test && !(taskInst instanceof TestActivity)) {
-            let test = taskInst.context.to(packCfg.test);
-            let testCfg;
-            if (isBoolean(test)) {
-                testCfg = {};
-            } else if (isArray(test) || isString(test)) {
-                testCfg = { test: test };
-            } else if (isToken(test)) {
-                testCfg = { task: test };
-            } else {
-                testCfg = test;
+        if (activity instanceof PackageActivity) {
+            let srcRoot = activity.src = activity.context.to(config.src);
+            let assets = await Promise.all(lang.keys(config.assets).map(name => {
+                return this.toActivity<Src, AssetActivity>(config.assets[name], activity,
+                    act => act instanceof AssetActivity,
+                    src => {
+                        if (isString(src) || isArray(src)) {
+                            return { src: src };
+                        } else {
+                            return null;
+                        }
+                    },
+                    assCfg => {
+                        if (!assCfg) {
+                            return null;
+                        }
+                        if (!assCfg.task) {
+                            assCfg.task = new InjectAcitityToken(name);
+                        } else if (isString(assCfg.task)) {
+                            assCfg.builder = AssetBuilderToken;
+                        }
+
+                        if (srcRoot && !assCfg.src) {
+                            assCfg.src = `${srcRoot}/**/*.${name}`;
+                        }
+                        return assCfg;
+                    })
+            }));
+            activity.assets = assets.filter(a => a);
+
+            if (config.clean) {
+                activity.clean = await this.toActivity<Src, CleanActivity>(config.clean, activity,
+                    act => act instanceof CleanActivity,
+                    src => {
+                        return <CleanConfigure>{ src: src, task: TestActivity };
+                    }
+                );
             }
-            testCfg.task = testCfg.task || TestAcitvityToken;
-            subs.push(testCfg);
-        }
 
-        if (packCfg.clean && !(taskInst instanceof CleanActivity)) {
-            let val = packCfg.clean;
-            let cleanCfg: CleanConfigure
-            if (isArray(val) || isString(val)) {
-                cleanCfg = { clean: val };
-            } else if (isToken(val)) {
-                cleanCfg = { task: val };
-            } else {
-                cleanCfg = val;
+            if (config.test) {
+                activity.test = await this.toActivity<Src, TestActivity>(config.test, activity,
+                    act => act instanceof TestActivity,
+                    src => {
+                        return <TestConfigure>{ src: src, task: TestActivity };
+                    }
+                );
             }
-            if (!cleanCfg.task) {
-                cleanCfg.task = CleanToken;
+
+            if (config.dest) {
+                activity.dest = await this.toActivity<string, DestActivity>(config.dest, activity,
+                    act => act instanceof DestActivity,
+                    dest => {
+                        return { dest: dest, task: DestActivity };
+                    });
             }
-            subs.push(cleanCfg);
+
+            if (config.watch) {
+                activity.watch = await this.toActivity<Src, WatchActivity>(config.watch, activity,
+                    act => act instanceof WatchActivity,
+                    watch => {
+                        return { watch: watch, task: WatchActivity };
+                    });
+            }
         }
 
-        if (packCfg.assets) {
-            let srcRoot = taskInst.context.to(packCfg.src);
-            lang.forIn(packCfg.assets, (val, key: string) => {
-                let assCfg: AssetConfigure;
-                if (isArray(val) || isString(val)) {
-                    assCfg = { src: val };
-                } else if (isToken(val)) {
-                    assCfg = { task: val };
-                } else {
-                    assCfg = val;
-                }
-
-                if (!assCfg.task) {
-                    assCfg.task = new Registration(AssetToken, key);
-                } else if (isString(assCfg.task)) {
-                    assCfg.builder = AssetTaskBuilderToken;
-                }
-
-                if (srcRoot && !assCfg.src) {
-                    assCfg.src = `${srcRoot}/**/*.${key}`;
-                }
-                subs.push(assCfg);
-            });
-        }
-
-        if (subs.length) {
-            await this.buildChildren(taskInst as ITaskComponent, subs);
-        }
-        return taskInst;
+        return activity;
     }
 }

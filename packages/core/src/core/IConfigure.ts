@@ -1,6 +1,7 @@
 import { IActivity } from './IActivity';
 import { Token, Type, AppConfiguration, isToken, isMetadataObject } from '@ts-ioc/core';
 import { IActivityBuilder } from './IActivityBuilder';
+import { isString } from 'util';
 
 /**
  * ActivityResult type
@@ -19,15 +20,24 @@ export type ActivityType<T extends IActivity<any>> = Token<T> | IActivityConfigu
  * @param {*} target
  * @returns {target is ActivityType<any>}
  */
-export function isActivityType(target: any): target is ActivityResultType<any> {
+export function isActivityType(target: any, check = true): target is ActivityResultType<any> {
     if (!target) {
         return false;
     }
+
+    // forbid string token for activity.
+    if (isString(target)) {
+        return false;
+    }
+
     if (isToken(target)) {
         return true;
     }
 
-    if (isMetadataObject(target) && (target.task || target.bootstrap)) {
+    if (isMetadataObject(target)) {
+        if (check) {
+            return !!(target.task || target.bootstrap);
+        }
         return true;
     }
 
