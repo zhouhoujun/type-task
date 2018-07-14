@@ -1,5 +1,5 @@
-import { ActivityBuilder, IActivity, IConfigure, IActivityBuilder, isActivityType, TaskRunner } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, isMetadataObject, Token, Registration, isToken, isPromise } from '@ts-ioc/core';
+import { ActivityBuilder, IActivity, IActivityBuilder, isActivityType } from '@taskfr/core';
+import { Inject, ContainerToken, IContainer, Singleton, isMetadataObject, Token, Registration, isPromise } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { TransformConfig, TransformType, TransformExpress } from './pipeTypes';
 import { PipeActivityToken, IPipeActivity, InjectAssetActivityToken } from './IPipeActivity';

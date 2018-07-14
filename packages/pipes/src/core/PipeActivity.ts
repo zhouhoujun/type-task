@@ -1,7 +1,7 @@
 import { IPipeContext, PipeContextToken } from './IPipeContext';
-import { Inject, isFunction, isClass, isArray } from '@ts-ioc/core';
+import { Inject, isArray } from '@ts-ioc/core';
 import { IPipeActivity } from './IPipeActivity';
-import { Activity, TaskRunner, IActivity } from '@taskfr/core';
+import { Activity, IActivity } from '@taskfr/core';
 import { PipeTask } from '../decorators';
 import { ITransform } from './ITransform';
 import { TransformType, isTransform } from './pipeTypes';

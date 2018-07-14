@@ -1,6 +1,7 @@
 export * from '../core/Activity';
 // export * from './Confirm';
 export * from './Delay';
+export * from './Interval';
 export * from './DoWhile';
 export * from './If';
 export * from './Invoke';

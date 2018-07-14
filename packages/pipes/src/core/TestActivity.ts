@@ -1,6 +1,6 @@
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
-import { Src, CtxType, Condition, IActivity, ExpressionType, Expression } from '@taskfr/core';
+import { CtxType, IActivity, ExpressionType, Expression } from '@taskfr/core';
 import { isUndefined, Singleton } from '@ts-ioc/core';
 import { TransformType, TransformConfig } from './pipeTypes';
 import { InjectPipeAcitityBuilderToken, PipeActivityBuilder } from './PipeActivityBuilder';
