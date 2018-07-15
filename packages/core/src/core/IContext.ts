@@ -11,15 +11,25 @@ import { ITaskContainer } from '../ITaskContainer';
  * context type.
  */
 export type CtxType<T> = T | ((context?: IContext, config?: IConfigure) => T);
-
+/**
+ * async result.
+ */
 export type AsyncResult<T> = (activity?: IActivity<T>, data?: any) => Promise<T>;
-
+/**
+ * activity result.
+ */
 export type ActivityResult<T> = Promise<T> | AsyncResult<T> | IActivity<T> | ITaskRunner<T>;
-
+/**
+ * expression.
+ */
 export type Expression<T> = T | ActivityResult<T>;
-
+/**
+ * condition expression.
+ */
 export type Condition = Expression<boolean>;
-
+/**
+ * expression type.
+ */
 export type ExpressionType<T> = Expression<T> | ActivityResultType<T>;
 
 /**

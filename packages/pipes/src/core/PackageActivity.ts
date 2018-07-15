@@ -58,11 +58,8 @@ export class PackageActivity extends SequenceActivity {
         if (this.clean) {
             await this.clean.run(data);
         }
-
         let assets = await this.execAssets(data);
-
         return assets;
-
     }
 
     protected execAssets(data?: any) {

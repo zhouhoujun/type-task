@@ -5,6 +5,7 @@ import { IPipeConfigure } from './IPipeConfigure';
 import { SourceActivity } from './SourceActivity';
 import { WatchActivity } from './WatchActivity';
 import { SourceMapsActivity } from './SourceMapsActivity';
+import { AnnotationActivity } from './Annotation';
 
 
 
@@ -37,6 +38,14 @@ export interface AssetConfigure extends IPipeConfigure {
      * @memberof AssetConfigure
      */
     watch?: ExpressionType<Src | boolean> | ActivityType<WatchActivity>;
+
+    /**
+     * asset dest activity.
+     *
+     * @type {(ExpressionType<string> | ActivityType<AnnotationActivity>)}
+     * @memberof AssetConfigure
+     */
+    annotation?: ExpressionType<string> | ActivityType<AnnotationActivity>;
 
     /**
      * asset dest activity.

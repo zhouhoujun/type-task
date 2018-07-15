@@ -1,7 +1,6 @@
-import { IActivity, IConfigure, SequenceActivityBuilder, Src, InjectAcitityToken } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration, isBoolean, isToken } from '@ts-ioc/core';
+import { IActivity, SequenceActivityBuilder, Src, InjectAcitityToken } from '@taskfr/core';
+import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration } from '@ts-ioc/core';
 import { PackageConfigure } from './PackageConfigure';
-import { AssetConfigure } from './AssetConfigure';
 import { IPipeActivity } from './IPipeActivity';
 import { PackageActivity } from './PackageActivity';
 import { WatchActivity } from './WatchActivity';
@@ -9,7 +8,7 @@ import { DestActivity } from './DestActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { AssetActivity } from './AssetActivity';
-import { AssetToken, AssetBuilderToken } from './AssetTaskBuilder';
+import { AssetBuilderToken } from './AssetTaskBuilder';
 
 
 export interface IPackageActivity extends IPipeActivity {

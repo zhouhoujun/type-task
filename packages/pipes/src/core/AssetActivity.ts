@@ -2,12 +2,15 @@ import { AssetTask } from '../decorators/AssetTask';
 import { SourceActivity } from './SourceActivity';
 import { SequenceActivity } from '@taskfr/core';
 import { DestActivity } from './DestActivity';
-import { isArray } from '@ts-ioc/core';
+import { isArray, Inject } from '@ts-ioc/core';
 import { ITransform } from './ITransform';
 import { IPipeActivity } from './IPipeActivity';
 import { WatchActivity } from './WatchActivity';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { UglifyActivity } from './UglifyActivity';
+import { AnnotationActivity } from './Annotation';
+import { IPipeContext, PipeContextToken } from './IPipeContext';
+import { AssetConfigure } from './AssetConfigure';
 
 export interface IAssetActivity extends IPipeActivity {
     /**
@@ -78,14 +81,40 @@ export class AssetActivity extends SequenceActivity implements IAssetActivity {
      */
     uglify: UglifyActivity;
 
+    /**
+     * asset annotation.
+     *
+     * @type {AnnotationActivity}
+     * @memberof AssetActivity
+     */
+    annotation: AnnotationActivity;
+
+    /**
+     * context.
+     *
+     * @type {IPipeContext}
+     * @memberof BaseTask
+     */
+    @Inject(PipeContextToken)
+    context: IPipeContext;
+
+    /**
+     * asset config.
+     *
+     * @type {AssetConfigure}
+     * @memberof AssetActivity
+     */
+    config: AssetConfigure;
+
     protected async begin(data?: any): Promise<ITransform> {
         let source = await this.src.run(data);
-        source = await this.anntation(source);
+        if (this.annotation) {
+            source = await this.annotation.run(source);
+        }
         if (this.sourcemaps) {
             source = await this.sourcemaps.init(source);
         }
         return source;
-
     }
 
     protected async end(data?: ITransform): Promise<ITransform> {
@@ -100,10 +129,6 @@ export class AssetActivity extends SequenceActivity implements IAssetActivity {
         } else if (this.dest) {
             await this.executeDest(this.dest, data);
         }
-        return data;
-    }
-
-    protected async anntation(data: ITransform): Promise<ITransform> {
         return data;
     }
 

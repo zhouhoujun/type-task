@@ -1,4 +1,4 @@
-import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken, isSymbol, InjectToken } from '@ts-ioc/core';
+import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken, InjectToken } from '@ts-ioc/core';
 import { TaskMetadata } from '../metadatas';
 import { ActivityToken, IActivity } from '../IActivity';
 import { ActivityBuilderToken, IActivityBuilder } from '../IActivityBuilder';
@@ -52,6 +52,18 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
     (target: Function): void;
 }
 
+/**
+ * create task decorator.
+ *
+ * @export
+ * @template T
+ * @param {string} taskType
+ * @param {(Token<IActivityBuilder> | IActivityBuilder)} builder
+ * @param {InjectToken<IActivity<any>>} provideType
+ * @param {MetadataAdapter} [adapter]
+ * @param {MetadataExtends<T>} [metadataExtends]
+ * @returns {ITaskDecorator<T>}
+ */
 export function createTaskDecorator<T extends TaskMetadata>(
     taskType: string,
     builder: Token<IActivityBuilder> | IActivityBuilder,

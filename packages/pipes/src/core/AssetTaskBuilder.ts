@@ -7,6 +7,8 @@ import { DestActivity } from './DestActivity';
 import { WatchActivity } from './WatchActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { SourceMapsActivity } from './SourceMapsActivity';
+import { AnnotationActivity, AnnotationConfigure } from './Annotation';
+import { isString } from 'util';
 
 
 
@@ -56,6 +58,20 @@ export class AssetTaskBuilder extends SequenceActivityBuilder {
                     act => act instanceof DestActivity,
                     dest => {
                         return { dest: dest, task: DestActivity };
+                    });
+            }
+
+            if (config.annotation) {
+                activity.annotation = await this.toActivity<string, AnnotationActivity>(config.annotation, activity,
+                    act => act instanceof AnnotationActivity,
+                    dest => {
+                        return <AnnotationConfigure>{ annotationFramework: require(dest), task: AnnotationActivity };
+                    },
+                    cfg => {
+                        if (isString(cfg)) {
+                            <AnnotationConfigure>{ annotationFramework: require(cfg), task: AnnotationActivity };
+                        }
+                        return cfg;
                     });
             }
 

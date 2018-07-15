@@ -1,8 +1,6 @@
 import { CtxType, Src, ExpressionType, ActivityType } from '@taskfr/core';
 import { ObjectMap } from '@ts-ioc/core';
-import { DestType } from './AssetConfigure';
 import { IPipeConfigure } from './IPipeConfigure';
-import { TransformConfig } from './pipeTypes';
 import { TestActivity } from './TestActivity';
 import { AssetActivity } from './AssetActivity';
 import { CleanActivity } from './CleanActivity';

@@ -88,7 +88,12 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
             return result;
         }
 
-        let rt = await target.context.exec(target, result);
+        let rt;
+        if (isString(result)) {
+            rt = result;
+        } else {
+            rt = await target.context.exec(target, result);
+        }
         let config = toConfig(rt);
         if (valify) {
             config = valify(config);

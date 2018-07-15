@@ -6,7 +6,8 @@ import * as uglify from 'gulp-uglify';
 import * as sourcemaps from 'gulp-sourcemaps';
 import * as ts from 'gulp-typescript';
 import { ITransform } from '../core/ITransform';
-import { CtxType, OnTaskInit } from '@taskfr/core';
+import { CtxType, OnTaskInit, ExpressionType, ActivityType } from '@taskfr/core';
+import { AnnotationActivity } from '../core/Annotation';
 
 /**
  * ts task configure.
@@ -27,10 +28,10 @@ export interface TsConfigure extends AssetConfigure {
     /**
      * class annotation.
      *
-     * @type {(CtxType<boolean | TransformType>)}
+     * @type {(boolean | ExpressionType<string> | ActivityType<AnnotationActivity>)}
      * @memberof TsConfigure
      */
-    annotation?: CtxType<boolean | TransformType>;
+    annotation?: boolean | ExpressionType<string> | ActivityType<AnnotationActivity>;
     /**
      * set tsconfig to compile.
      *
@@ -44,49 +45,42 @@ export interface TsConfigure extends AssetConfigure {
 @AssetTask('ts')
 export class TsCompile extends AssetActivity implements OnTaskInit {
 
-    annotationFramework: TransformType;
-
-    protected async anntation(data: ITransform): Promise<ITransform> {
-        if (this.annotationFramework) {
-            let next = await this.context.exec(this, this.annotationFramework, data);
-            return data.pipe(next);
-        }
-        return data;
-    }
 
     onTaskInit(cfg: TsConfigure) {
 
-        let pipes = this.context.to(cfg.pipes) || [];
-        let annotation = this.context.to(cfg.annotation);
-        if (annotation) {
-            if (isBoolean(annotation)) {
-                this.annotationFramework = () => classAnnotations();
-            } else {
-                this.annotationFramework = annotation;
+        if (isBoolean(cfg.annotation)) {
+            if (cfg.annotation) {
+                cfg.annotation = { annotationFramework: () => classAnnotations(), task: AnnotationActivity };
             }
         }
 
-        if (cfg.dest) {
-            let dest = this.context.to(cfg.dest);
-            if (isArray(dest)) {
-                let dests = [];
-                dest.forEach(d => {
-                    let subs = this.generateDest(cfg, d);
-                    if (isArray(subs)) {
-                        dests = dests.concat(subs);
-                    } else {
-                        dests.push(subs);
-                    }
-                });
-                dest = dests;
-            } else {
-                dest = this.generateDest(cfg, dest);
-            }
-            cfg.dest = dest;
-        }
+    // if (cfg.dest) {
+    //     let dest = this.context.to(cfg.dest);
+    //     if (isArray(dest)) {
+    //         let dests = [];
+    //         dest.forEach(d => {
+    //             let subs = this.generateDest(cfg, d);
+    //             if (isArray(subs)) {
+    //                 dests = dests.concat(subs);
+    //             } else {
+    //                 dests.push(subs);
+    //             }
+    //         });
+    //         dest = dests;
+    //     } else {
+    //         dest = this.generateDest(cfg, dest);
+    //     }
+    //     cfg.dest = dest;
+    // }
     }
 
-    private getTsCompilePipe(cfg: TsConfigure): ITransform {
+    protected async begin(data?: any): Promise<ITransform> {
+        let stream = await super.begin(data);
+        return stream.pipe(this.getTsCompilePipe());
+    }
+
+    private getTsCompilePipe(): ITransform {
+        let cfg = this.config as TsConfigure;
         let tsconfig = this.context.to(cfg.tsconfig || './tsconfig.json');
         if (isString(tsconfig)) {
             let tsProject = ts.createProject(this.context.toRootPath(tsconfig));
