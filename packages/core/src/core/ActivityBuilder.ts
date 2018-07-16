@@ -25,12 +25,11 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
     async build(task: ActivityResultType<any>, uuid: string): Promise<IActivity<any>> {
         let taskInst = await super.build(task);
         let config = this.getConfigure(task) as IConfigure;
-        let ctxbuider = this.getBuilder(config, task);
+        let ctxbuider = this.getBuilder(config);
         if (!taskInst || !(taskInst instanceof Activity)) {
             config.task = ctxbuider.getDefaultAcitvity();
             console.log('try load default activity:', getClassName(config.task));
-            config.builder = undefined;
-            taskInst = await ctxbuider.build(task, uuid);
+            taskInst = await ctxbuider.build(config, uuid);
         }
 
         taskInst.id = uuid;
@@ -56,19 +55,26 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         return super.getConfigure(token, moduleDecorator || Task);
     }
 
-    getBuilder(cfg: IConfigure, task: ActivityResultType<any>): IActivityBuilder {
+    getBuilder(cfg: IConfigure): IActivityBuilder {
         let builder: IActivityBuilder;
-        if (cfg.task) {
-            builder = this.getBuilderViaTask(cfg.task);
-        }
-        if (!builder && cfg.builder) {
+        if (cfg.builder) {
             builder = this.getBuilderViaConfig(cfg.builder);
+        } else {
+            let token = this.getBootstrapToken(cfg);
+            if (token) {
+                builder = this.getBuilderViaTask(token);
+            }
         }
         return builder || this;
     }
 
     getDefaultAcitvity(): Type<IActivity<any>> {
         return Activity;
+    }
+
+
+    protected getMetaConfig(token: Type<any>, moduleDecorator: Function | string): IConfigure {
+        return lang.omit(super.getMetaConfig(token, moduleDecorator || Task), 'builder');
     }
 
 

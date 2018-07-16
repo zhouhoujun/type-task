@@ -22,7 +22,6 @@ export class PackageBuilder extends SequenceActivityBuilder {
 
     async buildStrategy(activity: IActivity<any>, config: PackageConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
-
         if (activity instanceof PackageActivity) {
             let srcRoot = activity.src = activity.context.to(config.src);
             let assets = await Promise.all(lang.keys(config.assets).map(name => {
@@ -57,7 +56,7 @@ export class PackageBuilder extends SequenceActivityBuilder {
                 activity.clean = await this.toActivity<Src, CleanActivity>(config.clean, activity,
                     act => act instanceof CleanActivity,
                     src => {
-                        return <CleanConfigure>{ src: src, task: TestActivity };
+                        return <CleanConfigure>{ src: src, task: CleanActivity };
                     }
                 );
             }
@@ -66,6 +65,9 @@ export class PackageBuilder extends SequenceActivityBuilder {
                 activity.test = await this.toActivity<Src, TestActivity>(config.test, activity,
                     act => act instanceof TestActivity,
                     src => {
+                        if (!src) {
+                            return null;
+                        }
                         return <TestConfigure>{ src: src, task: TestActivity };
                     }
                 );

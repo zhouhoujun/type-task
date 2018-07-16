@@ -54,11 +54,10 @@ export interface IActivityBuilder extends IModuleBuilder<IActivity<any>> {
      * get builder.
      *
      * @param {IConfigure} cfg
-     * @param {ActivityResultType<any>} task
      * @returns {IActivityBuilder}
      * @memberof IActivityBuilder
      */
-    getBuilder(cfg: IConfigure, task: ActivityResultType<any>): IActivityBuilder;
+    getBuilder(cfg: IConfigure, isToken: boolean): IActivityBuilder;
 
     /**
      * get default activity of builder.

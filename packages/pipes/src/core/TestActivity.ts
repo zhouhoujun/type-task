@@ -79,7 +79,6 @@ export class TestActivity extends SourceActivity {
                     return new Promise((resolve, reject) => {
                         pipe
                             .once('end', () => {
-                                console.log('awit pipe end.')
                                 resolve();
                             })
                             .once('error', reject);
