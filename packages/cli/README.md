@@ -48,17 +48,10 @@ class SimpleTask extends AbstractTask implements ITask {
 
 ```
 
-* Component task
+* control flow activities.
 
-```ts
-@Task
-class DelComponentTask extends TaskElement {
-    execute(data?: any): Promise<any> {
-        return del(['lib/**']);
-    }
-}
+see [control flow codes](https://github.com/zhouhoujun/type-task/tree/master/packages/core/src/activities)
 
-```
 
 * Task module
 
@@ -93,7 +86,7 @@ TaskContainer.create(__dirname)
 ## Simples
 
 ```ts
-import { PipeModule, PackageTask, PipeAsset, IPackageConfigure, IAssetConfigure } from '@taskfr/pipes';
+import { PipeModule, PackageTask, AssetActivity, IPackageConfigure, IAssetConfigure } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const rename = require('gulp-rename');
 const rollup = require('gulp-rollup');
@@ -111,7 +104,7 @@ const builtins = require('rollup-plugin-node-builtins');
         ts: { dest: 'lib', uglify: true, task: 'ts' }
     }
 })
-export class Builder extends PipeElement {
+export class Builder {
 }
 
 TaskContainer.create(__dirname)
@@ -159,7 +152,7 @@ TaskContainer.create(__dirname)
                 () => rename('core.umd.js')
             ],
             dest: 'bundles',
-            task: PipeAsset
+            task: AssetActivity
         });
 
 ```
