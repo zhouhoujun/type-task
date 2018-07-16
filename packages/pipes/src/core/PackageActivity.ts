@@ -6,7 +6,8 @@ import { TestActivity } from './TestActivity';
 import { CleanActivity } from './CleanActivity';
 import { AssetActivity } from './AssetActivity';
 import { ITransform } from './ITransform';
-import { Type } from '@ts-ioc/core';
+import { Type, Inject } from '@ts-ioc/core';
+import { PipeContextToken, IPipeContext } from './IPipeContext';
 
 /**
  * package activity.
@@ -49,6 +50,15 @@ export class PackageActivity extends SequenceActivity {
      * @memberof PackageActivity
      */
     executeType: Type<SequenceActivity | ParallelActivity>;
+
+    /**
+     * context.
+     *
+     * @type {IPipeContext}
+     * @memberof PackageActivity
+     */
+    @Inject(PipeContextToken)
+    context: IPipeContext;
 
 
     protected async begin(data?: any): Promise<ITransform> {

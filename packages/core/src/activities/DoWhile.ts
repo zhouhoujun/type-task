@@ -73,10 +73,10 @@ export class DoWhileActivity extends Activity<any> {
 
 @Singleton(DoWhileActivityBuilderToken)
 export class DoWhileActivityBuilder extends ActivityBuilder {
-    async buildStrategy<T>(activity: IActivity<T>, config: DoWhileConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: DoWhileConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof DoWhileActivity) {
-            activity.body = await this.build<T>(config.do, activity.id);
+            activity.body = await this.build(config.do, activity.id);
             activity.condition = await this.toExpression(config.while, activity);
         }
         return activity;

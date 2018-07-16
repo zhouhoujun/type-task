@@ -21,7 +21,7 @@ import { UUIDToken, RandomUUIDFactory } from './uuid';
 export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
 
     get task(): ActivityResultType<T> {
-        return this.work;
+        return this.activity;
     }
 
     get taskInstance(): IActivity<T> {
@@ -47,17 +47,17 @@ export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
 
     /**
      * Creates an instance of TaskRunner.
-     * @param {ActivityResultType<T>} work
+     * @param {ActivityResultType<T>} activity
      * @param {string} [uuid]
      * @param {IActivity<T>} [instance]
-     * @param {IActivityBuilder} [taskBuilder]
+     * @param {IActivityBuilder} [activityBuilder]
      * @memberof TaskRunner
      */
     constructor(
-        private work: ActivityResultType<T>,
+        private activity: ActivityResultType<T>,
         public uuid?: string,
         private instance?: IActivity<T>,
-        private taskBuilder?: IActivityBuilder) {
+        private activityBuilder?: IActivityBuilder) {
         this.stateChanged = new BehaviorSubject(RunState.init);
     }
 
@@ -69,7 +69,7 @@ export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
         if (!this.uuid) {
             if (this.instance && this.instance.id) {
                 this.uuid = this.instance.id;
-            } else if (isToken(this.work)) {
+            } else if (isToken(this.activity)) {
                 this.uuid = this.createUUID();
             }
             this.uuid = this.uuid || this.createUUID()
@@ -79,10 +79,10 @@ export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
 
 
     getBuilder(): IActivityBuilder {
-        if (!this.taskBuilder) {
-            this.taskBuilder = this.container.resolve(ActivityBuilderToken);
+        if (!this.activityBuilder) {
+            this.activityBuilder = this.container.resolve(ActivityBuilderToken);
         }
-        return this.taskBuilder;
+        return this.activityBuilder;
     }
 
     async getInstance() {

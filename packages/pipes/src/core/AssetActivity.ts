@@ -79,8 +79,8 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      */
     defaultAnnotation?: IActivityConfigure<AnnotationActivity>;
 
-    protected async beginPipe(data?: any, execute?: IActivity<any>): Promise<ITransform> {
-        let source = await this.src.run(data);
+    protected async beginPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+        let source = await this.src.run(stream);
         if (this.annotation) {
             source = await this.annotation.run(source);
         }
@@ -90,25 +90,33 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
         return source;
     }
 
-    protected async endPipe(data?: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+    protected async endPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+        stream = await this.executeUglify(stream);
         if (isArray(this.dest)) {
             if (this.dest.length === 1) {
-                await this.dest[0].run(data, this.sourcemaps);
+                await this.executeDest(this.dest[0], stream);
             } else if (this.dest.length > 0) {
                 await Promise.all(this.dest.map(ds => {
-                    return this.executeDest(ds, data);
+                    return this.executeDest(ds, stream);
                 }));
             }
         } else if (this.dest) {
-            await this.executeDest(this.dest, data);
+            await this.executeDest(this.dest, stream);
         }
-        return data;
+        return stream;
     }
 
-    protected async executeDest(ds: DestActivity, data: ITransform) {
+    protected async executeUglify(stream: ITransform) {
+        if (this.uglify) {
+            stream = await this.uglify.run(stream);
+        }
+        return stream;
+    }
+
+    protected async executeDest(ds: DestActivity, stream: ITransform) {
         if (!ds) {
             return null;
         }
-        return ds.run(data, this.sourcemaps);
+        return ds.run(stream, this.sourcemaps);
     }
 }

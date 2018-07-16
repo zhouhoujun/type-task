@@ -1,10 +1,11 @@
-import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang } from '@ts-ioc/core';
-import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, ActivityBuilderToken, IActivityBuilder, ActivityResultType } from './core';
+import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang, isToken } from '@ts-ioc/core';
+import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, ActivityBuilderToken, IActivityBuilder, ActivityResultType, ActivityType } from './core';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
 import * as activites from './activities';
+import { SequenceConfigure } from './activities';
 
 
 /**
@@ -30,10 +31,6 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> imp
         return this;
     }
 
-    protected createRunner(task: ActivityResultType<IActivity<any>>, instance: IActivity<any>) {
-        return this.getContainer().resolve(TaskRunnerToken, { work: task, instance: instance, taskBuilder: this.getModuleBuilder() });
-    }
-
     /**
      * create workflow
      *
@@ -42,29 +39,35 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> imp
      * @memberof ITaskContainer
      */
     createWorkflow(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner<any>> {
-        let task = (tasks.length > 1) ? { children: tasks, task: activites.SequenceActivity } : lang.first(tasks);
-        return super.bootstrap(task)
-            .then(instance => {
-                return this.createRunner(task, instance);
-            });
+        let task = (tasks.length > 1) ? <SequenceConfigure>{ sequence: tasks, task: activites.SequenceActivity } : lang.first(tasks);
+        return super.bootstrap(task);
     }
 
     /**
      * bootstrap application via main module
      *
-     * @param {...tasks: TaskType<ITask>[]} bootModule
+     * @param {...tasks: ActivityType<IActivity<any>>[]} bootModule
      * @returns {Promise<T>}
      * @memberof ApplicationBuilder
      */
-    async bootstrap(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner<any>> {
+    async bootstrap(...tasks: ActivityType<IActivity<any>>[]): Promise<ITaskRunner<any>> {
         let runner = await this.createWorkflow(...tasks);
         await runner.start();
         return runner;
     }
 
+
     getRootPath() {
         return this.rootPath;
     }
+
+    protected async build(builder: IActivityBuilder, token: ActivityType<IActivity<any>>, config: IConfigure): Promise<ITaskRunner<any>> {
+        if (!config.task) {
+            config.task = isToken(token) ? token : null;
+        }
+        return this.getContainer().resolve(TaskRunnerToken, { activity: config, activityBuilder: builder });
+    }
+
 
     protected createModuleBuilder(): IActivityBuilder {
         return this.getContainer().get(ActivityBuilderToken);

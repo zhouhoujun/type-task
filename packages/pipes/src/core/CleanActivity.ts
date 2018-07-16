@@ -3,7 +3,8 @@ import {
     Expression, InjectAcitityBuilderToken, ActivityBuilder,
     IActivity, ExpressionType
 } from '@taskfr/core';
-import { Singleton } from '@ts-ioc/core';
+import { Singleton, Inject } from '@ts-ioc/core';
+import { PipeContextToken, IPipeContext } from './IPipeContext';
 const del = require('del');
 
 
@@ -39,6 +40,16 @@ export interface CleanConfigure extends IConfigure {
  */
 @Task(CleanToken, CleanActivityBuilderToken)
 export class CleanActivity extends Activity<any> {
+
+    /**
+     * context.
+     *
+     * @type {IPipeContext}
+     * @memberof BaseTask
+     */
+    @Inject(PipeContextToken)
+    context: IPipeContext;
+
     clean: Expression<Src>;
 
     async run(data?: any): Promise<any> {
@@ -50,7 +61,7 @@ export class CleanActivity extends Activity<any> {
 @Singleton(CleanActivityBuilderToken)
 export class CleanActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: CleanConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: CleanConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof CleanActivity) {
             activity.clean = await this.toExpression(config.clean, activity);

@@ -60,6 +60,11 @@ export class TsCompile extends AssetActivity implements OnTaskInit {
         }
     }
 
+    protected async execute(stream: ITransform): Promise<ITransform> {
+        stream.js = await this.pipe(stream.js, ...this.pipes);
+        return stream;
+     }
+
     protected async beginPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
         stream = await super.beginPipe(stream, execute);
         return await this.pipe(stream, this.getTsCompilePipe());
@@ -76,8 +81,17 @@ export class TsCompile extends AssetActivity implements OnTaskInit {
         }
     }
 
-    protected async endPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+    protected async executeUglify(stream: ITransform) {
+        if (this.uglify) {
+            stream.js = await this.uglify.run(stream.js);
+        }
+        return stream;
+    }
 
+    protected async executeDest(ds: DestActivity, stream: ITransform) {
+        if (!ds) {
+            return null;
+        }
         if (this.tdsDest && stream.dts) {
             let tds: DestActivity;
             if (isBoolean(this.tdsDest)) {
@@ -87,8 +101,8 @@ export class TsCompile extends AssetActivity implements OnTaskInit {
             }
             await this.executeDest(tds, stream);
         }
-
-        return await super.endPipe(stream, execute);
+        await ds.run(stream.js, this.sourcemaps);
+        return stream;
     }
 
     // generateDest(cfg: TsConfigure, dest: DestType): DestConfigure | DestConfigure[] {

@@ -74,7 +74,7 @@ export class SourceActivity extends PipeActivity {
 @Singleton(SourceAcitvityBuilderToken)
 export class PipeSourceActivityBuilder extends PipeActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: SourceConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: SourceConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof SourceActivity) {
 

@@ -1,5 +1,5 @@
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
-import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, Token, ModuleBuilder, Registration, isClass, getTypeMetadata, lang, Express, isToken } from '@ts-ioc/core';
+import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, Token, ModuleBuilder, Registration, isClass, getTypeMetadata, lang, Express, isToken, getClassName } from '@ts-ioc/core';
 import { IConfigure, ActivityResultType, isActivityType, ActivityType } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Task } from './decorators';
@@ -16,32 +16,34 @@ import { Activity } from './Activity';
  */
 @Singleton(ActivityBuilderToken)
 export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IActivityBuilder {
+    @Inject(ContainerToken) container: IContainer;
 
-    constructor(@Inject(ContainerToken) container: IContainer) {
-        super(container)
+    constructor() {
+        super()
     }
 
-    async build<T>(task: ActivityResultType<T>, uuid: string): Promise<IActivity<T>> {
+    async build(task: ActivityResultType<any>, uuid: string): Promise<IActivity<any>> {
         let taskInst = await super.build(task);
-
+        let config = this.getConfigure(task) as IConfigure;
+        let ctxbuider = this.getBuilder(config);
         if (!taskInst || !(taskInst instanceof Activity)) {
-            throw new Error('builder task instance failed.');
+            config.task = ctxbuider.getDefaultAcitvity();
+            console.log('try load default activity:', getClassName(config.task));
+            taskInst = await ctxbuider.build(config, uuid);
         }
 
         taskInst.id = uuid;
 
-        let config = this.getConfigure(task) as IConfigure;
         if (isFunction(taskInst['onTaskInit'])) {
             taskInst['onTaskInit'](config);
         }
-        let ctxbuider = this.getBuilder(config);
 
         await ctxbuider.buildStrategy(taskInst, config);
 
         return taskInst;
     }
 
-    async buildStrategy<T>(activity: IActivity<T>, config: IConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: IConfigure): Promise<IActivity<any>> {
         if (config.name) {
             activity.name = config.name;
         }
@@ -63,6 +65,11 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         }
         return builder || this;
     }
+
+    getDefaultAcitvity(): Type<IActivity<any>> {
+        return Activity;
+    }
+
 
     protected async toExpression<T>(exptype: ExpressionType<T>, target: IActivity<any>): Promise<Expression<T>> {
         if (isActivityType(exptype)) {

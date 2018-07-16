@@ -129,7 +129,7 @@ export class DestActivity extends PipeActivity {
 @Singleton(DestAcitvityBuilderToken)
 export class DestActivityBuilder extends PipeActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: DestConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: DestConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof DestActivity) {
 

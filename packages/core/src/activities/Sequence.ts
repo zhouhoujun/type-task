@@ -56,7 +56,7 @@ export class SequenceActivity extends Activity<any> {
 @Singleton(SequenceActivityBuilderToken)
 export class SequenceActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: SequenceConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: SequenceConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof SequenceActivity) {
             if (config.sequence && config.sequence.length) {
@@ -67,7 +67,7 @@ export class SequenceActivityBuilder extends ActivityBuilder {
         return activity;
     }
 
-    async buildChildren<T>(activity: SequenceActivity, configs: (IConfigure | Token<IActivity<T>>)[]) {
+    async buildChildren(activity: SequenceActivity, configs: (IConfigure | Token<IActivity<any>>)[]) {
         let sequence = await Promise.all(configs.map(async cfg => {
             let node = await this.build(cfg, activity.id);
             if (!node) {

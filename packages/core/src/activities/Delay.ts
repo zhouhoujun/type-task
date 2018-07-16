@@ -64,7 +64,7 @@ export class DelayActivity extends Activity<any> {
 @Singleton(DelayActivityBuilderToken)
 export class DelayActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: DelayConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: DelayConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof DelayActivity) {
             activity.delay = await this.toExpression(config.delay, activity);

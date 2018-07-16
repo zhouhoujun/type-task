@@ -83,9 +83,6 @@ export function createTaskDecorator<T extends TaskMetadata>(
                         metadata.name = arg;
                     } else {
                         metadata.provide = arg;
-                        if (arg instanceof Registration) {
-                            metadata.name = arg.getDesc();
-                        }
                     }
                 }
             });
@@ -93,7 +90,7 @@ export function createTaskDecorator<T extends TaskMetadata>(
             args.next<TaskMetadata>({
                 match: (arg) => isString(arg) || isToken(arg),
                 setMetadata: (metadata, arg) => {
-                    if (isString) {
+                    if (isString(arg)) {
                         metadata.name = arg;
                     } else {
                         metadata.builder = arg;
@@ -104,6 +101,7 @@ export function createTaskDecorator<T extends TaskMetadata>(
             args.next<TaskMetadata>({
                 match: (arg) => isString(arg),
                 setMetadata: (metadata, arg) => {
+                    console.log(arg);
                     metadata.name = arg;
                 }
             });

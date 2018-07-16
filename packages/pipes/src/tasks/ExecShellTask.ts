@@ -1,6 +1,7 @@
 import { ExecOptions, exec } from 'child_process';
-import { isString, isBoolean, isArray, lang, ObjectMap } from '@ts-ioc/core';
+import { isString, isBoolean, isArray, lang, ObjectMap, Inject } from '@ts-ioc/core';
 import { Src, IConfigure, CtxType, OnTaskInit, Activity, Task } from '@taskfr/core';
+import { IPipeContext, PipeContextToken } from '../core';
 
 /**
  * shell task config.
@@ -76,6 +77,9 @@ export class ExecShellTask extends Activity<any> implements OnTaskInit {
      * @memberof ExecShellTask
      */
     allowError: boolean;
+
+    @Inject(PipeContextToken)
+    context: IPipeContext;
 
     onTaskInit(config: ShellTaskConfig) {
         this.shell = this.context.to(config.shell);

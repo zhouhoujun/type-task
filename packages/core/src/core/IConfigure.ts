@@ -1,7 +1,6 @@
 import { IActivity } from './IActivity';
-import { Token, Type, AppConfiguration, isToken, isMetadataObject } from '@ts-ioc/core';
+import { Token, AppConfiguration, isToken, isMetadataObject, isString } from '@ts-ioc/core';
 import { IActivityBuilder } from './IActivityBuilder';
-import { isString } from 'util';
 
 /**
  * ActivityResult type

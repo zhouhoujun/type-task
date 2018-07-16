@@ -108,7 +108,7 @@ export class TryCatchActivity extends Activity<any> {
 @Singleton(TryCatchActivityBuilderToken)
 export class TryCatchActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: TryCatchConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: TryCatchConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof TryCatchActivity) {
             activity.try = await this.build(config.try, activity.id);

@@ -79,10 +79,10 @@ export class WhileActivity extends Activity<any> {
 
 @Singleton(WhileActivityBuilderToken)
 export class WhileActivityBuilder extends ActivityBuilder {
-    async buildStrategy<T>(activity: IActivity<T>, config: WhileConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: WhileConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof WhileActivity) {
-            activity.body = await this.build<any>(config.body, activity.id);
+            activity.body = await this.build(config.body, activity.id);
             activity.condition = await this.toExpression(config.while, activity);
         }
         return activity;

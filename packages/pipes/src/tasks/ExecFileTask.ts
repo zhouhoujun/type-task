@@ -1,7 +1,8 @@
-import { isString, isArray } from '@ts-ioc/core';
+import { isString, isArray, Inject } from '@ts-ioc/core';
 import { existsSync } from 'fs';
 import { Src, Activity, Task } from '@taskfr/core';
 import * as execa from 'execa';
+import { PipeContextToken, IPipeContext } from '../core';
 
 
 /**
@@ -16,6 +17,9 @@ export class ExecFileTask extends Activity<any> {
     args?: string[];
     options?: execa.Options;
     allowError = true;
+
+    @Inject(PipeContextToken)
+    context: IPipeContext;
 
     run(): Promise<any> {
         return Promise.resolve(this.files)

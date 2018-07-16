@@ -47,7 +47,7 @@ export class Context implements IContext {
         } else if (builder instanceof ActivityBuilder) {
             builderInst = builder;
         }
-        return this.container.resolve(TaskRunnerToken, { work: task, uuid: uuid, instance: instance, taskBuilder: builderInst })
+        return this.container.resolve(TaskRunnerToken, { activity: task, uuid: uuid, instance: instance, activityBuilder: builderInst })
     }
 
 
@@ -88,7 +88,7 @@ export class Context implements IContext {
         } else if (!isUndefined(expression)) {
             return Promise.resolve(expression as T);
         } else {
-            return Promise.reject('not right expression');
+            return Promise.resolve(undefined); // Promise.reject('not right expression');
         }
     }
 

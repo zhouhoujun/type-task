@@ -21,55 +21,36 @@ function createCommonjsModule(fn, module) {
 
 var ITaskContainer = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});exports.TaskContainerToken=new core_1.InjectToken("__TASK_TaskContainer");
-
 });
 
 unwrapExports(ITaskContainer);
 var ITaskContainer_1 = ITaskContainer.TaskContainerToken;
 
-var ITaskBuilder = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});exports.TaskBuilderToken=new core_1.InjectToken("__TASK_Builder");
-
+var IActivityBuilder = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var InjectAcitityBuilderToken=function(t){function e(e){return t.call(this,"ActivityBuilder",e)||this}return tslib_1.__extends(e,t), e.classAnnations={name:"InjectAcitityBuilderToken",params:{constructor:["desc"]}}, e}(core_1.Registration);exports.InjectAcitityBuilderToken=InjectAcitityBuilderToken, exports.ActivityBuilderToken=new core_1.InjectToken("__TASK_Builder");
 });
 
-unwrapExports(ITaskBuilder);
-var ITaskBuilder_1 = ITaskBuilder.TaskBuilderToken;
+unwrapExports(IActivityBuilder);
+var IActivityBuilder_1 = IActivityBuilder.InjectAcitityBuilderToken;
+var IActivityBuilder_2 = IActivityBuilder.ActivityBuilderToken;
 
-var ITask = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});exports.TaskToken=new core_1.InjectToken("__TASK_Task");
-
+var IConfigure = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});function isActivityType(e,t){return void 0===t&&(t=!0), !!e&&(!core_1.isString(e)&&(!!core_1.isToken(e)||!!core_1.isMetadataObject(e)&&(!t||!(!e.task&&!e.bootstrap))))}exports.isActivityType=isActivityType;
 });
 
-unwrapExports(ITask);
-var ITask_1 = ITask.TaskToken;
+unwrapExports(IConfigure);
+var IConfigure_1 = IConfigure.isActivityType;
 
-var RunWay_1 = createCommonjsModule(function (module, exports) {
-var RunWay;Object.defineProperty(exports,"__esModule",{value:!0}), function(e){e[e.sequence=1]="sequence", e[e.parallel=2]="parallel", e[e.nodeFirst=4]="nodeFirst", e[e.nodeLast=8]="nodeLast", e[e.seqFirst=5]="seqFirst", e[e.seqLast=9]="seqLast", e[e.paraFirst=6]="paraFirst", e[e.paraLast=10]="paraLast";}(RunWay=exports.RunWay||(exports.RunWay={}));
-
+var IActivity = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var InjectAcitityToken=function(e){function t(t){return e.call(this,"Activity",t)||this}return tslib_1.__extends(t,e), t.classAnnations={name:"InjectAcitityToken",params:{constructor:["desc"]}}, t}(core_1.Registration);exports.InjectAcitityToken=InjectAcitityToken, exports.ActivityToken=new InjectAcitityToken("");
 });
 
-unwrapExports(RunWay_1);
-var RunWay_2 = RunWay_1.RunWay;
-
-var IContext = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});exports.ContextToken=new core_1.InjectToken("__TASK_Context");
-
-});
-
-unwrapExports(IContext);
-var IContext_1 = IContext.ContextToken;
-
-var TaskComponent_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var TaskComponent=function(n){function t(t){var e=n.call(this,t)||this;return e.runWay=RunWay_1.RunWay.seqFirst, e}return tslib_1.__extends(t,n), t.prototype.run=function(t){var n,r=this;return n=this.runWay&RunWay_1.RunWay.nodeFirst?this.execute(t):Promise.resolve(t), this.runWay&RunWay_1.RunWay.sequence?this.each(function(e){n=n.then(function(t){return e.run(t)});},core_1.Mode.children):this.runWay&RunWay_1.RunWay.parallel&&(n=n.then(function(e){return Promise.all(r.children.map(function(t){return t.run(e)}))})), this.runWay&RunWay_1.RunWay.nodeLast&&(n=n.then(function(t){return r.execute(t)})), n}, t.prototype.getRoot=function(){return this.find(function(t){return!t.parent},core_1.Mode.route)}, t.classAnnations={name:"TaskComponent",params:{constructor:["name"],run:["data"],getRoot:[],execute:["data"]}}, tslib_1.__decorate([core_1.Inject(IContext.ContextToken),tslib_1.__metadata("design:type",Object)],t.prototype,"context",void 0), t=tslib_1.__decorate([core_1.Abstract(),tslib_1.__metadata("design:paramtypes",[String])],t)}(core_1.GComposite);exports.TaskComponent=TaskComponent;
-
-});
-
-unwrapExports(TaskComponent_1);
-var TaskComponent_2 = TaskComponent_1.TaskComponent;
+unwrapExports(IActivity);
+var IActivity_1 = IActivity.InjectAcitityToken;
+var IActivity_2 = IActivity.ActivityToken;
 
 var Task = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});function createTaskDecorator(a,r,t,n,s){return core_1.createClassDecorator("Task",function(e){n&&n(e), e.next({match:function(e){return e&&(core_1.isString(e)||core_1.isObject(e)&&e instanceof core_1.Registration)},setMetadata:function(e,a){core_1.isString(a)?e.name=a:(e.provide=a)instanceof core_1.Registration&&(e.name=a.getDesc());}}), e.next({match:function(e){return e&&core_1.isString(e)},setMetadata:function(e,a){e.name=a;}});},function(e){(s&&(e=s(e)), !e.name&&core_1.isClass(e.type))&&(/^[a-z]$/.test(e.type.name)&&e.type.classAnnations?e.name=e.type.classAnnations.name:e.name=e.type.name);return e.provide=e.provide||t, e.alias=e.alias||e.name, e.taskType=a, e.builder||(e.builder=r), e})}exports.createTaskDecorator=createTaskDecorator, exports.Task=createTaskDecorator("Task",ITaskBuilder.TaskBuilderToken,ITask.TaskToken);
-
+Object.defineProperty(exports,"__esModule",{value:!0});function createTaskDecorator(t,r,i,a,n){return core_1.createClassDecorator("Task",function(e){a&&a(e), e.next({match:function(e){return e&&(core_1.isString(e)||core_1.isObject(e)&&e instanceof core_1.Registration)},setMetadata:function(e,t){core_1.isString(t)?e.name=t:e.provide=t;}}), e.next({match:function(e){return core_1.isString(e)||core_1.isToken(e)},setMetadata:function(e,t){core_1.isString(t)?e.name=t:e.builder=t;}}), e.next({match:function(e){return core_1.isString(e)},setMetadata:function(e,t){console.log(t), e.name=t;}});},function(e){(n&&(e=n(e)), !e.name&&core_1.isClass(e.type))&&(/^[a-z]$/.test(e.type.name)&&e.type.classAnnations?e.name=e.type.classAnnations.name:e.name=e.type.name);return e.provide=e.provide||i, e.alias=e.alias||e.name, e.taskType=t, e.builder||(e.builder=r), e})}exports.createTaskDecorator=createTaskDecorator, exports.Task=createTaskDecorator("Task",IActivityBuilder.ActivityBuilderToken,IActivity.ActivityToken);
 });
 
 unwrapExports(Task);
@@ -78,7 +59,6 @@ var Task_2 = Task.Task;
 
 var Runner = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});exports.Runner=core_1.createClassDecorator("Runner");
-
 });
 
 unwrapExports(Runner);
@@ -86,79 +66,71 @@ var Runner_1 = Runner.Runner;
 
 var decorators = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(Task,exports), tslib_1.__exportStar(Runner,exports);
-
 });
 
 unwrapExports(decorators);
 
-var TaskElement_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var TaskElement=function(t){function e(e){return t.call(this,e)||this}return tslib_1.__extends(e,t), e.prototype.execute=function(e){return Promise.resolve(e)}, e.classAnnations={name:"TaskElement",params:{constructor:["name"],execute:["data"]}}, e=tslib_1.__decorate([decorators.Task,tslib_1.__metadata("design:paramtypes",[String])],e)}(TaskComponent_1.TaskComponent);exports.TaskElement=TaskElement;
-
+var IContext = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var InjectContextToken=function(t){function e(e){return t.call(this,"ActivityContext",e)||this}return tslib_1.__extends(e,t), e.classAnnations={name:"InjectContextToken",params:{constructor:["desc"]}}, e}(core_1.Registration);exports.InjectContextToken=InjectContextToken, exports.ContextToken=new InjectContextToken("");
 });
 
-unwrapExports(TaskElement_1);
-var TaskElement_2 = TaskElement_1.TaskElement;
+unwrapExports(IContext);
+var IContext_1 = IContext.InjectContextToken;
+var IContext_2 = IContext.ContextToken;
 
-var TaskBuilder_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var TaskBuilder=function(o){function e(e){return o.call(this,e)||this}return tslib_1.__extends(e,o), (t=e).prototype.build=function(i){return tslib_1.__awaiter(this,void 0,void 0,function(){var t,r,n;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,o.prototype.build.call(this,i)];case 1:if(!(t=e.sent()))throw new Error("builder task instance failed.");return r=this.getConfigure(i), n=this.getBuilderToken(r), core_1.isFunction(t.onTaskInit)&&t.onTaskInit(r), [4,n.buildWithConfigure(t,r)];case 2:return e.sent(), [2,t]}})})}, e.prototype.buildWithConfigure=function(t,r){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,this.beforeBindConfig(t,r)];case 1:return e.sent(), t instanceof TaskComponent_1.TaskComponent&&r.children&&r.children.length?[4,this.buildChildren(t,r.children)]:[3,3];case 2:e.sent(), e.label=3;case 3:return[4,this.afterBindConfig(t,r)];case 4:return e.sent(), [2,t]}})})}, e.prototype.beforeBindConfig=function(t,r){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(e){return r.name&&(t.name=r.name), r.runWay&&(t.runWay=r.runWay), [2,t]})})}, e.prototype.afterBindConfig=function(t,e){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(e){return[2,t]})})}, e.prototype.buildChildren=function(r,n){return tslib_1.__awaiter(this,void 0,void 0,function(){var t=this;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return core_1.isFunction(r.add)?[4,Promise.all(n.map(function(r){return tslib_1.__awaiter(t,void 0,void 0,function(){var t;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,this.build(r)];case 1:return(t=e.sent())?t instanceof TaskComponent_1.TaskComponent&&!core_1.isToken(r)&&r.children&&r.children.length?[4,this.buildChildren(t,r.children)]:[3,3]:[2,null];case 2:e.sent(), e.label=3;case 3:return[2,t]}})})}))]:[2];case 1:return e.sent().forEach(function(e){e&&r.add(e);}), [2]}})})}, e.prototype.buildComponent=function(i){return tslib_1.__awaiter(this,void 0,void 0,function(){var t,r,n;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return core_1.isToken(i)?[4,this.build(i).catch(function(e){return console.error(e), null})]:[3,2];case 1:return t=e.sent(), [3,7];case 2:return core_1.isMetadataObject(i)?(r=i).imports?[4,(n=this.container).loadModule.apply(n,r.imports)]:[3,4]:[3,6];case 3:e.sent(), e.label=4;case 4:return r.children||r.task||r.bootstrap?(r.bootstrap||(r.task=r.task||TaskElement_1.TaskElement), [4,this.build(r).catch(function(e){return console.error(e), null})]):[2,null];case 5:return t=e.sent(), [3,7];case 6:t=null, e.label=7;case 7:return[2,t]}})})}, e.prototype.getConfigure=function(e,t){return o.prototype.getConfigure.call(this,e,t||decorators.Task)}, e.prototype.getBootstrapToken=function(e,t){var r=e.task||e.bootstrap||t;return core_1.isString(r)&&(r=this.traslateStrToken(r)), r}, e.prototype.traslateStrToken=function(e){var t=new core_1.Registration(ITask.TaskToken,e);return this.container.has(t)?t:e}, e.prototype.getBuilderToken=function(e){var t;return e.builder&&(t=this.getBuilderTokenViaConfig(e.builder)), !t&&e.task&&(t=this.getBuilderTokenViaTask(e.task)), t||this}, e.prototype.getBuilderTokenViaConfig=function(e){return core_1.isToken(e)?this.container.resolve(e):e instanceof t?e:null}, e.prototype.getBuilderTokenViaTask=function(e){if(core_1.isToken(e)){var t=core_1.isClass(e)?e:this.container.getTokenImpl(e);if(t){var r=core_1.lang.first(core_1.getTypeMetadata(decorators.Task,t));if(r&&r.builder)return core_1.isToken(r.builder)?this.container.resolve(r.builder):r.builder}}return null}, e.classAnnations={name:"TaskBuilder",params:{constructor:["container"],build:["task"],buildWithConfigure:["taskInst","config"],beforeBindConfig:["taskInst","config"],afterBindConfig:["taskInst","config"],buildChildren:["parent","configs"],buildComponent:["child"],getConfigure:["token","moduleDecorator"],getBootstrapToken:["cfg","token"],traslateStrToken:["token"],getBuilderToken:["cfg"],getBuilderTokenViaConfig:["builder"],getBuilderTokenViaTask:["task"]}}, e=t=tslib_1.__decorate([core_1.Singleton(ITaskBuilder.TaskBuilderToken),tslib_1.__param(0,core_1.Inject(core_1.ContainerToken)),tslib_1.__metadata("design:paramtypes",[Object])],e);var t;}(core_1.ModuleBuilder);exports.TaskBuilder=TaskBuilder;
-
+var Activity_1 = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var Activity=function(){function t(){}return t.prototype.run=function(t,e){return Promise.resolve(t)}, t.classAnnations={name:"Activity",params:{constructor:[],run:["data","execute"]}}, tslib_1.__decorate([core_1.Inject(IContext.ContextToken),tslib_1.__metadata("design:type",Object)],t.prototype,"context",void 0), t=tslib_1.__decorate([decorators.Task,tslib_1.__metadata("design:paramtypes",[])],t)}();exports.Activity=Activity;
 });
 
-unwrapExports(TaskBuilder_1);
-var TaskBuilder_2 = TaskBuilder_1.TaskBuilder;
+unwrapExports(Activity_1);
+var Activity_2 = Activity_1.Activity;
+
+var ActivityBuilder_1 = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var ActivityBuilder=function(s){function t(){return s.call(this)||this}return tslib_1.__extends(t,s), (e=t).prototype.build=function(n,o){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i,r;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,s.prototype.build.call(this,n)];case 1:return e=t.sent(), i=this.getConfigure(n), r=this.getBuilder(i), e&&e instanceof Activity_1.Activity?[3,3]:(i.task=r.getDefaultAcitvity(), console.log("try load default activity:",core_1.getClassName(i.task)), [4,r.build(i,o)]);case 2:e=t.sent(), t.label=3;case 3:return e.id=o, core_1.isFunction(e.onTaskInit)&&e.onTaskInit(i), [4,r.buildStrategy(e,i)];case 4:return t.sent(), [2,e]}})})}, t.prototype.buildStrategy=function(e,i){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){return i.name&&(e.name=i.name), e.config=i, [2,e]})})}, t.prototype.getConfigure=function(t,e){return s.prototype.getConfigure.call(this,t,e||decorators.Task)}, t.prototype.getBuilder=function(t){var e;return t.builder&&(e=this.getBuilderViaConfig(t.builder)), !e&&t.task&&(e=this.getBuilderViaTask(t.task)), e||this}, t.prototype.getDefaultAcitvity=function(){return Activity_1.Activity}, t.prototype.toExpression=function(e,i){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){switch(t.label){case 0:return IConfigure.isActivityType(e)?[4,this.build(e,i.id)]:[3,2];case 1:return[2,t.sent()];case 2:return[2,e]}})})}, t.prototype.toActivity=function(n,o,s,a,c){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i,r;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return IConfigure.isActivityType(n,!c)?c?[4,this.build(core_1.isToken(n)?n:c(n),o.id)]:[3,2]:[3,5];case 1:return e=t.sent(), [3,4];case 2:return[4,this.build(n,o.id)];case 3:e=t.sent(), t.label=4;case 4:return[3,6];case 5:e=n, t.label=6;case 6:return s(e)?[2,e]:core_1.isString(e)?(i=e, [3,9]):[3,7];case 7:return[4,o.context.exec(o,e)];case 8:i=t.sent(), t.label=9;case 9:return r=a(i), c&&(r=c(r)), r?[4,this.build(r,o.id)]:[3,11];case 10:return e=t.sent(), [3,12];case 11:e=null, t.label=12;case 12:return[2,e]}})})}, t.prototype.getBuilderViaConfig=function(t){return core_1.isToken(t)?this.container.resolve(t):t instanceof e?t:null}, t.prototype.getBuilderViaTask=function(t){if(core_1.isToken(t)){var e=core_1.isClass(t)?t:this.container.getTokenImpl(t);if(e){var i=core_1.lang.first(core_1.getTypeMetadata(decorators.Task,e));if(i&&i.builder)return core_1.isToken(i.builder)?this.container.resolve(i.builder):i.builder}}return null}, t.prototype.getBootstrapToken=function(t,e){var i=t.task||t.bootstrap||e;return core_1.isString(i)&&(i=this.traslateStrToken(i)), i}, t.prototype.traslateStrToken=function(t){var e=new core_1.Registration(IActivity.ActivityToken,t);return this.container.has(e)?e:t}, t.classAnnations={name:"ActivityBuilder",params:{constructor:[],build:["task","uuid"],buildStrategy:["activity","config"],getConfigure:["token","moduleDecorator"],getBuilder:["cfg"],getDefaultAcitvity:[],toExpression:["exptype","target"],toActivity:["exptype","target","isRightActivity","toConfig","valify"],getBuilderViaConfig:["builder"],getBuilderViaTask:["task"],getBootstrapToken:["cfg","token"],traslateStrToken:["token"]}}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), t=e=tslib_1.__decorate([core_1.Singleton(IActivityBuilder.ActivityBuilderToken),tslib_1.__metadata("design:paramtypes",[])],t);var e;}(core_1.ModuleBuilder);exports.ActivityBuilder=ActivityBuilder;
+});
+
+unwrapExports(ActivityBuilder_1);
+var ActivityBuilder_2 = ActivityBuilder_1.ActivityBuilder;
 
 var uuid = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});exports.UUIDToken=new core_1.InjectToken("uuid_factory");var RandomUUIDFactory=function(){function t(){}return t.prototype.generate=function(){return this.randomS4()+this.randomS4()+"-"+this.randomS4()+"-"+this.randomS4()+"-"+this.randomS4()+"-"+this.randomS4()+this.randomS4()+this.randomS4()}, t.prototype.randomS4=function(){return(65536*(1+Math.random())|0).toString(16).substring(1)}, t.classAnnations={name:"RandomUUIDFactory",params:{constructor:[],generate:[],randomS4:[]}}, t=tslib_1.__decorate([core_1.Singleton(exports.UUIDToken),tslib_1.__metadata("design:paramtypes",[])],t)}();exports.RandomUUIDFactory=RandomUUIDFactory;
-
 });
 
 unwrapExports(uuid);
 var uuid_1 = uuid.UUIDToken;
 var uuid_2 = uuid.RandomUUIDFactory;
 
-var AbstractTask_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var AbstractTask=function(){function t(t){this.name=t, this.runWay=RunWay_1.RunWay.sequence;}return t.classAnnations={name:"AbstractTask",params:{constructor:["name"],run:["data"]}}, tslib_1.__decorate([core_1.Inject(IContext.ContextToken),tslib_1.__metadata("design:type",Object)],t.prototype,"context",void 0), t=tslib_1.__decorate([core_1.Abstract(),tslib_1.__metadata("design:paramtypes",[String])],t)}();exports.AbstractTask=AbstractTask;
-
-});
-
-unwrapExports(AbstractTask_1);
-var AbstractTask_2 = AbstractTask_1.AbstractTask;
-
 var ITaskRunner = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var RunState;exports.TaskRunnerToken=new core_1.InjectToken("__TASK_TaskRunner"), function(e){e[e.init=0]="init", e[e.running=1]="running", e[e.pause=2]="pause", e[e.stop=3]="stop", e[e.complete=4]="complete";}(RunState=exports.RunState||(exports.RunState={}));
-
+Object.defineProperty(exports,"__esModule",{value:!0});var RunState,InjectTaskRunnerToken=function(n){function e(e){return n.call(this,"TaskRunner",e)||this}return tslib_1.__extends(e,n), e.classAnnations={name:"InjectTaskRunnerToken",params:{constructor:["desc"]}}, e}(core_1.Registration);exports.InjectTaskRunnerToken=InjectTaskRunnerToken, exports.TaskRunnerToken=new InjectTaskRunnerToken(""), function(e){e[e.init=0]="init", e[e.running=1]="running", e[e.pause=2]="pause", e[e.stop=3]="stop", e[e.complete=4]="complete";}(RunState=exports.RunState||(exports.RunState={}));
 });
 
 unwrapExports(ITaskRunner);
-var ITaskRunner_1 = ITaskRunner.TaskRunnerToken;
-var ITaskRunner_2 = ITaskRunner.RunState;
-
-var Context_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var Context=function(){function t(){}return t.prototype.getContainer=function(){return this.container}, t.prototype.getTaskContiner=function(){return this.container.resolve(ITaskContainer.TaskContainerToken)}, t.prototype.getRootPath=function(){return this.getTaskContiner().getRootPath()}, t.prototype.getRunner=function(t,e,n,r){var o;return core_1.isToken(n)?o=this.container.resolve(n):n instanceof TaskBuilder_1.TaskBuilder&&(o=n), this.container.resolve(ITaskRunner.TaskRunnerToken,{work:t,uuid:e,instance:r,taskBuilder:o})}, t.prototype.getEnvArgs=function(){return{}}, t.prototype.to=function(t,e){return core_1.isFunction(t)?t(this,e):t}, t.prototype.isTask=function(t){return core_1.hasOwnClassMetadata(decorators.Task,t)}, t.classAnnations={name:"Context",params:{constructor:[],getContainer:[],getTaskContiner:[],getRootPath:[],getRunner:["task","uuid","builder","instance"],getEnvArgs:[],to:["target","config"],isTask:["task"]}}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), t=tslib_1.__decorate([core_1.Singleton(IContext.ContextToken),tslib_1.__metadata("design:paramtypes",[])],t)}();exports.Context=Context;
-
-});
-
-unwrapExports(Context_1);
-var Context_2 = Context_1.Context;
+var ITaskRunner_1 = ITaskRunner.InjectTaskRunnerToken;
+var ITaskRunner_2 = ITaskRunner.TaskRunnerToken;
+var ITaskRunner_3 = ITaskRunner.RunState;
 
 var TaskRunner_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var TaskRunner=function(){function t(t,e,r,n){this.work=t, this.uuid=e, this.instance=r, this.taskBuilder=n, this._result=new BehaviorSubject_1.BehaviorSubject(null), this.stateChanged=new BehaviorSubject_1.BehaviorSubject(ITaskRunner.RunState.init);}return Object.defineProperty(t.prototype,"task",{get:function(){return this.work},enumerable:!0,configurable:!0}), Object.defineProperty(t.prototype,"taskInstance",{get:function(){return this.instance},enumerable:!0,configurable:!0}), Object.defineProperty(t.prototype,"result",{get:function(){return this._result.filter(function(t){return!t})},enumerable:!0,configurable:!0}), Object.defineProperty(t.prototype,"resultValue",{get:function(){return this._resultValue},enumerable:!0,configurable:!0}), t.prototype.onInit=function(){this.uuid||(core_1.isToken(this.work)?this.uuid=this.createUUID():this.work&&(this.uuid=this.work.uuid||this.createUUID())), this.container.bindProvider(this.uuid,this);}, t.prototype.createUUID=function(){return this.container.has(uuid.UUIDToken)||this.container.register(uuid.RandomUUIDFactory), this.container.get(uuid.UUIDToken).generate()}, t.prototype.getBuilder=function(){return this.taskBuilder||(this.taskBuilder=this.container.resolve(ITaskBuilder.TaskBuilderToken)), this.taskBuilder}, t.prototype.getInstance=function(){return tslib_1.__awaiter(this,void 0,void 0,function(){var e;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return this.instance?[3,2]:[4,(e=this).getBuilder().build(this.task)];case 1:e.instance=t.sent(), t.label=2;case 2:return this.instance.workflowId||(this.instance.workflowId=this.uuid), [2,this.instance]}})})}, t.prototype.start=function(r){return tslib_1.__awaiter(this,void 0,void 0,function(){var e=this;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.getInstance()];case 1:return[2,t.sent().run(r).then(function(t){return e.state=ITaskRunner.RunState.complete, e.stateChanged.next(e.state), e._resultValue=t, e._result.next(t), t})]}})})}, t.prototype.saveState=function(t){this._currState=t;}, t.prototype.stop=function(){this.state=ITaskRunner.RunState.stop, this.stateChanged.next(this.state);}, t.prototype.pause=function(){this.state=ITaskRunner.RunState.pause, this.stateChanged.next(this.state);}, t.classAnnations={name:"TaskRunner",params:{constructor:["work","uuid","instance","taskBuilder"],onInit:[],createUUID:[],getBuilder:[],getInstance:[],start:["data"],saveState:["state"],stop:[],pause:[]}}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), t=tslib_1.__decorate([decorators.Runner(ITaskRunner.TaskRunnerToken),tslib_1.__metadata("design:paramtypes",[Object,String,Object,Object])],t)}();exports.TaskRunner=TaskRunner;
-
+Object.defineProperty(exports,"__esModule",{value:!0});var TaskRunner=function(){function t(t,e,i,n){this.activity=t, this.uuid=e, this.instance=i, this.activityBuilder=n, this._result=new BehaviorSubject_1.BehaviorSubject(null), this.stateChanged=new BehaviorSubject_1.BehaviorSubject(ITaskRunner.RunState.init);}return Object.defineProperty(t.prototype,"task",{get:function(){return this.activity},enumerable:!0,configurable:!0}), Object.defineProperty(t.prototype,"taskInstance",{get:function(){return this.instance},enumerable:!0,configurable:!0}), Object.defineProperty(t.prototype,"result",{get:function(){return this._result.filter(function(t){return!t})},enumerable:!0,configurable:!0}), Object.defineProperty(t.prototype,"resultValue",{get:function(){return this._resultValue},enumerable:!0,configurable:!0}), t.prototype.onInit=function(){this.container.bindProvider(this.getUUID(),this);}, t.prototype.getUUID=function(){return this.uuid||(this.instance&&this.instance.id?this.uuid=this.instance.id:core_1.isToken(this.activity)&&(this.uuid=this.createUUID()), this.uuid=this.uuid||this.createUUID()), this.uuid}, t.prototype.getBuilder=function(){return this.activityBuilder||(this.activityBuilder=this.container.resolve(IActivityBuilder.ActivityBuilderToken)), this.activityBuilder}, t.prototype.getInstance=function(){return tslib_1.__awaiter(this,void 0,void 0,function(){var e;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return this.instance?[3,2]:[4,(e=this).getBuilder().build(this.task,this.getUUID())];case 1:e.instance=t.sent(), t.label=2;case 2:return[2,this.instance]}})})}, t.prototype.start=function(i){return tslib_1.__awaiter(this,void 0,void 0,function(){var e=this;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.getInstance()];case 1:return[2,t.sent().run(i).then(function(t){return e.state=ITaskRunner.RunState.complete, e.stateChanged.next(e.state), e._resultValue=t, e._result.next(t), t})]}})})}, t.prototype.saveState=function(t){this._currState=t;}, t.prototype.stop=function(){this.state=ITaskRunner.RunState.stop, this.stateChanged.next(this.state);}, t.prototype.pause=function(){this.state=ITaskRunner.RunState.pause, this.stateChanged.next(this.state);}, t.prototype.createUUID=function(){return this.container.has(uuid.UUIDToken)||this.container.register(uuid.RandomUUIDFactory), this.container.get(uuid.UUIDToken).generate()}, t.classAnnations={name:"TaskRunner",params:{constructor:["activity","uuid","instance","activityBuilder"],onInit:[],getUUID:[],getBuilder:[],getInstance:[],start:["data"],saveState:["state"],stop:[],pause:[],createUUID:[]}}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), t=tslib_1.__decorate([decorators.Runner(ITaskRunner.TaskRunnerToken),tslib_1.__metadata("design:paramtypes",[Object,String,Object,Object])],t)}();exports.TaskRunner=TaskRunner;
 });
 
 unwrapExports(TaskRunner_1);
 var TaskRunner_2 = TaskRunner_1.TaskRunner;
 
-var core = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(ITaskBuilder,exports), tslib_1.__exportStar(TaskBuilder_1,exports), tslib_1.__exportStar(ITask,exports), tslib_1.__exportStar(uuid,exports), tslib_1.__exportStar(AbstractTask_1,exports), tslib_1.__exportStar(TaskComponent_1,exports), tslib_1.__exportStar(TaskElement_1,exports), tslib_1.__exportStar(decorators,exports), tslib_1.__exportStar(RunWay_1,exports), tslib_1.__exportStar(IContext,exports), tslib_1.__exportStar(Context_1,exports), tslib_1.__exportStar(ITaskRunner,exports), tslib_1.__exportStar(TaskRunner_1,exports);
+var Context_1 = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var Context=function(){function t(){}return t.prototype.getContainer=function(){return this.container}, t.prototype.getTaskContiner=function(){return this.container.resolve(ITaskContainer.TaskContainerToken)}, t.prototype.getRootPath=function(){return this.getTaskContiner().getRootPath()}, t.prototype.getRunner=function(t,e,n,r){var o;return core_1.isToken(n)?o=this.container.resolve(n):n instanceof ActivityBuilder_1.ActivityBuilder&&(o=n), this.container.resolve(ITaskRunner.TaskRunnerToken,{activity:t,uuid:e,instance:r,activityBuilder:o})}, t.prototype.getEnvArgs=function(){return{}}, t.prototype.to=function(t,e){return core_1.isFunction(t)?core_1.isClass(t)?t:t(this,e):t}, t.prototype.exec=function(t,e,n){return core_1.isFunction(e)?e(t,n):core_1.isPromise(e)?e:e instanceof Activity_1.Activity?e.run(n,t):e instanceof TaskRunner_1.TaskRunner?e.start(n):core_1.isUndefined(e)?Promise.resolve(void 0):Promise.resolve(e)}, t.prototype.isTask=function(t){return core_1.hasOwnClassMetadata(decorators.Task,t)}, t.classAnnations={name:"Context",params:{constructor:[],getContainer:[],getTaskContiner:[],getRootPath:[],getRunner:["task","uuid","builder","instance"],getEnvArgs:[],to:["target","config"],exec:["target","expression","data"],isTask:["task"]}}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), t=tslib_1.__decorate([core_1.Singleton(IContext.ContextToken),tslib_1.__metadata("design:paramtypes",[])],t)}();exports.Context=Context;
+});
 
+unwrapExports(Context_1);
+var Context_2 = Context_1.Context;
+
+var core = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(IActivityBuilder,exports), tslib_1.__exportStar(ActivityBuilder_1,exports), tslib_1.__exportStar(IActivity,exports), tslib_1.__exportStar(Activity_1,exports), tslib_1.__exportStar(IConfigure,exports), tslib_1.__exportStar(uuid,exports), tslib_1.__exportStar(decorators,exports), tslib_1.__exportStar(IContext,exports), tslib_1.__exportStar(Context_1,exports), tslib_1.__exportStar(ITaskRunner,exports), tslib_1.__exportStar(TaskRunner_1,exports);
 });
 
 unwrapExports(core);
 
 var RunAspect_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var RunAspect=function(){function t(){}return t.prototype.beforeRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core.RunState.pause:throw new Error("workflow paused!");case core.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.afterRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core.RunState.pause:throw new Error("workflow paused!");case core.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.getRunner=function(t){if(t instanceof core.TaskComponent){var e=t.getRoot();if(e.workflowId&&this.container.has(e.workflowId))return this.container.resolve(e.workflowId)}return null}, t.classAnnations={name:"RunAspect",params:{constructor:[],beforeRun:["joinPoint"],afterRun:["joinPoint"],getRunner:["task"]}}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), tslib_1.__decorate([aop_1.Before("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"beforeRun",null), tslib_1.__decorate([aop_1.AfterReturning("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"afterRun",null), t=tslib_1.__decorate([aop_1.Aspect({annotation:core.Task,singleton:!0}),tslib_1.__metadata("design:paramtypes",[])],t)}();exports.RunAspect=RunAspect;
-
+Object.defineProperty(exports,"__esModule",{value:!0});var RunAspect=function(){function t(){}return t.prototype.beforeRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core.RunState.pause:throw new Error("workflow paused!");case core.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.afterRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core.RunState.pause:throw new Error("workflow paused!");case core.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.getRunner=function(t){return t instanceof core.Activity&&t.id&&this.container.has(t.id)?this.container.resolve(t.id):null}, t.classAnnations={name:"RunAspect",params:{constructor:[],beforeRun:["joinPoint"],afterRun:["joinPoint"],getRunner:["task"]}}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), tslib_1.__decorate([aop_1.Before("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"beforeRun",null), tslib_1.__decorate([aop_1.AfterReturning("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"afterRun",null), t=tslib_1.__decorate([aop_1.Aspect({annotation:core.Task,singleton:!0}),tslib_1.__metadata("design:paramtypes",[])],t)}();exports.RunAspect=RunAspect;
 });
 
 unwrapExports(RunAspect_1);
@@ -166,22 +138,133 @@ var RunAspect_2 = RunAspect_1.RunAspect;
 
 var aop = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(RunAspect_1,exports);
-
 });
 
 unwrapExports(aop);
 
 var CoreModule_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var CoreModule=function(){function e(e){this.container=e;}return e.prototype.setup=function(){var e=this.container,o=e.getLifeScope();o.registerDecorator(core.Runner,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), o.registerDecorator(core.Task,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), e.register(core.TaskElement), e.register(core.TaskBuilder), e.register(core.TaskRunner), e.register(aop.RunAspect);}, e.classAnnations={name:"CoreModule",params:{constructor:["container"],setup:[]}}, e=tslib_1.__decorate([core_1.IocExt("setup"),tslib_1.__param(0,core_1.Inject(core_1.ContainerToken)),tslib_1.__metadata("design:paramtypes",[Object])],e)}();exports.CoreModule=CoreModule;
-
+Object.defineProperty(exports,"__esModule",{value:!0});var CoreModule=function(){function e(e){this.container=e;}return e.prototype.setup=function(){var e=this.container,o=e.getLifeScope();o.registerDecorator(core.Runner,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), o.registerDecorator(core.Task,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), e.register(core.ActivityBuilder), e.register(core.TaskRunner), e.register(aop.RunAspect);}, e.classAnnations={name:"CoreModule",params:{constructor:["container"],setup:[]}}, e=tslib_1.__decorate([core_1.IocExt("setup"),tslib_1.__param(0,core_1.Inject(core_1.ContainerToken)),tslib_1.__metadata("design:paramtypes",[Object])],e)}();exports.CoreModule=CoreModule;
 });
 
 unwrapExports(CoreModule_1);
 var CoreModule_2 = CoreModule_1.CoreModule;
 
-var DefaultTaskContainer_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var DefaultTaskContainer=function(n){function e(e){var t=n.call(this,e)||this;return t.rootPath=e, t.logAspects=[], t}return tslib_1.__extends(e,n), e.prototype.useLog=function(e){return core_1.hasClassMetadata(aop_1.Aspect,e)?this.logAspects.push(e):console.error("logAspect param is not right aspect"), this}, e.prototype.createRunner=function(e,t){return this.getContainer().resolve(core.TaskRunnerToken,{work:e,instance:t,taskBuilder:this.getModuleBuilder()})}, e.prototype.createWorkflow=function(){for(var t=this,e=[],r=0;r<arguments.length;r++)e[r]=arguments[r];var o=1<e.length?{children:e,task:core.TaskElement}:core_1.lang.first(e);return n.prototype.bootstrap.call(this,o).then(function(e){return t.createRunner(o,e)})}, e.prototype.bootstrap=function(){for(var r=[],e=0;e<arguments.length;e++)r[e]=arguments[e];return tslib_1.__awaiter(this,void 0,void 0,function(){var t;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,this.createWorkflow.apply(this,r)];case 1:return[4,(t=e.sent()).start()];case 2:return e.sent(), [2,t]}})})}, e.prototype.getRootPath=function(){return this.rootPath}, e.prototype.createModuleBuilder=function(){return this.getContainer().get(core.TaskBuilderToken)}, e.prototype.registerExts=function(t){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(e){switch(e.label){case 0:return t.has(aop_1.AopModule)||t.register(aop_1.AopModule), t.has(logs_1.LogModule)||t.register(logs_1.LogModule), t.bindProvider(ITaskContainer.TaskContainerToken,this), t.has(CoreModule_1.CoreModule)||t.register(CoreModule_1.CoreModule), this.beforRegister(t), [4,n.prototype.registerExts.call(this,t)];case 1:return e.sent(), [2,t]}})})}, e.prototype.beforRegister=function(t){this.logAspects.forEach(function(e){e&&t.register(e);});}, e.prototype.setConfigRoot=function(e){e.rootdir=this.rootPath;}, e.classAnnations={name:"DefaultTaskContainer",params:{constructor:["rootPath"],useLog:["logAspect"],createRunner:["task","instance"],createWorkflow:["tasks"],bootstrap:["tasks"],getRootPath:[],createModuleBuilder:[],registerExts:["container"],beforRegister:["container"],setConfigRoot:["config"]}}, e}(core_1.ApplicationBuilder);exports.DefaultTaskContainer=DefaultTaskContainer;
+var Delay = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.DelayActivityToken=new core.InjectAcitityToken("delay"), exports.DelayActivityBuilderToken=new core.InjectAcitityBuilderToken("delay");var DelayActivity=function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return tslib_1.__extends(t,e), t.prototype.run=function(n){return tslib_1.__awaiter(this,void 0,void 0,function(){var t,i,r;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,this.context.exec(this,this.delay,n)];case 1:return t=e.sent(), i=new core_1.Defer, r=setTimeout(function(){i.resolve(n), clearTimeout(r);},t), [4,i.promise];case 2:return[2,e.sent()]}})})}, t.classAnnations={name:"DelayActivity",params:{run:["data"]}}, t=tslib_1.__decorate([core.Task(exports.DelayActivityToken,exports.DelayActivityBuilderToken)],t)}(core.Activity);exports.DelayActivity=DelayActivity;var DelayActivityBuilder=function(n){function e(){return null!==n&&n.apply(this,arguments)||this}return tslib_1.__extends(e,n), e.prototype.buildStrategy=function(i,r){return tslib_1.__awaiter(this,void 0,void 0,function(){var t;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,n.prototype.buildStrategy.call(this,i,r)];case 1:return e.sent(), i instanceof DelayActivity?(t=i, [4,this.toExpression(r.delay,i)]):[3,3];case 2:t.delay=e.sent(), e.label=3;case 3:return[2,i]}})})}, e.classAnnations={name:"DelayActivityBuilder",params:{buildStrategy:["activity","config"]}}, e=tslib_1.__decorate([core_1.Singleton(exports.DelayActivityBuilderToken)],e)}(core.ActivityBuilder);exports.DelayActivityBuilder=DelayActivityBuilder;
+});
 
+unwrapExports(Delay);
+var Delay_1 = Delay.DelayActivityToken;
+var Delay_2 = Delay.DelayActivityBuilderToken;
+var Delay_3 = Delay.DelayActivity;
+var Delay_4 = Delay.DelayActivityBuilder;
+
+var Interval = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.IntervalActivityToken=new core.InjectAcitityToken("interval"), exports.IntervalActivityBuilderToken=new core.InjectAcitityBuilderToken("interval");var IntervalActivity=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return tslib_1.__extends(e,t), e.prototype.run=function(n){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i,r=this;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.context.exec(this,this.interval,n)];case 1:return e=t.sent(), i=n, setInterval(function(){r.body.run(i);},e), [2,n]}})})}, e.classAnnations={name:"IntervalActivity",params:{run:["data"]}}, e=tslib_1.__decorate([core.Task(exports.IntervalActivityToken,exports.IntervalActivityBuilderToken)],e)}(core.Activity);exports.IntervalActivity=IntervalActivity;var IntervalActivityBuilder=function(a){function t(){return null!==a&&a.apply(this,arguments)||this}return tslib_1.__extends(t,a), t.prototype.buildStrategy=function(r,n){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,a.prototype.buildStrategy.call(this,r,n)];case 1:return t.sent(), r instanceof IntervalActivity?(e=r, [4,this.toExpression(n.interval,r)]):[3,4];case 2:return e.interval=t.sent(), i=r, [4,this.build(n.body,r.id)];case 3:i.body=t.sent(), t.label=4;case 4:return[2,r]}})})}, t.classAnnations={name:"IntervalActivityBuilder",params:{buildStrategy:["activity","config"]}}, t=tslib_1.__decorate([core_1.Singleton(exports.IntervalActivityBuilderToken)],t)}(core.ActivityBuilder);exports.IntervalActivityBuilder=IntervalActivityBuilder;
+});
+
+unwrapExports(Interval);
+var Interval_1 = Interval.IntervalActivityToken;
+var Interval_2 = Interval.IntervalActivityBuilderToken;
+var Interval_3 = Interval.IntervalActivity;
+var Interval_4 = Interval.IntervalActivityBuilder;
+
+var DoWhile = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.DoWhileActivityToken=new core.InjectAcitityToken("dowhile"), exports.DoWhileActivityBuilderToken=new core.InjectAcitityBuilderToken("delay");var DoWhileActivity=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return tslib_1.__extends(e,t), e.prototype.run=function(r){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.body.run(r)];case 1:return e=t.sent(), [4,this.context.exec(this,this.condition,e)];case 2:i=t.sent(), t.label=3;case 3:return i?[4,this.body.run(e||r)]:[3,6];case 4:return e=t.sent(), [4,this.context.exec(this,this.condition,e)];case 5:return i=t.sent(), [3,3];case 6:return[2,e]}})})}, e.classAnnations={name:"DoWhileActivity",params:{run:["data"]}}, e=tslib_1.__decorate([core.Task(exports.DoWhileActivityToken,exports.DoWhileActivityBuilderToken)],e)}(core.Activity);exports.DoWhileActivity=DoWhileActivity;var DoWhileActivityBuilder=function(o){function t(){return null!==o&&o.apply(this,arguments)||this}return tslib_1.__extends(t,o), t.prototype.buildStrategy=function(r,n){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,o.prototype.buildStrategy.call(this,r,n)];case 1:return t.sent(), r instanceof DoWhileActivity?(e=r, [4,this.build(n.do,r.id)]):[3,4];case 2:return e.body=t.sent(), i=r, [4,this.toExpression(n.while,r)];case 3:i.condition=t.sent(), t.label=4;case 4:return[2,r]}})})}, t.classAnnations={name:"DoWhileActivityBuilder",params:{buildStrategy:["activity","config"]}}, t=tslib_1.__decorate([core_1.Singleton(exports.DoWhileActivityBuilderToken)],t)}(core.ActivityBuilder);exports.DoWhileActivityBuilder=DoWhileActivityBuilder;
+});
+
+unwrapExports(DoWhile);
+var DoWhile_1 = DoWhile.DoWhileActivityToken;
+var DoWhile_2 = DoWhile.DoWhileActivityBuilderToken;
+var DoWhile_3 = DoWhile.DoWhileActivity;
+var DoWhile_4 = DoWhile.DoWhileActivityBuilder;
+
+var If = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.IfActivityToken=new core.InjectAcitityToken("if"), exports.IfActivityBuilderToken=new core.InjectAcitityBuilderToken("if");var IfActivity=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return tslib_1.__extends(e,t), e.prototype.run=function(e){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.context.exec(this,this.condition,e)];case 1:return t.sent()?[2,this.execIf(e)]:this.elseBody?[2,this.execElse(e)]:[2,Promise.resolve(e)]}})})}, e.prototype.execIf=function(t){return this.ifBody.run(t)}, e.prototype.execElse=function(t){return this.elseBody.run(t)}, e.classAnnations={name:"IfActivity",params:{run:["data"],execIf:["data"],execElse:["data"]}}, e=tslib_1.__decorate([core.Task(exports.IfActivityToken,exports.IfActivityBuilderToken)],e)}(core.Activity);exports.IfActivity=IfActivity;var IfActivityBuilder=function(o){function t(){return null!==o&&o.apply(this,arguments)||this}return tslib_1.__extends(t,o), t.prototype.buildStrategy=function(n,s){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i,r;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,o.prototype.buildStrategy.call(this,n,s)];case 1:return t.sent(), n instanceof IfActivity?(e=n, [4,this.build(s.ifBody,n.id)]):[3,5];case 2:return e.ifBody=t.sent(), i=n, [4,this.toExpression(s.if,n)];case 3:return i.condition=t.sent(), s.elseBody?(r=n, [4,this.build(s.elseBody,n.id)]):[3,5];case 4:r.elseBody=t.sent(), t.label=5;case 5:return[2,n]}})})}, t.classAnnations={name:"IfActivityBuilder",params:{buildStrategy:["activity","config"]}}, t=tslib_1.__decorate([core_1.Singleton(exports.IfActivityBuilderToken)],t)}(core.ActivityBuilder);exports.IfActivityBuilder=IfActivityBuilder;
+});
+
+unwrapExports(If);
+var If_1 = If.IfActivityToken;
+var If_2 = If.IfActivityBuilderToken;
+var If_3 = If.IfActivity;
+var If_4 = If.IfActivityBuilder;
+
+var Invoke = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.InvokeActivityToken=new core.InjectAcitityToken("invoke");var InvokeActivity=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return tslib_1.__extends(e,t), e.prototype.run=function(e){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){return[2,this.context.getContainer().invoke(this.targetType,this.target,this.args,{data:e})]})})}, e.classAnnations={name:"InvokeActivity",params:{run:["data"]}}, e=tslib_1.__decorate([core.Task(exports.InvokeActivityToken)],e)}(core.Activity);exports.InvokeActivity=InvokeActivity;
+});
+
+unwrapExports(Invoke);
+var Invoke_1 = Invoke.InvokeActivityToken;
+var Invoke_2 = Invoke.InvokeActivity;
+
+var Parallel = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.ParallelActivityToken=new core.InjectAcitityToken("parallel"), exports.ParallelActivityBuilderToken=new core.InjectAcitityBuilderToken("parallel");var ParallelActivity=function(e){function t(){var t=null!==e&&e.apply(this,arguments)||this;return t.activites=[], t}return tslib_1.__extends(t,e), t.prototype.run=function(e){return Promise.all(this.activites.map(function(t){return t.run(e)}))}, t.classAnnations={name:"ParallelActivity",params:{run:["data"]}}, t=tslib_1.__decorate([core.Task(exports.ParallelActivityToken,exports.ParallelActivityBuilderToken)],t)}(core.Activity);exports.ParallelActivity=ParallelActivity;var ParallelActivityBuilder=function(r){function t(){return null!==r&&r.apply(this,arguments)||this}return tslib_1.__extends(t,r), t.prototype.buildStrategy=function(e,i){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,r.prototype.buildStrategy.call(this,e,i)];case 1:return t.sent(), e instanceof ParallelActivity&&i.parallel&&i.parallel.length?[4,this.buildChildren(e,i.parallel)]:[3,3];case 2:t.sent(), t.label=3;case 3:return[2,e]}})})}, t.prototype.buildChildren=function(l,i){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,r=this;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,Promise.all(i.map(function(i){return tslib_1.__awaiter(r,void 0,void 0,function(){var e;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.build(i,l.id)];case 1:return(e=t.sent())?e instanceof ParallelActivity&&!core_1.isToken(i)&&i.parallel&&i.parallel.length?[4,this.buildChildren(e,i.parallel)]:[3,3]:[2,null];case 2:t.sent(), t.label=3;case 3:return[2,e]}})})}))];case 1:return e=t.sent(), l.activites=e, [2,l]}})})}, t.classAnnations={name:"ParallelActivityBuilder",params:{buildStrategy:["activity","config"],buildChildren:["activity","configs"]}}, t=tslib_1.__decorate([core_1.Singleton(exports.ParallelActivityBuilderToken)],t)}(core.ActivityBuilder);exports.ParallelActivityBuilder=ParallelActivityBuilder;
+});
+
+unwrapExports(Parallel);
+var Parallel_1 = Parallel.ParallelActivityToken;
+var Parallel_2 = Parallel.ParallelActivityBuilderToken;
+var Parallel_3 = Parallel.ParallelActivity;
+var Parallel_4 = Parallel.ParallelActivityBuilder;
+
+var Sequence = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.SequenceActivityToken=new core.InjectAcitityToken("sequence"), exports.SequenceActivityBuilderToken=new core.InjectAcitityBuilderToken("sequence");var SequenceActivity=function(t){function e(){var e=null!==t&&t.apply(this,arguments)||this;return e.activites=[], e}return tslib_1.__extends(e,t), e.prototype.run=function(e){var t=this,i=this.begin(e);return this.activites.forEach(function(t){i=i.then(function(e){return t.run(e)});}), i.then(function(e){return t.end(e)})}, e.prototype.begin=function(e){return Promise.resolve(e)}, e.prototype.end=function(e){return Promise.resolve(e)}, e.classAnnations={name:"SequenceActivity",params:{run:["data"],begin:["data"],end:["data"]}}, e=tslib_1.__decorate([core.Task(exports.SequenceActivityToken,exports.SequenceActivityBuilderToken)],e)}(core.Activity);exports.SequenceActivity=SequenceActivity;var SequenceActivityBuilder=function(n){function e(){return null!==n&&n.apply(this,arguments)||this}return tslib_1.__extends(e,n), e.prototype.buildStrategy=function(t,i){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,n.prototype.buildStrategy.call(this,t,i)];case 1:return e.sent(), t instanceof SequenceActivity&&i.sequence&&i.sequence.length?[4,this.buildChildren(t,i.sequence)]:[3,3];case 2:e.sent(), e.label=3;case 3:return[2,t]}})})}, e.prototype.buildChildren=function(r,i){return tslib_1.__awaiter(this,void 0,void 0,function(){var t,n=this;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,Promise.all(i.map(function(i){return tslib_1.__awaiter(n,void 0,void 0,function(){var t;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,this.build(i,r.id)];case 1:return(t=e.sent())?t instanceof SequenceActivity&&!core_1.isToken(i)&&i.sequence&&i.sequence.length?[4,this.buildChildren(t,i.sequence)]:[3,3]:[2,null];case 2:e.sent(), e.label=3;case 3:return[2,t]}})})}))];case 1:return t=e.sent(), r.activites=t, [2,r]}})})}, e.classAnnations={name:"SequenceActivityBuilder",params:{buildStrategy:["activity","config"],buildChildren:["activity","configs"]}}, e=tslib_1.__decorate([core_1.Singleton(exports.SequenceActivityBuilderToken)],e)}(core.ActivityBuilder);exports.SequenceActivityBuilder=SequenceActivityBuilder;
+});
+
+unwrapExports(Sequence);
+var Sequence_1 = Sequence.SequenceActivityToken;
+var Sequence_2 = Sequence.SequenceActivityBuilderToken;
+var Sequence_3 = Sequence.SequenceActivity;
+var Sequence_4 = Sequence.SequenceActivityBuilder;
+
+var Switch = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.SwitchActivityToken=new core.InjectAcitityToken("switch"), exports.SwitchActivityBuilderToken=new core.InjectAcitityBuilderToken("switch");var SwitchActivity=function(e){function t(){var t=null!==e&&e.apply(this,arguments)||this;return t.cases=new core_1.MapSet, t}return tslib_1.__extends(t,e), t.prototype.run=function(i){return tslib_1.__awaiter(this,void 0,void 0,function(){var e;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.context.exec(this,this.expression,i)];case 1:return e=t.sent(), !core_1.isUndefined(e)&&this.cases.has(e)?[2,this.cases.get(e).run(i)]:this.defaultBody?[2,this.defaultBody.run(i)]:[2,Promise.resolve(i)]}})})}, t.classAnnations={name:"SwitchActivity",params:{run:["data"]}}, t=tslib_1.__decorate([core.Task(exports.SwitchActivityToken,exports.SwitchActivityBuilderToken)],t)}(core.Activity);exports.SwitchActivity=SwitchActivity;var SwitchActivityBuilder=function(c){function t(){return null!==c&&c.apply(this,arguments)||this}return tslib_1.__extends(t,c), t.prototype.buildStrategy=function(s,n){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i,r=this;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,c.prototype.buildStrategy.call(this,s,n)];case 1:return t.sent(), s instanceof SwitchActivity?(e=s, [4,this.toExpression(n.expression,s)]):[3,6];case 2:return e.expression=t.sent(), n.cases&&n.cases.length?[4,Promise.all(n.cases.map(function(i){return tslib_1.__awaiter(r,void 0,void 0,function(){var e;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.build(i.value,s.id)];case 1:return e=t.sent(), s.cases.set(i.key,e), [2,e]}})})}))]:[3,4];case 3:t.sent(), t.label=4;case 4:return n.defaultBody?(i=s, [4,this.build(n.defaultBody,s.id)]):[3,6];case 5:i.defaultBody=t.sent(), t.label=6;case 6:return[2,s]}})})}, t.classAnnations={name:"SwitchActivityBuilder",params:{buildStrategy:["activity","config"]}}, t=tslib_1.__decorate([core_1.Singleton(exports.SwitchActivityBuilderToken)],t)}(core.ActivityBuilder);exports.SwitchActivityBuilder=SwitchActivityBuilder;
+});
+
+unwrapExports(Switch);
+var Switch_1 = Switch.SwitchActivityToken;
+var Switch_2 = Switch.SwitchActivityBuilderToken;
+var Switch_3 = Switch.SwitchActivity;
+var Switch_4 = Switch.SwitchActivityBuilder;
+
+var Throw = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.ThrowActivityToken=new core.InjectAcitityToken("throw"), exports.ThrowActivityBuilderToken=new core.InjectAcitityBuilderToken("delay");var ThrowActivity=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return tslib_1.__extends(e,t), e.prototype.run=function(e){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.context.exec(this,this.exception,e)];case 1:throw t.sent()}})})}, e.classAnnations={name:"ThrowActivity",params:{run:["data"]}}, e=tslib_1.__decorate([core.Task(exports.ThrowActivityToken)],e)}(core.Activity);exports.ThrowActivity=ThrowActivity;var ThrowActivityBuilder=function(o){function t(){return null!==o&&o.apply(this,arguments)||this}return tslib_1.__extends(t,o), t.prototype.buildStrategy=function(i,r){return tslib_1.__awaiter(this,void 0,void 0,function(){var e;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,o.prototype.buildStrategy.call(this,i,r)];case 1:return t.sent(), i instanceof ThrowActivity?(e=i, [4,this.toExpression(r.exception,i)]):[3,3];case 2:e.exception=t.sent(), t.label=3;case 3:return[2,i]}})})}, t.classAnnations={name:"ThrowActivityBuilder",params:{buildStrategy:["activity","config"]}}, t=tslib_1.__decorate([core_1.Singleton(exports.ThrowActivityBuilderToken)],t)}(core.ActivityBuilder);exports.ThrowActivityBuilder=ThrowActivityBuilder;
+});
+
+unwrapExports(Throw);
+var Throw_1 = Throw.ThrowActivityToken;
+var Throw_2 = Throw.ThrowActivityBuilderToken;
+var Throw_3 = Throw.ThrowActivity;
+var Throw_4 = Throw.ThrowActivityBuilder;
+
+var TryCatch = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.TryCatchActivityToken=new core.InjectAcitityToken("trycatch"), exports.TryCatchActivityBuilderToken=new core.InjectAcitityBuilderToken("delay");var TryCatchActivity=function(i){function t(){var t=null!==i&&i.apply(this,arguments)||this;return t.catchs=[], t}return tslib_1.__extends(t,i), t.prototype.run=function(e){return tslib_1.__awaiter(this,void 0,void 0,function(){var r,i=this;return tslib_1.__generator(this,function(t){try{r=this.try.run(e), this.catchs.forEach(function(i){r=r.catch(function(t){return i.run(t)});}), this.finally&&r.then(function(t){return i.finally.run(t)});}catch(t){r=Promise.resolve(e), this.finally&&r.then(function(t){return i.finally.run(t)});}return[2,r]})})}, t.classAnnations={name:"TryCatchActivity",params:{run:["data"]}}, t=tslib_1.__decorate([core.Task(exports.TryCatchActivityToken)],t)}(Activity_1.Activity);exports.TryCatchActivity=TryCatchActivity;var TryCatchActivityBuilder=function(s){function t(){return null!==s&&s.apply(this,arguments)||this}return tslib_1.__extends(t,s), t.prototype.buildStrategy=function(n,a){return tslib_1.__awaiter(this,void 0,void 0,function(){var i,r,e,c=this;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,s.prototype.buildStrategy.call(this,n,a)];case 1:return t.sent(), n instanceof TryCatchActivity?(i=n, [4,this.build(a.try,n.id)]):[3,6];case 2:return i.try=t.sent(), a.catchs&&a.catchs.length?[4,Promise.all(a.catchs.map(function(t){return c.build(t,n.id)}))]:[3,4];case 3:r=t.sent(), n.catchs=r, t.label=4;case 4:return a.finally?(e=n, [4,this.build(a.finally,n.id)]):[3,6];case 5:e.finally=t.sent(), t.label=6;case 6:return[2,n]}})})}, t.classAnnations={name:"TryCatchActivityBuilder",params:{buildStrategy:["activity","config"]}}, t=tslib_1.__decorate([core_1.Singleton(exports.TryCatchActivityBuilderToken)],t)}(core.ActivityBuilder);exports.TryCatchActivityBuilder=TryCatchActivityBuilder;
+});
+
+unwrapExports(TryCatch);
+var TryCatch_1 = TryCatch.TryCatchActivityToken;
+var TryCatch_2 = TryCatch.TryCatchActivityBuilderToken;
+var TryCatch_3 = TryCatch.TryCatchActivity;
+var TryCatch_4 = TryCatch.TryCatchActivityBuilder;
+
+var While = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});exports.WhileActivityToken=new core.InjectAcitityToken("while"), exports.WhileActivityBuilderToken=new core.InjectAcitityBuilderToken("while");var WhileActivity=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return tslib_1.__extends(e,t), e.prototype.run=function(r){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.context.exec(this,this.condition,r)];case 1:e=t.sent(), t.label=2;case 2:return e?[4,this.body.run(i||r)]:[3,5];case 3:return i=t.sent(), [4,this.context.exec(this,this.condition,i)];case 4:return e=t.sent(), [3,2];case 5:return[2,i]}})})}, e.classAnnations={name:"WhileActivity",params:{run:["data"]}}, e=tslib_1.__decorate([core.Task(exports.WhileActivityToken)],e)}(core.Activity);exports.WhileActivity=WhileActivity;var WhileActivityBuilder=function(s){function t(){return null!==s&&s.apply(this,arguments)||this}return tslib_1.__extends(t,s), t.prototype.buildStrategy=function(r,n){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,s.prototype.buildStrategy.call(this,r,n)];case 1:return t.sent(), r instanceof WhileActivity?(e=r, [4,this.build(n.body,r.id)]):[3,4];case 2:return e.body=t.sent(), i=r, [4,this.toExpression(n.while,r)];case 3:i.condition=t.sent(), t.label=4;case 4:return[2,r]}})})}, t.classAnnations={name:"WhileActivityBuilder",params:{buildStrategy:["activity","config"]}}, t=tslib_1.__decorate([core_1.Singleton(exports.WhileActivityBuilderToken)],t)}(core.ActivityBuilder);exports.WhileActivityBuilder=WhileActivityBuilder;
+});
+
+unwrapExports(While);
+var While_1 = While.WhileActivityToken;
+var While_2 = While.WhileActivityBuilderToken;
+var While_3 = While.WhileActivity;
+var While_4 = While.WhileActivityBuilder;
+
+var activities = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(Delay,exports), tslib_1.__exportStar(Interval,exports), tslib_1.__exportStar(DoWhile,exports), tslib_1.__exportStar(If,exports), tslib_1.__exportStar(Invoke,exports), tslib_1.__exportStar(Parallel,exports), tslib_1.__exportStar(Sequence,exports), tslib_1.__exportStar(Switch,exports), tslib_1.__exportStar(Throw,exports), tslib_1.__exportStar(TryCatch,exports), tslib_1.__exportStar(While,exports);
+});
+
+unwrapExports(activities);
+
+var DefaultTaskContainer_1 = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var DefaultTaskContainer=function(r){function t(t){var e=r.call(this,t)||this;return e.rootPath=t, e.logAspects=[], e}return tslib_1.__extends(t,r), t.prototype.useLog=function(t){return core_1.hasClassMetadata(aop_1.Aspect,t)?this.logAspects.push(t):console.error("logAspect param is not right aspect"), this}, t.prototype.createWorkflow=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];var o=1<t.length?{sequence:t,task:activities.SequenceActivity}:core_1.lang.first(t);return r.prototype.bootstrap.call(this,o)}, t.prototype.bootstrap=function(){for(var o=[],t=0;t<arguments.length;t++)o[t]=arguments[t];return tslib_1.__awaiter(this,void 0,void 0,function(){var e;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.createWorkflow.apply(this,o)];case 1:return[4,(e=t.sent()).start()];case 2:return t.sent(), [2,e]}})})}, t.prototype.getRootPath=function(){return this.rootPath}, t.prototype.build=function(e,o,r){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){return r.task||(r.task=core_1.isToken(o)?o:null), [2,this.getContainer().resolve(core.TaskRunnerToken,{activity:r,activityBuilder:e})]})})}, t.prototype.createModuleBuilder=function(){return this.getContainer().get(core.ActivityBuilderToken)}, t.prototype.registerExts=function(e){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){switch(t.label){case 0:return e.has(aop_1.AopModule)||e.register(aop_1.AopModule), e.has(logs_1.LogModule)||e.register(logs_1.LogModule), e.bindProvider(ITaskContainer.TaskContainerToken,this), e.has(CoreModule_1.CoreModule)||e.register(CoreModule_1.CoreModule), this.use(activities), this.beforRegister(e), [4,r.prototype.registerExts.call(this,e)];case 1:return t.sent(), [2,e]}})})}, t.prototype.beforRegister=function(e){this.logAspects.forEach(function(t){t&&e.register(t);});}, t.prototype.setConfigRoot=function(t){t.rootdir=this.rootPath;}, t.classAnnations={name:"DefaultTaskContainer",params:{constructor:["rootPath"],useLog:["logAspect"],createWorkflow:["tasks"],bootstrap:["tasks"],getRootPath:[],build:["builder","token","config"],createModuleBuilder:[],registerExts:["container"],beforRegister:["container"],setConfigRoot:["config"]}}, t}(core_1.ApplicationBuilder);exports.DefaultTaskContainer=DefaultTaskContainer;
 });
 
 unwrapExports(DefaultTaskContainer_1);
@@ -189,7 +272,6 @@ var DefaultTaskContainer_2 = DefaultTaskContainer_1.DefaultTaskContainer;
 
 var objectUtil = createCommonjsModule(function (module, exports) {
 function pick(r){for(var e=[],t=1;t<arguments.length;t++)e[t-1]=arguments[t];var c={};return e.forEach(function(e){c[e]=r[e];}), c}Object.defineProperty(exports,"__esModule",{value:!0}), exports.pick=pick;
-
 });
 
 unwrapExports(objectUtil);
@@ -197,18 +279,16 @@ var objectUtil_1 = objectUtil.pick;
 
 var utils = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(objectUtil,exports);
-
 });
 
 unwrapExports(utils);
 
 var D__workspace_github_typeTask_packages_core_lib = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(ITaskContainer,exports), tslib_1.__exportStar(DefaultTaskContainer_1,exports), tslib_1.__exportStar(utils,exports), tslib_1.__exportStar(core,exports), tslib_1.__exportStar(aop,exports);
-
+Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(ITaskContainer,exports), tslib_1.__exportStar(DefaultTaskContainer_1,exports), tslib_1.__exportStar(utils,exports), tslib_1.__exportStar(core,exports), tslib_1.__exportStar(aop,exports), tslib_1.__exportStar(activities,exports);
 });
 
-var index$4 = unwrapExports(D__workspace_github_typeTask_packages_core_lib);
+var index$5 = unwrapExports(D__workspace_github_typeTask_packages_core_lib);
 
-return index$4;
+return index$5;
 
 })));

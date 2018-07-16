@@ -53,7 +53,7 @@ export class ThrowActivity extends Activity<any> {
 @Singleton(ThrowActivityBuilderToken)
 export class ThrowActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: ThrowConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: ThrowConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof ThrowActivity) {
             activity.exception = await this.toExpression(config.exception, activity);

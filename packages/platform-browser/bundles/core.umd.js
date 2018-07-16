@@ -20,15 +20,13 @@ function createCommonjsModule(fn, module) {
 
 var TaskLogAspect_1 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});var TaskLogAspect=function(r){function t(t){var e=r.call(this,t)||this;return e.startHrts={}, e}return tslib_1.__extends(t,r), t.prototype.logging=function(t){var e,r,a=this.logger,o=t.target.name;o||(o=t.targetType.classAnnations?t.targetType.classAnnations.name:t.targetType.name);var s="'"+o+"'";t.state===aop_1.JoinpointState.Before&&(e=new Date, this.startHrts[o]=e, a.log("["+e.toString()+"]","Starting",s,"...")), t.state===aop_1.JoinpointState.AfterReturning&&(e=this.startHrts[o], r=new Date, delete this.startHrts[o], a.log("["+r.toString()+"]","Finished",s," after ",r.getTime()-e.getTime())), t.state===aop_1.JoinpointState.AfterThrowing&&(e=this.startHrts[o], r=new Date, delete this.startHrts[o], a.log("["+r.toString()+"]","Finished",s,"errored after",r.getTime()-e.getTime()));}, t.classAnnations={name:"TaskLogAspect",params:{constructor:["container"],logging:["joinPoint"]}}, tslib_1.__decorate([aop_1.Around("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"logging",null), t=tslib_1.__decorate([aop_1.Aspect({annotation:core_2.Task,singleton:!0}),tslib_1.__param(0,core_1.Inject(core_1.ContainerToken)),tslib_1.__metadata("design:paramtypes",[Object])],t)}(logs_1.LoggerAspect);exports.TaskLogAspect=TaskLogAspect;
-
 });
 
 unwrapExports(TaskLogAspect_1);
 var TaskLogAspect_2 = TaskLogAspect_1.TaskLogAspect;
 
 var RunnerLogAspect_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var RunnerLogAspect=function(r){function t(t){var e=r.call(this,t)||this;return e.startHrts={}, e}return tslib_1.__extends(t,r), t.prototype.logStart=function(t){var e,r,o=this.logger,i=t.target.uuid,n="'"+i+"'";t.state===aop_1.JoinpointState.Before&&(e=new Date, this.startHrts[i]=e, o.log("["+e.toString()+"]","Starting workflow",n,"...")), t.state===aop_1.JoinpointState.AfterReturning&&(e=this.startHrts[i], r=new Date, delete this.startHrts[i], o.log("["+r.toString()+"]","Finished workflow",n," after ",r.getTime()-e.getTime())), t.state===aop_1.JoinpointState.AfterThrowing&&(e=this.startHrts[i], r=new Date, delete this.startHrts[i], o.log("["+r.toString()+"]","Finished workflow",n,"errored after",r.getTime()-e.getTime()));}, t.classAnnations={name:"RunnerLogAspect",params:{constructor:["container"],logStart:["joinPoint"]}}, tslib_1.__decorate([aop_1.Around("execution(*.start)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"logStart",null), t=tslib_1.__decorate([aop_1.Aspect({annotation:core_2.Runner,singleton:!0}),tslib_1.__param(0,core_1.Inject(core_1.ContainerToken)),tslib_1.__metadata("design:paramtypes",[Object])],t)}(logs_1.LoggerAspect);exports.RunnerLogAspect=RunnerLogAspect;
-
+Object.defineProperty(exports,"__esModule",{value:!0});var RunnerLogAspect=function(r){function t(t){var e=r.call(this,t)||this;return e.startHrts={}, e}return tslib_1.__extends(t,r), t.prototype.logStart=function(t){var e,r,o=this.logger,n=t.target.getUUID(),i="'"+n+"'";t.state===aop_1.JoinpointState.Before&&(e=new Date, this.startHrts[n]=e, o.log("["+e.toString()+"]","Starting workflow",i,"...")), t.state===aop_1.JoinpointState.AfterReturning&&(e=this.startHrts[n], r=new Date, delete this.startHrts[n], o.log("["+r.toString()+"]","Finished workflow",i," after ",r.getTime()-e.getTime())), t.state===aop_1.JoinpointState.AfterThrowing&&(e=this.startHrts[n], r=new Date, delete this.startHrts[n], o.log("["+r.toString()+"]","Finished workflow",i,"errored after",r.getTime()-e.getTime()));}, t.classAnnations={name:"RunnerLogAspect",params:{constructor:["container"],logStart:["joinPoint"]}}, tslib_1.__decorate([aop_1.Around("execution(*.start)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"logStart",null), t=tslib_1.__decorate([aop_1.Aspect({annotation:core_2.Runner,singleton:!0}),tslib_1.__param(0,core_1.Inject(core_1.ContainerToken)),tslib_1.__metadata("design:paramtypes",[Object])],t)}(logs_1.LoggerAspect);exports.RunnerLogAspect=RunnerLogAspect;
 });
 
 unwrapExports(RunnerLogAspect_1);
@@ -36,14 +34,12 @@ var RunnerLogAspect_2 = RunnerLogAspect_1.RunnerLogAspect;
 
 var aop = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(TaskLogAspect_1,exports), tslib_1.__exportStar(RunnerLogAspect_1,exports);
-
 });
 
 unwrapExports(aop);
 
 var TaskContainer_1 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});var TaskContainer=function(t){function o(e){var r=t.call(this,e)||this;return r.useLog(aop.TaskLogAspect), r.useLog(aop.RunnerLogAspect), r}return tslib_1.__extends(o,t), o.create=function(e){for(var r=[],t=1;t<arguments.length;t++)r[t-1]=arguments[t];var n=new o(e);return r&&n.useModules.apply(n,r), n}, o.classAnnations={name:"TaskContainer",params:{constructor:["rootPath"],create:["root","modules"]}}, o}(core_2.DefaultTaskContainer);exports.TaskContainer=TaskContainer;
-
 });
 
 unwrapExports(TaskContainer_1);
@@ -51,7 +47,6 @@ var TaskContainer_2 = TaskContainer_1.TaskContainer;
 
 var D__workspace_github_typeTask_packages_platformBrowser_lib = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(aop,exports), tslib_1.__exportStar(TaskContainer_1,exports);
-
 });
 
 var index$1 = unwrapExports(D__workspace_github_typeTask_packages_platformBrowser_lib);

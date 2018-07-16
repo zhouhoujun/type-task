@@ -1,4 +1,4 @@
-import { PipeModule, PipeElement, IPipeContext, PipeTask, PipeAsset } from '@taskfr/pipes';
+import { PipeModule, IPipeContext, PipeTask, AssetActivity } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const jeditor = require('gulp-json-editor');
 
@@ -24,22 +24,22 @@ let versionSetting = (ctx: IPipeContext) => {
 }
 
 @PipeTask({
-    children: [
+    pipes: [
         {
             src: ['packages/**/package.json', '!node_modules/**/package.json'],
             pipes: [
-                (ctx) => versionSetting(ctx)
+                (act: AssetActivity) => versionSetting(act.context)
             ],
             dest: 'packages',
-            task: PipeAsset
+            task: AssetActivity
         },
         {
             src: ['package.json'],
             pipes: [
-                (ctx) => versionSetting(ctx)
+                (act: AssetActivity) => versionSetting(act.context)
             ],
             dest: '.',
-            task: PipeAsset
+            task: AssetActivity
         },
         {
             shell: (ctx: IPipeContext) => {
@@ -56,7 +56,7 @@ let versionSetting = (ctx: IPipeContext) => {
         }
     ]
 })
-export class Builder extends PipeElement {
+export class Builder {
 }
 
 TaskContainer.create(__dirname)

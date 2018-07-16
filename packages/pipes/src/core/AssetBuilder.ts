@@ -1,5 +1,5 @@
-import { IActivity, IConfigure, SequenceActivityBuilder, Activity, Src, Expression, Task } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, Registration, isBoolean, isString } from '@ts-ioc/core';
+import { IActivity, Src, IActivityConfigure } from '@taskfr/core';
+import { Singleton, isBoolean, isString } from '@ts-ioc/core';
 import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
 import { SourceActivity } from './SourceActivity';
@@ -8,6 +8,7 @@ import { WatchActivity } from './WatchActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationConfigure } from './Annotation';
+import { PipeActivityBuilder } from './PipeActivityBuilder';
 
 
 
@@ -19,12 +20,9 @@ import { AnnotationActivity, AnnotationConfigure } from './Annotation';
  * @extends {DestTaskBuilder}
  */
 @Singleton(AssetBuilderToken)
-export class AssetTaskBuilder extends SequenceActivityBuilder {
-    constructor(@Inject(ContainerToken) container: IContainer) {
-        super(container)
-    }
+export class AssetBuilder extends PipeActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: AssetConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: AssetConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
 
         if (activity instanceof AssetActivity) {
@@ -108,7 +106,12 @@ export class AssetTaskBuilder extends SequenceActivityBuilder {
         return activity;
     }
 
-    protected getDefaultAnnotation(activity: AssetActivity) {
+    getDefaultAcitvity() {
+        return AssetActivity;
+    }
+
+    protected getDefaultAnnotation(activity: AssetActivity): IActivityConfigure<AnnotationActivity> {
         return activity.defaultAnnotation;
     }
+
 }

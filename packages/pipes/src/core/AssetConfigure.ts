@@ -1,4 +1,4 @@
-import { Src, ExpressionType, ActivityResultType, ActivityType, IActivityBuilder } from '@taskfr/core';
+import { Src, ExpressionType, ActivityResultType, ActivityType, IActivityBuilder, IActivityConfigure } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { DestConfigure, DestActivity } from './DestActivity';
 import { IPipeConfigure } from './IPipeConfigure';
@@ -7,14 +7,22 @@ import { WatchActivity } from './WatchActivity';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { AnnotationActivity } from './Annotation';
 import { IPipeActivity } from './IPipeActivity';
+import { UglifyActivity } from './UglifyActivity';
 
-
+/**
+ * asset activity.
+ *
+ * @export
+ * @interface IAssetActivity
+ * @extends {IPipeActivity}
+ */
 export interface IAssetActivity extends IPipeActivity {
+
     /**
      * src activity.
      *
      * @type {SourceActivity}
-     * @memberof IAssetActivity
+     * @memberof AssetActivity
      */
     src: SourceActivity;
 
@@ -22,9 +30,49 @@ export interface IAssetActivity extends IPipeActivity {
      * dest activity.
      *
      * @type {(DestActivity | DestActivity[])}
-     * @memberof IAssetActivity
+     * @memberof AssetActivity
      */
     dest: DestActivity | DestActivity[];
+
+    /**
+     * watch activity.
+     *
+     * @type {WatchActivity}
+     * @memberof AssetActivity
+     */
+    watch: WatchActivity;
+
+    /**
+     * source maps activity of asset.
+     *
+     * @type {SourceMapsActivity}
+     * @memberof AssetActivity
+     */
+    sourcemaps: SourceMapsActivity;
+
+    /**
+     * uglify for asset actvity.
+     *
+     * @type {UglifyActivity}
+     * @memberof AssetActivity
+     */
+    uglify: UglifyActivity;
+
+    /**
+     * asset annotation.
+     *
+     * @type {AnnotationActivity}
+     * @memberof AssetActivity
+     */
+    annotation: AnnotationActivity;
+
+    /**
+     * default annottion.
+     *
+     * @type {IActivityConfigure<AnnotationActivity>}
+     * @memberof AssetActivity
+     */
+    defaultAnnotation?: IActivityConfigure<AnnotationActivity>;
 }
 
 /**

@@ -109,7 +109,7 @@ export class TestActivity extends SourceActivity {
 @Singleton(TestAcitvityBuilderToken)
 export class TestActivityBuilder extends PipeActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: TestConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: TestConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof TestActivity) {
             activity.options = activity.context.to(config.options);

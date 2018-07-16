@@ -1,9 +1,10 @@
 import { ActivityBuilder, IActivity, isActivityType } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, isMetadataObject, Token, Registration, isPromise } from '@ts-ioc/core';
+import { Singleton, isMetadataObject, Token, Registration, isPromise } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { TransformConfig, TransformType, TransformExpress } from './pipeTypes';
-import { PipeActivityToken, IPipeActivity, InjectAssetActivityToken, PipeActivityBuilderToken } from './IPipeActivity';
+import { PipeActivityToken, IPipeActivity, PipeActivityBuilderToken } from './IPipeActivity';
 import { PipeActivity } from './PipeActivity';
+import { InjectAssetActivityToken } from './AssetConfigure';
 
 
 /**
@@ -15,11 +16,8 @@ import { PipeActivity } from './PipeActivity';
  */
 @Singleton(PipeActivityBuilderToken)
 export class PipeActivityBuilder extends ActivityBuilder {
-    constructor(@Inject(ContainerToken) container: IContainer) {
-        super(container)
-    }
 
-    async buildStrategy<T>(activity: IActivity<T>, config: IPipeConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: IPipeConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof PipeActivity) {
             if (config.pipes) {
@@ -33,6 +31,9 @@ export class PipeActivityBuilder extends ActivityBuilder {
         return activity;
     }
 
+    getDefaultAcitvity() {
+        return PipeActivity;
+    }
 
     protected traslateStrToken(token: string): Token<IPipeActivity> {
         let taskToken: Token<IPipeActivity> = new InjectAssetActivityToken(token);

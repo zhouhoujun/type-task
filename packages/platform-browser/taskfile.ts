@@ -1,4 +1,4 @@
-import { PipeModule, Package, PipeElement, IAssetConfigure, PipeAsset } from '@taskfr/pipes';
+import { PipeModule, Package, AssetConfigure, AssetActivity } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const rename = require('gulp-rename');
 const rollup = require('gulp-rollup');
@@ -14,8 +14,8 @@ const builtins = require('rollup-plugin-node-builtins');
     assets: {
         ts: { dest: 'lib', annotation: true, uglify: true }
     },
-    children: [
-        <IAssetConfigure>{
+    sequence: [
+        <AssetConfigure>{
             src: 'lib/**/*.js',
             pipes: [
                 () => rollup({
@@ -43,11 +43,11 @@ const builtins = require('rollup-plugin-node-builtins');
                 () => rename('core.umd.js')
             ],
             dest: 'bundles',
-            task: PipeAsset
+            task: AssetActivity
         }
     ]
 })
-export class Builder extends PipeElement {
+export class Builder {
 }
 
 TaskContainer.create(__dirname)

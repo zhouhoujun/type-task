@@ -1,5 +1,5 @@
-import { IActivity, SequenceActivityBuilder, Src, InjectAcitityToken } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration } from '@ts-ioc/core';
+import { IActivity, SequenceActivityBuilder, Src } from '@taskfr/core';
+import { Singleton, isArray, isString, lang, Registration } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
 import { WatchActivity } from './WatchActivity';
@@ -7,7 +7,7 @@ import { DestActivity } from './DestActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { AssetActivity } from './AssetActivity';
-import { AssetBuilderToken } from './AssetConfigure';
+import { AssetBuilderToken, InjectAssetActivityToken } from './AssetConfigure';
 
 
 /**
@@ -19,11 +19,8 @@ import { AssetBuilderToken } from './AssetConfigure';
  */
 @Singleton(PackageBuilderToken)
 export class PackageBuilder extends SequenceActivityBuilder {
-    constructor(@Inject(ContainerToken) container: IContainer) {
-        super(container)
-    }
 
-    async buildStrategy<T>(activity: IActivity<T>, config: PackageConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: PackageConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
 
         if (activity instanceof PackageActivity) {
@@ -43,9 +40,9 @@ export class PackageBuilder extends SequenceActivityBuilder {
                             return null;
                         }
                         if (!assCfg.task) {
-                            assCfg.task = new InjectAcitityToken(name);
+                            assCfg.task = new InjectAssetActivityToken(name);
                         } else if (isString(assCfg.task)) {
-                            assCfg.builder = AssetBuilderToken;
+                            assCfg.task = new InjectAssetActivityToken(assCfg.task);
                         }
 
                         if (srcRoot && !assCfg.src) {
@@ -92,5 +89,9 @@ export class PackageBuilder extends SequenceActivityBuilder {
         }
 
         return activity;
+    }
+
+    getDefaultAcitvity() {
+        return PackageActivity;
     }
 }

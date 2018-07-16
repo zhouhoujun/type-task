@@ -82,13 +82,13 @@ export class IfActivity extends Activity<any> {
 
 @Singleton(IfActivityBuilderToken)
 export class IfActivityBuilder extends ActivityBuilder {
-    async buildStrategy<T>(activity: IActivity<T>, config: IfConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: IfConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof IfActivity) {
-            activity.ifBody = await this.build<T>(config.ifBody, activity.id);
+            activity.ifBody = await this.build(config.ifBody, activity.id);
             activity.condition = await this.toExpression(config.if, activity);
             if (config.elseBody) {
-                activity.elseBody = await this.build<T>(config.elseBody, activity.id);
+                activity.elseBody = await this.build(config.elseBody, activity.id);
             }
         }
         return activity;

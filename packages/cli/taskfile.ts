@@ -1,4 +1,4 @@
-import { PipeModule, PipeElement, Package } from '@taskfr/pipes';
+import { PipeModule, Package } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 
 @Package({
@@ -13,7 +13,7 @@ import { TaskContainer } from '@taskfr/platform-server';
         }
     }
 })
-class BuildTask extends PipeElement {
+class BuildTask {
 }
 
 TaskContainer.create(__dirname)

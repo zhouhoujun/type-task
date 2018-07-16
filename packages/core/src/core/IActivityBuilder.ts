@@ -1,4 +1,4 @@
-import { InjectToken, IModuleBuilder, Registration } from '@ts-ioc/core';
+import { InjectToken, IModuleBuilder, Registration, Type } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
 import { IConfigure, ActivityResultType } from './IConfigure';
 
@@ -58,4 +58,12 @@ export interface IActivityBuilder extends IModuleBuilder<IActivity<any>> {
      * @memberof ITaskBuilder
      */
     getBuilder(cfg: IConfigure): IActivityBuilder;
+
+    /**
+     * get default activity of builder.
+     *
+     * @returns {Type<IActivity<any>>}
+     * @memberof IActivityBuilder
+     */
+    getDefaultAcitvity(): Type<IActivity<any>>
 }

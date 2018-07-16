@@ -28,7 +28,7 @@ export interface ParallelConfigure extends IConfigure {
      * @type {CtxType<number>}
      * @memberof ParallelConfigure
      */
-    parallel: ActivityResultType<any>[];
+    parallel?: ActivityResultType<any>[];
 }
 
 
@@ -53,7 +53,7 @@ export class ParallelActivity extends Activity<any> {
 @Singleton(ParallelActivityBuilderToken)
 export class ParallelActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: ParallelConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: ParallelConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof ParallelActivity) {
             if (config.parallel && config.parallel.length) {
@@ -64,7 +64,7 @@ export class ParallelActivityBuilder extends ActivityBuilder {
         return activity;
     }
 
-    async buildChildren<T>(activity: ParallelActivity, configs: (IConfigure | Token<IActivity<T>>)[]) {
+    async buildChildren(activity: ParallelActivity, configs: (IConfigure | Token<IActivity<any>>)[]) {
         let children = await Promise.all(configs.map(async cfg => {
             let node = await this.build(cfg, activity.id);
             if (!node) {

@@ -73,11 +73,11 @@ export class IntervalActivity extends Activity<any> {
 @Singleton(IntervalActivityBuilderToken)
 export class IntervalActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: IntervalConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: IntervalConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof IntervalActivity) {
             activity.interval = await this.toExpression(config.interval, activity);
-            activity.body = await this.build<any>(config.body, activity.id);
+            activity.body = await this.build(config.body, activity.id);
         }
 
         return activity;

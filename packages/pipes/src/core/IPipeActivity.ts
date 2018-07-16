@@ -36,20 +36,6 @@ export class InjectPipeActivityToken<T extends IPipeActivity> extends Registrati
     }
 }
 
-/**
- * Inject Pipe Activity Token
- *
- * @export
- * @class InjectPipeActivityToken
- * @extends {Registration<T>}
- * @template T
- */
-export class InjectAssetActivityToken<T extends IPipeActivity> extends Registration<T> {
-    constructor(desc: string) {
-        super('AssetActivity', desc);
-    }
-}
-
 
 /**
  * pipe activity token.

@@ -91,7 +91,7 @@ export class SwitchActivity extends Activity<any> {
 
 @Singleton(SwitchActivityBuilderToken)
 export class SwitchActivityBuilder extends ActivityBuilder {
-    async buildStrategy<T>(activity: IActivity<T>, config: SwitchConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity<any>, config: SwitchConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof SwitchActivity) {
             activity.expression = await this.toExpression(config.expression, activity);
@@ -104,7 +104,7 @@ export class SwitchActivityBuilder extends ActivityBuilder {
             }
 
             if (config.defaultBody) {
-                activity.defaultBody = await this.build<T>(config.defaultBody, activity.id);
+                activity.defaultBody = await this.build(config.defaultBody, activity.id);
             }
         }
         return activity;

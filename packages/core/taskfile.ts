@@ -17,11 +17,12 @@ TaskContainer.create(__dirname)
             src: 'src',
             // awaitPiped: true,
             assets: {
-                ts: <TsConfigure>{ src: 'src/**/*.ts', dest: 'lib', annotation: true,  uglify: true }
+                ts: <TsConfigure>{ src: 'src/**/*.ts', dest: 'lib', annotation: true, uglify: true }
             },
             task: PackageActivity
         },
         <AssetConfigure>{
+            name: 'rollup',
             src: 'lib/**/*.js',
             pipes: [
                 () => rollup({
@@ -72,4 +73,15 @@ TaskContainer.create(__dirname)
             ],
             dest: 'bundles',
             task: AssetActivity
-        });
+        },
+        <AssetConfigure>{
+            name: 'zip',
+            src: 'bundles/core.umd.js',
+            uglify: true,
+            pipes: [
+                () => rename('core.umd.min.js'),
+            ],
+            dest: 'bundles',
+            task: AssetActivity
+        }
+    );

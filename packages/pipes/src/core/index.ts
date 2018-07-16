@@ -13,9 +13,10 @@ export * from './CleanActivity';
 export * from './WatchActivity';
 export * from './UglifyActivity';
 export * from './SourceMapsActivity';
+export * from './Annotation';
 
 export * from './AssetConfigure';
-export * from './AssetTaskBuilder';
+export * from './AssetBuilder';
 export * from './AssetActivity';
 
 export * from './PackageConfigure';

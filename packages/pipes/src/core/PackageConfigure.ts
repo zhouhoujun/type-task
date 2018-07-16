@@ -1,4 +1,4 @@
-import { CtxType, Src, ExpressionType, ActivityType, IActivityBuilder } from '@taskfr/core';
+import { CtxType, Src, ExpressionType, ActivityType, IActivityBuilder, SequenceConfigure, ActivityResultType } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { TestActivity } from './TestActivity';
@@ -8,7 +8,7 @@ import { DestActivity } from './DestActivity';
 import { WatchActivity } from './WatchActivity';
 import { IPipeActivity } from './IPipeActivity';
 
-export interface PackageConfigure extends IPipeConfigure {
+export interface PackageConfigure extends SequenceConfigure {
     /**
      * src root path.
      *
@@ -56,6 +56,7 @@ export interface PackageConfigure extends IPipeConfigure {
      * @memberof PackageConfigure
      */
     dest?: ExpressionType<string> | ActivityType<DestActivity>;
+
 }
 
 
