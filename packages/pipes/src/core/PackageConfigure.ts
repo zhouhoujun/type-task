@@ -1,6 +1,5 @@
-import { CtxType, Src, ExpressionType, ActivityType, IActivityBuilder, SequenceConfigure, ActivityResultType } from '@taskfr/core';
+import { CtxType, Src, ExpressionType, ActivityType, IActivityBuilder, SequenceConfigure } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
-import { IPipeConfigure } from './IPipeConfigure';
 import { TestActivity } from './TestActivity';
 import { AssetActivity } from './AssetActivity';
 import { CleanActivity } from './CleanActivity';

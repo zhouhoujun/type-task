@@ -37,7 +37,7 @@ export interface IntervalConfigure extends IConfigure {
      * @type {ActivityResultType<any>}
      * @memberof WhileConfigure
      */
-    body: ActivityResultType<any>
+    body?: ActivityResultType<any>
 }
 
 /**

@@ -1,5 +1,5 @@
 import { IActivity, SequenceActivityBuilder, Src } from '@taskfr/core';
-import { Singleton, isArray, isString, lang, Registration } from '@ts-ioc/core';
+import { Singleton, isArray, isString, lang } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
 import { WatchActivity } from './WatchActivity';
@@ -7,7 +7,7 @@ import { DestActivity } from './DestActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { AssetActivity } from './AssetActivity';
-import { AssetBuilderToken, InjectAssetActivityToken } from './AssetConfigure';
+import { InjectAssetActivityToken } from './AssetConfigure';
 
 
 /**

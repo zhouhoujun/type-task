@@ -10,72 +10,6 @@ import { IPipeActivity } from './IPipeActivity';
 import { UglifyActivity } from './UglifyActivity';
 
 /**
- * asset activity.
- *
- * @export
- * @interface IAssetActivity
- * @extends {IPipeActivity}
- */
-export interface IAssetActivity extends IPipeActivity {
-
-    /**
-     * src activity.
-     *
-     * @type {SourceActivity}
-     * @memberof AssetActivity
-     */
-    src: SourceActivity;
-
-    /**
-     * dest activity.
-     *
-     * @type {(DestActivity | DestActivity[])}
-     * @memberof AssetActivity
-     */
-    dest: DestActivity | DestActivity[];
-
-    /**
-     * watch activity.
-     *
-     * @type {WatchActivity}
-     * @memberof AssetActivity
-     */
-    watch: WatchActivity;
-
-    /**
-     * source maps activity of asset.
-     *
-     * @type {SourceMapsActivity}
-     * @memberof AssetActivity
-     */
-    sourcemaps: SourceMapsActivity;
-
-    /**
-     * uglify for asset actvity.
-     *
-     * @type {UglifyActivity}
-     * @memberof AssetActivity
-     */
-    uglify: UglifyActivity;
-
-    /**
-     * asset annotation.
-     *
-     * @type {AnnotationActivity}
-     * @memberof AssetActivity
-     */
-    annotation: AnnotationActivity;
-
-    /**
-     * default annottion.
-     *
-     * @type {IActivityConfigure<AnnotationActivity>}
-     * @memberof AssetActivity
-     */
-    defaultAnnotation?: IActivityConfigure<AnnotationActivity>;
-}
-
-/**
  * dest type.
  */
 export type DestType = string | DestConfigure;
@@ -140,6 +74,71 @@ export interface AssetConfigure extends IPipeConfigure {
 }
 
 
+/**
+ * asset activity.
+ *
+ * @export
+ * @interface IAssetActivity
+ * @extends {IPipeActivity}
+ */
+export interface IAssetActivity extends IPipeActivity {
+
+    /**
+     * src activity.
+     *
+     * @type {SourceActivity}
+     * @memberof AssetActivity
+     */
+    src: SourceActivity;
+
+    /**
+     * dest activity.
+     *
+     * @type {(DestActivity | DestActivity[])}
+     * @memberof AssetActivity
+     */
+    dest: DestActivity | DestActivity[];
+
+    /**
+     * watch activity.
+     *
+     * @type {WatchActivity}
+     * @memberof AssetActivity
+     */
+    watch: WatchActivity;
+
+    /**
+     * source maps activity of asset.
+     *
+     * @type {SourceMapsActivity}
+     * @memberof AssetActivity
+     */
+    sourcemaps: SourceMapsActivity;
+
+    /**
+     * uglify for asset actvity.
+     *
+     * @type {UglifyActivity}
+     * @memberof AssetActivity
+     */
+    uglify: UglifyActivity;
+
+    /**
+     * asset annotation.
+     *
+     * @type {AnnotationActivity}
+     * @memberof AssetActivity
+     */
+    annotation: AnnotationActivity;
+
+    /**
+     * default annottion.
+     *
+     * @type {IActivityConfigure<AnnotationActivity>}
+     * @memberof AssetActivity
+     */
+    defaultAnnotation?: IActivityConfigure<AnnotationActivity>;
+}
 
 
 export class InjectAssetActivityToken<T extends IAssetActivity> extends Registration<T> {

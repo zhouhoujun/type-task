@@ -1,4 +1,4 @@
-import { SequenceActivity, ParallelActivity } from '@taskfr/core';
+import { SequenceActivity, ParallelActivity, IntervalActivityToken } from '@taskfr/core';
 import { Package } from '../decorators';
 import { WatchActivity } from './WatchActivity';
 import { DestActivity } from './DestActivity';
@@ -18,15 +18,34 @@ import { PipeContextToken, IPipeContext } from './IPipeContext';
  */
 @Package
 export class PackageActivity extends SequenceActivity {
-
+    /**
+     * watch activity.
+     *
+     * @type {WatchActivity}
+     * @memberof PackageActivity
+     */
     watch: WatchActivity;
-
+    /**
+     * dest activity.
+     *
+     * @type {DestActivity}
+     * @memberof PackageActivity
+     */
     dest: DestActivity;
-
+    /**
+     * test activity.
+     *
+     * @type {TestActivity}
+     * @memberof PackageActivity
+     */
     test: TestActivity;
-
+    /**
+     * clean activity.
+     *
+     * @type {CleanActivity}
+     * @memberof PackageActivity
+     */
     clean: CleanActivity;
-
     /**
      * src root pacth.
      *
@@ -34,7 +53,6 @@ export class PackageActivity extends SequenceActivity {
      * @memberof PackageActivity
      */
     src: string;
-
     /**
      * assets activities.
      *
@@ -42,7 +60,6 @@ export class PackageActivity extends SequenceActivity {
      * @memberof PackageActivity
      */
     assets: AssetActivity[] = [];
-
     /**
      * assets execute control type.
      *
@@ -50,7 +67,6 @@ export class PackageActivity extends SequenceActivity {
      * @memberof PackageActivity
      */
     executeType: Type<SequenceActivity | ParallelActivity>;
-
     /**
      * context.
      *
@@ -60,6 +76,14 @@ export class PackageActivity extends SequenceActivity {
     @Inject(PipeContextToken)
     context: IPipeContext;
 
+    async run(data?: any): Promise<any> {
+        let stream = await super.run(data);
+        // TODO: watch
+        if (this.watch) {
+            this.watch.run(data);
+        }
+        return stream;
+    }
 
     protected async begin(data?: any): Promise<ITransform> {
         if (this.test) {

@@ -22,7 +22,6 @@ import { IAssetActivity } from './AssetConfigure';
  */
 @AssetTask
 export class AssetActivity extends PipeActivity implements IAssetActivity {
-
     /**
      * src activity.
      *
@@ -30,7 +29,6 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      * @memberof AssetActivity
      */
     src: SourceActivity;
-
     /**
      * dest activity.
      *
@@ -38,7 +36,6 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      * @memberof AssetActivity
      */
     dest: DestActivity | DestActivity[];
-
     /**
      * watch activity.
      *
@@ -46,7 +43,6 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      * @memberof AssetActivity
      */
     watch: WatchActivity;
-
     /**
      * source maps activity of asset.
      *

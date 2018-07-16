@@ -38,8 +38,6 @@ export interface TestConfigure extends SourceConfigure {
     options?: CtxType<any>;
 }
 
-
-
 @PipeTask(TestAcitvityToken, TestAcitvityBuilderToken)
 export class TestActivity extends SourceActivity {
 
