@@ -1,7 +1,7 @@
 import { src, SrcOptions } from 'vinyl-fs';
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
-import { Src, IActivity, Expression, ActivityResultType } from '@taskfr/core';
+import { Src, IActivity, Expression, ActivityResultType, ExpressionType } from '@taskfr/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
 import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
@@ -26,7 +26,7 @@ export interface SourceConfigure extends IPipeConfigure {
      * @type {TransformSource}
      * @memberof IPipeConfigure
      */
-    src: Expression<Src> | ActivityResultType<Src>;
+    src: ExpressionType<Src>;
 
     /**
      * src options.
@@ -34,7 +34,7 @@ export interface SourceConfigure extends IPipeConfigure {
      * @type {CtxType<SrcOptions>}
      * @memberof IPipeConfigure
      */
-    srcOptions?: Expression<SrcOptions> | ActivityResultType<SrcOptions>;
+    srcOptions?: ExpressionType<SrcOptions>;
 }
 
 @PipeTask(SourceAcitvityToken, SourceAcitvityBuilderToken)
