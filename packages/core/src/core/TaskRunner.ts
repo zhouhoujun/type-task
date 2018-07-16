@@ -1,5 +1,5 @@
-import { Token, Inject, IContainer, Type, ContainerToken, OnInit, isToken } from '@ts-ioc/core';
-import { IConfigure, ActivityResultType } from './IConfigure';
+import { Inject, IContainer, ContainerToken, OnInit, isToken } from '@ts-ioc/core';
+import { ActivityResultType } from './IConfigure';
 import { IActivity } from './IActivity';
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
@@ -67,13 +67,12 @@ export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
 
     getUUID() {
         if (!this.uuid) {
-            if (this.instance) {
+            if (this.instance && this.instance.id) {
                 this.uuid = this.instance.id;
             } else if (isToken(this.work)) {
                 this.uuid = this.createUUID();
-            } else {
-                this.uuid = this.uuid || this.createUUID()
             }
+            this.uuid = this.uuid || this.createUUID()
         }
         return this.uuid;
     }
@@ -88,7 +87,7 @@ export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
 
     async getInstance() {
         if (!this.instance) {
-            this.instance = await this.getBuilder().build<T>(this.task, this.uuid);
+            this.instance = await this.getBuilder().build<T>(this.task, this.getUUID());
         }
         return this.instance;
     }

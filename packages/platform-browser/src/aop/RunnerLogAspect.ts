@@ -1,7 +1,7 @@
 import { ObjectMap, Inject, IContainer, ContainerToken } from '@ts-ioc/core';
-import { Around, Aspect, Joinpoint, JoinpointState, Before } from '@ts-ioc/aop';
+import { Around, Aspect, Joinpoint, JoinpointState } from '@ts-ioc/aop';
 import { LoggerAspect } from '@ts-ioc/logs';
-import { Runner } from '@taskfr/core';
+import { Runner, ITaskRunner } from '@taskfr/core';
 /**
  * Task Log
  *
@@ -24,7 +24,8 @@ export class RunnerLogAspect extends LoggerAspect {
     @Around('execution(*.start)')
     logStart(joinPoint: Joinpoint) {
         let logger = this.logger;
-        let uuid = joinPoint.target.uuid;
+        let runner = joinPoint.target as ITaskRunner<any>;
+        let uuid = runner.getUUID();
 
         let start: Date, end: Date;
         let taskname = '\'' + uuid + '\'';

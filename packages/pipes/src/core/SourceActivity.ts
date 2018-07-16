@@ -4,9 +4,9 @@ import { PipeTask } from '../decorators';
 import { Src, IActivity, Expression, ActivityResultType } from '@taskfr/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
-import { InjectPipeActivityToken } from './IPipeActivity';
+import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
 import { Singleton } from '@ts-ioc/core';
-import { PipeActivityBuilder, InjectPipeAcitityBuilderToken } from './PipeActivityBuilder';
+import { PipeActivityBuilder } from './PipeActivityBuilder';
 
 
 export const SourceAcitvityToken = new InjectPipeActivityToken<SourceActivity>('source');

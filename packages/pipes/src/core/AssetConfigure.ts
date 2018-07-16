@@ -1,13 +1,31 @@
-import { Src, ExpressionType, ActivityResultType, ActivityType } from '@taskfr/core';
-import { ObjectMap } from '@ts-ioc/core';
+import { Src, ExpressionType, ActivityResultType, ActivityType, IActivityBuilder } from '@taskfr/core';
+import { ObjectMap, Registration } from '@ts-ioc/core';
 import { DestConfigure, DestActivity } from './DestActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { SourceActivity } from './SourceActivity';
 import { WatchActivity } from './WatchActivity';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { AnnotationActivity } from './Annotation';
+import { IPipeActivity } from './IPipeActivity';
 
 
+export interface IAssetActivity extends IPipeActivity {
+    /**
+     * src activity.
+     *
+     * @type {SourceActivity}
+     * @memberof IAssetActivity
+     */
+    src: SourceActivity;
+
+    /**
+     * dest activity.
+     *
+     * @type {(DestActivity | DestActivity[])}
+     * @memberof IAssetActivity
+     */
+    dest: DestActivity | DestActivity[];
+}
 
 /**
  * dest type.
@@ -42,10 +60,10 @@ export interface AssetConfigure extends IPipeConfigure {
     /**
      * asset dest activity.
      *
-     * @type {(ExpressionType<string> | ActivityType<AnnotationActivity>)}
+     * @type {(ExpressionType<string | boolean> | ActivityType<AnnotationActivity>)}
      * @memberof AssetConfigure
      */
-    annotation?: ExpressionType<string> | ActivityType<AnnotationActivity>;
+    annotation?: ExpressionType<string | boolean> | ActivityType<AnnotationActivity>;
 
     /**
      * asset dest activity.
@@ -72,3 +90,22 @@ export interface AssetConfigure extends IPipeConfigure {
     sourcemaps?: ExpressionType<boolean | string> | ActivityType<SourceMapsActivity>;
 
 }
+
+
+
+
+export class InjectAssetActivityToken<T extends IAssetActivity> extends Registration<T> {
+    constructor(desc: string) {
+        super('AssetActivity', desc);
+    }
+}
+
+export class InjectAssetActivityBuilderToken<T extends IActivityBuilder> extends Registration<T> {
+    constructor(desc: string) {
+        super('AssetActivityBuilder', desc);
+    }
+}
+
+export const AssetToken = new InjectAssetActivityToken<IAssetActivity>('');
+export const AssetBuilderToken = new InjectAssetActivityBuilderToken<IActivityBuilder>('')
+

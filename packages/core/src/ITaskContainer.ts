@@ -39,7 +39,7 @@ export interface ITaskContainer extends IApplicationBuilder<IActivity<any>> {
      * @returns {Promise<ITaskRunner>}
      * @memberof ITaskContainer
      */
-    createWorkflow(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner>;
+    createWorkflow(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner<any>>;
 
     /**
      * bootstrap app via main module.
@@ -48,5 +48,5 @@ export interface ITaskContainer extends IApplicationBuilder<IActivity<any>> {
      * @returns {Promise<ITaskRunner>}
      * @memberof IApplicationBuilder
      */
-    bootstrap(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner>;
+    bootstrap(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner<any>>;
 }

@@ -41,7 +41,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> imp
      * @returns {Promise<ITaskRunner>}
      * @memberof ITaskContainer
      */
-    createWorkflow(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner> {
+    createWorkflow(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner<any>> {
         let task = (tasks.length > 1) ? { children: tasks, task: activites.SequenceActivity } : lang.first(tasks);
         return super.bootstrap(task)
             .then(instance => {
@@ -56,7 +56,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> imp
      * @returns {Promise<T>}
      * @memberof ApplicationBuilder
      */
-    async bootstrap(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner> {
+    async bootstrap(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner<any>> {
         let runner = await this.createWorkflow(...tasks);
         await runner.start();
         return runner;

@@ -1,32 +1,13 @@
 import { IActivity, IConfigure, SequenceActivityBuilder, Activity, Src, Expression, Task } from '@taskfr/core';
-import { Inject, ContainerToken, IContainer, Singleton, Registration, isBoolean } from '@ts-ioc/core';
-import { AssetConfigure } from './AssetConfigure';
-import { IAssetActivity, AssetActivity } from './AssetActivity';
+import { Inject, ContainerToken, IContainer, Singleton, Registration, isBoolean, isString } from '@ts-ioc/core';
+import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
+import { AssetActivity } from './AssetActivity';
 import { SourceActivity } from './SourceActivity';
 import { DestActivity } from './DestActivity';
 import { WatchActivity } from './WatchActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationConfigure } from './Annotation';
-import { isString } from 'util';
-
-
-
-
-export class InjectAssetActivityToken<T extends IAssetActivity> extends Registration<T> {
-    constructor(desc: string) {
-        super('AssetActivity', desc);
-    }
-}
-
-export class InjectAssetActivityBuilderToken<T extends AssetTaskBuilder> extends Registration<T> {
-    constructor(desc: string) {
-        super('AssetActivityBuilder', desc);
-    }
-}
-
-export const AssetToken = new InjectAssetActivityToken<IAssetActivity>('');
-export const AssetBuilderToken = new InjectAssetActivityBuilderToken<AssetTaskBuilder>('')
 
 
 
@@ -62,9 +43,15 @@ export class AssetTaskBuilder extends SequenceActivityBuilder {
             }
 
             if (config.annotation) {
-                activity.annotation = await this.toActivity<string, AnnotationActivity>(config.annotation, activity,
+                activity.annotation = await this.toActivity<string | boolean, AnnotationActivity>(config.annotation, activity,
                     act => act instanceof AnnotationActivity,
                     dest => {
+                        if (isBoolean(dest)) {
+                            if (dest) {
+                                return this.getDefaultAnnotation(activity);
+                            }
+                            return null;
+                        }
                         return <AnnotationConfigure>{ annotationFramework: require(dest), task: AnnotationActivity };
                     },
                     cfg => {
@@ -119,5 +106,9 @@ export class AssetTaskBuilder extends SequenceActivityBuilder {
         }
 
         return activity;
+    }
+
+    protected getDefaultAnnotation(activity: AssetActivity) {
+        return activity.defaultAnnotation;
     }
 }

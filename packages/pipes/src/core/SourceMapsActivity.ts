@@ -7,7 +7,7 @@ export interface SourceMapsConfigure extends IConfigure {
     sourcemaps?: CtxType<string>;
 }
 
-export const SourceMapsToken = new InjectAcitityToken('sourcemaps');
+export const SourceMapsToken = new InjectAcitityToken<SourceMapsActivity>('sourcemaps');
 
 @Task(SourceMapsToken)
 export class SourceMapsActivity extends Activity<ITransform> implements OnTaskInit {

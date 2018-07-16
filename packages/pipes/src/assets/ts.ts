@@ -1,12 +1,10 @@
 import { AssetTask } from '../decorators';
-import { DestConfigure, TransformType, AssetConfigure, AssetActivity } from '../core';
-import { isBoolean, ObjectMap, isString, isArray } from '@ts-ioc/core';
+import { AssetConfigure, AssetActivity, DestActivity, DestAcitvityToken } from '../core';
+import { isBoolean, ObjectMap, isString, lang, isArray } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
-import * as uglify from 'gulp-uglify';
-import * as sourcemaps from 'gulp-sourcemaps';
 import * as ts from 'gulp-typescript';
 import { ITransform } from '../core/ITransform';
-import { CtxType, OnTaskInit, ExpressionType, ActivityType } from '@taskfr/core';
+import { CtxType, OnTaskInit, ExpressionType, ActivityType, IActivity } from '@taskfr/core';
 import { AnnotationActivity } from '../core/Annotation';
 
 /**
@@ -31,7 +29,7 @@ export interface TsConfigure extends AssetConfigure {
      * @type {(boolean | ExpressionType<string> | ActivityType<AnnotationActivity>)}
      * @memberof TsConfigure
      */
-    annotation?: boolean | ExpressionType<string> | ActivityType<AnnotationActivity>;
+    annotation?: ExpressionType<string | boolean> | ActivityType<AnnotationActivity>;
     /**
      * set tsconfig to compile.
      *
@@ -40,43 +38,31 @@ export interface TsConfigure extends AssetConfigure {
      */
     tsconfig?: CtxType<string | ObjectMap<any>>;
 
+
 }
 
 @AssetTask('ts')
 export class TsCompile extends AssetActivity implements OnTaskInit {
 
+    tdsDest: DestActivity | boolean;
 
     onTaskInit(cfg: TsConfigure) {
-
-        if (isBoolean(cfg.annotation)) {
-            if (cfg.annotation) {
-                cfg.annotation = { annotationFramework: () => classAnnotations(), task: AnnotationActivity };
+        this.defaultAnnotation = { annotationFramework: () => classAnnotations(), task: AnnotationActivity };
+        let tds = this.context.to(cfg.tds);
+        if (tds) {
+            if (isBoolean(tds)) {
+                this.tdsDest = true;
+            }
+            if (isString(tds)) {
+                this.tdsDest = this.context.getContainer().resolve(DestAcitvityToken);
+                this.tdsDest.dest = tds;
             }
         }
-
-    // if (cfg.dest) {
-    //     let dest = this.context.to(cfg.dest);
-    //     if (isArray(dest)) {
-    //         let dests = [];
-    //         dest.forEach(d => {
-    //             let subs = this.generateDest(cfg, d);
-    //             if (isArray(subs)) {
-    //                 dests = dests.concat(subs);
-    //             } else {
-    //                 dests.push(subs);
-    //             }
-    //         });
-    //         dest = dests;
-    //     } else {
-    //         dest = this.generateDest(cfg, dest);
-    //     }
-    //     cfg.dest = dest;
-    // }
     }
 
-    protected async begin(data?: any): Promise<ITransform> {
-        let stream = await super.begin(data);
-        return stream.pipe(this.getTsCompilePipe());
+    protected async beginPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+        stream = await super.beginPipe(stream, execute);
+        return await this.pipe(stream, this.getTsCompilePipe());
     }
 
     private getTsCompilePipe(): ITransform {
@@ -90,60 +76,75 @@ export class TsCompile extends AssetActivity implements OnTaskInit {
         }
     }
 
-    generateDest(cfg: TsConfigure, dest: DestType): DestConfigure | DestConfigure[] {
-        let destPath: string;
-        if (isString(dest)) {
-            destPath = dest;
-            dest = { dest: dest };
-        } else {
-            destPath = this.context.to(dest.dest);
-        }
-        let pipes = this.context.to(dest.pipes) || [];
+    protected async endPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
 
-        if (cfg.uglify) {
-            let uglifyCfg = this.context.to(cfg.uglify)
-            pipes.unshift((ctx) => {
-                if (uglifyCfg) {
-                    return isBoolean(uglifyCfg) ? uglify() : uglify(uglifyCfg);
-                }
-                return null;
-            });
+        if (this.tdsDest && stream.dts) {
+            let tds: DestActivity;
+            if (isBoolean(this.tdsDest)) {
+                tds = isArray(this.dest) ? lang.first(this.dest) : this.dest;
+            } else {
+                tds = this.tdsDest;
+            }
+            await this.executeDest(tds, stream);
         }
 
-        let smaps = this.context.to(cfg.sourcemaps);
-        if (smaps !== false) {
-            pipes.push((ctx) => sourcemaps.write(isString(smaps) ? smaps : './sourcemaps'))
-        }
-
-
-        pipes.unshift((ctx, task, transform) => {
-            let trans: ITransform = transform.js;
-            trans.changeAsOrigin = true;
-            return trans;
-        });
-
-        dest.pipes = pipes;
-        let tds = this.context.to(cfg.tds)
-        if (tds !== false) {
-            cfg.tds = destPath;
-        }
-
-        if (cfg.tds) {
-            dest.name = 'dest-js';
-            dest = [dest, {
-                name: 'dest-tds',
-                dest: cfg.tds,
-                pipes: [
-                    (ctx, task, transform) => {
-                        let tans: ITransform = transform.dts;
-                        tans.changeAsOrigin = true;
-                        return tans;
-                    }
-                ]
-            }];
-        }
-
-        return dest;
+        return await super.endPipe(stream, execute);
     }
+
+    // generateDest(cfg: TsConfigure, dest: DestType): DestConfigure | DestConfigure[] {
+    //     let destPath: string;
+    //     if (isString(dest)) {
+    //         destPath = dest;
+    //         dest = { dest: dest };
+    //     } else {
+    //         destPath = this.context.to(dest.dest);
+    //     }
+    //     let pipes = this.context.to(dest.pipes) || [];
+
+    //     if (cfg.uglify) {
+    //         let uglifyCfg = this.context.to(cfg.uglify)
+    //         pipes.unshift((ctx) => {
+    //             if (uglifyCfg) {
+    //                 return isBoolean(uglifyCfg) ? uglify() : uglify(uglifyCfg);
+    //             }
+    //             return null;
+    //         });
+    //     }
+
+    //     let smaps = this.context.to(cfg.sourcemaps);
+    //     if (smaps !== false) {
+    //         pipes.push((ctx) => sourcemaps.write(isString(smaps) ? smaps : './sourcemaps'))
+    //     }
+
+
+    //     pipes.unshift((ctx, task, transform) => {
+    //         let trans: ITransform = transform.js;
+    //         trans.changeAsOrigin = true;
+    //         return trans;
+    //     });
+
+    //     dest.pipes = pipes;
+    //     let tds = this.context.to(cfg.tds)
+    //     if (tds !== false) {
+    //         cfg.tds = destPath;
+    //     }
+
+    //     if (cfg.tds) {
+    //         dest.name = 'dest-js';
+    //         dest = [dest, {
+    //             name: 'dest-tds',
+    //             dest: cfg.tds,
+    //             pipes: [
+    //                 (ctx, task, transform) => {
+    //                     let tans: ITransform = transform.dts;
+    //                     tans.changeAsOrigin = true;
+    //                     return tans;
+    //                 }
+    //             ]
+    //         }];
+    //     }
+
+    //     return dest;
+    // }
 
 }

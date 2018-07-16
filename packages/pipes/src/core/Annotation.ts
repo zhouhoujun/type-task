@@ -3,9 +3,10 @@ import { TransformType } from './pipeTypes';
 import { IActivity } from '@taskfr/core';
 import { PipeTask } from '../decorators';
 import { IPipeConfigure } from './IPipeConfigure';
-import { InjectPipeActivityToken } from './IPipeActivity';
-import { InjectPipeAcitityBuilderToken, PipeActivityBuilder } from './PipeActivityBuilder';
+import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
+import { PipeActivityBuilder } from './PipeActivityBuilder';
 import { Singleton } from '@ts-ioc/core';
+import { ITransform } from './ITransform';
 
 
 export const AnnotationAcitvityToken = new InjectPipeActivityToken<AnnotationActivity>('Annotation');
@@ -15,7 +16,7 @@ export interface AnnotationConfigure extends IPipeConfigure {
     annotationFramework: TransformType
 }
 
-@PipeTask
+@PipeTask(AnnotationAcitvityToken, AnnotationAcitvityBuilderToken)
 export class AnnotationActivity extends PipeActivity {
 
     /**
@@ -26,11 +27,13 @@ export class AnnotationActivity extends PipeActivity {
      */
     annotationFramework: TransformType;
 
-    protected async getRunPipes(execute?: IActivity<any>): Promise<TransformType[]> {
-        let annotation = await this.context.exec(this, this.annotationFramework);
-        let pipes = await super.getRunPipes(execute);
-        pipes.push(annotation);
-        return pipes;
+    protected async beginPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+        stream = await super.beginPipe(stream, execute);
+        if (this.annotationFramework) {
+            let annotation = await this.context.exec(this, this.annotationFramework);
+            stream = await this.pipe(stream, annotation);
+        }
+        return stream;
     }
 }
 

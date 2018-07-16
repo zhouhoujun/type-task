@@ -4,15 +4,15 @@ import { ITransform } from './ITransform';
 import { TransformType } from './pipeTypes';
 import { Expression, IActivity, ExpressionType } from '@taskfr/core';
 import { Singleton, isArray } from '@ts-ioc/core';
-import { InjectPipeActivityToken } from './IPipeActivity';
+import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
-import { InjectPipeAcitityBuilderToken, PipeActivityBuilder } from './PipeActivityBuilder';
+import { PipeActivityBuilder } from './PipeActivityBuilder';
 import { SourceMapsActivity } from './SourceMapsActivity';
 /**
  * dest activity token.
  */
-export const DestAcitvityToken = new InjectPipeActivityToken('dest');
+export const DestAcitvityToken = new InjectPipeActivityToken<DestActivity>('dest');
 
 export const DestAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<DestActivityBuilder>('dest')
 

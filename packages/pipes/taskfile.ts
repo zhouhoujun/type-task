@@ -1,4 +1,4 @@
-import { PipeModule, Package, PipeElement } from 'src';
+import { PipeModule, Package } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 
 @Package({
@@ -9,7 +9,7 @@ import { TaskContainer } from '@taskfr/platform-server';
         ts: { dest: 'lib', uglify: true, annotation: true, task: 'ts' }
     }
 })
-export class Builder extends PipeElement {
+export class Builder {
 }
 
 TaskContainer.create(__dirname)

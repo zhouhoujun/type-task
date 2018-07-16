@@ -7,7 +7,7 @@ export interface UglifyConfigure extends IConfigure {
     uglifyOtions?: CtxType<any>;
 }
 
-export const UglifyToken = new InjectAcitityToken('uglify');
+export const UglifyToken = new InjectAcitityToken<UglifyActivity>('uglify');
 
 @Task(UglifyToken)
 export class UglifyActivity extends Activity<ITransform> implements OnTaskInit {

@@ -1,4 +1,4 @@
-import { PipeModule, PackageTask, PipeAsset, PackageConfigure, AssetConfigure, TsConfigure } from '@taskfr/pipes';
+import { PipeModule, PackageConfigure, AssetConfigure, TsConfigure, PackageActivity, AssetActivity } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const rename = require('gulp-rename');
 const rollup = require('gulp-rollup');
@@ -19,7 +19,7 @@ TaskContainer.create(__dirname)
             assets: {
                 ts: <TsConfigure>{ src: 'src/**/*.ts', dest: 'lib', annotation: true,  uglify: true }
             },
-            task: PackageTask
+            task: PackageActivity
         },
         <AssetConfigure>{
             src: 'lib/**/*.js',
@@ -71,5 +71,5 @@ TaskContainer.create(__dirname)
                 () => rename('core.umd.js')
             ],
             dest: 'bundles',
-            task: PipeAsset
+            task: AssetActivity
         });

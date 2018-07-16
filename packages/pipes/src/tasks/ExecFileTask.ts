@@ -1,9 +1,7 @@
 import { isString, isArray } from '@ts-ioc/core';
 import { existsSync } from 'fs';
-import { Src } from '@taskfr/core';
+import { Src, Activity, Task } from '@taskfr/core';
 import * as execa from 'execa';
-import { PipeTask } from '../decorators';
-import { PipeActivity } from '../core/PipeActivity';
 
 
 /**
@@ -12,15 +10,12 @@ import { PipeActivity } from '../core/PipeActivity';
  * @class ExecFileTask
  * @implements {ITask}
  */
-@PipeTask('execfile')
-export class ExecFileTask extends PipeActivity {
+@Task('execfile')
+export class ExecFileTask extends Activity<any> {
     files: Src;
     args?: string[];
     options?: execa.Options;
     allowError = true;
-    constructor(name?: string) {
-        super(name);
-    }
 
     run(): Promise<any> {
         return Promise.resolve(this.files)

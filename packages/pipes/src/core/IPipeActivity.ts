@@ -1,8 +1,6 @@
-import { IActivity, CtxType, Src } from '@taskfr/core';
+import { IActivity, IActivityBuilder } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { Registration } from '@ts-ioc/core';
-import { IPipeConfigure } from './IPipeConfigure';
-import { SrcOptions } from 'vinyl-fs';
 
 /**
  * pipe task.
@@ -21,33 +19,6 @@ export interface IPipeActivity extends IActivity<ITransform> {
      * @memberof IPipeTask
      */
     run(data?: any): Promise<ITransform>;
-}
-
-/**
- * source pipe configure.
- *
- * @export
- * @interface IPipeSourceConfigure
- * @extends {IPipeConfigure}
- */
-export interface ISourceConfigure extends IPipeConfigure {
-
-    /**
-     * transform source.
-     *
-     * @type {TransformSource}
-     * @memberof IPipeConfigure
-     */
-    src?: CtxType<Src>;
-
-    /**
-     * src options.
-     *
-     * @type {CtxType<SrcOptions>}
-     * @memberof IPipeConfigure
-     */
-    srcOptions?: CtxType<SrcOptions>;
-
 }
 
 
@@ -84,3 +55,24 @@ export class InjectAssetActivityToken<T extends IPipeActivity> extends Registrat
  * pipe activity token.
  */
 export const PipeActivityToken = new InjectPipeActivityToken<IPipeActivity>('');
+
+
+
+/**
+ * Inject PipeAcitityBuilder Token
+ *
+ * @export
+ * @class InjectPipeAcitityBuilderToken
+ * @extends {Registration<T>}
+ * @template T
+ */
+export class InjectPipeAcitityBuilderToken<T extends IActivityBuilder> extends Registration<T> {
+    constructor(desc: string) {
+        super('PipeActivityBuilder', desc);
+    }
+}
+
+/**
+ * pipe activity builder token.
+ */
+export const PipeActivityBuilderToken = new InjectPipeAcitityBuilderToken<IActivityBuilder>('')

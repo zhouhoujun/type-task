@@ -1,29 +1,10 @@
-import { ActivityBuilder, IActivity, IActivityBuilder, isActivityType } from '@taskfr/core';
+import { ActivityBuilder, IActivity, isActivityType } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isMetadataObject, Token, Registration, isPromise } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { TransformConfig, TransformType, TransformExpress } from './pipeTypes';
-import { PipeActivityToken, IPipeActivity, InjectAssetActivityToken } from './IPipeActivity';
+import { PipeActivityToken, IPipeActivity, InjectAssetActivityToken, PipeActivityBuilderToken } from './IPipeActivity';
 import { PipeActivity } from './PipeActivity';
 
-
-/**
- * Inject PipeAcitityBuilder Token
- *
- * @export
- * @class InjectPipeAcitityBuilderToken
- * @extends {Registration<T>}
- * @template T
- */
-export class InjectPipeAcitityBuilderToken<T extends IActivityBuilder> extends Registration<T> {
-    constructor(desc: string) {
-        super('PipeActivityBuilder', desc);
-    }
-}
-
-/**
- * pipe activity builder token.
- */
-export const PipeActivityBuilderToken = new InjectPipeAcitityBuilderToken<PipeActivityBuilder>('')
 
 /**
  * pipe task builder.

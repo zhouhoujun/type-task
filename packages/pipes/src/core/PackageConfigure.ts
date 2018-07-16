@@ -1,11 +1,12 @@
-import { CtxType, Src, ExpressionType, ActivityType } from '@taskfr/core';
-import { ObjectMap } from '@ts-ioc/core';
+import { CtxType, Src, ExpressionType, ActivityType, IActivityBuilder } from '@taskfr/core';
+import { ObjectMap, Registration } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { TestActivity } from './TestActivity';
 import { AssetActivity } from './AssetActivity';
 import { CleanActivity } from './CleanActivity';
 import { DestActivity } from './DestActivity';
 import { WatchActivity } from './WatchActivity';
+import { IPipeActivity } from './IPipeActivity';
 
 export interface PackageConfigure extends IPipeConfigure {
     /**
@@ -56,3 +57,23 @@ export interface PackageConfigure extends IPipeConfigure {
      */
     dest?: ExpressionType<string> | ActivityType<DestActivity>;
 }
+
+
+export interface IPackageActivity extends IPipeActivity {
+
+}
+
+export class InjectPackageToken<T extends IPackageActivity> extends Registration<T> {
+    constructor(desc: string) {
+        super('PackageActivity', desc);
+    }
+}
+
+export class InjectPackageBuilderToken<T extends IActivityBuilder> extends Registration<T> {
+    constructor(desc: string) {
+        super('PackageActivityBuilder', desc);
+    }
+}
+
+export const PackageToken = new InjectPackageToken<IPackageActivity>('');
+export const PackageBuilderToken = new InjectPackageBuilderToken<IActivityBuilder>('')

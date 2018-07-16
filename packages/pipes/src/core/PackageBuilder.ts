@@ -1,34 +1,14 @@
 import { IActivity, SequenceActivityBuilder, Src, InjectAcitityToken } from '@taskfr/core';
 import { Inject, ContainerToken, IContainer, Singleton, isArray, isString, lang, Registration } from '@ts-ioc/core';
-import { PackageConfigure } from './PackageConfigure';
-import { IPipeActivity } from './IPipeActivity';
+import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
 import { WatchActivity } from './WatchActivity';
 import { DestActivity } from './DestActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { AssetActivity } from './AssetActivity';
-import { AssetBuilderToken } from './AssetTaskBuilder';
+import { AssetBuilderToken } from './AssetConfigure';
 
-
-export interface IPackageActivity extends IPipeActivity {
-
-}
-
-export class InjectPackageToken<T extends IPackageActivity> extends Registration<T> {
-    constructor(desc: string) {
-        super('PackageActivity', desc);
-    }
-}
-
-export class InjectPackageBuilderToken<T extends PackageBuilder> extends Registration<T> {
-    constructor(desc: string) {
-        super('PackageActivityBuilder', desc);
-    }
-}
-
-export const PackageToken = new InjectPackageToken<IPackageActivity>('');
-export const PackageBuilderToken = new InjectPackageBuilderToken<PackageBuilder>('')
 
 /**
  * Asset task builder

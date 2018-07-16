@@ -4,8 +4,8 @@ import { IConfigure, ActivityResultType, isActivityType, ActivityType } from './
 import { IActivity, ActivityToken } from './IActivity';
 import { Task } from './decorators';
 import { TaskMetadata } from './metadatas';
-import { Activity } from '../activities';
 import { ExpressionType, Expression } from './IContext';
+import { Activity } from './Activity';
 
 /**
  * builder.

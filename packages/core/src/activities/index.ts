@@ -1,4 +1,3 @@
-export * from '../core/Activity';
 // export * from './Confirm';
 export * from './Delay';
 export * from './Interval';

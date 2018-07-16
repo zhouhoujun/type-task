@@ -1,7 +1,6 @@
 import { createTaskDecorator, TaskMetadata, ITaskDecorator } from '@taskfr/core';
 import { IPipeConfigure } from '../core/IPipeConfigure';
-import { PipeActivityToken } from '../core/IPipeActivity';
-import { PipeActivityBuilderToken } from '../core/PipeActivityBuilder';
+import { PipeActivityToken, PipeActivityBuilderToken } from '../core/IPipeActivity';
 
 export interface PipeTaskMetadata extends TaskMetadata, IPipeConfigure {
 

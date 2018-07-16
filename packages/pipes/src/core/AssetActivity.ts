@@ -1,34 +1,16 @@
 import { AssetTask } from '../decorators/AssetTask';
 import { SourceActivity } from './SourceActivity';
-import { SequenceActivity } from '@taskfr/core';
 import { DestActivity } from './DestActivity';
-import { isArray, Inject } from '@ts-ioc/core';
+import { isArray } from '@ts-ioc/core';
 import { ITransform } from './ITransform';
-import { IPipeActivity } from './IPipeActivity';
 import { WatchActivity } from './WatchActivity';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity } from './Annotation';
-import { IPipeContext, PipeContextToken } from './IPipeContext';
-import { AssetConfigure } from './AssetConfigure';
+import { PipeActivity } from './PipeActivity';
+import { IActivityConfigure, IActivity } from '@taskfr/core';
+import { IAssetActivity } from './AssetConfigure';
 
-export interface IAssetActivity extends IPipeActivity {
-    /**
-     * src activity.
-     *
-     * @type {SourceActivity}
-     * @memberof IAssetActivity
-     */
-    src: SourceActivity;
-
-    /**
-     * dest activity.
-     *
-     * @type {(DestActivity | DestActivity[])}
-     * @memberof IAssetActivity
-     */
-    dest: DestActivity | DestActivity[];
-}
 
 /**
  * Asset Activity
@@ -39,7 +21,7 @@ export interface IAssetActivity extends IPipeActivity {
  * @implements {IPipeComponent<ITransform>}
  */
 @AssetTask
-export class AssetActivity extends SequenceActivity implements IAssetActivity {
+export class AssetActivity extends PipeActivity implements IAssetActivity {
 
     /**
      * src activity.
@@ -90,23 +72,14 @@ export class AssetActivity extends SequenceActivity implements IAssetActivity {
     annotation: AnnotationActivity;
 
     /**
-     * context.
+     * default annottion.
      *
-     * @type {IPipeContext}
-     * @memberof BaseTask
-     */
-    @Inject(PipeContextToken)
-    context: IPipeContext;
-
-    /**
-     * asset config.
-     *
-     * @type {AssetConfigure}
+     * @type {IActivityConfigure<AnnotationActivity>}
      * @memberof AssetActivity
      */
-    config: AssetConfigure;
+    defaultAnnotation?: IActivityConfigure<AnnotationActivity>;
 
-    protected async begin(data?: any): Promise<ITransform> {
+    protected async beginPipe(data?: any, execute?: IActivity<any>): Promise<ITransform> {
         let source = await this.src.run(data);
         if (this.annotation) {
             source = await this.annotation.run(source);
@@ -117,7 +90,7 @@ export class AssetActivity extends SequenceActivity implements IAssetActivity {
         return source;
     }
 
-    protected async end(data?: ITransform): Promise<ITransform> {
+    protected async endPipe(data?: ITransform, execute?: IActivity<any>): Promise<ITransform> {
         if (isArray(this.dest)) {
             if (this.dest.length === 1) {
                 await this.dest[0].run(data, this.sourcemaps);
