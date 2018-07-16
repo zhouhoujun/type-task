@@ -1,11 +1,7 @@
-import { Task, IActivity, TaskElement, TaskComponent, ITaskComponent, AbstractActivity } from 'src';
+import { Task, IActivity, Activity, SequenceActivity, SequenceActivityBuilderToken, SequenceConfigure } from 'src';
 
 @Task('test')
-export class SimpleTask extends AbstractActivity implements IActivity {
-
-    constructor(name: string) {
-        super(name);
-    }
+export class SimpleTask extends Activity<any> {
 
     run(): Promise<any> {
         // console.log('before simple task:', this.name);
@@ -17,15 +13,10 @@ export class SimpleTask extends AbstractActivity implements IActivity {
     }
 }
 
-@Task('comptest')
-export class SimpleCTask extends TaskElement {
+@Task('comptest', SequenceActivityBuilderToken)
+export class SimpleCTask extends SequenceActivity {
 
-    constructor(name: string) {
-        super(name);
-        // console.log('SimpleCTask', Object.getOwnPropertyDescriptors(this));
-    }
-
-    protected execute(): Promise<any> {
+    protected end(data?: any): Promise<any> {
         // console.log('before component task:', this.name);
         return Promise.resolve('component task')
             .then(val => {
@@ -36,10 +27,10 @@ export class SimpleCTask extends TaskElement {
 }
 
 
-@Task({
+@Task(<SequenceConfigure>{
     name: 'test-module',
-    task: TaskElement,
-    children: [
+    task: SequenceActivity,
+    sequence: [
         {
             name: 'test------3',
             task: SimpleTask

@@ -44,12 +44,12 @@ export class SequenceActivity extends Activity<any> {
         return execPromise.then(result => this.end(result));
     }
 
-    protected begin(data?: any): Promise<any> {
-        return Promise.resolve(data);
+    protected async begin(data?: any): Promise<any> {
+        return data;
     }
 
-    protected end(data?: any): Promise<any> {
-        return Promise.resolve(data);
+    protected async end(data?: any): Promise<any> {
+        return data;
     }
 }
 

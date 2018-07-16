@@ -25,11 +25,12 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
     async build(task: ActivityResultType<any>, uuid: string): Promise<IActivity<any>> {
         let taskInst = await super.build(task);
         let config = this.getConfigure(task) as IConfigure;
-        let ctxbuider = this.getBuilder(config);
+        let ctxbuider = this.getBuilder(config, task);
         if (!taskInst || !(taskInst instanceof Activity)) {
             config.task = ctxbuider.getDefaultAcitvity();
             console.log('try load default activity:', getClassName(config.task));
-            taskInst = await ctxbuider.build(config, uuid);
+            config.builder = undefined;
+            taskInst = await ctxbuider.build(task, uuid);
         }
 
         taskInst.id = uuid;
@@ -55,13 +56,13 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         return super.getConfigure(token, moduleDecorator || Task);
     }
 
-    getBuilder(cfg: IConfigure): IActivityBuilder {
+    getBuilder(cfg: IConfigure, task: ActivityResultType<any>): IActivityBuilder {
         let builder: IActivityBuilder;
-        if (cfg.builder) {
-            builder = this.getBuilderViaConfig(cfg.builder);
-        }
-        if (!builder && cfg.task) {
+        if (cfg.task) {
             builder = this.getBuilderViaTask(cfg.task);
+        }
+        if (!builder && cfg.builder) {
+            builder = this.getBuilderViaConfig(cfg.builder);
         }
         return builder || this;
     }

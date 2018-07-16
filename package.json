@@ -1,6 +1,6 @@
 {
     "name": "taskfr-srcs",
-    "version": "1.0.0-beta5",
+    "version": "1.0.0-beta6",
     "description": "taskfr is task framework via AOP, IOC.",
     "main": "./lib/index.js",
     "typings": "./lib/index.d.ts",
@@ -8,7 +8,16 @@
         "reinstall": "npm cache clean && npm install",
         "test": "ts-node -r tsconfig-paths/register taskfile.ts"
     },
-    "keywords": ["task", "task manager", "pipe", "ioc", "aop", "shell", "develop", "tool"],
+    "keywords": [
+        "task",
+        "task manager",
+        "pipe",
+        "ioc",
+        "aop",
+        "shell",
+        "develop",
+        "tool"
+    ],
     "author": "houjun",
     "license": "MIT",
     "bugs": {

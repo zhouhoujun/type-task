@@ -25,12 +25,12 @@ describe('auto register with build', () => {
 
     it('should bootstrap with component task.', async () => {
         let result = await container.bootstrap(SimpleCTask);
-        console.log('task type:', result.task);
         expect(result.resultValue).eq('component task');
     });
 
     it('should bootstrap with component task via name or provider.', async () => {
         let result = await container.use(SimpleCTask).bootstrap('comptest');
+        console.log('comptest:' , result.task, result.taskInstance);
         expect(result.resultValue).eq('component task');
     });
 
@@ -38,7 +38,7 @@ describe('auto register with build', () => {
         let result = await container.bootstrap({
             name: 'test1',
             task: SequenceActivity,
-            children: [
+            sequence: [
                 {
                     name: 'test------1',
                     task: SimpleTask

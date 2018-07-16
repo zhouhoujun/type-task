@@ -3,8 +3,7 @@ import { PipeTask } from '../decorators';
 import { CtxType, IActivity, ExpressionType, Expression } from '@taskfr/core';
 import { isUndefined, Singleton } from '@ts-ioc/core';
 import { TransformType, TransformConfig } from './pipeTypes';
-import { PipeActivityBuilder } from './PipeActivityBuilder';
-import { SourceConfigure, SourceActivity } from './SourceActivity';
+import { SourceConfigure, SourceActivity, SourceActivityBuilder } from './SourceActivity';
 import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
 
 
@@ -68,10 +67,10 @@ export class TestActivity extends SourceActivity {
      */
     enable: Expression<boolean>;
 
-    async run(data?: any): Promise<ITransform> {
-        let test = await this.context.exec(this, this.enable, data);
-        if (test) {
-            let source = await super.run(data);
+    protected async endPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+        let source = await super.endPipe(stream, execute);
+        let test = await this.context.exec(this, this.enable, source);
+        if (test !== false) {
             return await this.pipe(source, this.framework)
                 .then(pipe => {
                     if (!pipe) {
@@ -100,32 +99,28 @@ export class TestActivity extends SourceActivity {
                     });
                 });
         } else {
-            return data;
+            return source;
         }
     }
 }
 
 
 @Singleton(TestAcitvityBuilderToken)
-export class TestActivityBuilder extends PipeActivityBuilder {
+export class TestActivityBuilder extends SourceActivityBuilder {
 
     async buildStrategy(activity: IActivity<any>, config: TestConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
         if (activity instanceof TestActivity) {
             activity.options = activity.context.to(config.options);
-            activity.src = await this.toExpression(config.test, activity);
             if (!isUndefined(config.enable)) {
                 activity.enable = await this.toExpression(config.enable, activity);
-            }
-            if (config.srcOptions) {
-                activity.srcOptions = await this.toExpression(config.srcOptions, activity);
             }
             if (config.framework) {
                 activity.framework = await this.toExpression(config.framework, activity);
             } else {
                 activity.framework = () => {
                     let mocha = require('gulp-mocha');
-                    return mocha(activity.options);
+                    return activity.options ? mocha(activity.options) : mocha();
                 };
             }
         }

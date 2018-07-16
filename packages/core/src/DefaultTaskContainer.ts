@@ -62,12 +62,12 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> imp
     }
 
     protected async build(builder: IActivityBuilder, token: ActivityType<IActivity<any>>, config: IConfigure): Promise<ITaskRunner<any>> {
-        if (!config.task) {
-            config.task = isToken(token) ? token : null;
-        }
         return this.getContainer().resolve(TaskRunnerToken, { activity: config, activityBuilder: builder });
     }
 
+    // protected bindConfiguration(container: IContainer, config: IConfigure) {
+
+    // }
 
     protected createModuleBuilder(): IActivityBuilder {
         return this.getContainer().get(ActivityBuilderToken);

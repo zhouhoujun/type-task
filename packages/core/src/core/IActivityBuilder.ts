@@ -51,13 +51,14 @@ export interface IActivityBuilder extends IModuleBuilder<IActivity<any>> {
     buildStrategy<T>(activity: IActivity<T>, config: IConfigure): Promise<IActivity<T>>;
 
     /**
-     * get builder via config.
+     * get builder.
      *
      * @param {IConfigure} cfg
+     * @param {ActivityResultType<any>} task
      * @returns {IActivityBuilder}
-     * @memberof ITaskBuilder
+     * @memberof IActivityBuilder
      */
-    getBuilder(cfg: IConfigure): IActivityBuilder;
+    getBuilder(cfg: IConfigure, task: ActivityResultType<any>): IActivityBuilder;
 
     /**
      * get default activity of builder.

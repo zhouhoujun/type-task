@@ -11,7 +11,7 @@ import { PipeActivityBuilder } from './PipeActivityBuilder';
 
 export const SourceAcitvityToken = new InjectPipeActivityToken<SourceActivity>('source');
 
-export const SourceAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<PipeSourceActivityBuilder>('source')
+export const SourceAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<SourceActivityBuilder>('source')
 /**
  * source pipe configure.
  *
@@ -72,7 +72,7 @@ export class SourceActivity extends PipeActivity {
 }
 
 @Singleton(SourceAcitvityBuilderToken)
-export class PipeSourceActivityBuilder extends PipeActivityBuilder {
+export class SourceActivityBuilder extends PipeActivityBuilder {
 
     async buildStrategy(activity: IActivity<any>, config: SourceConfigure): Promise<IActivity<any>> {
         await super.buildStrategy(activity, config);
