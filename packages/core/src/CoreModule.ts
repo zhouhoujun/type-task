@@ -1,5 +1,5 @@
 import { IContainer, CoreActions, Inject, ContainerToken, IocExt } from '@ts-ioc/core';
-import { ActivityBuilder, TaskRunner, Task, Runner } from './core';
+import { ActivityBuilder, TaskRunner, Task, Runner, Activity } from './core';
 // import { InitTaskAction } from './core/actions/InitTaskAction';
 import { RunAspect } from './aop';
 
@@ -25,5 +25,6 @@ export class CoreModule {
         container.register(ActivityBuilder);
         container.register(TaskRunner);
         container.register(RunAspect);
+        container.register(Activity);
     }
 }
