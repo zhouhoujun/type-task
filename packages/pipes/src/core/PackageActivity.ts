@@ -70,6 +70,14 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
     @Inject(PipeContextToken)
     context: IPipeContext;
 
+    /**
+     * begin transform
+     *
+     * @protected
+     * @param {*} [data]
+     * @returns {Promise<ITransform>}
+     * @memberof PackageActivity
+     */
     protected async begin(data?: any): Promise<ITransform> {
         if (this.test) {
             await this.test.run(data);
@@ -81,12 +89,18 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
         return assets;
     }
 
+    /**
+     * execute assets.
+     *
+     * @protected
+     * @param {*} [data]
+     * @returns
+     * @memberof PackageActivity
+     */
     protected execAssets(data?: any) {
         this.executeType = this.executeType || SequenceActivity;
         let execute = this.context.getContainer().resolve(this.executeType);
         execute.activites = this.assets;
         return execute.run(data);
     }
-
-
 }

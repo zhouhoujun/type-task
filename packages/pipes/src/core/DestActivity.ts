@@ -13,7 +13,9 @@ import { SourceMapsActivity } from './SourceMapsActivity';
  * dest activity token.
  */
 export const DestAcitvityToken = new InjectPipeActivityToken<DestActivity>('dest');
-
+/**
+ * dest activity build token.
+ */
 export const DestAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<DestActivityBuilder>('dest')
 
 /**
@@ -70,7 +72,14 @@ export class DestActivity extends PipeActivity {
      * @memberof PipeDest
      */
     destOptions: Expression<DestOptions>;
-
+    /**
+     * get run pipes.
+     *
+     * @protected
+     * @param {IActivity} [execute]
+     * @returns
+     * @memberof DestActivity
+     */
     protected getRunPipes(execute?: IActivity) {
         let pipes = this.pipes;
         if (execute) {
@@ -82,7 +91,15 @@ export class DestActivity extends PipeActivity {
         }
         return pipes;
     }
-
+    /**
+     * pipe stream via transform.
+     *
+     * @protected
+     * @param {ITransform} source
+     * @param {...TransformType[]} pipes
+     * @returns {Promise<ITransform>}
+     * @memberof DestActivity
+     */
     protected pipe(source: ITransform, ...pipes: TransformType[]): Promise<ITransform> {
         return super.pipe(source, ...pipes)
             .then(stream => {
@@ -93,6 +110,14 @@ export class DestActivity extends PipeActivity {
             });
     }
 
+    /**
+     * write dest stream.
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @returns {Promise<ITransform>}
+     * @memberof DestActivity
+     */
     protected async writeStream(stream: ITransform): Promise<ITransform> {
         let dist = await this.context.exec(this, this.dest, stream);
         let destOptions = undefined;
@@ -124,11 +149,23 @@ export class DestActivity extends PipeActivity {
     }
 }
 
-
-
+/**
+ * dest activity builder.
+ *
+ * @export
+ * @class DestActivityBuilder
+ * @extends {PipeActivityBuilder}
+ */
 @Singleton(DestAcitvityBuilderToken)
 export class DestActivityBuilder extends PipeActivityBuilder {
-
+    /**
+     * dest activity build strategy.
+     *
+     * @param {IActivity} activity
+     * @param {DestConfigure} config
+     * @returns {Promise<IActivity>}
+     * @memberof DestActivityBuilder
+     */
     async buildStrategy(activity: IActivity, config: DestConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof DestActivity) {

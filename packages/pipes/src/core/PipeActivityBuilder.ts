@@ -71,5 +71,4 @@ export class PipeActivityBuilder extends ActivityBuilder {
 
         return tsCfg as TransformType;
     }
-
 }

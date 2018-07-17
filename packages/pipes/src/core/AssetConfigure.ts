@@ -149,19 +149,40 @@ export interface IAssetActivity extends IPipeActivity {
     defaultAnnotation?: IActivityConfigure<AnnotationActivity>;
 }
 
-
+/**
+ * inject asset activity token.
+ *
+ * @export
+ * @class InjectAssetActivityToken
+ * @extends {Registration<T>}
+ * @template T
+ */
 export class InjectAssetActivityToken<T extends IAssetActivity> extends Registration<T> {
     constructor(desc: string) {
         super('AssetActivity', desc);
     }
 }
 
+/**
+ * Inject asset activity builder token.
+ *
+ * @export
+ * @class InjectAssetActivityBuilderToken
+ * @extends {Registration<T>}
+ * @template T
+ */
 export class InjectAssetActivityBuilderToken<T extends IActivityBuilder> extends Registration<T> {
     constructor(desc: string) {
         super('AssetActivityBuilder', desc);
     }
 }
 
+/**
+ * asset token.
+ */
 export const AssetToken = new InjectAssetActivityToken<IAssetActivity>('');
+/**
+ * asset builder token.
+ */
 export const AssetBuilderToken = new InjectAssetActivityBuilderToken<IActivityBuilder>('')
 

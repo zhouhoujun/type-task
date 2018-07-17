@@ -23,6 +23,14 @@ import { TestActivity, TestConfigure } from './TestActivity';
 @Singleton(AssetBuilderToken)
 export class AssetBuilder extends PipeActivityBuilder {
 
+    /**
+     * asset build strategy.
+     *
+     * @param {IActivity} activity
+     * @param {AssetConfigure} config
+     * @returns {Promise<IActivity>}
+     * @memberof AssetBuilder
+     */
     async buildStrategy(activity: IActivity, config: AssetConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
 
@@ -119,10 +127,24 @@ export class AssetBuilder extends PipeActivityBuilder {
         return activity;
     }
 
+    /**
+     * get default activity.
+     *
+     * @returns
+     * @memberof AssetBuilder
+     */
     getDefaultAcitvity() {
         return AssetActivity;
     }
 
+    /**
+     * get default annotation.
+     *
+     * @protected
+     * @param {AssetActivity} activity
+     * @returns {IActivityConfigure<AnnotationActivity>}
+     * @memberof AssetBuilder
+     */
     protected getDefaultAnnotation(activity: AssetActivity): IActivityConfigure<AnnotationActivity> {
         return activity.defaultAnnotation;
     }
