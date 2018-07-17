@@ -61,7 +61,7 @@ export class CleanActivity extends Activity<any> {
 @Singleton(CleanActivityBuilderToken)
 export class CleanActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: CleanConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: CleanConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof CleanActivity) {
             activity.clean = await this.toExpression(config.clean, activity);

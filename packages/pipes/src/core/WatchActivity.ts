@@ -1,18 +1,18 @@
 
-import { IActivity, ExpressionType, Src, Expression } from '@taskfr/core';
-import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
-import { Singleton } from '@ts-ioc/core';
+import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, InjectAcitityBuilderToken } from '@taskfr/core';
+import { Singleton, Defer, isArray } from '@ts-ioc/core';
 import { PipeTask } from '../decorators';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivityBuilder } from './PipeActivityBuilder';
-import { PipeActivity } from './PipeActivity';
 import { ITransform } from './ITransform';
+import { Observable } from 'rxjs';
+import { src } from 'vinyl-fs';
 const chokidar = require('chokidar');
 
 
 
-export const WatchAcitvityToken = new InjectPipeActivityToken<WatchActivity>('Watch');
-export const WatchAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<WatchActivityBuilder>('Watch')
+export const WatchAcitvityToken = new InjectAcitityToken<WatchActivity>('Watch');
+export const WatchAcitvityBuilderToken = new InjectAcitityBuilderToken<WatchActivityBuilder>('Watch')
 
 /**
  * watch configure.
@@ -183,10 +183,21 @@ export interface WatchOptions {
 
 }
 
+/**
+ * files changed.
+ *
+ * @export
+ * @interface FileChanged
+ */
+export interface FileChanged {
+    added: string[];
+    changed: string[];
+    removed: string[];
+}
 
 
 @PipeTask(WatchAcitvityToken, WatchAcitvityBuilderToken)
-export class WatchActivity extends PipeActivity {
+export class WatchActivity extends Activity<any> {
 
     /**
      * watch src.
@@ -203,11 +214,70 @@ export class WatchActivity extends PipeActivity {
      */
     options: Expression<WatchOptions>;
 
-    protected async beginPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
-        stream = await super.beginPipe(stream, execute);
-        return stream;
+
+    async run(data: any, watched: IActivity): Promise<any> {
+        return await this.watch(data, watched);
     }
 
+    protected async watch(data: any, watched: IActivity) {
+        let watchSrc = await this.context.exec(this, this.src, data);
+        let options = await this.context.exec(this, this.options, data);
+        let watcher = chokidar.watch(watchSrc, options);
+
+        let defer = new Defer();
+        Observable.fromEventPattern<FileChanged>(
+            handler => {
+                watcher.on('add', paths => handler({ added: isArray(paths) ? paths : [paths] }));
+                watcher.on('change', paths => handler({ changed: isArray(paths) ? paths : [paths] }));
+                watcher.on('unlink', paths => handler({ removed: isArray(paths) ? paths : [paths] }));
+                watcher.on('unlinkDir', paths => handler({ removed: isArray(paths) ? paths : [paths] }));
+            },
+            handler => {
+                watcher.close();
+                defer.resolve(data);
+            })
+            .bufferTime(300)
+            .map(chgs => {
+                let chg: FileChanged = {
+                    added: [],
+                    changed: [],
+                    removed: []
+                }
+                chgs.forEach(fc => {
+                    if (fc.added) {
+                        chg.added = chg.added.concat(fc.added);
+                    }
+                    if (fc.changed) {
+                        chg.changed = chg.changed.concat(fc.changed);
+                    }
+                    if (fc.removed) {
+                        chg.removed = chg.removed.concat(fc.removed);
+                    }
+                });
+                return chg;
+            })
+            .subscribe(chg => {
+                let chgStream = this.changedToStream(watchSrc, chg);
+                if (chgStream) {
+                    watched.run(chgStream, this);
+                }
+            });
+
+        defer.promise;
+    }
+
+    protected changedToStream(watchSrc: Src, chg: FileChanged): ITransform {
+        if (chg.removed.length) {
+            return src(watchSrc); // removed will build all.
+        } else {
+            let srcs = chg.added.concat(chg.changed);
+            if (srcs.length) {
+                return src(srcs);
+            } else {
+                return null;
+            }
+        }
+    }
 }
 
 
@@ -215,7 +285,7 @@ export class WatchActivity extends PipeActivity {
 @Singleton(WatchAcitvityBuilderToken)
 export class WatchActivityBuilder extends PipeActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: WatchConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: WatchConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof WatchActivity) {
             activity.src = await this.toExpression(config.src, activity);

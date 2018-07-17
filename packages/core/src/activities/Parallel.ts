@@ -1,4 +1,4 @@
-import { Task, IActivity, OnTaskInit, IConfigure, InjectAcitityToken, InjectAcitityBuilderToken, ActivityBuilder, Activity, ActivityResultType } from '../core';
+import { Task, IActivity, IConfigure, InjectAcitityToken, InjectAcitityBuilderToken, ActivityBuilder, Activity, ActivityResultType } from '../core';
 import { Singleton, Token, isToken } from '@ts-ioc/core';
 
 
@@ -42,7 +42,7 @@ export interface ParallelConfigure extends IConfigure {
 @Task(ParallelActivityToken, ParallelActivityBuilderToken)
 export class ParallelActivity extends Activity<any> {
 
-    activites: IActivity<any>[] = [];
+    activites: IActivity[] = [];
 
     run(data?: any): Promise<any> {
         return Promise.all(this.activites.map(task => task.run(data)));
@@ -53,7 +53,7 @@ export class ParallelActivity extends Activity<any> {
 @Singleton(ParallelActivityBuilderToken)
 export class ParallelActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: ParallelConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: ParallelConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof ParallelActivity) {
             if (config.parallel && config.parallel.length) {
@@ -64,7 +64,7 @@ export class ParallelActivityBuilder extends ActivityBuilder {
         return activity;
     }
 
-    async buildChildren(activity: ParallelActivity, configs: (IConfigure | Token<IActivity<any>>)[]) {
+    async buildChildren(activity: ParallelActivity, configs: (IConfigure | Token<IActivity>)[]) {
         let children = await Promise.all(configs.map(async cfg => {
             let node = await this.build(cfg, activity.id);
             if (!node) {

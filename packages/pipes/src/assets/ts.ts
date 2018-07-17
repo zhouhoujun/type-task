@@ -4,7 +4,7 @@ import { isBoolean, ObjectMap, isString, lang, isArray } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
 import * as ts from 'gulp-typescript';
 import { ITransform } from '../core/ITransform';
-import { CtxType, OnTaskInit, ExpressionType, ActivityType, IActivity } from '@taskfr/core';
+import { CtxType, OnTaskInit, IActivity } from '@taskfr/core';
 import { AnnotationActivity } from '../core/Annotation';
 
 /**
@@ -23,13 +23,6 @@ export interface TsConfigure extends AssetConfigure {
      */
     tds?: CtxType<boolean | string>;
 
-    /**
-     * class annotation.
-     *
-     * @type {(boolean | ExpressionType<string> | ActivityType<AnnotationActivity>)}
-     * @memberof TsConfigure
-     */
-    annotation?: ExpressionType<string | boolean> | ActivityType<AnnotationActivity>;
     /**
      * set tsconfig to compile.
      *
@@ -65,7 +58,7 @@ export class TsCompile extends AssetActivity implements OnTaskInit {
         return stream;
      }
 
-    protected async beginPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+    protected async beginPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         stream = await super.beginPipe(stream, execute);
         return await this.pipe(stream, this.getTsCompilePipe());
     }

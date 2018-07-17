@@ -1,13 +1,14 @@
-import { Src, ExpressionType, ActivityResultType, ActivityType, IActivityBuilder, IActivityConfigure } from '@taskfr/core';
+import { Src, ExpressionToken, IActivityBuilder, IActivityConfigure, ConfigureType } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { DestConfigure, DestActivity } from './DestActivity';
 import { IPipeConfigure } from './IPipeConfigure';
-import { SourceActivity } from './SourceActivity';
-import { WatchActivity } from './WatchActivity';
-import { SourceMapsActivity } from './SourceMapsActivity';
-import { AnnotationActivity } from './Annotation';
+import { SourceActivity, SourceConfigure } from './SourceActivity';
+import { WatchActivity, WatchConfigure } from './WatchActivity';
+import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
+import { AnnotationActivity, AnnotationConfigure } from './Annotation';
 import { IPipeActivity } from './IPipeActivity';
-import { UglifyActivity } from './UglifyActivity';
+import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
+import { TestActivity, TestConfigure } from './TestActivity';
 
 /**
  * dest type.
@@ -27,49 +28,57 @@ export interface AssetConfigure extends IPipeConfigure {
     /**
      * src config.
      *
-     * @type {(ExpressionType<Src> | ActivityType<SourceActivity>)}
+     * @type {(ExpressionToken<Src> | ConfigureType<SourceActivity, SourceConfigure>)}
      * @memberof AssetConfigure
      */
-    src: ExpressionType<Src> | ActivityType<SourceActivity>;
+    src?: ExpressionToken<Src> | ConfigureType<SourceActivity, SourceConfigure>;
     /**
      * watch activity.
      *
-     * @type {(ExpressionType<Src | boolean> | ActivityType<WatchActivity>)}
+     * @type {(ExpressionToken<Src | boolean> | ConfigureType<WatchActivity, WatchConfigure>)}
      * @memberof AssetConfigure
      */
-    watch?: ExpressionType<Src | boolean> | ActivityType<WatchActivity>;
+    watch?: ExpressionToken<Src | boolean> | ConfigureType<WatchActivity, WatchConfigure>;
+
+    /**
+     * test config.
+     *
+     * @type {(ExpressionToken<Src> | ConfigureType<TestActivity, TestConfigure>)}
+     * @memberof PackageConfigure
+     */
+    test?: ExpressionToken<Src> | ConfigureType<TestActivity, TestConfigure>;
 
     /**
      * asset dest activity.
      *
-     * @type {(ExpressionType<string | boolean> | ActivityType<AnnotationActivity>)}
+     * @type {(ExpressionToken<string | boolean> | ConfigureType<AnnotationActivity, AnnotationConfigure>)}
      * @memberof AssetConfigure
      */
-    annotation?: ExpressionType<string | boolean> | ActivityType<AnnotationActivity>;
+    annotation?: ExpressionToken<string | boolean> | ConfigureType<AnnotationActivity, AnnotationConfigure>;
 
     /**
      * asset dest activity.
      *
-     * @type {(ExpressionType<string> | ActivityType<DestActivity>)}
+     * @type {(ExpressionToken<string> | ConfigureType<DestActivity, DestConfigure>)}
      * @memberof AssetConfigure
      */
-    dest?: ExpressionType<string> | ActivityType<DestActivity>;
+    dest?: ExpressionToken<string> | ConfigureType<DestActivity, DestConfigure>;
 
     /**
      * uglify asset activity.
      *
-     * @type {(ExpressionType<boolean | ObjectMap<any>> | ActivityType<WatchActivity>>)}
+     * @type {(ExpressionToken<boolean | ObjectMap<any>> | ConfigureType<UglifyActivity, UglifyConfigure>)}
      * @memberof AssetConfigure
      */
-    uglify?: ExpressionType<boolean | ObjectMap<any>> | ActivityType<WatchActivity>;
+    uglify?: ExpressionToken<boolean | ObjectMap<any>> | ConfigureType<UglifyActivity, UglifyConfigure>;
 
     /**
      * create source map or not. default create source map at  `./sourcemaps` for js asset and ts asset.
      *
-     * @type {(ExpressionType<boolean | string> | ActivityType<SourceMapsActivity>)}
+     * @type {(ExpressionToken<boolean | string> | ConfigureType<SourceMapsActivity, SourceMapsConfigure>)}
      * @memberof AssetConfigure
      */
-    sourcemaps?: ExpressionType<boolean | string> | ActivityType<SourceMapsActivity>;
+    sourcemaps?: ExpressionToken<boolean | string> | ConfigureType<SourceMapsActivity, SourceMapsConfigure>;
 
 }
 

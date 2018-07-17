@@ -11,7 +11,7 @@ import { IConfigure } from './IConfigure';
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectAcitityToken<T extends IActivity<any>> extends Registration<T> {
+export class InjectAcitityToken<T extends IActivity> extends Registration<T> {
     constructor(desc: string) {
         super('Activity', desc);
     }
@@ -20,18 +20,15 @@ export class InjectAcitityToken<T extends IActivity<any>> extends Registration<T
 /**
  * task token.
  */
-export const ActivityToken = new InjectAcitityToken<IActivity<any>>('');
-
+export const ActivityToken = new InjectAcitityToken<IActivity>('');
 
 /**
- * activity interface.
+ * activity object.
  *
  * @export
  * @interface IActivity
- * @template T
  */
-export interface IActivity<T> {
-
+export interface IActivity {
     /**
      * workflow instance uuid.
      *
@@ -60,7 +57,7 @@ export interface IActivity<T> {
      * config.
      *
      * @type {IConfigure}
-     * @memberof Activity
+     * @memberof IActivity
      */
     config: IConfigure;
 
@@ -68,10 +65,30 @@ export interface IActivity<T> {
      * run task.
      *
      * @param {*} [data]
-     * @param {IActivity<any>} [target]
+     * @param {IActivity} [execute]
      * @returns {Promise<any>}
+     * @memberof IActivityObject
+     */
+    run(data?: any, execute?: IActivity): Promise<any>;
+}
+
+/**
+ * typed result activity.
+ *
+ * @export
+ * @interface GActivity
+ * @template T
+ */
+export interface GActivity<T> extends IActivity {
+
+    /**
+     * run activity.
+     *
+     * @param {*} [data]
+     * @param {IActivity} [target]
+     * @returns {Promise<T>}
      * @memberof IActivity
      */
-    run(data?: any, target?: IActivity<any>): Promise<T>;
+    run(data?: any, target?: IActivity): Promise<T>;
 
 }

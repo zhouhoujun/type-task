@@ -59,7 +59,7 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
  * @template T
  * @param {string} taskType
  * @param {(Token<IActivityBuilder> | IActivityBuilder)} builder
- * @param {InjectToken<IActivity<any>>} provideType
+ * @param {InjectToken<IActivity>} provideType
  * @param {MetadataAdapter} [adapter]
  * @param {MetadataExtends<T>} [metadataExtends]
  * @returns {ITaskDecorator<T>}
@@ -67,7 +67,7 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
 export function createTaskDecorator<T extends TaskMetadata>(
     taskType: string,
     builder: Token<IActivityBuilder> | IActivityBuilder,
-    provideType: InjectToken<IActivity<any>>,
+    provideType: InjectToken<IActivity>,
     adapter?: MetadataAdapter,
     metadataExtends?: MetadataExtends<T>): ITaskDecorator<T> {
 

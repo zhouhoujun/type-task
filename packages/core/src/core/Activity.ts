@@ -1,12 +1,19 @@
 import { Inject } from '@ts-ioc/core';
 import { Task } from './decorators';
-import { IActivity } from './IActivity';
+import { IActivity, GActivity } from './IActivity';
 import { IConfigure } from './IConfigure';
 import { ContextToken, IContext } from './IContext';
 
-
+/**
+ * base activity.
+ *
+ * @export
+ * @class Activity
+ * @implements {GActivity<T>}
+ * @template T
+ */
 @Task
-export class Activity<T> implements IActivity<T> {
+export class Activity<T> implements GActivity<T> {
 
     /**
      * workflow instance uuid.
@@ -47,11 +54,11 @@ export class Activity<T> implements IActivity<T> {
      * run task.
      *
      * @param {*} [data] execut data.
-     * @param {IActivity<any>} [execute] execute activity.
+     * @param {IActivity} [execute] execute activity.
      * @returns {Promise<T>}
      * @memberof Activity
      */
-    run(data?: any, execute?: IActivity<any>): Promise<T> {
+    run(data?: any, execute?: IActivity): Promise<T> {
         return Promise.resolve(data);
     }
 

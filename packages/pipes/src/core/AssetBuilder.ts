@@ -4,11 +4,12 @@ import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
 import { SourceActivity } from './SourceActivity';
 import { DestActivity } from './DestActivity';
-import { WatchActivity } from './WatchActivity';
+import { WatchActivity, WatchConfigure } from './WatchActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationConfigure } from './Annotation';
 import { PipeActivityBuilder } from './PipeActivityBuilder';
+import { TestActivity, TestConfigure } from './TestActivity';
 
 
 
@@ -22,7 +23,7 @@ import { PipeActivityBuilder } from './PipeActivityBuilder';
 @Singleton(AssetBuilderToken)
 export class AssetBuilder extends PipeActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: AssetConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: AssetConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
 
         if (activity instanceof AssetActivity) {
@@ -31,6 +32,18 @@ export class AssetBuilder extends PipeActivityBuilder {
                 src => {
                     return { src: src, task: SourceActivity };
                 });
+
+            if (config.test) {
+                activity.test = await this.toActivity<Src, TestActivity>(config.test, activity,
+                    act => act instanceof TestActivity,
+                    src => {
+                        if (!src) {
+                            return null;
+                        }
+                        return <TestConfigure>{ src: src, task: TestActivity };
+                    }
+                );
+            }
 
             if (config.dest) {
                 activity.dest = await this.toActivity<string, DestActivity>(config.dest, activity,
@@ -65,12 +78,12 @@ export class AssetBuilder extends PipeActivityBuilder {
                     act => act instanceof WatchActivity,
                     watch => {
                         if (isBoolean(watch)) {
-                            if (watch) {
-                                return { watch: activity.src, task: WatchActivity };
+                            if (watch && activity.src) {
+                                return <WatchConfigure>{ src: activity.src.src, task: WatchActivity };
                             }
                             return null;
                         }
-                        return { watch: watch, task: WatchActivity };
+                        return <WatchConfigure>{ src: watch, task: WatchActivity };
                     });
             }
 

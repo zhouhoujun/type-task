@@ -58,7 +58,7 @@ export class IntervalActivity extends Activity<any> {
      */
     interval: Expression<number>;
 
-    body: IActivity<any>;
+    body: IActivity;
 
     async run(data?: any): Promise<any> {
         let interval = await this.context.exec(this, this.interval, data);
@@ -73,7 +73,7 @@ export class IntervalActivity extends Activity<any> {
 @Singleton(IntervalActivityBuilderToken)
 export class IntervalActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: IntervalConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: IntervalConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof IntervalActivity) {
             activity.interval = await this.toExpression(config.interval, activity);

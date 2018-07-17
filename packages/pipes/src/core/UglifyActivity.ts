@@ -3,6 +3,13 @@ import * as uglify from 'gulp-uglify';
 import { Task, Activity, OnTaskInit, IConfigure, CtxType, InjectAcitityToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 
+/**
+ * uglify activity configure.
+ *
+ * @export
+ * @interface UglifyConfigure
+ * @extends {IConfigure}
+ */
 export interface UglifyConfigure extends IConfigure {
     uglifyOtions?: CtxType<any>;
 }

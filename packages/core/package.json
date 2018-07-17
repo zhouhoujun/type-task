@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/core",
-  "version": "1.0.0-beta6",
+  "version": "1.0.0-beta7",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
   "main": "./bundles/core.umd.js",
   "typings": "./lib/index.d.ts",

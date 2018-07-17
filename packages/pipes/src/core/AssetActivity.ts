@@ -10,6 +10,7 @@ import { AnnotationActivity } from './Annotation';
 import { PipeActivity } from './PipeActivity';
 import { IActivityConfigure, IActivity } from '@taskfr/core';
 import { IAssetActivity } from './AssetConfigure';
+import { TestActivity } from './TestActivity';
 
 
 /**
@@ -29,6 +30,15 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      * @memberof AssetActivity
      */
     src: SourceActivity;
+
+    /**
+     * test activity.
+     *
+     * @type {TestActivity}
+     * @memberof AssetActivity
+     */
+    test: TestActivity;
+
     /**
      * dest activity.
      *
@@ -75,8 +85,19 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      */
     defaultAnnotation?: IActivityConfigure<AnnotationActivity>;
 
-    protected async beginPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
-        let source = await this.src.run(stream);
+    protected async beginPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+        if (this.test) {
+            await this.test.run(stream);
+        }
+        let source: ITransform;
+        if (execute === this.watch) {
+            source = stream;
+        } else {
+            source = await this.src.run(stream);
+            if (this.watch) {
+                this.watch.run(stream, this);
+            }
+        }
         if (this.annotation) {
             source = await this.annotation.run(source);
         }
@@ -86,7 +107,7 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
         return source;
     }
 
-    protected async endPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+    protected async endPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         stream = await this.executeUglify(stream);
         if (isArray(this.dest)) {
             if (this.dest.length === 1) {

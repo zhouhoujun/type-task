@@ -58,7 +58,7 @@ export class DoWhileActivity extends Activity<any> {
      * @type {IActivity}
      * @memberof DoWhileActivity
      */
-    body: IActivity<any>;
+    body: IActivity;
 
     async run(data?: any): Promise<any> {
         let result = await this.body.run(data);
@@ -73,7 +73,7 @@ export class DoWhileActivity extends Activity<any> {
 
 @Singleton(DoWhileActivityBuilderToken)
 export class DoWhileActivityBuilder extends ActivityBuilder {
-    async buildStrategy(activity: IActivity<any>, config: DoWhileConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: DoWhileConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof DoWhileActivity) {
             activity.body = await this.build(config.do, activity.id);

@@ -1,6 +1,5 @@
-import { SequenceActivity, ParallelActivity, IntervalActivityToken } from '@taskfr/core';
+import { SequenceActivity, ParallelActivity } from '@taskfr/core';
 import { Package } from '../decorators';
-import { WatchActivity } from './WatchActivity';
 import { DestActivity } from './DestActivity';
 import { TestActivity } from './TestActivity';
 import { CleanActivity } from './CleanActivity';
@@ -8,6 +7,7 @@ import { AssetActivity } from './AssetActivity';
 import { ITransform } from './ITransform';
 import { Type, Inject } from '@ts-ioc/core';
 import { PipeContextToken, IPipeContext } from './IPipeContext';
+import { IPackageActivity } from './PackageConfigure';
 
 /**
  * package activity.
@@ -17,14 +17,8 @@ import { PipeContextToken, IPipeContext } from './IPipeContext';
  * @extends {SequenceActivity}
  */
 @Package
-export class PackageActivity extends SequenceActivity {
-    /**
-     * watch activity.
-     *
-     * @type {WatchActivity}
-     * @memberof PackageActivity
-     */
-    watch: WatchActivity;
+export class PackageActivity extends SequenceActivity implements IPackageActivity {
+
     /**
      * dest activity.
      *
@@ -75,15 +69,6 @@ export class PackageActivity extends SequenceActivity {
      */
     @Inject(PipeContextToken)
     context: IPipeContext;
-
-    async run(data?: any): Promise<any> {
-        let stream = await super.run(data);
-        // TODO: watch
-        if (this.watch) {
-            this.watch.run(data);
-        }
-        return stream;
-    }
 
     protected async begin(data?: any): Promise<ITransform> {
         if (this.test) {

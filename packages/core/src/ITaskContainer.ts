@@ -14,7 +14,7 @@ export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskCo
  * @interface ITaskContainer
  * @extends {TaskComponent}
  */
-export interface ITaskContainer extends IApplicationBuilder<IActivity<any>> {
+export interface ITaskContainer extends IApplicationBuilder<IActivity> {
 
     /**
      * get root path.
@@ -39,7 +39,7 @@ export interface ITaskContainer extends IApplicationBuilder<IActivity<any>> {
      * @returns {Promise<ITaskRunner>}
      * @memberof ITaskContainer
      */
-    createWorkflow(...tasks: ActivityType<IActivity<any>>[]): Promise<ITaskRunner<any>>;
+    createWorkflow(...tasks: ActivityType<IActivity>[]): Promise<ITaskRunner<any>>;
 
     /**
      * bootstrap app via main module.
@@ -48,5 +48,5 @@ export interface ITaskContainer extends IApplicationBuilder<IActivity<any>> {
      * @returns {Promise<ITaskRunner>}
      * @memberof IApplicationBuilder
      */
-    bootstrap(...tasks: ActivityType<IActivity<any>>[]): Promise<ITaskRunner<any>>;
+    bootstrap(...tasks: ActivityType<IActivity>[]): Promise<ITaskRunner<any>>;
 }

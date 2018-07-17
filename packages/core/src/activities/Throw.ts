@@ -1,4 +1,4 @@
-import { Task, InjectAcitityToken, Activity, Expression, IConfigure, ActivityResultType, ActivityBuilder, IActivity, isActivityType, InjectAcitityBuilderToken } from '../core';
+import { Task, InjectAcitityToken, Activity, Expression, IConfigure, ActivityResultType, ActivityBuilder, IActivity, InjectAcitityBuilderToken } from '../core';
 import { Singleton } from '@ts-ioc/core';
 
 /**
@@ -53,7 +53,7 @@ export class ThrowActivity extends Activity<any> {
 @Singleton(ThrowActivityBuilderToken)
 export class ThrowActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: ThrowConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: ThrowConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof ThrowActivity) {
             activity.exception = await this.toExpression(config.exception, activity);

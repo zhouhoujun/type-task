@@ -1,6 +1,6 @@
 import { InjectToken, IModuleBuilder, Registration, Type } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
-import { IConfigure, ActivityResultType } from './IConfigure';
+import { IConfigure, ActivityType } from './IConfigure';
 
 
 /**
@@ -28,27 +28,25 @@ export const ActivityBuilderToken = new InjectToken<IActivityBuilder>('__TASK_Bu
  * @export
  * @interface ITaskBuilder
  */
-export interface IActivityBuilder extends IModuleBuilder<IActivity<any>> {
+export interface IActivityBuilder extends IModuleBuilder<IActivity> {
 
     /**
-     * build
+     * build activity.
      *
-     * @template T
-     * @param {ActivityResultType<T>} task
+     * @param {ActivityType<T>} task
      * @param {string} uuid
-     * @returns {Promise<IActivity<T>>}
-     * @memberof ITaskBuilder
+     * @returns {Promise<T>}
+     * @memberof IActivityBuilder
      */
-    build<T>(task: ActivityResultType<T>, uuid: string): Promise<IActivity<T>>;
+    build(task: ActivityType<IActivity>, uuid: string): Promise<IActivity>;
     /**
      * bundle task config.
-     *
      * @param {IActivity} activity
      * @param {IConfigure} config
      * @returns {Promise<IActivity>}
      * @memberof ITaskBuilder
      */
-    buildStrategy<T>(activity: IActivity<T>, config: IConfigure): Promise<IActivity<T>>;
+    buildStrategy(activity: IActivity, config: IConfigure): Promise<IActivity>;
 
     /**
      * get builder.
@@ -62,8 +60,8 @@ export interface IActivityBuilder extends IModuleBuilder<IActivity<any>> {
     /**
      * get default activity of builder.
      *
-     * @returns {Type<IActivity<any>>}
+     * @returns {Type<IActivity>}
      * @memberof IActivityBuilder
      */
-    getDefaultAcitvity(): Type<IActivity<any>>
+    getDefaultAcitvity(): Type<IActivity>
 }

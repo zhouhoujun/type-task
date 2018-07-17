@@ -71,7 +71,7 @@ export class DestActivity extends PipeActivity {
      */
     destOptions: Expression<DestOptions>;
 
-    protected getRunPipes(execute?: IActivity<any>) {
+    protected getRunPipes(execute?: IActivity) {
         let pipes = this.pipes;
         if (execute) {
             if (execute instanceof SourceMapsActivity) {
@@ -129,7 +129,7 @@ export class DestActivity extends PipeActivity {
 @Singleton(DestAcitvityBuilderToken)
 export class DestActivityBuilder extends PipeActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: DestConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: DestConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof DestActivity) {
 

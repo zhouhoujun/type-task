@@ -1,16 +1,18 @@
-import { IActivity } from './IActivity';
+import { IActivity, GActivity } from './IActivity';
 import { Token, AppConfiguration, isToken, isMetadataObject, isString } from '@ts-ioc/core';
 import { IActivityBuilder } from './IActivityBuilder';
 
 /**
  * ActivityResult type
  */
-export type ActivityResultType<T> = Token<IActivity<T>> | IActivityConfigure<IActivity<T>>;
+export type ActivityResultType<T> = Token<GActivity<T>> | IActivityConfigure<GActivity<T>>;
 
 /**
  * activity type.
  */
-export type ActivityType<T extends IActivity<any>> = Token<T> | IActivityConfigure<T>; // | Type<any>
+export type ActivityType<T extends IActivity> = Token<T> | IActivityConfigure<IActivity>;
+
+export type ConfigureType<T extends IActivity, TF extends IConfigure> = Token<T> | TF;
 
 /**
  * check target is activity type or not.
@@ -100,6 +102,6 @@ export interface IActivityConfigure<T> extends AppConfiguration<T> {
  * @interface IConfigure
  * @extends {IActivityConfigure<IActivity<any>>}
  */
-export interface IConfigure extends IActivityConfigure<IActivity<any>> {
+export interface IConfigure extends IActivityConfigure<IActivity> {
 
 }

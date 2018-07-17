@@ -1,4 +1,4 @@
-import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang, isToken } from '@ts-ioc/core';
+import { IContainer, Type, ApplicationBuilder, hasClassMetadata, lang } from '@ts-ioc/core';
 import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, ActivityBuilderToken, IActivityBuilder, ActivityResultType, ActivityType } from './core';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
@@ -14,7 +14,7 @@ import { SequenceConfigure } from './activities';
  * @export
  * @class DefaultTaskContainer
  */
-export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> implements ITaskContainer {
+export class DefaultTaskContainer extends ApplicationBuilder<IActivity> implements ITaskContainer {
 
     protected logAspects: Type<any>[];
     constructor(public rootPath: string) {
@@ -38,7 +38,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> imp
      * @returns {Promise<ITaskRunner>}
      * @memberof ITaskContainer
      */
-    createWorkflow(...tasks: ActivityResultType<IActivity<any>>[]): Promise<ITaskRunner<any>> {
+    createWorkflow(...tasks: ActivityResultType<IActivity>[]): Promise<ITaskRunner<any>> {
         let task = (tasks.length > 1) ? <SequenceConfigure>{ sequence: tasks, task: activites.SequenceActivity } : lang.first(tasks);
         return super.bootstrap(task);
     }
@@ -46,11 +46,11 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> imp
     /**
      * bootstrap application via main module
      *
-     * @param {...tasks: ActivityType<IActivity<any>>[]} bootModule
+     * @param {...tasks: ActivityType<IActivity>[]} bootModule
      * @returns {Promise<T>}
      * @memberof ApplicationBuilder
      */
-    async bootstrap(...tasks: ActivityType<IActivity<any>>[]): Promise<ITaskRunner<any>> {
+    async bootstrap(...tasks: ActivityType<IActivity>[]): Promise<ITaskRunner<any>> {
         let runner = await this.createWorkflow(...tasks);
         await runner.start();
         return runner;
@@ -61,7 +61,7 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity<any>> imp
         return this.rootPath;
     }
 
-    protected async build(builder: IActivityBuilder, token: ActivityType<IActivity<any>>, config: IConfigure): Promise<ITaskRunner<any>> {
+    protected async build(builder: IActivityBuilder, token: ActivityType<IActivity>, config: IConfigure): Promise<ITaskRunner<any>> {
         return this.getContainer().resolve(TaskRunnerToken, { activity: config, activityBuilder: builder });
     }
 

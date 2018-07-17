@@ -1,6 +1,6 @@
 import { ActivityResultType } from './IConfigure';
-import { InjectToken, Registration } from '@ts-ioc/core';
-import { IActivity } from './IActivity';
+import { Registration } from '@ts-ioc/core';
+import { IActivity, GActivity } from './IActivity';
 import { IActivityBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
@@ -73,10 +73,10 @@ export interface ITaskRunner<T> {
     /**
      * task instance
      *
-     * @type {IActivity<any>}
+     * @type {GActivity}
      * @memberof ITaskRunner
      */
-    readonly taskInstance: IActivity<T>;
+    readonly taskInstance: GActivity<T>;
 
     /**
      * current run task data.

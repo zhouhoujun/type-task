@@ -1,11 +1,11 @@
-import { CtxType, Src, ExpressionType, ActivityType, IActivityBuilder, SequenceConfigure } from '@taskfr/core';
+import { CtxType, Src, ExpressionToken, IActivityBuilder, SequenceConfigure, ConfigureType, IActivity } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
-import { TestActivity } from './TestActivity';
+import { TestActivity, TestConfigure } from './TestActivity';
 import { AssetActivity } from './AssetActivity';
-import { CleanActivity } from './CleanActivity';
-import { DestActivity } from './DestActivity';
-import { WatchActivity } from './WatchActivity';
+import { CleanActivity, CleanConfigure } from './CleanActivity';
+import { DestActivity, DestConfigure } from './DestActivity';
 import { IPipeActivity } from './IPipeActivity';
+import { AssetConfigure } from './AssetConfigure';
 
 export interface PackageConfigure extends SequenceConfigure {
     /**
@@ -16,50 +16,49 @@ export interface PackageConfigure extends SequenceConfigure {
      */
     src?: CtxType<string>;
 
-    /**
-     * watch activity.
-     *
-     * @type {(ExpressionType<Src> | ActivityType<WatchActivity>)}
-     * @memberof PackageConfigure
-     */
-    watch?: ExpressionType<Src> | ActivityType<WatchActivity>;
+    // /**
+    //  * watch activity.
+    //  *
+    //  * @type {(ExpressionToken<Src> | ActivityType<WatchActivity>)}
+    //  * @memberof PackageConfigure
+    //  */
+    // watch?: ExpressionToken<Src> | ActivityType<WatchActivity>;
 
 
     /**
      * clean task config.
      *
-     * @type {(ExpressionType<Src> | ActivityType<CleanActivity>)}
+     * @type {(ExpressionToken<Src> | ConfigureType<CleanActivity, CleanConfigure>)}
      * @memberof PackageConfigure
      */
-    clean?: ExpressionType<Src> | ActivityType<CleanActivity>;
+    clean?: ExpressionToken<Src> | ConfigureType<CleanActivity, CleanConfigure>;
     /**
      * assets.
      *
-     * @type {ObjectMap<ExpressionType<Src> | ActivityType<AssetActivity>>}
+     * @type {ObjectMap<ExpressionToken<Src> | ConfigureType<AssetActivity, AssetConfigure>>}
      * @memberof PackageConfigure
      */
-    assets: ObjectMap<ExpressionType<Src> | ActivityType<AssetActivity>>;
+    assets: ObjectMap<ExpressionToken<Src> | ConfigureType<AssetActivity, AssetConfigure>>;
 
     /**
      * test config.
      *
-     * @type {(ExpressionType<Src> | ActivityType<TestActivity>;)}
+     * @type {(ExpressionToken<Src> | ConfigureType<TestActivity, TestConfigure>)}
      * @memberof PackageConfigure
      */
-    test?: ExpressionType<Src> | ActivityType<TestActivity>;
+    test?: ExpressionToken<Src> | ConfigureType<TestActivity, TestConfigure>;
 
     /**
      * dest.
      *
-     * @type {(ExpressionType<string> | ActivityType<DestActivity>)}
+     * @type {(ExpressionToken<string> | ConfigureType<DestActivity, DestConfigure>)}
      * @memberof PackageConfigure
      */
-    dest?: ExpressionType<string> | ActivityType<DestActivity>;
+    dest?: ExpressionToken<string> | ConfigureType<DestActivity, DestConfigure>;
 
 }
 
-
-export interface IPackageActivity extends IPipeActivity {
+export interface IPackageActivity extends IActivity {
 
 }
 

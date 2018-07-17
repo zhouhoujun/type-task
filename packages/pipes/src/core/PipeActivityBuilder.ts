@@ -17,7 +17,7 @@ import { InjectAssetActivityToken } from './AssetConfigure';
 @Singleton(PipeActivityBuilderToken)
 export class PipeActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: IPipeConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: IPipeConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof PipeActivity) {
             if (config.pipes) {

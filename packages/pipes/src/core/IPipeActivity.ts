@@ -1,4 +1,4 @@
-import { IActivity, IActivityBuilder } from '@taskfr/core';
+import { IActivityBuilder, GActivity } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { Registration } from '@ts-ioc/core';
 
@@ -7,10 +7,10 @@ import { Registration } from '@ts-ioc/core';
  *
  * @export
  * @interface IPipeTask
- * @extends {IActivity}
+ * @extends {GActivity}
  * @template T
  */
-export interface IPipeActivity extends IActivity<ITransform> {
+export interface IPipeActivity extends GActivity<ITransform> {
     /**
      * pipe task
      *

@@ -1,5 +1,9 @@
-import { isFunction, IContainer, Inject, ContainerToken, Singleton, Type, hasOwnClassMetadata, Token, isToken, ObjectMap, isPromise, isUndefined, isClass } from '@ts-ioc/core';
-import { IContext, ContextToken, CtxType, Condition, ActivityResult, Expression } from './IContext';
+import {
+    isFunction, IContainer, Inject, ContainerToken, Singleton,
+    Type, hasOwnClassMetadata, Token, isToken, ObjectMap,
+    isPromise, isUndefined, isClass
+} from '@ts-ioc/core';
+import { IContext, ContextToken, CtxType, Expression } from './IContext';
 import { ITaskContainer, TaskContainerToken } from '../ITaskContainer';
 import { IConfigure, ActivityResultType } from './IConfigure';
 import { IActivity } from './IActivity';
@@ -70,13 +74,13 @@ export class Context implements IContext {
      * exec activity result.
      *
      * @template T
-     * @param {IActivity<any>} target
+     * @param {IActivity} target
      * @param {Expression<T>} result
      * @param {IConfigure} [data]
      * @returns {Promise<T>}
      * @memberof IContext
      */
-    exec<T>(target: IActivity<any>, expression: Expression<T>, data?: any): Promise<T> {
+    exec<T>(target: IActivity, expression: Expression<T>, data?: any): Promise<T> {
         if (isFunction(expression)) {
             return expression(target, data);
         } else if (isPromise(expression)) {
@@ -92,7 +96,7 @@ export class Context implements IContext {
         }
     }
 
-    isTask(task: Type<IActivity<any>>): boolean {
+    isTask(task: Type<IActivity>): boolean {
         return hasOwnClassMetadata(Task, task);
     }
 }

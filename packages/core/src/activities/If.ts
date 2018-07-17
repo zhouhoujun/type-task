@@ -54,9 +54,9 @@ export interface IfConfigure extends IConfigure {
  */
 @Task(IfActivityToken, IfActivityBuilderToken)
 export class IfActivity extends Activity<any> {
-    ifBody: IActivity<any>;
+    ifBody: IActivity;
     condition: Condition;
-    elseBody?: IActivity<any>;
+    elseBody?: IActivity;
 
     async run(data?: any): Promise<any> {
         let condition = await this.context.exec(this, this.condition, data);
@@ -82,7 +82,7 @@ export class IfActivity extends Activity<any> {
 
 @Singleton(IfActivityBuilderToken)
 export class IfActivityBuilder extends ActivityBuilder {
-    async buildStrategy(activity: IActivity<any>, config: IfConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: IfConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof IfActivity) {
             activity.ifBody = await this.build(config.ifBody, activity.id);

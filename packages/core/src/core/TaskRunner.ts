@@ -1,6 +1,6 @@
 import { Inject, IContainer, ContainerToken, OnInit, isToken } from '@ts-ioc/core';
 import { ActivityResultType } from './IConfigure';
-import { IActivity } from './IActivity';
+import { IActivity, GActivity } from './IActivity';
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -24,7 +24,7 @@ export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
         return this.activity;
     }
 
-    get taskInstance(): IActivity<T> {
+    get taskInstance(): GActivity<T> {
         return this.instance;
     }
 
@@ -56,7 +56,7 @@ export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
     constructor(
         private activity: ActivityResultType<T>,
         public uuid?: string,
-        private instance?: IActivity<T>,
+        private instance?: IActivity,
         private activityBuilder?: IActivityBuilder) {
         this.stateChanged = new BehaviorSubject(RunState.init);
     }
@@ -87,7 +87,7 @@ export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
 
     async getInstance() {
         if (!this.instance) {
-            this.instance = await this.getBuilder().build<T>(this.task, this.getUUID());
+            this.instance = await this.getBuilder().build(this.task, this.getUUID());
         }
         return this.instance;
     }

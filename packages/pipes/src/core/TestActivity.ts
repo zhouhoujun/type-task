@@ -10,7 +10,13 @@ import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeA
 export const TestAcitvityToken = new InjectPipeActivityToken<TestActivity>('test');
 export const TestAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<TestActivityBuilder>('test')
 
-
+/**
+ * test activity configure.
+ *
+ * @export
+ * @interface TestConfigure
+ * @extends {SourceConfigure}
+ */
 export interface TestConfigure extends SourceConfigure {
 
     /**
@@ -65,7 +71,7 @@ export class TestActivity extends SourceActivity {
      */
     enable: Expression<boolean>;
 
-    protected async endPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+    protected async endPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         let source = await super.endPipe(stream, execute);
         let test = await this.context.exec(this, this.enable, source);
         if (test !== false) {
@@ -105,7 +111,7 @@ export class TestActivity extends SourceActivity {
 @Singleton(TestAcitvityBuilderToken)
 export class TestActivityBuilder extends SourceActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: TestConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: TestConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof TestActivity) {
             activity.options = activity.context.to(config.options);

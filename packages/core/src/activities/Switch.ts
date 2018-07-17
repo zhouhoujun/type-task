@@ -63,18 +63,18 @@ export class SwitchActivity extends Activity<any> {
     /**
      * Switch body.
      *
-     * @type {MapSet<any, IActivity<any>>}
+     * @type {MapSet<any, IActivity>}
      * @memberof SwitchActivity
      */
-    cases: MapSet<any, IActivity<any>> = new MapSet();
+    cases: MapSet<any, IActivity> = new MapSet();
 
     /**
      * default activity.
      *
-     * @type {IActivity<any>}
+     * @type {IActivity}
      * @memberof SwitchActivity
      */
-    defaultBody?: IActivity<any>;
+    defaultBody?: IActivity;
 
     async run(data?: any): Promise<any> {
         let matchkey = await this.context.exec<any>(this, this.expression, data);
@@ -91,7 +91,7 @@ export class SwitchActivity extends Activity<any> {
 
 @Singleton(SwitchActivityBuilderToken)
 export class SwitchActivityBuilder extends ActivityBuilder {
-    async buildStrategy(activity: IActivity<any>, config: SwitchConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: SwitchConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof SwitchActivity) {
             activity.expression = await this.toExpression(config.expression, activity);

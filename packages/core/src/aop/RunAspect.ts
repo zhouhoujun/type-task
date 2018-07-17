@@ -14,8 +14,15 @@ import { ITaskRunner, RunState, Task, Activity } from '../core';
 })
 export class RunAspect {
 
+    /**
+     * ioc container.
+     *
+     * @type {IContainer}
+     * @memberof RunAspect
+     */
     @Inject(ContainerToken)
     container: IContainer;
+
     constructor() {
 
     }

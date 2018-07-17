@@ -27,7 +27,7 @@ export class AnnotationActivity extends PipeActivity {
      */
     annotationFramework: TransformType;
 
-    protected async beginPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+    protected async beginPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         stream = await super.beginPipe(stream, execute);
         if (this.annotationFramework) {
             let annotation = await this.context.exec(this, this.annotationFramework);
@@ -41,7 +41,7 @@ export class AnnotationActivity extends PipeActivity {
 @Singleton(AnnotationAcitvityBuilderToken)
 export class AnnotationActivityBuilder extends PipeActivityBuilder {
 
-    async buildStrategy<T>(activity: IActivity<T>, config: AnnotationConfigure): Promise<IActivity<T>> {
+    async buildStrategy(activity: IActivity, config: AnnotationConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof AnnotationActivity) {
             activity.annotationFramework = await this.toExpression(config.annotationFramework, activity);

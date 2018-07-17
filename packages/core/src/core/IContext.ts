@@ -1,5 +1,5 @@
 import { IConfigure, ActivityResultType } from './IConfigure';
-import { IActivity } from './IActivity';
+import { IActivity, GActivity } from './IActivity';
 import { ITaskRunner } from './ITaskRunner';
 import { IActivityBuilder } from './IActivityBuilder';
 import { IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
@@ -14,11 +14,11 @@ export type CtxType<T> = T | ((context?: IContext, config?: IConfigure) => T);
 /**
  * async result.
  */
-export type AsyncResult<T> = (activity?: IActivity<T>, data?: any) => Promise<T>;
+export type AsyncResult<T> = (activity?: GActivity<T>, data?: any) => Promise<T>;
 /**
  * activity result.
  */
-export type ActivityResult<T> = Promise<T> | AsyncResult<T> | IActivity<T> | ITaskRunner<T>;
+export type ActivityResult<T> = Promise<T> | AsyncResult<T> | GActivity<T> | ITaskRunner<T>;
 /**
  * expression.
  */
@@ -27,6 +27,12 @@ export type Expression<T> = T | ActivityResult<T>;
  * condition expression.
  */
 export type Condition = Expression<boolean>;
+
+/**
+ *  expression token.
+ */
+export type ExpressionToken<T> = Expression<T> | Token<GActivity<T>>;
+
 /**
  * expression type.
  */
@@ -55,7 +61,7 @@ export interface KeyValue<TKey, TVal> {
  */
 export class InjectContextToken<T> extends Registration<T> {
   constructor(desc: string) {
-      super('ActivityContext', desc);
+    super('ActivityContext', desc);
   }
 }
 
@@ -144,13 +150,13 @@ export interface IContext {
    * exec activity result.
    *
    * @template T
-   * @param {IActivity<any>} target
+   * @param {IActivity} target
    * @param {Expression<T>} expression
    * @param {IConfigure} [data]
    * @returns {Promise<T>}
    * @memberof IContext
    */
-  exec<T>(target: IActivity<any>, expression: Expression<T>, data?: any): Promise<T>;
+  exec<T>(target: IActivity, expression: Expression<T>, data?: any): Promise<T>;
 
   /**
    * check is task or not.
@@ -159,5 +165,5 @@ export interface IContext {
    * @returns {boolean}
    * @memberof IContext
    */
-  isTask(task: Type<IActivity<any>>): boolean;
+  isTask(task: Type<IActivity>): boolean;
 }

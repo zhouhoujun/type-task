@@ -53,11 +53,11 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * run task.
      *
      * @param {*} [data]
-     * @param {IActivity<any>} [execute]
+     * @param {IActivity} [execute]
      * @returns {Promise<T>}
      * @memberof Activity
      */
-    async run(data?: any, execute?: IActivity<any>): Promise<ITransform> {
+    async run(data?: any, execute?: IActivity): Promise<ITransform> {
         let stream = await this.merge(...(isArray(data) ? data : [data]));
         stream = await this.beginPipe(stream, execute);
         stream = await this.execute(stream);
@@ -69,14 +69,14 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
        return await this.pipe(stream, ...this.pipes);
     }
 
-    protected async beginPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+    protected async beginPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         if (execute instanceof PipeActivity) {
             stream = await this.pipe(stream, execute);
         }
         return stream;
     }
 
-    protected async endPipe(stream: ITransform, execute?: IActivity<any>): Promise<ITransform> {
+    protected async endPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         return stream;
     }
 

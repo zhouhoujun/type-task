@@ -11,13 +11,13 @@ TaskContainer.create(__dirname)
     .use(PipeModule)
     .bootstrap(
         <PackageConfigure>{
-            test: 'test/**/*.spec.ts',
-            // test: false,
             clean: 'lib',
             src: 'src',
-            // awaitPiped: true,
             assets: {
-                ts: <TsConfigure>{ src: 'src/**/*.ts', dest: 'lib', annotation: true, uglify: true }
+                ts: <TsConfigure>{
+                     // watch: true,
+                     src: 'src/**/*.ts', test: 'test/**/*.spec.ts', dest: 'lib', annotation: true, uglify: true
+                }
             },
             task: PackageActivity
         },

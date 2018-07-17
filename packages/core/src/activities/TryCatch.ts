@@ -65,20 +65,20 @@ export class TryCatchActivity extends Activity<any> {
      * @type {IActivity}
      * @memberof TryCatchActivity
      */
-    try: IActivity<any>;
+    try: IActivity;
     /**
      * catch activities.
      *
      * @type {IActivity[]}
      * @memberof TryCatchActivity
      */
-    catchs: IActivity<any>[] = [];
+    catchs: IActivity[] = [];
     /**
      * finally activity.
      *
      * @memberof TryCatchActivity
      */
-    finally?: IActivity<any>;
+    finally?: IActivity;
 
     async run(data?: any): Promise<any> {
         let rp;
@@ -108,7 +108,7 @@ export class TryCatchActivity extends Activity<any> {
 @Singleton(TryCatchActivityBuilderToken)
 export class TryCatchActivityBuilder extends ActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: TryCatchConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: TryCatchConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof TryCatchActivity) {
             activity.try = await this.build(config.try, activity.id);

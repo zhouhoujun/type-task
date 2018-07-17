@@ -2,7 +2,6 @@ import { IActivity, SequenceActivityBuilder, Src } from '@taskfr/core';
 import { Singleton, isArray, isString, lang } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
-import { WatchActivity } from './WatchActivity';
 import { DestActivity } from './DestActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
@@ -20,7 +19,7 @@ import { InjectAssetActivityToken } from './AssetConfigure';
 @Singleton(PackageBuilderToken)
 export class PackageBuilder extends SequenceActivityBuilder {
 
-    async buildStrategy(activity: IActivity<any>, config: PackageConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: PackageConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof PackageActivity) {
             let srcRoot = activity.src = activity.context.to(config.src);
@@ -81,13 +80,13 @@ export class PackageBuilder extends SequenceActivityBuilder {
                     });
             }
 
-            if (config.watch) {
-                activity.watch = await this.toActivity<Src, WatchActivity>(config.watch, activity,
-                    act => act instanceof WatchActivity,
-                    watch => {
-                        return { watch: watch, task: WatchActivity };
-                    });
-            }
+            // if (config.watch) {
+            //     activity.watch = await this.toActivity<Src, WatchActivity>(config.watch, activity,
+            //         act => act instanceof WatchActivity,
+            //         watch => {
+            //             return { src: watch, task: WatchActivity };
+            //         });
+            // }
         }
 
         return activity;

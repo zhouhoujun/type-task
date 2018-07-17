@@ -3,6 +3,13 @@ import { ITransform } from './ITransform';
 import * as sourcemaps from 'gulp-sourcemaps';
 
 
+/**
+ * source map configure
+ *
+ * @export
+ * @interface SourceMapsConfigure
+ * @extends {IConfigure}
+ */
 export interface SourceMapsConfigure extends IConfigure {
     sourcemaps?: CtxType<string>;
 }

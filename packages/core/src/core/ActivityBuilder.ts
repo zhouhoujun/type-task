@@ -1,5 +1,9 @@
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
-import { Type, isFunction, Inject, IContainer, Singleton, isString, ContainerToken, Token, ModuleBuilder, Registration, isClass, getTypeMetadata, lang, Express, isToken, getClassName } from '@ts-ioc/core';
+import {
+    Type, isFunction, Inject, IContainer, Singleton, isString,
+    ContainerToken, Token, ModuleBuilder, Registration, isClass,
+    getTypeMetadata, lang, Express, isToken, getClassName
+} from '@ts-ioc/core';
 import { IConfigure, ActivityResultType, isActivityType, ActivityType } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Task } from './decorators';
@@ -15,14 +19,14 @@ import { Activity } from './Activity';
  * @implements {IBuilder}
  */
 @Singleton(ActivityBuilderToken)
-export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IActivityBuilder {
+export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivityBuilder {
     @Inject(ContainerToken) container: IContainer;
 
     constructor() {
         super()
     }
 
-    async build(task: ActivityResultType<any>, uuid: string): Promise<IActivity<any>> {
+    async build(task: ActivityType<IActivity>, uuid: string): Promise<IActivity> {
         let taskInst = await super.build(task);
         let config = this.getConfigure(task) as IConfigure;
         let ctxbuider = this.getBuilder(config);
@@ -43,7 +47,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         return taskInst;
     }
 
-    async buildStrategy(activity: IActivity<any>, config: IConfigure): Promise<IActivity<any>> {
+    async buildStrategy(activity: IActivity, config: IConfigure): Promise<IActivity> {
         if (config.name) {
             activity.name = config.name;
         }
@@ -68,7 +72,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         return builder || this;
     }
 
-    getDefaultAcitvity(): Type<IActivity<any>> {
+    getDefaultAcitvity(): Type<IActivity> {
         return Activity;
     }
 
@@ -78,7 +82,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
     }
 
 
-    protected async toExpression<T>(exptype: ExpressionType<T>, target: IActivity<any>): Promise<Expression<T>> {
+    protected async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
         if (isActivityType(exptype)) {
             return await this.build(exptype, target.id);
         } else {
@@ -86,7 +90,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         }
     }
 
-    protected async toActivity<Tr, Ta extends IActivity<any>>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity<any>, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, IConfigure>, valify?: Express<IConfigure, IConfigure>): Promise<Ta> {
+    protected async toActivity<Tr, Ta extends IActivity>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, IConfigure>, valify?: Express<IConfigure, IConfigure>): Promise<Ta> {
         let result;
         if (isActivityType(exptype, !valify)) {
             if (valify) {
@@ -129,7 +133,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         return null;
     }
 
-    protected getBuilderViaTask(task: Token<IActivity<any>>): IActivityBuilder {
+    protected getBuilderViaTask(task: Token<IActivity>): IActivityBuilder {
         if (isToken(task)) {
             let taskType = isClass(task) ? task : this.container.getTokenImpl(task);
             if (taskType) {
@@ -142,7 +146,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         return null;
     }
 
-    protected getBootstrapToken(cfg: IConfigure, token?: Token<IActivity<any>> | Type<any>): Token<IActivity<any>> {
+    protected getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
         let bootstrapToken = cfg.task || cfg.bootstrap || token;
         if (isString(bootstrapToken)) {
             bootstrapToken = this.traslateStrToken(bootstrapToken);
@@ -150,7 +154,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity<any>> implements IA
         return bootstrapToken;
     }
 
-    protected traslateStrToken(token: string): Token<IActivity<any>> {
+    protected traslateStrToken(token: string): Token<IActivity> {
         let taskToken = new Registration(ActivityToken, token);
         if (this.container.has(taskToken)) {
             return taskToken;

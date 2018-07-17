@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/pipes",
-  "version": "1.0.0-beta6",
+  "version": "1.0.0-beta7",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -32,6 +32,7 @@
     "del": "^2.2.1",
     "chai": "^3.5.0",
     "chalk": "^2.3.1",
+    "chokidar": "^2.0.4",
     "gulp-cached": "^1.1.0",
     "gulp-mocha": "^3.0.1",
     "gulp-sourcemaps": "^2.1.1",
@@ -42,7 +43,7 @@
     "execa": "^0.10.0"
   },
   "peerDependencies": {
-    "@taskfr/core": "1.0.0-beta6"
+    "@taskfr/core": "1.0.0-beta7"
   },
   "directories": {
     "lib": "lib",
