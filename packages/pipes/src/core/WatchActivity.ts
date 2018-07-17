@@ -1,9 +1,6 @@
 
-import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, InjectAcitityBuilderToken } from '@taskfr/core';
+import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, InjectAcitityBuilderToken, Task, ActivityBuilder, IConfigure } from '@taskfr/core';
 import { Singleton, Defer, isArray } from '@ts-ioc/core';
-import { PipeTask } from '../decorators';
-import { IPipeConfigure } from './IPipeConfigure';
-import { PipeActivityBuilder } from './PipeActivityBuilder';
 import { ITransform } from './ITransform';
 import { Observable } from 'rxjs';
 import { src } from 'vinyl-fs';
@@ -21,7 +18,7 @@ export const WatchAcitvityBuilderToken = new InjectAcitityBuilderToken<WatchActi
  * @interface WatchConfigure
  * @extends {SourceConfigure}
  */
-export interface WatchConfigure extends IPipeConfigure {
+export interface WatchConfigure extends IConfigure {
 
     /**
     * transform source.
@@ -196,7 +193,7 @@ export interface FileChanged {
 }
 
 
-@PipeTask(WatchAcitvityToken, WatchAcitvityBuilderToken)
+@Task(WatchAcitvityToken, WatchAcitvityBuilderToken)
 export class WatchActivity extends Activity<any> {
 
     /**
@@ -283,7 +280,7 @@ export class WatchActivity extends Activity<any> {
 
 
 @Singleton(WatchAcitvityBuilderToken)
-export class WatchActivityBuilder extends PipeActivityBuilder {
+export class WatchActivityBuilder extends ActivityBuilder {
 
     async buildStrategy(activity: IActivity, config: WatchConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
