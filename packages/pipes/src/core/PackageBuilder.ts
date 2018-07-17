@@ -98,7 +98,12 @@ export class PackageBuilder extends SequenceActivityBuilder {
 
         return activity;
     }
-
+    /**
+     * get default activity.
+     *
+     * @returns
+     * @memberof PackageBuilder
+     */
     getDefaultAcitvity() {
         return PackageActivity;
     }

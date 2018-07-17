@@ -58,21 +58,50 @@ export interface PackageConfigure extends SequenceConfigure {
 
 }
 
+/**
+ * package activity.
+ *
+ * @export
+ * @interface IPackageActivity
+ * @extends {IActivity}
+ */
 export interface IPackageActivity extends IActivity {
 
 }
 
+/**
+ * inject package token.
+ *
+ * @export
+ * @class InjectPackageToken
+ * @extends {Registration<T>}
+ * @template T
+ */
 export class InjectPackageToken<T extends IPackageActivity> extends Registration<T> {
     constructor(desc: string) {
         super('PackageActivity', desc);
     }
 }
 
+/**
+ * inject package build token.
+ *
+ * @export
+ * @class InjectPackageBuilderToken
+ * @extends {Registration<T>}
+ * @template T
+ */
 export class InjectPackageBuilderToken<T extends IActivityBuilder> extends Registration<T> {
     constructor(desc: string) {
         super('PackageActivityBuilder', desc);
     }
 }
 
+/**
+ * package token
+ */
 export const PackageToken = new InjectPackageToken<IPackageActivity>('');
+/**
+ * package builder token.
+ */
 export const PackageBuilderToken = new InjectPackageBuilderToken<IActivityBuilder>('')

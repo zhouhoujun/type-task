@@ -17,6 +17,14 @@ import { InjectAssetActivityToken } from './AssetConfigure';
 @Singleton(PipeActivityBuilderToken)
 export class PipeActivityBuilder extends ActivityBuilder {
 
+    /**
+     * pipe activity build strategy.
+     *
+     * @param {IActivity} activity
+     * @param {IPipeConfigure} config
+     * @returns {Promise<IActivity>}
+     * @memberof PipeActivityBuilder
+     */
     async buildStrategy(activity: IActivity, config: IPipeConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof PipeActivity) {
@@ -30,11 +38,24 @@ export class PipeActivityBuilder extends ActivityBuilder {
         }
         return activity;
     }
-
+    /**
+     * get pipe default acitvity.
+     *
+     * @returns
+     * @memberof PipeActivityBuilder
+     */
     getDefaultAcitvity() {
         return PipeActivity;
     }
 
+    /**
+     * traslate string token.
+     *
+     * @protected
+     * @param {string} token
+     * @returns {Token<IPipeActivity>}
+     * @memberof PipeActivityBuilder
+     */
     protected traslateStrToken(token: string): Token<IPipeActivity> {
         let taskToken: Token<IPipeActivity> = new InjectAssetActivityToken(token);
         if (this.container.has(taskToken)) {
@@ -47,7 +68,15 @@ export class PipeActivityBuilder extends ActivityBuilder {
         }
         return super.traslateStrToken(token);
     }
-
+    /**
+     * translate pipes express.
+     *
+     * @protected
+     * @param {PipeActivity} activity
+     * @param {TransformExpress} pipes
+     * @returns {Promise<TransformType[]>}
+     * @memberof PipeActivityBuilder
+     */
     protected translate(activity: PipeActivity, pipes: TransformExpress): Promise<TransformType[]> {
         let trsfs: TransformConfig[] = activity.context.to(pipes);
         if (!trsfs || trsfs.length < 1) {
@@ -55,7 +84,15 @@ export class PipeActivityBuilder extends ActivityBuilder {
         }
         return Promise.all(trsfs.map(p => this.translateConfig(activity, p)));
     }
-
+    /**
+     * translate transform config.
+     *
+     * @protected
+     * @param {PipeActivity} activity
+     * @param {TransformConfig} tsCfg
+     * @returns {Promise<TransformType>}
+     * @memberof PipeActivityBuilder
+     */
     protected async translateConfig(activity: PipeActivity, tsCfg: TransformConfig): Promise<TransformType> {
         if (isActivityType(tsCfg)) {
             return await this.build(tsCfg, activity.id);
