@@ -1,6 +1,5 @@
 
-import { SourceActivity, SourceConfigure, SourceActivityBuilder } from './SourceActivity';
-import { IntervalActivity, IActivity, ActivityType, ExpressionType, IntervalConfigure, Src, CtxType, Expression } from '@taskfr/core';
+import { IActivity, ExpressionType, Src, Expression } from '@taskfr/core';
 import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
 import { Singleton } from '@ts-ioc/core';
 import { PipeTask } from '../decorators';
@@ -209,64 +208,6 @@ export class WatchActivity extends PipeActivity {
         return stream;
     }
 
-    // watch(glob, options, cb) {
-    //     if (typeof options === 'function') {
-    //         cb = options;
-    //         options = {};
-    //     }
-
-    //     var opt = defaults(options, defaultOpts);
-
-    //     if (!Array.isArray(opt.events)) {
-    //         opt.events = [opt.events];
-    //     }
-
-    //     var queued = false;
-    //     var running = false;
-
-    //     var watcher = chokidar.watch(glob, opt);
-
-    //     function runComplete(err) {
-    //         running = false;
-
-    //         if (err && hasErrorListener(watcher)) {
-    //             watcher.emit('error', err);
-    //         }
-
-    //         // If we have a run queued, start onChange again
-    //         if (queued) {
-    //             queued = false;
-    //             onChange();
-    //         }
-    //     }
-
-    //     function onChange() {
-    //         if (running) {
-    //             if (opt.queue) {
-    //                 queued = true;
-    //             }
-    //             return;
-    //         }
-
-    //         running = true;
-    //         asyncDone(cb, runComplete);
-    //     }
-
-    //     var fn;
-    //     if (typeof cb === 'function') {
-    //         fn = debounce(onChange, opt.delay);
-    //     }
-
-    //     function watchEvent(eventName) {
-    //         watcher.on(eventName, fn);
-    //     }
-
-    //     if (fn) {
-    //         opt.events.forEach(watchEvent);
-    //     }
-
-    //     return watcher;
-    // }
 }
 
 
