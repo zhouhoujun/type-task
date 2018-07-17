@@ -33,7 +33,7 @@ export interface ThrowConfigure extends IConfigure {
  * @class ThrowActivity
  * @extends {Activity}
  */
-@Task(ThrowActivityToken)
+@Task(ThrowActivityToken, ThrowActivityBuilderToken)
 export class ThrowActivity extends Activity<any> {
     /**
      * throw exception error.

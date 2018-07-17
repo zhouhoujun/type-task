@@ -50,7 +50,7 @@ export interface TryCatchConfigure extends IConfigure {
  * @class TryCatchActivity
  * @extends {Activity}
  */
-@Task(TryCatchActivityToken)
+@Task(TryCatchActivityToken, TryCatchActivityBuilderToken)
 export class TryCatchActivity extends Activity<any> {
     /**
      * while condition.

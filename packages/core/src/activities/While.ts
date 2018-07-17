@@ -47,7 +47,7 @@ export interface WhileConfigure extends IConfigure {
  * @class WhileActivity
  * @extends {Activity}
  */
-@Task(WhileActivityToken)
+@Task(WhileActivityToken, WhileActivityBuilderToken)
 export class WhileActivity extends Activity<any> {
     /**
      * while condition.
