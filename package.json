@@ -8,16 +8,7 @@
         "reinstall": "npm cache clean && npm install",
         "test": "ts-node -r tsconfig-paths/register taskfile.ts"
     },
-    "keywords": [
-        "task",
-        "task manager",
-        "pipe",
-        "ioc",
-        "aop",
-        "shell",
-        "develop",
-        "tool"
-    ],
+    "keywords": ["task", "task manager", "pipe", "ioc", "aop", "shell", "develop", "tool"],
     "author": "houjun",
     "license": "MIT",
     "bugs": {
@@ -75,7 +66,7 @@
         "tsconfig-paths": "^3.3.1",
         "tslib": "^1.9.2",
         "tslint": "^5.4.3",
-        "typescript": "^2.8.4",
+        "typescript": "^2.9.2",
         "vinyl-fs": "^3.0.3",
         "zone.js": "^0.8.12"
     },

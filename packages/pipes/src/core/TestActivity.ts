@@ -71,8 +71,8 @@ export class TestActivity extends SourceActivity {
      */
     enable: Expression<boolean>;
 
-    protected async endPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        let source = await super.endPipe(stream, execute);
+    protected async afterPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+        let source = await super.afterPipe(stream, execute);
         let test = await this.context.exec(this, this.enable, source);
         if (test !== false) {
             return await this.pipe(source, this.framework)

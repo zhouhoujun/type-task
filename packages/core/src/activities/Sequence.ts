@@ -35,20 +35,42 @@ export class SequenceActivity extends Activity<any> {
 
     activites: IActivity[] = [];
 
-    run(data?: any): Promise<any> {
-        let execPromise = this.begin(data);
-        this.activites.forEach(task => {
-            execPromise = execPromise.then(pdata => task.run(pdata));
-        });
-
-        return execPromise.then(result => this.end(result));
+    async run(data?: any, execute?: IActivity): Promise<any> {
+        let result = await this.before(data, execute);
+        result = await this.execute(result, execute);
+        result = await this.after(result, execute);
+        return result;
     }
 
-    protected async begin(data?: any): Promise<any> {
+    /**
+     * before run sequence.
+     *
+     * @protected
+     * @param {*} [data]
+     * @returns {Promise<any>}
+     * @memberof SequenceActivity
+     */
+    protected async before(data?: any, execute?: IActivity): Promise<any> {
         return data;
     }
 
-    protected async end(data?: any): Promise<any> {
+    protected execute(data?: any, execute?: IActivity): Promise<any> {
+        let execPromise = Promise.resolve(data);
+        this.activites.forEach(task => {
+            execPromise = execPromise.then(pdata => task.run(pdata));
+        });
+        return execPromise;
+    }
+
+    /**
+     * after run sequence.
+     *
+     * @protected
+     * @param {*} [data]
+     * @returns {Promise<any>}
+     * @memberof SequenceActivity
+     */
+    protected async after(data?: any, execute?: IActivity): Promise<any> {
         return data;
     }
 }

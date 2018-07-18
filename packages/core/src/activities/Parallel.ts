@@ -44,8 +44,56 @@ export class ParallelActivity extends Activity<any> {
 
     activites: IActivity[] = [];
 
-    run(data?: any): Promise<any> {
+    /**
+     * run parallel activity.
+     *
+     * @param {*} [data]
+     * @param {IActivity} [execute]
+     * @returns {Promise<any>}
+     * @memberof ParallelActivity
+     */
+    async run(data?: any, execute?: IActivity): Promise<any> {
+        let result = await this.before(data, execute);
+        result = await this.execute(result, execute);
+        result = await this.after(result, execute);
+        return result;
+    }
+
+    /**
+     * before run parallel.
+     *
+     * @protected
+     * @param {*} [data]
+     * @returns {Promise<any>}
+     * @memberof ParallelActivity
+     */
+    protected async before(data?: any, execute?: IActivity): Promise<any> {
+        return data;
+    }
+
+    /**
+     * execute parallel.
+     *
+     * @protected
+     * @param {*} [data]
+     * @param {IActivity} [execute]
+     * @returns {Promise<any>}
+     * @memberof ParallelActivity
+     */
+    protected execute(data?: any, execute?: IActivity): Promise<any> {
         return Promise.all(this.activites.map(task => task.run(data)));
+    }
+
+    /**
+     * after run parallel.
+     *
+     * @protected
+     * @param {*} [data]
+     * @returns {Promise<any>}
+     * @memberof ParallelActivity
+     */
+    protected async after(data?: any, execute?: IActivity): Promise<any> {
+        return data;
     }
 
 }

@@ -16,7 +16,7 @@ export class SimpleTask extends Activity<any> {
 @Task('comptest', SequenceActivityBuilderToken)
 export class SimpleCTask extends SequenceActivity {
 
-    protected end(data?: any): Promise<any> {
+    protected after(data?: any): Promise<any> {
         // console.log('before component task:', this.name);
         return Promise.resolve('component task')
             .then(val => {

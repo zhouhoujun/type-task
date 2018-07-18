@@ -30,15 +30,18 @@ export interface TsConfigure extends AssetConfigure {
      * @memberof TsConfigure
      */
     tsconfig?: CtxType<string | ObjectMap<any>>;
-
-
 }
 
 @AssetTask('ts')
 export class TsCompile extends AssetActivity implements OnTaskInit {
 
     tdsDest: DestActivity | boolean;
-
+    /**
+     * on task init.
+     *
+     * @param {TsConfigure} cfg
+     * @memberof TsCompile
+     */
     onTaskInit(cfg: TsConfigure) {
         this.defaultAnnotation = { annotationFramework: () => classAnnotations(), task: AnnotationActivity };
         let tds = this.context.to(cfg.tds);
@@ -52,17 +55,38 @@ export class TsCompile extends AssetActivity implements OnTaskInit {
             }
         }
     }
-
+    /**
+     * execute ts pipe.
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @returns {Promise<ITransform>}
+     * @memberof TsCompile
+     */
     protected async execute(stream: ITransform): Promise<ITransform> {
         stream.js = await this.pipe(stream.js, ...this.pipes);
         return stream;
-     }
-
-    protected async beginPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        stream = await super.beginPipe(stream, execute);
+    }
+    /**
+     * begin pipe.
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @param {IActivity} [execute]
+     * @returns {Promise<ITransform>}
+     * @memberof TsCompile
+     */
+    protected async beforePipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+        stream = await super.beforePipe(stream, execute);
         return await this.pipe(stream, this.getTsCompilePipe());
     }
-
+    /**
+     * get ts configue compile.
+     *
+     * @private
+     * @returns {ITransform}
+     * @memberof TsCompile
+     */
     private getTsCompilePipe(): ITransform {
         let cfg = this.config as TsConfigure;
         let tsconfig = this.context.to(cfg.tsconfig || './tsconfig.json');
@@ -73,14 +97,29 @@ export class TsCompile extends AssetActivity implements OnTaskInit {
             return ts(tsconfig);
         }
     }
-
+    /**
+     * execyte uglify.
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @returns
+     * @memberof TsCompile
+     */
     protected async executeUglify(stream: ITransform) {
         if (this.uglify) {
             stream.js = await this.uglify.run(stream.js);
         }
         return stream;
     }
-
+    /**
+     * execute dest activity.
+     *
+     * @protected
+     * @param {DestActivity} ds
+     * @param {ITransform} stream
+     * @returns
+     * @memberof TsCompile
+     */
     protected async executeDest(ds: DestActivity, stream: ITransform) {
         if (!ds) {
             return null;

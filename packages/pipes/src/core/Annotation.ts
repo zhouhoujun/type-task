@@ -48,8 +48,8 @@ export class AnnotationActivity extends PipeActivity {
      * @returns {Promise<ITransform>}
      * @memberof AnnotationActivity
      */
-    protected async beginPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        stream = await super.beginPipe(stream, execute);
+    protected async beforePipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+        stream = await super.beforePipe(stream, execute);
         if (this.annotationFramework) {
             let annotation = await this.context.exec(this, this.annotationFramework);
             stream = await this.pipe(stream, annotation);

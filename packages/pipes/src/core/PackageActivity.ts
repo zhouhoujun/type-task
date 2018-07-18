@@ -78,7 +78,7 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
      * @returns {Promise<ITransform>}
      * @memberof PackageActivity
      */
-    protected async begin(data?: any): Promise<ITransform> {
+    protected async before(data?: any): Promise<ITransform> {
         if (this.test) {
             await this.test.run(data);
         }

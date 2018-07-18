@@ -85,7 +85,16 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      */
     defaultAnnotation?: IActivityConfigure<AnnotationActivity>;
 
-    protected async beginPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+    /**
+     * before pipe
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @param {IActivity} [execute]
+     * @returns {Promise<ITransform>}
+     * @memberof AssetActivity
+     */
+    protected async beforePipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         if (this.test) {
             await this.test.run(stream);
         }
@@ -107,7 +116,16 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
         return source;
     }
 
-    protected async endPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+    /**
+     * after pipe.
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @param {IActivity} [execute]
+     * @returns {Promise<ITransform>}
+     * @memberof AssetActivity
+     */
+    protected async afterPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         stream = await this.executeUglify(stream);
         if (isArray(this.dest)) {
             if (this.dest.length === 1) {
