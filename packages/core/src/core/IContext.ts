@@ -27,12 +27,10 @@ export type Expression<T> = T | ActivityResult<T>;
  * condition expression.
  */
 export type Condition = Expression<boolean>;
-
 /**
  *  expression token.
  */
 export type ExpressionToken<T> = Expression<T> | Token<GActivity<T>>;
-
 /**
  * expression type.
  */
@@ -118,22 +116,12 @@ export interface IContext {
   getRootPath(): string;
 
   /**
-* get task evn args.
-*
-* @returns {ObjectMap<any>}
-* @memberof IContext
-*/
+   * get task evn args.
+   *
+   * @returns {ObjectMap<any>}
+   * @memberof IContext
+   */
   getEnvArgs(): ObjectMap<any>;
-
-  // /**
-  //  * validate condition.
-  //  *
-  //  * @param {Condition} condition
-  //  * @param {*} data
-  //  * @returns {Promise<boolean>}
-  //  * @memberof IContext
-  //  */
-  // validate(condition: Condition, data: any): Promise<boolean>;
 
   /**
    *convert to finally type via context.

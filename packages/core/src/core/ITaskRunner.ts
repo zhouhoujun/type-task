@@ -1,6 +1,6 @@
 import { ActivityResultType } from './IConfigure';
 import { Registration } from '@ts-ioc/core';
-import { IActivity, GActivity } from './IActivity';
+import { GActivity } from './IActivity';
 import { IActivityBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
