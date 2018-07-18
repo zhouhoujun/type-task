@@ -18,7 +18,14 @@ import { InjectAssetActivityToken } from './AssetConfigure';
  */
 @Singleton(PackageBuilderToken)
 export class PackageBuilder extends SequenceActivityBuilder {
-
+    /**
+     * package build startegy.
+     *
+     * @param {IActivity} activity
+     * @param {PackageConfigure} config
+     * @returns {Promise<IActivity>}
+     * @memberof PackageBuilder
+     */
     async buildStrategy(activity: IActivity, config: PackageConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof PackageActivity) {

@@ -4,9 +4,15 @@ import { TestActivity, TestConfigure } from './TestActivity';
 import { AssetActivity } from './AssetActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
-import { IPipeActivity } from './IPipeActivity';
 import { AssetConfigure } from './AssetConfigure';
 
+/**
+ * package configure.
+ *
+ * @export
+ * @interface PackageConfigure
+ * @extends {SequenceConfigure}
+ */
 export interface PackageConfigure extends SequenceConfigure {
     /**
      * src root path.
@@ -58,21 +64,50 @@ export interface PackageConfigure extends SequenceConfigure {
 
 }
 
+/**
+ * package activity.
+ *
+ * @export
+ * @interface IPackageActivity
+ * @extends {IActivity}
+ */
 export interface IPackageActivity extends IActivity {
 
 }
 
+/**
+ * package inject token.
+ *
+ * @export
+ * @class InjectPackageToken
+ * @extends {Registration<T>}
+ * @template T
+ */
 export class InjectPackageToken<T extends IPackageActivity> extends Registration<T> {
     constructor(desc: string) {
         super('PackageActivity', desc);
     }
 }
 
+/**
+ * package build inject token
+ *
+ * @export
+ * @class InjectPackageBuilderToken
+ * @extends {Registration<T>}
+ * @template T
+ */
 export class InjectPackageBuilderToken<T extends IActivityBuilder> extends Registration<T> {
     constructor(desc: string) {
         super('PackageActivityBuilder', desc);
     }
 }
 
+/**
+ * package token
+ */
 export const PackageToken = new InjectPackageToken<IPackageActivity>('');
+/**
+ * package build token.
+ */
 export const PackageBuilderToken = new InjectPackageBuilderToken<IActivityBuilder>('')
