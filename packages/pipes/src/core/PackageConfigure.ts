@@ -76,7 +76,7 @@ export interface IPackageActivity extends IActivity {
 }
 
 /**
- * package inject token.
+ * inject package token.
  *
  * @export
  * @class InjectPackageToken
@@ -90,7 +90,7 @@ export class InjectPackageToken<T extends IPackageActivity> extends Registration
 }
 
 /**
- * package build inject token
+ * inject package build token.
  *
  * @export
  * @class InjectPackageBuilderToken
@@ -108,6 +108,6 @@ export class InjectPackageBuilderToken<T extends IActivityBuilder> extends Regis
  */
 export const PackageToken = new InjectPackageToken<IPackageActivity>('');
 /**
- * package build token.
+ * package builder token.
  */
 export const PackageBuilderToken = new InjectPackageBuilderToken<IActivityBuilder>('')

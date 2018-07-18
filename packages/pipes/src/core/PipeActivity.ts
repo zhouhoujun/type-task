@@ -65,10 +65,27 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
         return stream;
     }
 
+    /**
+     * execute pipes.
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @returns {Promise<ITransform>}
+     * @memberof PipeActivity
+     */
     protected async execute(stream: ITransform): Promise<ITransform> {
        return await this.pipe(stream, ...this.pipes);
     }
 
+    /**
+     * begin pipe.
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @param {IActivity} [execute]
+     * @returns {Promise<ITransform>}
+     * @memberof PipeActivity
+     */
     protected async beginPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         if (execute instanceof PipeActivity) {
             stream = await this.pipe(stream, execute);
@@ -76,6 +93,15 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
         return stream;
     }
 
+    /**
+     * end pipe.
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @param {IActivity} [execute]
+     * @returns {Promise<ITransform>}
+     * @memberof PipeActivity
+     */
     protected async endPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         return stream;
     }

@@ -19,7 +19,7 @@ import { InjectAssetActivityToken } from './AssetConfigure';
 @Singleton(PackageBuilderToken)
 export class PackageBuilder extends SequenceActivityBuilder {
     /**
-     * package build startegy.
+     * package build stragegy.
      *
      * @param {IActivity} activity
      * @param {PackageConfigure} config
@@ -98,7 +98,12 @@ export class PackageBuilder extends SequenceActivityBuilder {
 
         return activity;
     }
-
+    /**
+     * get default activity.
+     *
+     * @returns
+     * @memberof PackageBuilder
+     */
     getDefaultAcitvity() {
         return PackageActivity;
     }

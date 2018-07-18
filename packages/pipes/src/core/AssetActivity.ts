@@ -123,6 +123,14 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
         return stream;
     }
 
+    /**
+     * execute uglify.
+     *
+     * @protected
+     * @param {ITransform} stream
+     * @returns
+     * @memberof AssetActivity
+     */
     protected async executeUglify(stream: ITransform) {
         if (this.uglify) {
             stream = await this.uglify.run(stream);
@@ -130,6 +138,15 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
         return stream;
     }
 
+    /**
+     * execute dest activity.
+     *
+     * @protected
+     * @param {DestActivity} ds
+     * @param {ITransform} stream
+     * @returns
+     * @memberof AssetActivity
+     */
     protected async executeDest(ds: DestActivity, stream: ITransform) {
         if (!ds) {
             return null;

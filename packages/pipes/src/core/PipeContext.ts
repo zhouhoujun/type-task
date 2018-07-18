@@ -24,22 +24,46 @@ export class PipeContext extends Context implements IPipeContext {
     }
 
     private args: ObjectMap<any>;
+    /**
+     * get evn args.
+     *
+     * @returns {ObjectMap<any>}
+     * @memberof PipeContext
+     */
     getEnvArgs(): ObjectMap<any> {
         if (!this.args) {
             this.args = minimist(process.argv.slice(2));
         }
         return this.args;
     }
-
+    /**
+     * get run tasks.
+     *
+     * @returns {string[]}
+     * @memberof PipeContext
+     */
     getRunTasks(): string[] {
         return this.getEnvArgs()._ || ['default'];
     }
-
-
+    /**
+     * get root folders.
+     *
+     * @param {Express2<string, string, boolean>} [express]
+     * @returns {string[]}
+     * @memberof PipeContext
+     */
     getRootFolders(express?: Express2<string, string, boolean>): string[] {
         return this.getFolders(this.getRootPath(), express);
     }
 
+    /**
+     * get folders of path.
+     *
+     * @param {string} pathstr
+     * @param {Express2<string, string, boolean>} [express]
+     * @returns {string[]}
+     * @memberof PipeContext
+     */
     getFolders(pathstr: string, express?: Express2<string, string, boolean>): string[] {
         let dir = readdirSync(pathstr);
         let folders = [];
@@ -59,12 +83,24 @@ export class PipeContext extends Context implements IPipeContext {
         });
         return folders;
     }
-
+    /**
+     * to root path.
+     *
+     * @param {string} pathstr
+     * @returns {string}
+     * @memberof PipeContext
+     */
     toRootPath(pathstr: string): string {
         return toAbsolutePath(this.getRootPath(), pathstr);
     }
 
     private _package: any;
+    /**
+     * get package.
+     *
+     * @returns {*}
+     * @memberof PipeContext
+     */
     getPackage(): any {
         let filename = this.toRootPath(this.packageFile);
         if (!this._package) {
@@ -72,7 +108,12 @@ export class PipeContext extends Context implements IPipeContext {
         }
         return this._package;
     }
-
+    /**
+     * get package version.
+     *
+     * @returns {string}
+     * @memberof PipeContext
+     */
     getPackageVersion(): string {
         let packageCfg = this.getPackage();
         if (!packageCfg) {
@@ -80,7 +121,14 @@ export class PipeContext extends Context implements IPipeContext {
         }
         return packageCfg.version || '';
     }
-
+    /**
+     * get module version.
+     *
+     * @param {string} name
+     * @param {boolean} [dependencies=false]
+     * @returns {string}
+     * @memberof PipeContext
+     */
     getModuleVersion(name: string, dependencies = false): string {
         let packageCfg = this.getPackage();
         if (!packageCfg) {
