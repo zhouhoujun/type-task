@@ -76,7 +76,13 @@ export class WhileActivity extends Activity<any> {
     }
 }
 
-
+/**
+ * while activity builder.
+ *
+ * @export
+ * @class WhileActivityBuilder
+ * @extends {ActivityBuilder}
+ */
 @Singleton(WhileActivityBuilderToken)
 export class WhileActivityBuilder extends ActivityBuilder {
     async buildStrategy(activity: IActivity, config: WhileConfigure): Promise<IActivity> {
