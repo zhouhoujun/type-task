@@ -65,10 +65,6 @@ export class DefaultTaskContainer extends ApplicationBuilder<IActivity> implemen
         return this.getContainer().resolve(TaskRunnerToken, { activity: config, activityBuilder: builder });
     }
 
-    // protected bindConfiguration(container: IContainer, config: IConfigure) {
-
-    // }
-
     protected createModuleBuilder(): IActivityBuilder {
         return this.getContainer().get(ActivityBuilderToken);
     }
