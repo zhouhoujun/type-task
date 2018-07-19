@@ -1,7 +1,7 @@
 {
   "name": "@taskfr/pipes",
   "version": "1.0.0-beta8",
-  "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
+  "description": "type task framework, base on AOP, Ioc container, via @ts-ioc. file stream pipes activities.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "scripts": {
