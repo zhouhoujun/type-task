@@ -1,14 +1,13 @@
 import { dest, DestOptions } from 'vinyl-fs';
 import { PipeTask } from '../decorators';
 import { ITransform } from './ITransform';
-import { TransformType } from './pipeTypes';
+import { TransformType, isTransform } from './pipeTypes';
 import { Expression, IActivity, ExpressionType } from '@taskfr/core';
-import { Singleton, isArray } from '@ts-ioc/core';
+import { Singleton, isUndefined } from '@ts-ioc/core';
 import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
 import { PipeActivityBuilder } from './PipeActivityBuilder';
-import { SourceMapsActivity } from './SourceMapsActivity';
 /**
  * dest activity token.
  */
@@ -72,42 +71,11 @@ export class DestActivity extends PipeActivity {
      * @memberof PipeDest
      */
     destOptions: Expression<DestOptions>;
-    /**
-     * get run pipes.
-     *
-     * @protected
-     * @param {IActivity} [execute]
-     * @returns
-     * @memberof DestActivity
-     */
-    protected getRunPipes(execute?: IActivity) {
-        let pipes = this.pipes;
-        if (execute) {
-            if (execute instanceof SourceMapsActivity) {
-                pipes = pipes.concat([execute]);
-            } else if (execute instanceof PipeActivity) {
-                pipes = pipes.concat([execute]);
-            }
-        }
-        return pipes;
-    }
-    /**
-     * pipe stream via transform.
-     *
-     * @protected
-     * @param {ITransform} source
-     * @param {...TransformType[]} pipes
-     * @returns {Promise<ITransform>}
-     * @memberof DestActivity
-     */
-    protected pipe(source: ITransform, ...pipes: TransformType[]): Promise<ITransform> {
-        return super.pipe(source, ...pipes)
-            .then(stream => {
-                return this.writeStream(stream)
-            })
-            .then(() => {
-                return source;
-            });
+
+    protected async afterPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+        stream = await super.afterPipe(stream, execute);
+        await this.writeStream(stream);
+        return stream;
     }
 
     /**
@@ -124,28 +92,9 @@ export class DestActivity extends PipeActivity {
         if (this.destOptions) {
             destOptions = await this.context.exec(this, this.destOptions, stream);
         }
-        let output = stream.pipe(dest(this.context.toRootPath(dist), destOptions));
-        if (!output) {
-            return null;
-        }
-
-        return await new Promise((resolve, reject) => {
-            output
-                .once('end', () => {
-                    resolve();
-                })
-                .once('error', reject);
-
-        }).then(() => {
-            output.removeAllListeners('error');
-            output.removeAllListeners('end');
-            return stream;
-        }, err => {
-            output.removeAllListeners('error');
-            output.removeAllListeners('end');
-            process.exit(1);
-            return err;
-        });
+        dist = this.context.toRootPath(dist);
+        await this.executePipe(stream, dest(dist, destOptions), true);
+        return stream;
     }
 }
 

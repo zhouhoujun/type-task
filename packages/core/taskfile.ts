@@ -12,7 +12,7 @@ TaskContainer.create(__dirname)
     .bootstrap(
         <PackageConfigure>{
             clean: 'lib',
-            src: 'src',
+            // src: 'src',
             assets: {
                 ts: <TsConfigure>{
                      // watch: true,

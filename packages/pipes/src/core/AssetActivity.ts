@@ -11,6 +11,7 @@ import { PipeActivity } from './PipeActivity';
 import { IActivityConfigure, IActivity } from '@taskfr/core';
 import { IAssetActivity } from './AssetConfigure';
 import { TestActivity } from './TestActivity';
+import { isTransform } from './pipeTypes';
 
 
 /**
@@ -99,7 +100,7 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
             await this.test.run(stream);
         }
         let source: ITransform;
-        if (execute === this.watch) {
+        if (execute && execute === this.watch) {
             source = stream;
         } else {
             source = await this.src.run(stream);

@@ -1,6 +1,6 @@
 import { AssetTask } from '../decorators';
-import { AssetConfigure, AssetActivity, DestActivity, DestAcitvityToken } from '../core';
-import { isBoolean, ObjectMap, isString, lang, isArray } from '@ts-ioc/core';
+import { AssetConfigure, AssetActivity, DestActivity, DestAcitvityToken, isTransform } from '../core';
+import { isBoolean, ObjectMap, isString } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
 import * as ts from 'gulp-typescript';
 import { ITransform } from '../core/ITransform';
@@ -45,14 +45,16 @@ export class TsCompile extends AssetActivity implements OnTaskInit {
     onTaskInit(cfg: TsConfigure) {
         this.defaultAnnotation = { annotationFramework: () => classAnnotations(), task: AnnotationActivity };
         let tds = this.context.to(cfg.tds);
-        if (tds) {
-            if (isBoolean(tds)) {
-                this.tdsDest = true;
-            }
+        if (tds !== false) {
             if (isString(tds)) {
                 this.tdsDest = this.context.getContainer().resolve(DestAcitvityToken);
                 this.tdsDest.dest = tds;
+            } else {
+                this.tdsDest = true;
             }
+        }
+        if (!cfg.sourcemaps && cfg.sourcemaps !== false) {
+            cfg.sourcemaps = true;
         }
     }
     /**
@@ -124,16 +126,15 @@ export class TsCompile extends AssetActivity implements OnTaskInit {
         if (!ds) {
             return null;
         }
-        if (this.tdsDest && stream.dts) {
-            let tds: DestActivity;
-            if (isBoolean(this.tdsDest)) {
-                tds = isArray(this.dest) ? lang.first(this.dest) : this.dest;
-            } else {
-                tds = this.tdsDest;
-            }
-            await this.executeDest(tds, stream);
+        if (this.tdsDest && isTransform(stream.dts)) {
+            let dts = isBoolean(this.tdsDest) ? ds : (this.tdsDest || ds);
+            await dts.run(stream.dts);
         }
-        await ds.run(stream.js, this.sourcemaps);
+        if (isTransform(stream.js)) {
+            await ds.run(stream.js, this.sourcemaps);
+        } else {
+            await ds.run(stream, this.sourcemaps);
+        }
         return stream;
     }
 }

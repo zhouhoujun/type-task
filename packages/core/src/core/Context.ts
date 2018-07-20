@@ -89,10 +89,8 @@ export class Context implements IContext {
             return expression.run(data, target);
         } else if (expression instanceof TaskRunner) {
             return expression.start(data);
-        } else if (!isUndefined(expression)) {
-            return Promise.resolve(expression as T);
         } else {
-            return Promise.resolve(undefined); // Promise.reject('not right expression');
+            return Promise.resolve(expression as T);
         }
     }
 

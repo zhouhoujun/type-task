@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
   "main": "./bundles/core.umd.js",
   "typings": "./lib/index.d.ts",
@@ -24,15 +24,12 @@
   "dependencies": {
     "reflect-metadata": "^0.1.12",
     "tslib": "^1.9.2",
-    "@ts-ioc/aop": "^2.5.3",
-    "@ts-ioc/core": "^2.5.3",
-    "@ts-ioc/logs": "^2.5.3",
+    "@ts-ioc/aop": "^2.5.4",
+    "@ts-ioc/core": "^2.5.4",
+    "@ts-ioc/logs": "^2.5.4",
     "rxjs": "^5.5.11"
   },
   "directories": {
     "lib": "lib"
-  },
-  "devDependencies": {
-    "rollup-plugin-node-builtins": "^2.1.2"
   }
 }

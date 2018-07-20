@@ -101,11 +101,11 @@ export class AssetBuilder extends PipeActivityBuilder {
                     sourcemaps => {
                         if (isBoolean(sourcemaps)) {
                             if (sourcemaps) {
-                                return { sourcemaps: '', task: WatchActivity };
+                                return { sourcemaps: '', task: SourceMapsActivity };
                             }
                             return null;
                         }
-                        return { sourcemaps: sourcemaps, task: WatchActivity };
+                        return { sourcemaps: sourcemaps, task: SourceMapsActivity };
                     });
             }
 

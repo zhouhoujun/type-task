@@ -101,7 +101,6 @@ export function createTaskDecorator<T extends TaskMetadata>(
             args.next<TaskMetadata>({
                 match: (arg) => isString(arg),
                 setMetadata: (metadata, arg) => {
-                    console.log(arg);
                     metadata.name = arg;
                 }
             });

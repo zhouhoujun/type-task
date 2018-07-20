@@ -1,11 +1,12 @@
 import { IPipeContext, PipeContextToken } from './IPipeContext';
-import { Inject, isArray } from '@ts-ioc/core';
+import { Inject, isArray, isUndefined } from '@ts-ioc/core';
 import { IPipeActivity } from './IPipeActivity';
 import { Activity, IActivity } from '@taskfr/core';
 import { PipeTask } from '../decorators';
 import { ITransform } from './ITransform';
 import { TransformType, isTransform } from './pipeTypes';
 import { IPipeConfigure } from './IPipeConfigure';
+import { SourceMapsActivity } from './SourceMapsActivity';
 
 /**
  * Pipe activity.
@@ -74,7 +75,7 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @memberof PipeActivity
      */
     protected async execute(stream: ITransform): Promise<ITransform> {
-       return await this.pipe(stream, ...this.pipes);
+        return await this.pipe(stream, ...this.pipes);
     }
 
     /**
@@ -87,9 +88,6 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @memberof PipeActivity
      */
     protected async beforePipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        if (execute instanceof PipeActivity) {
-            stream = await this.pipe(stream, execute);
-        }
         return stream;
     }
 
@@ -103,6 +101,9 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @memberof PipeActivity
      */
     protected async afterPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+        if (execute instanceof SourceMapsActivity) {
+            stream = await this.executePipe(stream, execute);
+        }
         return stream;
     }
 
@@ -162,17 +163,43 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @returns {Promise<ITransform>}
      * @memberof PipeComponent
      */
-    protected async executePipe(stream: ITransform, transform: TransformType): Promise<ITransform> {
+    protected async executePipe(stream: ITransform, transform: TransformType, waitend = false): Promise<ITransform> {
         let next: ITransform = await this.context.exec(this, transform, stream);
+        let piped = false;
         if (isTransform(stream)) {
             if (isTransform(next)) {
                 if (!next.changeAsOrigin) {
+                    piped = true;
                     next = stream.pipe(next);
                 }
             } else {
                 next = stream;
             }
         }
-        return next;
+
+        if (piped && waitend) {
+            return await new Promise((resolve, reject) => {
+                next
+                    .once('end', () => {
+                        resolve();
+                    })
+                    .once('error', reject);
+            }).then(() => {
+                next.removeAllListeners('error');
+                next.removeAllListeners('end');
+                return next;
+            }, err => {
+                next.removeAllListeners('error');
+                next.removeAllListeners('end');
+                if (!isUndefined(process)) {
+                    process.exit(1);
+                    return err;
+                } else {
+                    return Promise.reject(new Error(err));
+                }
+            });
+        } else {
+            return next;
+        }
     }
 }

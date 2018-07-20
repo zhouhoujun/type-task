@@ -75,32 +75,7 @@ export class TestActivity extends SourceActivity {
         let source = await super.afterPipe(stream, execute);
         let test = await this.context.exec(this, this.enable, source);
         if (test !== false) {
-            return await this.pipe(source, this.framework)
-                .then(pipe => {
-                    if (!pipe) {
-                        return null;
-                    }
-                    return new Promise((resolve, reject) => {
-                        pipe
-                            .once('end', () => {
-                                resolve();
-                            })
-                            .once('error', reject);
-                    }).then(() => {
-                        pipe.removeAllListeners('error');
-                        pipe.removeAllListeners('end');
-                        return pipe;
-                    }, err => {
-                        pipe.removeAllListeners('error');
-                        pipe.removeAllListeners('end');
-                        if (!isUndefined(process)) {
-                            process.exit(1);
-                            return err;
-                        } else {
-                            return Promise.reject(new Error(err));
-                        }
-                    });
-                });
+            return await this.executePipe(source, this.framework, true);
         } else {
             return source;
         }

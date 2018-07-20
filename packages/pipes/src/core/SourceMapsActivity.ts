@@ -25,20 +25,25 @@ export class SourceMapsActivity extends Activity<ITransform> implements OnTaskIn
     }
 
     private hasInit = false;
-    run(data: ITransform) {
-        if (this.hasInit) {
-            return this.write(data);
+    async run(data: ITransform) {
+        if (!this.hasInit) {
+            return data.pipe(sourcemaps.init());
         } else {
-            return this.init(data);
+            return data.pipe(sourcemaps.write(this.sourcemaps));
         }
     }
 
     async init(data: ITransform) {
+        this.hasInit = false;
+        let stream = await this.run(data);
         this.hasInit = true;
-        return data.pipe(sourcemaps.init());
+        return stream;
     }
 
     async write(data: ITransform): Promise<ITransform> {
-        return data.pipe(sourcemaps.write(this.sourcemaps));
+        if (this.hasInit) {
+            return data;
+        }
+        return this.run(data);
     }
 }
