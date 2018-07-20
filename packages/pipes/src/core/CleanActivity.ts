@@ -31,7 +31,7 @@ export interface CleanConfigure extends IConfigure {
      * @type {ExpressionType<Src>}
      * @memberof ICleanConfigure
      */
-    clean?: ExpressionType<Src>;
+    clean: ExpressionType<Src>;
 }
 
 

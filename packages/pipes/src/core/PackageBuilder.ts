@@ -62,7 +62,7 @@ export class PackageBuilder extends SequenceActivityBuilder {
                 activity.clean = await this.toActivity<Src, CleanActivity>(config.clean, activity,
                     act => act instanceof CleanActivity,
                     src => {
-                        return <CleanConfigure>{ src: src, task: CleanActivity };
+                        return <CleanConfigure>{ clean: src, task: CleanActivity };
                     }
                 );
             }
