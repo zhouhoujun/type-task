@@ -5,6 +5,4 @@ gulpfile.ts
 taskfile.ts
 tsconfig.json
 tslint.json
-lib/simples
-lib/sourcemaps/simples
 package-lock.json

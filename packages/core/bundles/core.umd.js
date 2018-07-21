@@ -382,14 +382,14 @@ Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(obje
 
 unwrapExports(utils);
 
-var D__workspace_github_typeTask_packages_core_lib = createCommonjsModule(function (module, exports) {
+var D__Workspace_Projects_modules_typeTask_packages_core_lib = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(ITaskContainer,exports), tslib_1.__exportStar(DefaultTaskContainer_1,exports), tslib_1.__exportStar(utils,exports), tslib_1.__exportStar(core,exports), tslib_1.__exportStar(aop,exports), tslib_1.__exportStar(activities,exports);
 
 
 
 });
 
-var index$5 = unwrapExports(D__workspace_github_typeTask_packages_core_lib);
+var index$5 = unwrapExports(D__Workspace_Projects_modules_typeTask_packages_core_lib);
 
 return index$5;
 

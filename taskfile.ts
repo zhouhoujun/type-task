@@ -9,7 +9,6 @@ let versionSetting = (ctx: IPipeContext) => {
     return jeditor((json: any) => {
         let version = envArgs['setvs'] || '';
         if (version) {
-            // console.log(version);
             json.version = version;
             if (json.peerDependencies) {
                 Object.keys(json.peerDependencies).forEach(key => {
