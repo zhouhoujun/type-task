@@ -2,11 +2,11 @@ import { IActivity, SequenceActivityBuilder, Src } from '@taskfr/core';
 import { Singleton, isArray, isString, lang } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
-import { DestActivity } from './DestActivity';
+import { DestActivity, DestConfigure } from './DestActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { AssetActivity } from './AssetActivity';
-import { InjectAssetActivityToken } from './AssetConfigure';
+import { InjectAssetActivityToken, AssetConfigure } from './AssetConfigure';
 
 
 /**
@@ -31,11 +31,11 @@ export class PackageBuilder extends SequenceActivityBuilder {
         if (activity instanceof PackageActivity) {
             let srcRoot = activity.src = activity.context.to(config.src);
             let assets = await Promise.all(lang.keys(config.assets).map(name => {
-                return this.toActivity<Src, AssetActivity>(config.assets[name], activity,
+                return this.toActivity<Src, AssetActivity, AssetConfigure>(config.assets[name], activity,
                     act => act instanceof AssetActivity,
                     src => {
                         if (isString(src) || isArray(src)) {
-                            return { src: src };
+                            return <AssetConfigure>{ src: src };
                         } else {
                             return null;
                         }
@@ -59,7 +59,7 @@ export class PackageBuilder extends SequenceActivityBuilder {
             activity.assets = assets.filter(a => a);
 
             if (config.clean) {
-                activity.clean = await this.toActivity<Src, CleanActivity>(config.clean, activity,
+                activity.clean = await this.toActivity<Src, CleanActivity, CleanConfigure>(config.clean, activity,
                     act => act instanceof CleanActivity,
                     src => {
                         return <CleanConfigure>{ clean: src, task: CleanActivity };
@@ -68,7 +68,7 @@ export class PackageBuilder extends SequenceActivityBuilder {
             }
 
             if (config.test) {
-                activity.test = await this.toActivity<Src, TestActivity>(config.test, activity,
+                activity.test = await this.toActivity<Src, TestActivity, TestConfigure>(config.test, activity,
                     act => act instanceof TestActivity,
                     src => {
                         if (!src) {
@@ -80,7 +80,7 @@ export class PackageBuilder extends SequenceActivityBuilder {
             }
 
             if (config.dest) {
-                activity.dest = await this.toActivity<string, DestActivity>(config.dest, activity,
+                activity.dest = await this.toActivity<string, DestActivity, DestConfigure>(config.dest, activity,
                     act => act instanceof DestActivity,
                     dest => {
                         return { dest: dest, task: DestActivity };

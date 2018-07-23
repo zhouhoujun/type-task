@@ -112,7 +112,7 @@ export class ParallelActivityBuilder extends ActivityBuilder {
         return activity;
     }
 
-    async buildChildren(activity: ParallelActivity, configs: (IConfigure | Token<IActivity>)[]) {
+    async buildChildren(activity: ParallelActivity, configs: (ParallelConfigure | Token<IActivity>)[]) {
         let children = await Promise.all(configs.map(async cfg => {
             let node = await this.build(cfg, activity.id);
             if (!node) {

@@ -70,11 +70,11 @@ export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivi
         }
     }
 
-    protected async toActivity<Tr, Ta extends IActivity>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, IConfigure>, valify?: Express<IConfigure, IConfigure>): Promise<Ta> {
+    protected async toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta> {
         let result;
         if (isActivityType(exptype, !valify)) {
             if (valify) {
-                result = await this.build(isToken(exptype) ? exptype : valify(exptype), target.id);
+                result = await this.build(isToken(exptype) ? exptype : valify(exptype as TCfg), target.id);
             } else {
                 result = await this.build(exptype, target.id);
             }

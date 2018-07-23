@@ -18,10 +18,7 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
      *
      * @Task
      *
-     * @param {T} [taskName] task name.
-     * @param {(Registration<any> | symbol | string)} provide define this class provider for provide.
-     * @param {string} [alias] define this class provider with alias for provide.
-     * @param {boolean} [singlton] define this class as singlton.
+     * @param {T} [metadata] task metadate configure.
      */
     (metadata?: T): ClassDecorator;
 
@@ -122,7 +119,7 @@ export function createTaskDecorator<T extends TaskMetadata>(
             metadata.provide = metadata.provide || provideType;
             metadata.alias = metadata.alias || metadata.name;
 
-            metadata.taskType = taskType;
+            metadata.decorType = taskType;
             if (!metadata.builder) {
                 metadata.builder = builder;
             }

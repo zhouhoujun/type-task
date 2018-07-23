@@ -2,11 +2,11 @@ import { IActivity, Src, IActivityConfigure } from '@taskfr/core';
 import { Singleton, isBoolean, isString } from '@ts-ioc/core';
 import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
-import { SourceActivity } from './SourceActivity';
-import { DestActivity } from './DestActivity';
+import { SourceActivity, SourceConfigure } from './SourceActivity';
+import { DestActivity, DestConfigure } from './DestActivity';
 import { WatchActivity, WatchConfigure } from './WatchActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
-import { SourceMapsActivity } from './SourceMapsActivity';
+import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationConfigure } from './Annotation';
 import { PipeActivityBuilder } from './PipeActivityBuilder';
 import { TestActivity, TestConfigure } from './TestActivity';
@@ -35,14 +35,14 @@ export class AssetBuilder extends PipeActivityBuilder {
         await super.buildStrategy(activity, config);
 
         if (activity instanceof AssetActivity) {
-            activity.src = await this.toActivity<Src, SourceActivity>(config.src, activity,
+            activity.src = await this.toActivity<Src, SourceActivity, SourceConfigure>(config.src, activity,
                 act => act instanceof SourceActivity,
                 src => {
                     return { src: src, task: SourceActivity };
                 });
 
             if (config.test) {
-                activity.test = await this.toActivity<Src, TestActivity>(config.test, activity,
+                activity.test = await this.toActivity<Src, TestActivity, TestConfigure>(config.test, activity,
                     act => act instanceof TestActivity,
                     src => {
                         if (!src) {
@@ -54,7 +54,7 @@ export class AssetBuilder extends PipeActivityBuilder {
             }
 
             if (config.dest) {
-                activity.dest = await this.toActivity<string, DestActivity>(config.dest, activity,
+                activity.dest = await this.toActivity<string, DestActivity, DestConfigure>(config.dest, activity,
                     act => act instanceof DestActivity,
                     dest => {
                         return { dest: dest, task: DestActivity };
@@ -62,7 +62,7 @@ export class AssetBuilder extends PipeActivityBuilder {
             }
 
             if (config.annotation) {
-                activity.annotation = await this.toActivity<string | boolean, AnnotationActivity>(config.annotation, activity,
+                activity.annotation = await this.toActivity<string | boolean, AnnotationActivity, AnnotationConfigure>(config.annotation, activity,
                     act => act instanceof AnnotationActivity,
                     dest => {
                         if (isBoolean(dest)) {
@@ -82,7 +82,7 @@ export class AssetBuilder extends PipeActivityBuilder {
             }
 
             if (config.watch) {
-                activity.watch = await this.toActivity<Src | boolean, WatchActivity>(config.watch, activity,
+                activity.watch = await this.toActivity<Src | boolean, WatchActivity, WatchConfigure>(config.watch, activity,
                     act => act instanceof WatchActivity,
                     watch => {
                         if (isBoolean(watch)) {
@@ -96,7 +96,7 @@ export class AssetBuilder extends PipeActivityBuilder {
             }
 
             if (config.sourcemaps) {
-                activity.sourcemaps = await this.toActivity<boolean | string, SourceMapsActivity>(config.sourcemaps, activity,
+                activity.sourcemaps = await this.toActivity<boolean | string, SourceMapsActivity, SourceMapsConfigure>(config.sourcemaps, activity,
                     act => act instanceof SourceMapsActivity,
                     sourcemaps => {
                         if (isBoolean(sourcemaps)) {
@@ -110,7 +110,7 @@ export class AssetBuilder extends PipeActivityBuilder {
             }
 
             if (config.uglify) {
-                activity.uglify = await this.toActivity<any, UglifyActivity>(config.uglify, activity,
+                activity.uglify = await this.toActivity<any, UglifyActivity, UglifyConfigure>(config.uglify, activity,
                     act => act instanceof UglifyActivity,
                     uglify => {
                         if (isBoolean(uglify)) {
@@ -142,10 +142,10 @@ export class AssetBuilder extends PipeActivityBuilder {
      *
      * @protected
      * @param {AssetActivity} activity
-     * @returns {IActivityConfigure<AnnotationActivity>}
+     * @returns {AnnotationConfigure}
      * @memberof AssetBuilder
      */
-    protected getDefaultAnnotation(activity: AssetActivity): IActivityConfigure<AnnotationActivity> {
+    protected getDefaultAnnotation(activity: AssetActivity): AnnotationConfigure {
         return activity.defaultAnnotation;
     }
 

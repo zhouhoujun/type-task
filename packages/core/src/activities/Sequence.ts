@@ -89,7 +89,7 @@ export class SequenceActivityBuilder extends ActivityBuilder {
         return activity;
     }
 
-    async buildChildren(activity: SequenceActivity, configs: (IConfigure | Token<IActivity>)[]) {
+    async buildChildren(activity: SequenceActivity, configs: (SequenceConfigure | Token<IActivity>)[]) {
         let sequence = await Promise.all(configs.map(async cfg => {
             let node = await this.build(cfg, activity.id);
             if (!node) {

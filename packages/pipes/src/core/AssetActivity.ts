@@ -6,7 +6,7 @@ import { ITransform } from './ITransform';
 import { WatchActivity } from './WatchActivity';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { UglifyActivity } from './UglifyActivity';
-import { AnnotationActivity } from './Annotation';
+import { AnnotationActivity, AnnotationConfigure } from './Annotation';
 import { PipeActivity } from './PipeActivity';
 import { IActivityConfigure, IActivity } from '@taskfr/core';
 import { IAssetActivity } from './AssetConfigure';
@@ -81,10 +81,10 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
     /**
      * default annottion.
      *
-     * @type {IActivityConfigure<AnnotationActivity>}
+     * @type {AnnotationConfigure}
      * @memberof AssetActivity
      */
-    defaultAnnotation?: IActivityConfigure<AnnotationActivity>;
+    defaultAnnotation?: AnnotationConfigure;
 
     /**
      * before pipe

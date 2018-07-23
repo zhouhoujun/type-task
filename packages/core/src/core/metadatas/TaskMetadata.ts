@@ -9,5 +9,5 @@ import { IConfigure } from '../IConfigure';
  * @extends {ClassMetadata}
  */
 export interface TaskMetadata extends ClassMetadata, IConfigure {
-
+    decorType?: string;
 }

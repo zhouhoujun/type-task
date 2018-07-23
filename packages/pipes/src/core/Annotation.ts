@@ -18,6 +18,12 @@ export const AnnotationAcitvityToken = new InjectPipeActivityToken<AnnotationAct
 export const AnnotationAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<AnnotationActivityBuilder>('Annotation')
 
 export interface AnnotationConfigure extends IPipeConfigure {
+    /**
+     * annotation framework.
+     *
+     * @type {TransformType}
+     * @memberof AnnotationConfigure
+     */
     annotationFramework: TransformType
 }
 

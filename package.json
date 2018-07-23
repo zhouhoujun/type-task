@@ -1,6 +1,6 @@
 {
     "name": "taskfr-srcs",
-    "version": "1.0.2",
+    "version": "1.1.0-beta1",
     "description": "taskfr is task framework via AOP, IOC.",
     "main": "./lib/index.js",
     "typings": "./lib/index.d.ts",
@@ -8,16 +8,7 @@
         "reinstall": "npm cache clean && npm install",
         "test": "ts-node -r tsconfig-paths/register taskfile.ts"
     },
-    "keywords": [
-        "task",
-        "task manager",
-        "pipe",
-        "ioc",
-        "aop",
-        "shell",
-        "develop",
-        "tool"
-    ],
+    "keywords": ["task", "task manager", "pipe", "ioc", "aop", "shell", "develop", "tool"],
     "author": "houjun",
     "license": "MIT",
     "bugs": {
@@ -30,13 +21,13 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "@ts-ioc/annotations": "^3.0.0-beta",
-        "@ts-ioc/aop": "^3.0.0-beta",
-        "@ts-ioc/core": "^3.0.0-beta",
-        "@ts-ioc/logs": "^3.0.0-beta",
-        "@ts-ioc/bootstrap": "^3.0.0-beta",
-        "@ts-ioc/platform-browser": "^3.0.0-beta",
-        "@ts-ioc/platform-server": "^3.0.0-beta",
+        "@ts-ioc/annotations": "^3.0.0-beta1",
+        "@ts-ioc/aop": "^3.0.0-beta1",
+        "@ts-ioc/core": "^3.0.0-beta1",
+        "@ts-ioc/logs": "^3.0.0-beta1",
+        "@ts-ioc/bootstrap": "^3.0.0-beta1",
+        "@ts-ioc/platform-browser": "^3.0.0-beta1",
+        "@ts-ioc/platform-server": "^3.0.0-beta1",
         "@types/chai": "^3.4.34",
         "@types/chalk": "^2.2.0",
         "@types/execa": "^0.9.0",

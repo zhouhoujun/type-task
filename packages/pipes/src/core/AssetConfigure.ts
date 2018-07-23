@@ -1,4 +1,4 @@
-import { Src, ExpressionToken, IActivityBuilder, IActivityConfigure, ConfigureType } from '@taskfr/core';
+import { Src, ExpressionToken, IActivityBuilder, ConfigureType } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { DestConfigure, DestActivity } from './DestActivity';
 import { IPipeConfigure } from './IPipeConfigure';
@@ -143,10 +143,10 @@ export interface IAssetActivity extends IPipeActivity {
     /**
      * default annottion.
      *
-     * @type {IActivityConfigure<AnnotationActivity>}
+     * @type {AnnotationConfigure}
      * @memberof AssetActivity
      */
-    defaultAnnotation?: IActivityConfigure<AnnotationActivity>;
+    defaultAnnotation?: AnnotationConfigure;
 }
 
 /**

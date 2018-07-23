@@ -18,7 +18,6 @@ export class CoreModule {
         let container = this.container;
         let lifeScope = container.getLifeScope();
         lifeScope.registerDecorator(Runner, CoreActions.bindProvider, CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
-        // lifeScope.addAction(new InitTaskAction(), IocState.runtime, LifeState.afterConstructor);
         lifeScope.registerDecorator(Task, CoreActions.bindProvider, CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
 
         container.register(ActivityBuilder);

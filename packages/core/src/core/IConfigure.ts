@@ -1,7 +1,6 @@
 import { IActivity, GActivity } from './IActivity';
 import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
-import { IActivityBuilder } from './IActivityBuilder';
-import { AppConfiguration, ModuleConfiguration } from '@ts-ioc/bootstrap';
+import { ModuleConfiguration } from '@ts-ioc/bootstrap';
 
 /**
  * ActivityResult type
@@ -73,12 +72,12 @@ export interface IActivityConfigure<T> extends ModuleConfiguration<T> {
     name?: string;
 
     /**
-     * root dir.
+     * run baseURL.
      *
      * @type {string}
      * @memberof ITaskConfigure
      */
-    rootdir?: string;
+    baseURL?: string;
 
     /**
      * task module.
@@ -87,14 +86,6 @@ export interface IActivityConfigure<T> extends ModuleConfiguration<T> {
      * @memberof ITaskConfigure
      */
     task?: Token<T>;
-
-    // /**
-    //  * the task builder.
-    //  *
-    //  * @type {(Token<IActivityBuilder> | IActivityBuilder)}
-    //  * @memberof ITaskConfigure
-    //  */
-    // builder?: Token<IActivityBuilder> | IActivityBuilder;
 
 }
 
