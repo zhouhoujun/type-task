@@ -1,6 +1,7 @@
 import { IActivity, GActivity } from './IActivity';
-import { Token, AppConfiguration, isToken, isMetadataObject, isString } from '@ts-ioc/core';
+import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
 import { IActivityBuilder } from './IActivityBuilder';
+import { AppConfiguration, ModuleConfiguration } from '@ts-ioc/bootstrap';
 
 /**
  * ActivityResult type
@@ -11,7 +12,9 @@ export type ActivityResultType<T> = Token<GActivity<T>> | IActivityConfigure<GAc
  * activity type.
  */
 export type ActivityType<T extends IActivity> = Token<T> | IActivityConfigure<IActivity>;
-
+/**
+ * activity configure type.
+ */
 export type ConfigureType<T extends IActivity, TF extends IConfigure> = Token<T> | TF;
 
 /**
@@ -51,7 +54,7 @@ export function isActivityType(target: any, check = true): target is ActivityRes
  * @export
  * @interface ITaskConfigure
  */
-export interface IActivityConfigure<T> extends AppConfiguration<T> {
+export interface IActivityConfigure<T> extends ModuleConfiguration<T> {
 
     /**
      * workflow uuid.
@@ -85,13 +88,13 @@ export interface IActivityConfigure<T> extends AppConfiguration<T> {
      */
     task?: Token<T>;
 
-    /**
-     * the task builder.
-     *
-     * @type {(Token<IActivityBuilder> | IActivityBuilder)}
-     * @memberof ITaskConfigure
-     */
-    builder?: Token<IActivityBuilder> | IActivityBuilder;
+    // /**
+    //  * the task builder.
+    //  *
+    //  * @type {(Token<IActivityBuilder> | IActivityBuilder)}
+    //  * @memberof ITaskConfigure
+    //  */
+    // builder?: Token<IActivityBuilder> | IActivityBuilder;
 
 }
 

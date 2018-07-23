@@ -1,6 +1,6 @@
 import { IActivity, ITaskRunner, ActivityType } from './core';
-import { Type, InjectToken, IApplicationBuilder } from '@ts-ioc/core';
-
+import { Type, InjectToken } from '@ts-ioc/core';
+import { IApplicationBuilder } from '@ts-ioc/bootstrap';
 
 /**
  * TaskContainer token.

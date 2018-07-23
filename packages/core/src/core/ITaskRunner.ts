@@ -4,6 +4,7 @@ import { GActivity } from './IActivity';
 import { IActivityBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
+import { IApplication } from '@ts-ioc/bootstrap';
 
 
 /**
@@ -60,7 +61,7 @@ export enum RunState {
  * @export
  * @interface ITaskRunner
  */
-export interface ITaskRunner<T> {
+export interface ITaskRunner<T> extends IApplication {
 
     /**
      * runner task

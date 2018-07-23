@@ -1,7 +1,7 @@
 import {
     isFunction, IContainer, Inject, ContainerToken, Singleton,
     Type, hasOwnClassMetadata, Token, isToken, ObjectMap,
-    isPromise, isUndefined, isClass
+    isPromise, isClass
 } from '@ts-ioc/core';
 import { IContext, ContextToken, CtxType, Expression } from './IContext';
 import { ITaskContainer, TaskContainerToken } from '../ITaskContainer';

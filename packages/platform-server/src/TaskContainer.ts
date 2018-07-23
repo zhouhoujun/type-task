@@ -30,7 +30,7 @@ export class TaskContainer extends DefaultTaskContainer {
     static create(root: string, ...modules: LoadType[]): ITaskContainer {
         let taskContainer = new TaskContainer(root);
         if (modules) {
-            taskContainer.useModules(...modules);
+            taskContainer.use(...modules);
         }
         return taskContainer;
     }

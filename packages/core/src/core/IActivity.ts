@@ -1,6 +1,7 @@
 import { Registration } from '@ts-ioc/core';
 import { IContext } from './IContext';
 import { IConfigure } from './IConfigure';
+import { IApplication } from '@ts-ioc/bootstrap';
 
 
 /**
@@ -28,7 +29,7 @@ export const ActivityToken = new InjectAcitityToken<IActivity>('');
  * @export
  * @interface IActivity
  */
-export interface IActivity {
+export interface IActivity extends IApplication {
     /**
      * workflow instance uuid.
      *

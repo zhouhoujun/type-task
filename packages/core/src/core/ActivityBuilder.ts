@@ -1,15 +1,16 @@
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import {
     Type, isFunction, Inject, IContainer, Singleton, isString,
-    ContainerToken, Token, ModuleBuilder, Registration, isClass,
+    ContainerToken, Token, Registration, isClass,
     getTypeMetadata, lang, Express, isToken, getClassName
 } from '@ts-ioc/core';
-import { IConfigure, ActivityResultType, isActivityType, ActivityType } from './IConfigure';
+import { IConfigure, isActivityType, ActivityType } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Task } from './decorators';
 import { TaskMetadata } from './metadatas';
 import { ExpressionType, Expression } from './IContext';
 import { Activity } from './Activity';
+import { ModuleBuilder } from '@ts-ioc/bootstrap';
 
 /**
  * builder.
@@ -20,31 +21,27 @@ import { Activity } from './Activity';
  */
 @Singleton(ActivityBuilderToken)
 export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivityBuilder {
-    @Inject(ContainerToken) container: IContainer;
 
     constructor() {
         super()
     }
 
-    async build(task: ActivityType<IActivity>, uuid: string): Promise<IActivity> {
-        let taskInst = await super.build(task);
-        let config = this.getConfigure(task) as IConfigure;
-        let ctxbuider = this.getBuilder(config);
-        if (!taskInst || !(taskInst instanceof Activity)) {
-            config.task = ctxbuider.getDefaultAcitvity();
+    build(task: ActivityType<IActivity>, uuid: string): Promise<IActivity> {
+        return super.build(task, uuid);
+    }
+
+    async createInstance(token: Token<IActivity>, config: IConfigure, uuid: string): Promise<IActivity> {
+        let instance = await super.createInstance(token, config);
+        if (!instance || !(instance instanceof Activity)) {
+            config.task = this.getDefaultAcitvity();
             console.log('try load default activity:', getClassName(config.task));
-            taskInst = await ctxbuider.build(config, uuid);
+            instance = await this.build(config, uuid);
         }
-
-        taskInst.id = uuid;
-
-        if (isFunction(taskInst['onTaskInit'])) {
-            taskInst['onTaskInit'](config);
+        instance.id = uuid;
+        if (isFunction(instance['onTaskInit'])) {
+            instance['onTaskInit'](config);
         }
-
-        await ctxbuider.buildStrategy(taskInst, config);
-
-        return taskInst;
+        return instance;
     }
 
     async buildStrategy(activity: IActivity, config: IConfigure): Promise<IActivity> {
@@ -55,30 +52,13 @@ export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivi
         return activity;
     }
 
-    getConfigure(token?: Token<any> | IConfigure, moduleDecorator?: Function | string): IConfigure {
-        return super.getConfigure(token, moduleDecorator || Task);
+    getDecorator() {
+        return Task.toString();
     }
 
-    getBuilder(cfg: IConfigure): IActivityBuilder {
-        let builder: IActivityBuilder;
-        if (cfg.builder) {
-            builder = this.getBuilderViaConfig(cfg.builder);
-        } else {
-            let token = this.getBootstrapToken(cfg);
-            if (token) {
-                builder = this.getBuilderViaTask(token);
-            }
-        }
-        return builder || this;
-    }
 
     getDefaultAcitvity(): Type<IActivity> {
         return Activity;
-    }
-
-
-    protected getMetaConfig(token: Type<any>, moduleDecorator: Function | string): IConfigure {
-        return lang.omit(super.getMetaConfig(token, moduleDecorator || Task), 'builder');
     }
 
 
@@ -124,27 +104,6 @@ export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivi
         return result;
     }
 
-    protected getBuilderViaConfig(builder: Token<IActivityBuilder> | IActivityBuilder): IActivityBuilder {
-        if (isToken(builder)) {
-            return this.container.resolve(builder);
-        } else if (builder instanceof ActivityBuilder) {
-            return builder;
-        }
-        return null;
-    }
-
-    protected getBuilderViaTask(task: Token<IActivity>): IActivityBuilder {
-        if (isToken(task)) {
-            let taskType = isClass(task) ? task : this.container.getTokenImpl(task);
-            if (taskType) {
-                let meta = lang.first(getTypeMetadata<TaskMetadata>(Task, taskType));
-                if (meta && meta.builder) {
-                    return isToken(meta.builder) ? this.container.resolve(meta.builder) : meta.builder;
-                }
-            }
-        }
-        return null;
-    }
 
     protected getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
         let bootstrapToken = cfg.task || cfg.bootstrap || token;

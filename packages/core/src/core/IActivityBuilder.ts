@@ -1,6 +1,7 @@
-import { InjectToken, IModuleBuilder, Registration, Type } from '@ts-ioc/core';
+import { InjectToken, Registration, Type, Token } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
 import { IConfigure, ActivityType } from './IConfigure';
+import { IModuleBuilder } from '@ts-ioc/bootstrap';
 
 
 /**
@@ -39,6 +40,18 @@ export interface IActivityBuilder extends IModuleBuilder<IActivity> {
      * @memberof IActivityBuilder
      */
     build(task: ActivityType<IActivity>, uuid: string): Promise<IActivity>;
+
+    /**
+     * create activity instance via token and config.
+     *
+     * @param {Token<IActivity>} token
+     * @param {IConfigure} config
+     * @param {string} uuid
+     * @returns {Promise<IActivity>}
+     * @memberof IActivityBuilder
+     */
+    createInstance(token: Token<IActivity>, config: IConfigure, uuid: string): Promise<IActivity>;
+
     /**
      * bundle task config.
      * @param {IActivity} activity
@@ -47,15 +60,6 @@ export interface IActivityBuilder extends IModuleBuilder<IActivity> {
      * @memberof ITaskBuilder
      */
     buildStrategy(activity: IActivity, config: IConfigure): Promise<IActivity>;
-
-    /**
-     * get builder.
-     *
-     * @param {IConfigure} cfg
-     * @returns {IActivityBuilder}
-     * @memberof IActivityBuilder
-     */
-    getBuilder(cfg: IConfigure, isToken: boolean): IActivityBuilder;
 
     /**
      * get default activity of builder.
