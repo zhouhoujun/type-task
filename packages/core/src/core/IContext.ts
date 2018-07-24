@@ -1,5 +1,5 @@
-import { IConfigure, ActivityResultType } from './IConfigure';
-import { IActivity, GActivity } from './IActivity';
+import { IConfigure, ActivityResultType, Expression } from './IConfigure';
+import { IActivity } from './IActivity';
 import { ITaskRunner } from './ITaskRunner';
 import { IActivityBuilder } from './IActivityBuilder';
 import { IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
@@ -11,43 +11,7 @@ import { ITaskContainer } from '../ITaskContainer';
  * context type.
  */
 export type CtxType<T> = T | ((context?: IContext, config?: IConfigure) => T);
-/**
- * async result.
- */
-export type AsyncResult<T> = (activity?: GActivity<T>, data?: any) => Promise<T>;
-/**
- * activity result.
- */
-export type ActivityResult<T> = Promise<T> | AsyncResult<T> | GActivity<T> | ITaskRunner<T>;
-/**
- * expression.
- */
-export type Expression<T> = T | ActivityResult<T>;
-/**
- * condition expression.
- */
-export type Condition = Expression<boolean>;
-/**
- *  expression token.
- */
-export type ExpressionToken<T> = Expression<T> | Token<GActivity<T>>;
-/**
- * expression type.
- */
-export type ExpressionType<T> = Expression<T> | ActivityResultType<T>;
 
-/**
- * key value pair.
- *
- * @export
- * @interface KeyValue
- * @template TKey
- * @template TVal
- */
-export interface KeyValue<TKey, TVal> {
-  key: TKey;
-  value: TVal;
-}
 
 /**
  * Inject Acitity context Token

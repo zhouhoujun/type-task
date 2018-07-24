@@ -1,4 +1,8 @@
-import { Task, IActivity, IConfigure, InjectAcitityToken, InjectAcitityBuilderToken, ActivityBuilder, Activity, ActivityResultType } from '../core';
+import {
+    Task, IActivity, InjectAcitityToken,
+    InjectAcitityBuilderToken, ActivityBuilder, Activity,
+    SequenceConfigure
+} from '../core';
 import { Singleton, Token, isToken } from '@ts-ioc/core';
 
 
@@ -11,17 +15,6 @@ export const SequenceActivityToken = new InjectAcitityToken<SequenceActivity>('s
  * sequence activity builder token
  */
 export const SequenceActivityBuilderToken = new InjectAcitityBuilderToken<SequenceActivityBuilder>('sequence');
-
-
-export interface SequenceConfigure extends IConfigure {
-    /**
-     * sequence activities.
-     *
-     * @type {ActivityResultType<any>[]}
-     * @memberof IConfigure
-     */
-    sequence?: ActivityResultType<any>[];
-}
 
 /**
  * sequence activity.

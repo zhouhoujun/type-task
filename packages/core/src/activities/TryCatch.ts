@@ -1,4 +1,7 @@
-import { IActivity, Task, InjectAcitityToken, Condition, InjectAcitityBuilderToken, IConfigure, ActivityResultType, ActivityBuilder } from '../core';
+import {
+    IActivity, Task, InjectAcitityToken, Condition,
+    InjectAcitityBuilderToken, ActivityBuilder, TryCatchConfigure
+} from '../core';
 import { Activity } from '../core/Activity';
 import { Singleton } from '@ts-ioc/core';
 
@@ -11,38 +14,6 @@ export const TryCatchActivityToken = new InjectAcitityToken<TryCatchActivity>('t
  */
 export const TryCatchActivityBuilderToken = new InjectAcitityBuilderToken<TryCatchActivityBuilder>('delay');
 
-/**
- * TryCatch activity configure.
- *
- * @export
- * @interface TryCatchConfigure
- * @extends {IConfigure}
- */
-export interface TryCatchConfigure extends IConfigure {
-    /**
-     * try activity.
-     *
-     * @type {CtxType<number>}
-     * @memberof TryCatchConfigure
-     */
-    try: ActivityResultType<any>;
-
-    /**
-     * catchs activities.
-     *
-     * @type {ActivityResultType<any>[]}
-     * @memberof TryCatchConfigure
-     */
-    catchs: ActivityResultType<any>[];
-
-    /**
-     * finally activity.
-     *
-     * @type {ActivityResultType<any>}
-     * @memberof TryCatchConfigure
-     */
-    finally?: ActivityResultType<any>;
-}
 /**
  * while control activity.
  *

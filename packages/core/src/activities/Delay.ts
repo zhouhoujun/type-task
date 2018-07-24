@@ -1,6 +1,6 @@
 import {
     IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
-    ActivityBuilder, IConfigure, Activity, Expression, ExpressionType
+    ActivityBuilder, Activity, Expression, DelayConfigure
 } from '../core';
 import { Defer, Singleton } from '@ts-ioc/core';
 
@@ -14,22 +14,6 @@ export const DelayActivityToken = new InjectAcitityToken<DelayActivity>('delay')
  */
 export const DelayActivityBuilderToken = new InjectAcitityBuilderToken<DelayActivityBuilder>('delay');
 
-/**
- * delay activity configure.
- *
- * @export
- * @interface DelayConfigure
- * @extends {IConfigure}
- */
-export interface DelayConfigure extends IConfigure {
-    /**
-     * delay ms.
-     *
-     * @type {ExpressionType<number>}
-     * @memberof DelayConfigure
-     */
-    delay?: ExpressionType<number>;
-}
 
 /**
  * while control activity.

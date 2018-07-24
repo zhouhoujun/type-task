@@ -1,4 +1,7 @@
-import { IActivity, Task, InjectAcitityToken, Activity, Condition, ActivityBuilder, ActivityResultType, IConfigure, InjectAcitityBuilderToken, ExpressionType } from '../core';
+import {
+    IActivity, Task, InjectAcitityToken, Activity,
+    Condition, ActivityBuilder, InjectAcitityBuilderToken, IfConfigure
+} from '../core';
 import { Singleton } from '@ts-ioc/core';
 
 /**
@@ -9,41 +12,6 @@ export const IfActivityToken = new InjectAcitityToken<IfActivity>('if');
  * If activity builder token
  */
 export const IfActivityBuilderToken = new InjectAcitityBuilderToken<IfActivityBuilder>('if');
-
-/**
- * If activity configure.
- *
- * @export
- * @interface IfConfigure
- * @extends {IConfigure}
- */
-export interface IfConfigure extends IConfigure {
-
-    /**
-     * while condition
-     *
-     * @type {ExpressionType<boolean>}
-     * @memberof IfConfigure
-     */
-    if: ExpressionType<boolean>;
-
-    /**
-     * if body
-     *
-     * @type {ActivityResultType<any>}
-     * @memberof IfConfigure
-     */
-    ifBody: ActivityResultType<any>;
-
-    /**
-     * else body
-     *
-     * @type {ActivityResultType<any>}
-     * @memberof IfConfigure
-     */
-    elseBody?: ActivityResultType<any>;
-
-}
 
 /**
  * if control activity.

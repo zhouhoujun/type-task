@@ -1,14 +1,11 @@
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import {
-    Type, isFunction, Inject, IContainer, Singleton, isString,
-    ContainerToken, Token, Registration, isClass,
-    getTypeMetadata, lang, Express, isToken, getClassName
+    Type, isFunction, Singleton, isString,
+    Token, Registration, Express, isToken, getClassName
 } from '@ts-ioc/core';
-import { IConfigure, isActivityType, ActivityType } from './IConfigure';
+import { IConfigure, isActivityType, ActivityType, ExpressionType, Expression } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Task } from './decorators';
-import { TaskMetadata } from './metadatas';
-import { ExpressionType, Expression } from './IContext';
 import { Activity } from './Activity';
 import { ModuleBuilder } from '@ts-ioc/bootstrap';
 

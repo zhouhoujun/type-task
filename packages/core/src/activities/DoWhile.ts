@@ -1,4 +1,7 @@
-import { IActivity, Task, InjectAcitityToken, Condition, Activity, InjectAcitityBuilderToken, ActivityBuilder, IConfigure, ActivityResultType, ExpressionType } from '../core';
+import {
+    IActivity, Task, InjectAcitityToken, Condition,
+    Activity, InjectAcitityBuilderToken, ActivityBuilder, DoWhileConfigure
+} from '../core';
 import { Singleton } from '@ts-ioc/core';
 
 /**
@@ -10,31 +13,6 @@ export const DoWhileActivityToken = new InjectAcitityToken<DoWhileActivity>('dow
  * DoWhile activity builder token
  */
 export const DoWhileActivityBuilderToken = new InjectAcitityBuilderToken<DoWhileActivityBuilder>('delay');
-
-/**
- * DoWhile activity configure.
- *
- * @export
- * @interface DoWhileConfigure
- * @extends {IConfigure}
- */
-export interface DoWhileConfigure extends IConfigure {
-    /**
-     * do while
-     *
-     * @type {ActivityResultType<any>}
-     * @memberof DoWhileConfigure
-     */
-    do: ActivityResultType<any>;
-
-    /**
-     * while condition
-     *
-     * @type {ExpressionType<boolean>}
-     * @memberof DoWhileConfigure
-     */
-    while: ExpressionType<boolean>;
-}
 
 /**
  * do while control activity.

@@ -1,4 +1,7 @@
-import { Task, IActivity, IConfigure, InjectAcitityToken, InjectAcitityBuilderToken, ActivityBuilder, Activity, ActivityResultType } from '../core';
+import {
+    Task, IActivity, InjectAcitityToken, InjectAcitityBuilderToken,
+    ActivityBuilder, Activity, ParallelConfigure
+} from '../core';
 import { Singleton, Token, isToken } from '@ts-ioc/core';
 
 
@@ -11,26 +14,6 @@ export const ParallelActivityToken = new InjectAcitityToken<ParallelActivity>('p
  * Parallel activity builder token.
  */
 export const ParallelActivityBuilderToken = new InjectAcitityBuilderToken<ParallelActivityBuilder>('parallel');
-
-
-
-/**
- * Parallel activity configure.
- *
- * @export
- * @interface ParallelConfigure
- * @extends {IConfigure}
- */
-export interface ParallelConfigure extends IConfigure {
-    /**
-     * parallel activities.
-     *
-     * @type {CtxType<number>}
-     * @memberof ParallelConfigure
-     */
-    parallel?: ActivityResultType<any>[];
-}
-
 
 /**
  * parallel activity.

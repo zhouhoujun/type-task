@@ -1,4 +1,7 @@
-import { Task, InjectAcitityToken, Activity, Expression, IConfigure, ActivityResultType, ActivityBuilder, IActivity, InjectAcitityBuilderToken } from '../core';
+import {
+    Task, InjectAcitityToken, Activity, Expression,
+    ActivityBuilder, IActivity, InjectAcitityBuilderToken, ThrowConfigure
+} from '../core';
 import { Singleton } from '@ts-ioc/core';
 
 /**
@@ -10,22 +13,6 @@ export const ThrowActivityToken = new InjectAcitityToken<ThrowActivity>('throw')
  */
 export const ThrowActivityBuilderToken = new InjectAcitityBuilderToken<ThrowActivityBuilder>('delay');
 
-/**
- * Throw activity configure.
- *
- * @export
- * @interface ThrowConfigure
- * @extends {IConfigure}
- */
-export interface ThrowConfigure extends IConfigure {
-    /**
-     * delay ms.
-     *
-     * @type {CtxType<number>}
-     * @memberof ThrowConfigure
-     */
-    exception?: Expression<Error> | ActivityResultType<Error>;
-}
 /**
  * throw control activity.
  *

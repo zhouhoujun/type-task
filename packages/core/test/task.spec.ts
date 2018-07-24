@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { ITaskContainer, DefaultTaskContainer, TaskRunner, SequenceActivity } from 'src';
+import { ITaskContainer, DefaultTaskContainer, TaskRunner, SequenceActivity, SequenceConfigure } from 'src';
 
 import { SimpleTask, SimpleCTask, TaskModuleTest } from './simples.task';
 
@@ -35,7 +35,7 @@ describe('auto register with build', () => {
     });
 
     it('should bootstrap with IConfigure.', async () => {
-        let result = await container.bootstrap({
+        let result = await container.bootstrap(<SequenceConfigure>{
             name: 'test1',
             task: SequenceActivity,
             sequence: [

@@ -1,11 +1,10 @@
 import { IContainer, Type, hasClassMetadata, lang } from '@ts-ioc/core';
-import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, ActivityBuilderToken, IActivityBuilder, ActivityResultType, ActivityType } from './core';
+import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, ActivityBuilderToken, IActivityBuilder, SequenceConfigure, ActivityResultType, ActivityType } from './core';
 import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
 import { AopModule, Aspect } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
 import * as activites from './activities';
-import { SequenceConfigure } from './activities';
 import { ApplicationBuilder } from '@ts-ioc/bootstrap';
 
 

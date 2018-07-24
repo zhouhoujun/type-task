@@ -27,7 +27,7 @@ export class SimpleCTask extends SequenceActivity {
 }
 
 
-@Task(<SequenceConfigure>{
+@Task({
     name: 'test-module',
     task: SequenceActivity,
     sequence: [

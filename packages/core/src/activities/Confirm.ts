@@ -1,6 +1,6 @@
 import {
     IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
-    ActivityBuilder, IConfigure, Activity, Expression, ExpressionType
+    ActivityBuilder, Activity, Expression, ConfirmConfigure
 } from '../core';
 import { Defer, Singleton } from '@ts-ioc/core';
 
@@ -13,23 +13,6 @@ export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity>('Con
  * Confirm activity builder token
  */
 export const ConfirmActivityBuilderToken = new InjectAcitityBuilderToken<ConfirmActivityBuilder>('Confirm');
-
-/**
- * Confirm activity configure.
- *
- * @export
- * @interface ConfirmConfigure
- * @extends {IConfigure}
- */
-export interface ConfirmConfigure extends IConfigure {
-    /**
-     * confirm expression.
-     *
-     * @type {ExpressionType<boolean>}
-     * @memberof ConfirmConfigure
-     */
-    confirm?: ExpressionType<boolean>;
-}
 
 /**
  * while control activity.

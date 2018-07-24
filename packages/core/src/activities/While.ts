@@ -1,6 +1,6 @@
 import {
-    IActivity, Activity, Task, InjectAcitityToken, Condition, IConfigure,
-    ActivityResultType, ActivityBuilder, InjectAcitityBuilderToken, ExpressionType
+    IActivity, Activity, Task, InjectAcitityToken, Condition,
+    ActivityBuilder, InjectAcitityBuilderToken, WhileConfigure
 } from '../core';
 import { Singleton } from '@ts-ioc/core';
 
@@ -13,32 +13,6 @@ export const WhileActivityToken = new InjectAcitityToken<WhileActivity>('while')
  * While activity builder token
  */
 export const WhileActivityBuilderToken = new InjectAcitityBuilderToken<WhileActivityBuilder>('while');
-
-/**
- * While activity configure.
- *
- * @export
- * @interface WhileConfigure
- * @extends {IConfigure}
- */
-export interface WhileConfigure extends IConfigure {
-
-    /**
-     * while condition
-     *
-     * @type {(ExpressionType<boolean>)}
-     * @memberof WhileConfigure
-     */
-    while: ExpressionType<boolean>;
-
-    /**
-     * while body.
-     *
-     * @type {ActivityResultType<any>}
-     * @memberof WhileConfigure
-     */
-    body: ActivityResultType<any>;
-}
 
 /**
  * while control activity.

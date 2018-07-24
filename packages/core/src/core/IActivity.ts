@@ -93,3 +93,4 @@ export interface GActivity<T> extends IActivity {
     run(data?: any, target?: IActivity): Promise<T>;
 
 }
+

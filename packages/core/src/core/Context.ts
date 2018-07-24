@@ -3,9 +3,9 @@ import {
     Type, hasOwnClassMetadata, Token, isToken, ObjectMap,
     isPromise, isClass
 } from '@ts-ioc/core';
-import { IContext, ContextToken, CtxType, Expression } from './IContext';
+import { IContext, ContextToken, CtxType } from './IContext';
 import { ITaskContainer, TaskContainerToken } from '../ITaskContainer';
-import { IConfigure, ActivityResultType } from './IConfigure';
+import { IConfigure, ActivityResultType, Expression } from './IConfigure';
 import { IActivity } from './IActivity';
 import { Task } from './decorators';
 import { IActivityBuilder } from './IActivityBuilder';

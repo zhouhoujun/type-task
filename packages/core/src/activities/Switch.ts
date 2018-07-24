@@ -1,4 +1,8 @@
-import { IActivity, Task, InjectAcitityToken, IConfigure, Activity, InjectAcitityBuilderToken, ActivityBuilder, ActivityResultType, Expression, KeyValue, ExpressionType } from '../core';
+import {
+    IActivity, Task, InjectAcitityToken,
+    Activity, InjectAcitityBuilderToken,
+    ActivityBuilder, Expression, SwitchConfigure
+} from '../core';
 import { MapSet, isUndefined, Singleton } from '@ts-ioc/core';
 
 /**
@@ -10,40 +14,7 @@ export const SwitchActivityToken = new InjectAcitityToken<SwitchActivity>('switc
  */
 export const SwitchActivityBuilderToken = new InjectAcitityBuilderToken<SwitchActivityBuilder>('switch');
 
-/**
- * Switch activity configure.
- *
- * @export
- * @interface SwitchConfigure
- * @extends {IConfigure}
- */
-export interface SwitchConfigure extends IConfigure {
 
-    /**
-     * while condition
-     *
-     * @type {ExpressionType<any>}
-     * @memberof SwitchConfigure
-     */
-    expression: ExpressionType<any>;
-
-    /**
-     * if body
-     *
-     * @type {KeyValue<any, ActivityResultType<any>>[]}
-     * @memberof SwitchConfigure
-     */
-    cases: KeyValue<any, ActivityResultType<any>>[];
-
-    /**
-     * default body
-     *
-     * @type {ActivityResultType<any>}
-     * @memberof SwitchConfigure
-     */
-    defaultBody?: ActivityResultType<any>;
-
-}
 /**
  * Switch control activity.
  *

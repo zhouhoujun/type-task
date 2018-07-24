@@ -1,8 +1,8 @@
 import {
     IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
-    ActivityBuilder, IConfigure, Activity, Expression, ExpressionType, ActivityResultType
+    ActivityBuilder, Activity, Expression, IntervalConfigure
 } from '../core';
-import { Defer, Singleton } from '@ts-ioc/core';
+import { Singleton } from '@ts-ioc/core';
 
 
 /**
@@ -14,31 +14,6 @@ export const IntervalActivityToken = new InjectAcitityToken<IntervalActivity>('i
  * Interval activity builder token
  */
 export const IntervalActivityBuilderToken = new InjectAcitityBuilderToken<IntervalActivityBuilder>('interval');
-
-/**
- * Interval activity configure.
- *
- * @export
- * @interface IntervalConfigure
- * @extends {IConfigure}
- */
-export interface IntervalConfigure extends IConfigure {
-    /**
-     * Interval ms.
-     *
-     * @type {ExpressionType<number>}
-     * @memberof IntervalConfigure
-     */
-    interval: ExpressionType<number>;
-
-    /**
-     * while body.
-     *
-     * @type {ActivityResultType<any>}
-     * @memberof WhileConfigure
-     */
-    body?: ActivityResultType<any>
-}
 
 /**
  * while control activity.

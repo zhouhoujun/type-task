@@ -1,7 +1,7 @@
 import { DefaultTaskContainer, ITaskContainer } from '@taskfr/core';
 import { LoadType } from '@ts-ioc/core';
 import { TaskLogAspect, RunnerLogAspect } from './aop';
-
+import { ContainerBuilder } from '@ts-ioc/platform-server';
 
 /**
  * task container in server.
@@ -16,6 +16,10 @@ export class TaskContainer extends DefaultTaskContainer {
         super(rootPath);
         this.useLog(TaskLogAspect);
         this.useLog(RunnerLogAspect);
+    }
+
+    protected createContainerBuilder() {
+        return new ContainerBuilder();
     }
 
     /**
