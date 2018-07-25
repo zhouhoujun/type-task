@@ -36,7 +36,7 @@ describe('auto register with build', () => {
     });
 
     it('should bootstrap with IConfigure.', async () => {
-        let result = await container.bootstrap(<SequenceConfigure>{
+        let result = await container.bootstrap({
             name: 'test1',
             task: SequenceActivity,
             sequence: [

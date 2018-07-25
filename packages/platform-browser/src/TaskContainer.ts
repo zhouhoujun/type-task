@@ -1,5 +1,5 @@
-import { CoreModule, IActivity, ITaskContainer, ActivityType, IActivityRunner, SequenceConfigure, SequenceActivity } from '@taskfr/core';
-import { LoadType, lang } from '@ts-ioc/core';
+import { CoreModule, IActivity, ITaskContainer, ActivityType, IActivityRunner, SequenceConfigure, SequenceActivity, IConfigure } from '@taskfr/core';
+import { LoadType, lang, Token, Type, isString } from '@ts-ioc/core';
 import { TaskLogAspect, RunnerLogAspect } from './aop/index';
 import { BroserApplicationBuilder } from '@ts-ioc/platform-browser/bootstrap';
 import { AopModule } from '@ts-ioc/aop';
@@ -49,7 +49,8 @@ export class TaskContainer extends BroserApplicationBuilder<IActivity>  implemen
      * @memberof ITaskContainer
      */
     async createWorkflow(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>> {
-        let runner = await this.build(...tasks) as IActivityRunner<any>;
+        let task = (tasks.length > 1) ? <SequenceConfigure>{ sequence: tasks, task: SequenceActivity } : lang.first(tasks);
+        let runner = await this.build(task) as IActivityRunner<any>;
         return runner;
     }
 
@@ -67,11 +68,7 @@ export class TaskContainer extends BroserApplicationBuilder<IActivity>  implemen
         return runner;
     }
 
-
-    async build(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>> {
-        let task = (tasks.length > 1) ? <SequenceConfigure>{ sequence: tasks, task: SequenceActivity } : lang.first(tasks);
-        let runner = await super.build(task) as IActivityRunner<any>;
-        return runner;
+    protected getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
+        return cfg.task || cfg.bootstrap || token;
     }
-
 }

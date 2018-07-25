@@ -1,5 +1,5 @@
-import { ActivityType, IActivity, IActivityRunner, SequenceConfigure, ITaskContainer, SequenceActivity, CoreModule } from '@taskfr/core';
-import { LoadType, lang } from '@ts-ioc/core';
+import { ActivityType, IActivity, IActivityRunner, SequenceConfigure, ITaskContainer, SequenceActivity, CoreModule, IConfigure } from '@taskfr/core';
+import { LoadType, lang, Token, Type } from '@ts-ioc/core';
 import { TaskLogAspect, RunnerLogAspect } from './aop';
 import { ServerApplicationBuilder } from '@ts-ioc/platform-server/bootstrap';
 import { AopModule } from '@ts-ioc/aop';
@@ -48,7 +48,8 @@ export class TaskContainer extends ServerApplicationBuilder<IActivity> implement
      * @memberof ITaskContainer
      */
     async createWorkflow(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>> {
-        let runner = await this.build(...tasks) as IActivityRunner<any>;
+        let task = (tasks.length > 1) ? <SequenceConfigure>{ sequence: tasks, task: SequenceActivity } : lang.first(tasks);
+        let runner = await this.build(task) as IActivityRunner<any>;
         return runner;
     }
 
@@ -66,10 +67,14 @@ export class TaskContainer extends ServerApplicationBuilder<IActivity> implement
         return runner;
     }
 
-
-    async build(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>> {
-        let task = (tasks.length > 1) ? <SequenceConfigure>{ sequence: tasks, task: SequenceActivity } : lang.first(tasks);
-        let runner = await super.build(task) as IActivityRunner<any>;
-        return runner;
+    protected getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
+        return cfg.task || cfg.bootstrap || token;
     }
+
+
+    // async build(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>> {
+    //     let task = (tasks.length > 1) ? <SequenceConfigure>{ sequence: tasks, task: SequenceActivity } : lang.first(tasks);
+    //     let runner = await super.build(task) as IActivityRunner<any>;
+    //     return runner;
+    // }
 }

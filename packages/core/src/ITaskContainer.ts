@@ -16,14 +16,14 @@ export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskCo
  */
 export interface ITaskContainer extends IApplicationBuilder<IActivity> {
 
-    /**
-     * build activity runner.
-     *
-     * @param {...ActivityType<IActivity>[]} tasks
-     * @returns {Promise<IActivityRunner<any>>}
-     * @memberof ITaskContainer
-     */
-    build(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>>;
+    // /**
+    //  * build activity runner.
+    //  *
+    //  * @param {...ActivityType<IActivity>[]} tasks
+    //  * @returns {Promise<IActivityRunner<any>>}
+    //  * @memberof ITaskContainer
+    //  */
+    // build(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>>;
 
     /**
      * create workflow
