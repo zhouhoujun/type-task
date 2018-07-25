@@ -1,7 +1,7 @@
 import { IActivity, GActivity } from './IActivity';
 import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
 import { ModuleConfiguration } from '@ts-ioc/bootstrap';
-import { ITaskRunner } from './ITaskRunner';
+import { IActivityRunner } from './ITaskRunner';
 
 
 /**
@@ -25,7 +25,7 @@ export type AsyncResult<T> = (activity?: GActivity<T>, data?: any) => Promise<T>
 /**
  * activity result.
  */
-export type ActivityResult<T> = Promise<T> | AsyncResult<T> | GActivity<T> | ITaskRunner<T>;
+export type ActivityResult<T> = Promise<T> | AsyncResult<T> | GActivity<T> | IActivityRunner<T>;
 
 
 /**

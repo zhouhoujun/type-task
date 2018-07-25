@@ -1,4 +1,4 @@
-import { IActivity, ITaskRunner, ActivityType } from './core';
+import { IActivity, IActivityRunner, ActivityType } from './core';
 import { Type, InjectToken } from '@ts-ioc/core';
 import { IApplicationBuilder } from '@ts-ioc/bootstrap';
 
@@ -17,45 +17,29 @@ export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskCo
 export interface ITaskContainer extends IApplicationBuilder<IActivity> {
 
     /**
-     * get root path.
-     *
-     * @returns {string}
-     * @memberof ITaskContainer
-     */
-    getRootPath(): string;
-    /**
-     * use log aspect.
-     *
-     * @param {Type<any>} logAspect
-     * @returns {this}
-     * @memberof ITaskContainer
-     */
-    useLog(logAspect: Type<any>): this;
-
-    /**
      * build activity runner.
      *
      * @param {...ActivityType<IActivity>[]} tasks
-     * @returns {Promise<ITaskRunner<any>>}
+     * @returns {Promise<IActivityRunner<any>>}
      * @memberof ITaskContainer
      */
-    build(...tasks: ActivityType<IActivity>[]): Promise<ITaskRunner<any>>;
+    build(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>>;
 
     /**
      * create workflow
      *
      * @param {...ActivityType<IActivity>[]} tasks
-     * @returns {Promise<ITaskRunner>}
+     * @returns {Promise<IActivityRunner>}
      * @memberof ITaskContainer
      */
-    createWorkflow(...tasks: ActivityType<IActivity>[]): Promise<ITaskRunner<any>>;
+    createWorkflow(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>>;
 
     /**
      * bootstrap app via main module.
      *
      * @param {...ActivityType<IActivity>[]} tasks bootstrap tasks.
-     * @returns {Promise<ITaskRunner>}
+     * @returns {Promise<IActivityRunner>}
      * @memberof IApplicationBuilder
      */
-    bootstrap(...tasks: ActivityType<IActivity>[]): Promise<ITaskRunner<any>>;
+    bootstrap(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>>;
 }

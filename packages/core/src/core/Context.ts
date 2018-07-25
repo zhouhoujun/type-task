@@ -4,15 +4,15 @@ import {
     isPromise, isClass
 } from '@ts-ioc/core';
 import { IContext, ContextToken, CtxType } from './IContext';
-import { ITaskContainer, TaskContainerToken } from '../ITaskContainer';
 import { IConfigure, ActivityResultType, Expression } from './IConfigure';
 import { IActivity } from './IActivity';
 import { Task } from './decorators';
 import { IActivityBuilder } from './IActivityBuilder';
-import { ITaskRunner, TaskRunnerToken } from './ITaskRunner';
+import { IActivityRunner, ActivityRunnerToken } from './ITaskRunner';
 import { ActivityBuilder } from './ActivityBuilder';
 import { Activity } from './Activity';
-import { TaskRunner } from './TaskRunner';
+import { ActivityRunner } from './TaskRunner';
+import { RootContainerToken, AppConfigurationToken } from '@ts-ioc/bootstrap';
 
 /**
  * task context.
@@ -27,8 +27,16 @@ export class Context implements IContext {
     @Inject(ContainerToken)
     private container: IContainer;
 
+    @Inject(RootContainerToken)
+    private rootContainer: IContainer;
+
     constructor() {
 
+    }
+
+
+    getRootContainer(): IContainer {
+        return this.rootContainer;
     }
 
 
@@ -36,22 +44,20 @@ export class Context implements IContext {
         return this.container;
     }
 
-    getTaskContiner(): ITaskContainer {
-        return this.container.resolve(TaskContainerToken);
+    getRootPath(): string {
+        let cfg = this.getRootContainer().get(AppConfigurationToken) || {};
+        return cfg.baseURL || '.';
     }
 
-    getRootPath() {
-        return this.getTaskContiner().getRootPath();
-    }
 
-    getRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner<any> {
+    createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): IActivityRunner<any> {
         let builderInst: IActivityBuilder;
         if (isToken(builder)) {
             builderInst = this.container.resolve(builder);
         } else if (builder instanceof ActivityBuilder) {
             builderInst = builder;
         }
-        return this.container.resolve(TaskRunnerToken, { activity: task, uuid: uuid, instance: instance, activityBuilder: builderInst })
+        return this.container.resolve(ActivityRunnerToken, { activity: task, uuid: uuid, instance: instance, activityBuilder: builderInst })
     }
 
 
@@ -87,7 +93,7 @@ export class Context implements IContext {
             return expression;
         } else if (expression instanceof Activity) {
             return expression.run(data, target);
-        } else if (expression instanceof TaskRunner) {
+        } else if (expression instanceof ActivityRunner) {
             return expression.start(data);
         } else {
             return Promise.resolve(expression as T);

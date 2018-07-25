@@ -1,6 +1,6 @@
 import { IConfigure, ActivityResultType, Expression } from './IConfigure';
 import { IActivity } from './IActivity';
-import { ITaskRunner } from './ITaskRunner';
+import { IActivityRunner } from './ITaskRunner';
 import { IActivityBuilder } from './IActivityBuilder';
 import { IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
 import { ITaskContainer } from '../ITaskContainer';
@@ -44,6 +44,14 @@ export const ContextToken = new InjectContextToken<IContext>('');
 export interface IContext {
 
   /**
+   * get root container.
+   *
+   * @returns {IContainer}
+   * @memberof IContext
+   */
+  getRootContainer(): IContainer;
+
+  /**
    * get ioc container.
    *
    * @returns {IContainer}
@@ -52,32 +60,24 @@ export interface IContext {
   getContainer(): IContainer;
 
   /**
-   * get task container.
-   *
-   * @returns {ITaskContainer}
-   * @memberof IContext
-   */
-  getTaskContiner(): ITaskContainer;
-
-  /**
-   * get task runner;
-   *
-   * @param {ActivityResultType<any>} task
-   * @param {string} uuid
-   * @param {(IActivityBuilder | Token<IActivityBuilder>)} [builder]
-   * @param {*} [instance]
-   * @returns {ITaskRunner}
-   * @memberof IContext
-   */
-  getRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): ITaskRunner<any>;
-
-  /**
-   * get task run root path.
+   * get base URL.
    *
    * @returns {string}
    * @memberof IContext
    */
   getRootPath(): string;
+
+  /**
+   * create task runner;
+   *
+   * @param {ActivityResultType<any>} task
+   * @param {string} uuid
+   * @param {(IActivityBuilder | Token<IActivityBuilder>)} [builder]
+   * @param {*} [instance]
+   * @returns {IActivityRunner}
+   * @memberof IContext
+   */
+  createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): IActivityRunner<any>;
 
   /**
    * get task evn args.

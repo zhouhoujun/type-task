@@ -2,7 +2,7 @@ import { Inject, IContainer, ContainerToken, OnInit, isToken } from '@ts-ioc/cor
 import { ActivityResultType } from './IConfigure';
 import { IActivity, GActivity } from './IActivity';
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
-import { ITaskRunner, TaskRunnerToken, RunState } from './ITaskRunner';
+import { IActivityRunner, ActivityRunnerToken, RunState } from './ITaskRunner';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Runner } from './decorators';
 import { Joinpoint } from '@ts-ioc/aop';
@@ -17,8 +17,8 @@ import { UUIDToken, RandomUUIDFactory } from './uuid';
  * @class TaskRunner
  * @implements {ITaskRunner}
  */
-@Runner(TaskRunnerToken)
-export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
+@Runner(ActivityRunnerToken)
+export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
 
     get task(): ActivityResultType<T> {
         return this.activity;
@@ -90,6 +90,13 @@ export class TaskRunner<T> implements ITaskRunner<T>, OnInit {
             this.instance = await this.getBuilder().build(this.task, this.getUUID());
         }
         return this.instance;
+    }
+
+    getBaseURL(): string {
+        if (this.instance) {
+            return this.instance.config.baseURL;
+        }
+        return '.';
     }
 
 

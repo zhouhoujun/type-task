@@ -8,23 +8,23 @@ import { IApplication } from '@ts-ioc/bootstrap';
 
 
 /**
- * Inject AcitityToken
+ * Inject AcitityRuner Token
  *
  * @export
- * @class InjectAcitityToken
+ * @class InjectActivityRunnerToken
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectTaskRunnerToken<T extends ITaskRunner<any>> extends Registration<T> {
+export class InjectActivityRunnerToken<T extends IActivityRunner<any>> extends Registration<T> {
     constructor(desc: string) {
-        super('TaskRunner', desc);
+        super('ActivityRunner', desc);
     }
 }
 
 /**
- * task runner token.
+ * activity runner token.
  */
-export const TaskRunnerToken = new InjectTaskRunnerToken<ITaskRunner<any>>('');
+export const ActivityRunnerToken = new InjectActivityRunnerToken<IActivityRunner<any>>('');
 
 /**
  *run state.
@@ -34,7 +34,7 @@ export const TaskRunnerToken = new InjectTaskRunnerToken<ITaskRunner<any>>('');
  */
 export enum RunState {
     /**
-     * task init.
+     * activity init.
      */
     init,
     /**
@@ -42,15 +42,15 @@ export enum RunState {
      */
     running,
     /**
-     * task parused.
+     * activity parused.
      */
     pause,
     /**
-     * task stopped.
+     * activity stopped.
      */
     stop,
     /**
-     * task complete.
+     * activity complete.
      */
     complete
 }
@@ -61,7 +61,7 @@ export enum RunState {
  * @export
  * @interface ITaskRunner
  */
-export interface ITaskRunner<T> extends IApplication {
+export interface IActivityRunner<T> extends IApplication {
 
     /**
      * runner task
@@ -120,7 +120,15 @@ export interface ITaskRunner<T> extends IApplication {
     getUUID(): string;
 
     /**
-     * get task builder.
+     * get task run base path.
+     *
+     * @returns {string}
+     * @memberof IContext
+     */
+    getBaseURL(): string;
+
+    /**
+     * get activity builder.
      *
      * @returns {IActivityBuilder}
      * @memberof ITaskRunner
@@ -128,7 +136,7 @@ export interface ITaskRunner<T> extends IApplication {
     getBuilder(): IActivityBuilder;
 
     /**
-     * start task.
+     * start activity.
      *
      * @param {*} [data]
      * @returns {Promise<T>}
@@ -137,14 +145,14 @@ export interface ITaskRunner<T> extends IApplication {
     start(data?: any): Promise<T>;
 
     /**
-     * stop running task.
+     * stop running activity.
      *
      * @memberof ITaskRunner
      */
     stop(): void;
 
     /**
-     * pause running task.
+     * pause running activity.
      *
      * @memberof ITaskRunner
      */

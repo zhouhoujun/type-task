@@ -1,19 +1,20 @@
 import 'mocha';
 import { expect } from 'chai';
-import { ITaskContainer, DefaultTaskContainer, TaskRunner, SequenceActivity, SequenceConfigure } from 'src';
+import { ITaskContainer, ActivityRunner, SequenceActivity, SequenceConfigure } from 'src';
 
 import { SimpleTask, SimpleCTask, TaskModuleTest } from './simples.task';
+import { TaskContainer } from '@taskfr/platform-server';
 
 describe('auto register with build', () => {
 
     let container: ITaskContainer;
     before(async () => {
-        container = new DefaultTaskContainer(__dirname);
+        container = new TaskContainer(__dirname);
     });
 
     it('should bootstrap with single task.', async () => {
         let runner = await container.bootstrap(SimpleTask);
-        expect(runner instanceof TaskRunner).eq(true);
+        expect(runner instanceof ActivityRunner).eq(true);
         let result = await runner.start();
         expect(result).eq('simple task');
     });
