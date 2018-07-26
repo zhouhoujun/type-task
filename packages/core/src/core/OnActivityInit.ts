@@ -6,12 +6,12 @@ import { IConfigure } from './IConfigure';
  * @export
  * @interface OnTaskInit
  */
-export interface OnTaskInit {
+export interface OnActivityInit {
     /**
-     * task init via config.
+     * activity init via config.
      *
      * @param {IConfigure} config
      * @memberof OnTaskInit
      */
-    onTaskInit(config: IConfigure);
+    activityInit(config: IConfigure): void | Promise<any>;
 }

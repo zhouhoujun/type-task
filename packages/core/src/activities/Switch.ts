@@ -3,7 +3,7 @@ import {
     Activity, InjectAcitityBuilderToken,
     ActivityBuilder, Expression, SwitchConfigure
 } from '../core';
-import { MapSet, isUndefined, Singleton } from '@ts-ioc/core';
+import { MapSet, isUndefined, Injectable } from '@ts-ioc/core';
 
 /**
  * Switch activity token.
@@ -60,8 +60,13 @@ export class SwitchActivity extends Activity<any> {
     }
 }
 
-@Singleton(SwitchActivityBuilderToken)
+@Injectable(SwitchActivityBuilderToken)
 export class SwitchActivityBuilder extends ActivityBuilder {
+
+    createBuilder() {
+        return this.container.get(SwitchActivityBuilderToken);
+    }
+
     async buildStrategy(activity: IActivity, config: SwitchConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof SwitchActivity) {

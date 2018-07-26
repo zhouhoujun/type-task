@@ -62,12 +62,12 @@ export class TaskContainer extends ServerApplicationBuilder<IActivity> implement
      */
     async bootstrap(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>> {
         let task = (tasks.length > 1) ? <SequenceConfigure>{ sequence: tasks, task: SequenceActivity } : lang.first(tasks);
-        let runner = await super.bootstrap(task);
+        let runner = await this.build(task); // super.bootstrap(task);
         await runner.start();
         return runner;
     }
 
-    protected getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
+    getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
         return cfg.task || cfg.bootstrap || token;
     }
 

@@ -1,6 +1,6 @@
 
 import * as uglify from 'gulp-uglify';
-import { Task, Activity, OnTaskInit, IConfigure, CtxType, InjectAcitityToken } from '@taskfr/core';
+import { Task, Activity, OnActivityInit, IConfigure, CtxType, InjectAcitityToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 
 /**
@@ -17,11 +17,11 @@ export interface UglifyConfigure extends IConfigure {
 export const UglifyToken = new InjectAcitityToken<UglifyActivity>('uglify');
 
 @Task(UglifyToken)
-export class UglifyActivity extends Activity<ITransform> implements OnTaskInit {
+export class UglifyActivity extends Activity<ITransform> implements OnActivityInit {
 
     uglifyOtions: any;
 
-    onTaskInit(config: UglifyConfigure) {
+    activityInit(config: UglifyConfigure) {
         this.uglifyOtions = this.context.to(config.uglifyOtions);
     }
 

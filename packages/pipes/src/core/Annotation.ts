@@ -5,7 +5,7 @@ import { PipeTask } from '../decorators';
 import { IPipeConfigure } from './IPipeConfigure';
 import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
 import { PipeActivityBuilder } from './PipeActivityBuilder';
-import { Singleton } from '@ts-ioc/core';
+import { Injectable } from '@ts-ioc/core';
 import { ITransform } from './ITransform';
 
 /**
@@ -71,8 +71,12 @@ export class AnnotationActivity extends PipeActivity {
  * @class AnnotationActivityBuilder
  * @extends {PipeActivityBuilder}
  */
-@Singleton(AnnotationAcitvityBuilderToken)
+@Injectable(AnnotationAcitvityBuilderToken)
 export class AnnotationActivityBuilder extends PipeActivityBuilder {
+
+    createBuilder() {
+        return this.container.get(AnnotationAcitvityBuilderToken);
+    }
 
     /**
      * annoation acitvity build strategy.

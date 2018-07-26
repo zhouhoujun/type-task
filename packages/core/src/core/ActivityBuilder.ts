@@ -1,7 +1,7 @@
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import {
-    Type, isFunction, Singleton, isString,
-    Token, Registration, Express, isToken, getClassName
+    Type, isFunction, isString,
+    Token, Registration, Express, isToken, getClassName, Injectable
 } from '@ts-ioc/core';
 import { IConfigure, isActivityType, ActivityType, ExpressionType, Expression } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
@@ -16,7 +16,7 @@ import { ModuleBuilder } from '@ts-ioc/bootstrap';
  * @class Builder
  * @implements {IBuilder}
  */
-@Singleton(ActivityBuilderToken)
+@Injectable(ActivityBuilderToken)
 export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivityBuilder {
 
     constructor() {
@@ -36,7 +36,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivi
         }
         instance.id = uuid;
         if (isFunction(instance['onTaskInit'])) {
-            instance['onTaskInit'](config);
+            await Promise.resolve(instance['onTaskInit'](config));
         }
         return instance;
     }
@@ -51,6 +51,10 @@ export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivi
 
     getDecorator() {
         return Task.toString();
+    }
+
+    createBuilder() {
+        return this.container.get(ActivityBuilderToken);
     }
 
 
@@ -102,7 +106,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivi
     }
 
 
-    protected getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
+    getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
         let bootstrapToken = cfg.task || cfg.bootstrap || token;
         if (isString(bootstrapToken)) {
             bootstrapToken = this.traslateStrToken(bootstrapToken);

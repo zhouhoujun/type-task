@@ -3,7 +3,7 @@ import {
     Expression, InjectAcitityBuilderToken, ActivityBuilder,
     IActivity, ExpressionType
 } from '@taskfr/core';
-import { Singleton, Inject } from '@ts-ioc/core';
+import { Inject, Injectable } from '@ts-ioc/core';
 import { PipeContextToken, IPipeContext } from './IPipeContext';
 const del = require('del');
 
@@ -76,8 +76,13 @@ export class CleanActivity extends Activity<any> {
  * @class CleanActivityBuilder
  * @extends {ActivityBuilder}
  */
-@Singleton(CleanActivityBuilderToken)
+@Injectable(CleanActivityBuilderToken)
 export class CleanActivityBuilder extends ActivityBuilder {
+
+    createBuilder() {
+        return this.container.get(CleanActivityBuilderToken);
+    }
+
     /**
      * clean build startegy.
      *

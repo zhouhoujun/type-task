@@ -8,7 +8,7 @@ import { SourceMapsActivity } from './SourceMapsActivity';
 import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationConfigure } from './Annotation';
 import { PipeActivity } from './PipeActivity';
-import { IActivityConfigure, IActivity } from '@taskfr/core';
+import { IActivity } from '@taskfr/core';
 import { IAssetActivity } from './AssetConfigure';
 import { TestActivity } from './TestActivity';
 import { isTransform } from './pipeTypes';

@@ -2,7 +2,7 @@ import {
     IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
     ActivityBuilder, Activity, Expression, IntervalConfigure
 } from '../core';
-import { Singleton } from '@ts-ioc/core';
+import { Injectable } from '@ts-ioc/core';
 
 
 /**
@@ -45,8 +45,12 @@ export class IntervalActivity extends Activity<any> {
     }
 }
 
-@Singleton(IntervalActivityBuilderToken)
+@Injectable(IntervalActivityBuilderToken)
 export class IntervalActivityBuilder extends ActivityBuilder {
+
+    createBuilder() {
+        return this.container.get(IntervalActivityBuilderToken);
+    }
 
     async buildStrategy(activity: IActivity, config: IntervalConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);

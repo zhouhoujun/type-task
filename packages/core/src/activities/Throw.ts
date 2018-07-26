@@ -2,7 +2,7 @@ import {
     Task, InjectAcitityToken, Activity, Expression,
     ActivityBuilder, IActivity, InjectAcitityBuilderToken, ThrowConfigure
 } from '../core';
-import { Singleton } from '@ts-ioc/core';
+import { Singleton, Injectable } from '@ts-ioc/core';
 
 /**
  * throw activity token.
@@ -37,8 +37,12 @@ export class ThrowActivity extends Activity<any> {
 }
 
 
-@Singleton(ThrowActivityBuilderToken)
+@Injectable(ThrowActivityBuilderToken)
 export class ThrowActivityBuilder extends ActivityBuilder {
+
+    createBuilder() {
+        return this.container.get(ThrowActivityBuilderToken);
+    }
 
     async buildStrategy(activity: IActivity, config: ThrowConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);

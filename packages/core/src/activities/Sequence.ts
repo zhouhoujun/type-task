@@ -1,9 +1,10 @@
 import {
     Task, IActivity, InjectAcitityToken,
     InjectAcitityBuilderToken, ActivityBuilder, Activity,
-    SequenceConfigure
+    SequenceConfigure,
+    IActivityBuilder
 } from '../core';
-import { Singleton, Token, isToken } from '@ts-ioc/core';
+import { Token, isToken, Injectable } from '@ts-ioc/core';
 
 
 /**
@@ -68,8 +69,12 @@ export class SequenceActivity extends Activity<any> {
     }
 }
 
-@Singleton(SequenceActivityBuilderToken)
+@Injectable(SequenceActivityBuilderToken)
 export class SequenceActivityBuilder extends ActivityBuilder {
+
+    createBuilder(): IActivityBuilder {
+        return this.container.get(SequenceActivityBuilderToken);
+    }
 
     async buildStrategy(activity: IActivity, config: SequenceConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);

@@ -2,7 +2,7 @@ import { Inject, IContainer, ContainerToken, OnInit, isToken } from '@ts-ioc/cor
 import { ActivityResultType } from './IConfigure';
 import { IActivity, GActivity } from './IActivity';
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
-import { IActivityRunner, ActivityRunnerToken, RunState } from './ITaskRunner';
+import { IActivityRunner, ActivityRunnerToken, RunState } from './IActivityRunner';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Runner } from './decorators';
 import { Joinpoint } from '@ts-ioc/aop';

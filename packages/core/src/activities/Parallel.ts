@@ -1,8 +1,8 @@
 import {
     Task, IActivity, InjectAcitityToken, InjectAcitityBuilderToken,
-    ActivityBuilder, Activity, ParallelConfigure
+    ActivityBuilder, Activity, ParallelConfigure, IActivityBuilder
 } from '../core';
-import { Singleton, Token, isToken } from '@ts-ioc/core';
+import { Singleton, Token, isToken, Injectable } from '@ts-ioc/core';
 
 
 /**
@@ -81,8 +81,12 @@ export class ParallelActivity extends Activity<any> {
 
 }
 
-@Singleton(ParallelActivityBuilderToken)
+@Injectable(ParallelActivityBuilderToken)
 export class ParallelActivityBuilder extends ActivityBuilder {
+
+    createBuilder(): IActivityBuilder {
+        return this.container.get(ParallelActivityBuilderToken);
+    }
 
     async buildStrategy(activity: IActivity, config: ParallelConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);

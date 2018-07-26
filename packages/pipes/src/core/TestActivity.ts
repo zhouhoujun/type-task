@@ -1,7 +1,7 @@
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
 import { CtxType, IActivity, ExpressionType, Expression } from '@taskfr/core';
-import { isUndefined, Singleton } from '@ts-ioc/core';
+import { isUndefined, Injectable } from '@ts-ioc/core';
 import { TransformType, TransformConfig } from './pipeTypes';
 import { SourceConfigure, SourceActivity, SourceActivityBuilder } from './SourceActivity';
 import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
@@ -83,8 +83,12 @@ export class TestActivity extends SourceActivity {
 }
 
 
-@Singleton(TestAcitvityBuilderToken)
+@Injectable(TestAcitvityBuilderToken)
 export class TestActivityBuilder extends SourceActivityBuilder {
+
+    createBuilder() {
+        return this.container.get(TestAcitvityBuilderToken);
+    }
 
     async buildStrategy(activity: IActivity, config: TestConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);

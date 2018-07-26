@@ -1,9 +1,8 @@
 import { dest, DestOptions } from 'vinyl-fs';
 import { PipeTask } from '../decorators';
 import { ITransform } from './ITransform';
-import { TransformType, isTransform } from './pipeTypes';
 import { Expression, IActivity, ExpressionType } from '@taskfr/core';
-import { Singleton, isUndefined } from '@ts-ioc/core';
+import { Injectable } from '@ts-ioc/core';
 import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
@@ -105,8 +104,13 @@ export class DestActivity extends PipeActivity {
  * @class DestActivityBuilder
  * @extends {PipeActivityBuilder}
  */
-@Singleton(DestAcitvityBuilderToken)
+@Injectable(DestAcitvityBuilderToken)
 export class DestActivityBuilder extends PipeActivityBuilder {
+
+    createBuilder() {
+        return this.container.get(DestAcitvityBuilderToken);
+    }
+
     /**
      * dest activity build strategy.
      *

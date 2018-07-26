@@ -1,4 +1,4 @@
-import { Activity, Task, CtxType, IConfigure, OnTaskInit, InjectAcitityToken } from '@taskfr/core';
+import { Activity, Task, CtxType, IConfigure, OnActivityInit, InjectAcitityToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import * as sourcemaps from 'gulp-sourcemaps';
 
@@ -17,10 +17,10 @@ export interface SourceMapsConfigure extends IConfigure {
 export const SourceMapsToken = new InjectAcitityToken<SourceMapsActivity>('sourcemaps');
 
 @Task(SourceMapsToken)
-export class SourceMapsActivity extends Activity<ITransform> implements OnTaskInit {
+export class SourceMapsActivity extends Activity<ITransform> implements OnActivityInit {
     sourcemaps: string;
 
-    onTaskInit(config: SourceMapsConfigure) {
+    activityInit(config: SourceMapsConfigure) {
         this.sourcemaps = this.context.to(config.sourcemaps) || './sourcemaps';
     }
 

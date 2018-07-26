@@ -1,7 +1,7 @@
-import { Inject } from '@ts-ioc/core';
+import { Inject, isToken, Express, isString } from '@ts-ioc/core';
 import { Task } from './decorators';
 import { IActivity, GActivity } from './IActivity';
-import { IConfigure } from './IConfigure';
+import { IConfigure, isActivityType, ExpressionType, Expression, ActivityType } from './IConfigure';
 import { ContextToken, IContext } from './IContext';
 
 /**

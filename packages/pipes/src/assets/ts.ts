@@ -4,7 +4,7 @@ import { isBoolean, ObjectMap, isString } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
 import * as ts from 'gulp-typescript';
 import { ITransform } from '../core/ITransform';
-import { CtxType, OnTaskInit, IActivity } from '@taskfr/core';
+import { CtxType, OnActivityInit, IActivity } from '@taskfr/core';
 import { AnnotationActivity } from '../core/Annotation';
 
 /**
@@ -33,7 +33,7 @@ export interface TsConfigure extends AssetConfigure {
 }
 
 @AssetTask('ts')
-export class TsCompile extends AssetActivity implements OnTaskInit {
+export class TsCompile extends AssetActivity implements OnActivityInit {
 
     tdsDest: DestActivity | boolean;
     /**
@@ -42,7 +42,7 @@ export class TsCompile extends AssetActivity implements OnTaskInit {
      * @param {TsConfigure} cfg
      * @memberof TsCompile
      */
-    onTaskInit(cfg: TsConfigure) {
+    activityInit(cfg: TsConfigure) {
         this.defaultAnnotation = { annotationFramework: () => classAnnotations(), task: AnnotationActivity };
         let tds = this.context.to(cfg.tds);
         if (tds !== false) {

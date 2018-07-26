@@ -68,7 +68,7 @@ export class TaskContainer extends BroserApplicationBuilder<IActivity>  implemen
         return runner;
     }
 
-    protected getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
+    getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
         return cfg.task || cfg.bootstrap || token;
     }
 }

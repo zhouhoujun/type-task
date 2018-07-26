@@ -1,11 +1,11 @@
 import { src, SrcOptions } from 'vinyl-fs';
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
-import { Src, IActivity, Expression, ActivityResultType, ExpressionType } from '@taskfr/core';
+import { Src, IActivity, Expression, ExpressionType } from '@taskfr/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
-import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
-import { Singleton } from '@ts-ioc/core';
+import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken, IPipeActivity } from './IPipeActivity';
+import { Injectable } from '@ts-ioc/core';
 import { PipeActivityBuilder } from './PipeActivityBuilder';
 
 
@@ -71,8 +71,12 @@ export class SourceActivity extends PipeActivity {
     }
 }
 
-@Singleton(SourceAcitvityBuilderToken)
+@Injectable(SourceAcitvityBuilderToken)
 export class SourceActivityBuilder extends PipeActivityBuilder {
+
+    createBuilder() {
+        return this.container.get(SourceAcitvityBuilderToken);
+    }
 
     async buildStrategy(activity: IActivity, config: SourceConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);

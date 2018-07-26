@@ -1,7 +1,7 @@
 import { IActivity, GActivity } from './IActivity';
 import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
 import { ModuleConfiguration } from '@ts-ioc/bootstrap';
-import { IActivityRunner } from './ITaskRunner';
+import { IActivityRunner } from './IActivityRunner';
 
 
 /**
@@ -74,7 +74,7 @@ export type ConfigureType<T extends IActivity, TC extends IConfigure> = Token<T>
  * @param {*} target
  * @returns {target is ActivityType<any>}
  */
-export function isActivityType(target: any, check = true): target is ActivityResultType<any> {
+export function isActivityType(target: any, check = true): target is ActivityType<any> {
     if (!target) {
         return false;
     }

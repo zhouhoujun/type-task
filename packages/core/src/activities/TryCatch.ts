@@ -3,7 +3,7 @@ import {
     InjectAcitityBuilderToken, ActivityBuilder, TryCatchConfigure
 } from '../core';
 import { Activity } from '../core/Activity';
-import { Singleton } from '@ts-ioc/core';
+import { Singleton, Injectable } from '@ts-ioc/core';
 
 /**
  * while activity token.
@@ -76,8 +76,12 @@ export class TryCatchActivity extends Activity<any> {
     }
 }
 
-@Singleton(TryCatchActivityBuilderToken)
+@Injectable(TryCatchActivityBuilderToken)
 export class TryCatchActivityBuilder extends ActivityBuilder {
+
+    createBuilder() {
+        return this.container.get(TryCatchActivityBuilderToken);
+    }
 
     async buildStrategy(activity: IActivity, config: TryCatchConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
