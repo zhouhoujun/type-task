@@ -4,7 +4,7 @@ import {
     isPromise, isClass, isString, Express
 } from '@ts-ioc/core';
 import { IContext, ContextToken, CtxType } from './IContext';
-import { IConfigure, ActivityResultType, Expression, ExpressionType, isActivityType, ActivityType } from './IConfigure';
+import { IConfigure, ActivityResultType, Expression, ExpressionType, isActivityType, ActivityType, isActivityResultType } from './IConfigure';
 import { IActivity } from './IActivity';
 import { Task } from './decorators';
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
@@ -13,6 +13,7 @@ import { ActivityBuilder } from './ActivityBuilder';
 import { Activity } from './Activity';
 import { ActivityRunner } from './ActivityRunner';
 import { RootContainerToken, AppConfigurationToken } from '@ts-ioc/bootstrap';
+import { ExpressionActivity } from './ExpressionActivity';
 /**
  * task context.
  *
@@ -107,33 +108,35 @@ export class Context implements IContext {
     }
 
     async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
-        if (isActivityType(exptype)) {
-            return await this.builder.build(exptype, target.id);
+        if (exptype instanceof ExpressionActivity) {
+            return exptype;
+        } else if (isActivityResultType(exptype)) {
+            return await this.builder.build(exptype, target.id) as ExpressionActivity<T>;
         } else {
             return exptype;
         }
     }
 
     async toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta> {
-        let result;
-        if (isActivityType(exptype, !valify)) {
+        let result: Ta;
+        if (isActivityResultType(exptype, !valify)) {
             if (valify) {
-                result = await this.builder.build(isToken(exptype) ? exptype : valify(exptype as TCfg), target.id);
+                result = await this.builder.build(isToken(exptype) ? exptype : valify(exptype as TCfg), target.id) as Ta;
             } else {
-                result = await this.builder.build(exptype, target.id);
+                result = await this.builder.build(exptype, target.id) as Ta;
             }
         } else {
-            result = exptype ;
+            result = exptype as Ta;
         }
 
-        if (isRightActivity(result)) {
+        if (!(target instanceof ExpressionActivity) && isRightActivity(result)) {
             return result as Ta;
         }
 
         let rt;
         if (isString(result)) {
             rt = result;
-        } else {
+        } else if (target instanceof ExpressionActivity) {
             rt = await target.context.exec(target, result);
         }
         let config = toConfig(rt);
@@ -145,6 +148,6 @@ export class Context implements IContext {
         } else {
             result = null;
         }
-        return result as Ta;
+        return result;
     }
 }

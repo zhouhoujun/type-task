@@ -3,11 +3,12 @@ import {
     Type, isFunction, isString,
     Token, Registration, Express, isToken, getClassName, Injectable
 } from '@ts-ioc/core';
-import { IConfigure, isActivityType, ActivityType, ExpressionType, Expression } from './IConfigure';
+import { IConfigure, isActivityResultType, ActivityType, ExpressionType, Expression } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Task } from './decorators';
 import { Activity } from './Activity';
 import { ModuleBuilder } from '@ts-ioc/bootstrap';
+import { AssignActivity } from './ExpressionActivity';
 
 /**
  * builder.
@@ -64,8 +65,8 @@ export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivi
 
 
     protected async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
-        if (isActivityType(exptype)) {
-            return await this.build(exptype, target.id);
+        if (isActivityResultType(exptype)) {
+            return await this.build(exptype, target.id) as AssignActivity<T>;
         } else {
             return exptype;
         }
@@ -73,7 +74,7 @@ export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivi
 
     protected async toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta> {
         let result;
-        if (isActivityType(exptype, !valify)) {
+        if (isActivityResultType(exptype, !valify)) {
             if (valify) {
                 result = await this.build(isToken(exptype) ? exptype : valify(exptype as TCfg), target.id);
             } else {

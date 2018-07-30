@@ -1,7 +1,7 @@
-import { Inject, isToken, Express, isString } from '@ts-ioc/core';
+import { Inject, Express } from '@ts-ioc/core';
 import { Task } from './decorators';
 import { IActivity, GActivity } from './IActivity';
-import { IConfigure, isActivityType, ExpressionType, Expression, ActivityType } from './IConfigure';
+import { IConfigure, ExpressionType, Expression, ActivityType } from './IConfigure';
 import { ContextToken, IContext } from './IContext';
 
 /**
@@ -60,6 +60,20 @@ export class Activity<T> implements GActivity<T> {
      */
     run(data?: any, execute?: IActivity): Promise<T> {
         return Promise.resolve(data);
+    }
+
+
+    protected async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
+        return this.context.toExpression(exptype, target);
+    }
+
+    protected async toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(
+        exptype: ExpressionType<Tr> | ActivityType<Ta>,
+        target: IActivity,
+        isRightActivity: Express<any, boolean>,
+        toConfig: Express<Tr, TCfg>,
+        valify?: Express<TCfg, TCfg>): Promise<Ta> {
+        return this.context.toActivity<Tr, Ta, TCfg>(exptype, target, isRightActivity, toConfig, valify);
     }
 
 }

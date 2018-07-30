@@ -1,7 +1,8 @@
-import { IActivity, GActivity } from './IActivity';
+import { IActivity } from './IActivity';
 import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
 import { ModuleConfiguration } from '@ts-ioc/bootstrap';
 import { IActivityRunner } from './IActivityRunner';
+import { ExpressionActivity } from './ExpressionActivity';
 
 
 /**
@@ -20,12 +21,12 @@ export interface KeyValue<TKey, TVal> {
 /**
  * async result.
  */
-export type AsyncResult<T> = (activity?: GActivity<T>, data?: any) => Promise<T>;
+export type AsyncResult<T> = (activity?: ExpressionActivity<T>, data?: any) => Promise<T>;
 
 /**
  * activity result.
  */
-export type ActivityResult<T> = Promise<T> | AsyncResult<T> | GActivity<T> | IActivityRunner<T>;
+export type ActivityResult<T> = Promise<T> | AsyncResult<T> | ExpressionActivity<T> | IActivityRunner<T>;
 
 
 /**
@@ -39,12 +40,12 @@ export type Condition = Expression<boolean>;
 /**
  *  expression token.
  */
-export type ExpressionToken<T> = Expression<T> | Token<GActivity<T>>;
+export type ExpressionToken<T> = Expression<T> | Token<ExpressionActivity<T>>;
 
 /**
  * ActivityResult type
  */
-export type ActivityResultType<T> = Token<GActivity<T>> | IActivityConfigure<GActivity<T>>;
+export type ActivityResultType<T> = Token<ExpressionActivity<T>> | IActivityConfigure<ExpressionActivity<T>>;
 
 /**
  * expression type.
@@ -74,9 +75,13 @@ export type ConfigureType<T extends IActivity, TC extends IConfigure> = Token<T>
  * @param {*} target
  * @returns {target is ActivityType<any>}
  */
-export function isActivityType(target: any, check = true): target is ActivityType<any> {
+export function isActivityResultType(target: any, check = true): target is ActivityResultType<any> {
     if (!target) {
         return false;
+    }
+
+    if (target instanceof ExpressionActivity) {
+        return true;
     }
 
     // forbid string token for activity.
@@ -145,7 +150,7 @@ export interface IActivityConfigure<T> extends ModuleConfiguration<T> {
  *
  * @export
  * @interface IConfigure
- * @extends {IActivityConfigure<IActivity<any>>}
+ * @extends {IActivityConfigure<IActivity>}
  */
 export interface IConfigure extends IActivityConfigure<IActivity> {
 
