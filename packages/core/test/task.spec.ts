@@ -31,7 +31,7 @@ describe('auto register with build', () => {
 
     it('should bootstrap with component task via name or provider.', async () => {
         let result = await container.use(SimpleCTask).bootstrap('comptest');
-        console.log('comptest:' , result.task, result.taskInstance);
+        console.log('comptest:' , result.activity, result.activityInstance);
         expect(result.resultValue).eq('component task');
     });
 

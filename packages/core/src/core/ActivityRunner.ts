@@ -20,11 +20,11 @@ import { UUIDToken, RandomUUIDFactory } from './uuid';
 @Runner(ActivityRunnerToken)
 export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
 
-    get task(): ActivityResultType<T> {
-        return this.activity;
+    get activity(): ActivityResultType<T> {
+        return this.activities;
     }
 
-    get taskInstance(): GActivity<T> {
+    get activityInstance(): GActivity<T> {
         return this.instance;
     }
 
@@ -47,14 +47,14 @@ export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
 
     /**
      * Creates an instance of TaskRunner.
-     * @param {ActivityResultType<T>} activity
+     * @param {ActivityResultType<T>} activities
      * @param {string} [uuid]
      * @param {IActivity<T>} [instance]
      * @param {IActivityBuilder} [activityBuilder]
      * @memberof TaskRunner
      */
     constructor(
-        private activity: ActivityResultType<T>,
+        private activities: ActivityResultType<T>,
         public uuid?: string,
         private instance?: IActivity,
         private activityBuilder?: IActivityBuilder) {
@@ -87,7 +87,7 @@ export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
 
     async getInstance() {
         if (!this.instance) {
-            this.instance = await this.getBuilder().build(this.task, this.getUUID());
+            this.instance = await this.getBuilder().build(this.activity, this.getUUID());
         }
         return this.instance;
     }

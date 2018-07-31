@@ -7,7 +7,7 @@ import { IConfigure, isActivityResultType, ActivityType, ExpressionType, Express
 import { IActivity, ActivityToken } from './IActivity';
 import { Task } from './decorators';
 import { Activity } from './Activity';
-import { ModuleBuilder } from '@ts-ioc/bootstrap';
+import { BaseModuleBuilder, BootstrapBuilder } from '@ts-ioc/bootstrap';
 import { AssignActivity } from './ExpressionActivity';
 
 /**
@@ -18,7 +18,7 @@ import { AssignActivity } from './ExpressionActivity';
  * @implements {IBuilder}
  */
 @Injectable(ActivityBuilderToken)
-export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivityBuilder {
+export class ActivityBuilder extends BootstrapBuilder<IActivity> implements IActivityBuilder {
 
     constructor() {
         super()
@@ -52,10 +52,6 @@ export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivi
 
     getDecorator() {
         return Task.toString();
-    }
-
-    createBuilder() {
-        return this.container.get(ActivityBuilderToken);
     }
 
 

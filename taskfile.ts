@@ -30,7 +30,7 @@ let versionSetting = (ctx: IPipeContext) => {
                 (act: AssetActivity) => versionSetting(act.context)
             ],
             dest: 'packages',
-            task: AssetActivity
+            activity: AssetActivity
         },
         {
             src: ['package.json'],
@@ -38,7 +38,7 @@ let versionSetting = (ctx: IPipeContext) => {
                 (act: AssetActivity) => versionSetting(act.context)
             ],
             dest: '.',
-            task: AssetActivity
+            activity: AssetActivity
         },
         {
             shell: (ctx: IPipeContext) => {
@@ -51,7 +51,7 @@ let versionSetting = (ctx: IPipeContext) => {
                 console.log(cmds);
                 return cmds;
             },
-            task: 'shell'
+            activity: 'shell'
         }
     ]
 })

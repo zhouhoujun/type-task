@@ -1,7 +1,7 @@
 import { CoreModule, IActivity, ITaskContainer, ActivityType, IActivityRunner, SequenceConfigure, SequenceActivity, IConfigure } from '@taskfr/core';
 import { LoadType, lang, Token, Type, isString } from '@ts-ioc/core';
 import { TaskLogAspect, RunnerLogAspect } from './aop/index';
-import { BroserApplicationBuilder } from '@ts-ioc/platform-browser/bootstrap';
+import { ApplicationBuilder } from '@ts-ioc/platform-browser/bootstrap';
 import { AopModule } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 
@@ -12,7 +12,7 @@ import { LogModule } from '@ts-ioc/logs';
  * @class TaskContainer
  * @extends {DefaultTaskContainer}
  */
-export class TaskContainer extends BroserApplicationBuilder<IActivity>  implements ITaskContainer  {
+export class TaskContainer extends ApplicationBuilder implements ITaskContainer  {
 
     constructor(baseURL: string) {
         super(baseURL);

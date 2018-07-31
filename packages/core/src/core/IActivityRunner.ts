@@ -1,10 +1,10 @@
 import { ActivityResultType } from './IConfigure';
 import { Registration } from '@ts-ioc/core';
-import { GActivity } from './IActivity';
+import { GActivity, IActivity } from './IActivity';
 import { IActivityBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
-import { IApplication } from '@ts-ioc/bootstrap';
+import { MdlInstance, IocModule } from '@ts-ioc/bootstrap';
 
 
 /**
@@ -61,23 +61,23 @@ export enum RunState {
  * @export
  * @interface ITaskRunner
  */
-export interface IActivityRunner<T> extends IApplication {
+export interface IActivityRunner<T extends IActivity> extends IocModule<T> {
 
     /**
-     * runner task
+     * actvity to run.
      *
      * @type {ActivityResultType<T>}
      * @memberof ITaskRunner
      */
-    readonly task: ActivityResultType<T>;
+    readonly activity: ActivityResultType<T>;
 
     /**
-     * task instance
+     * activity instance
      *
      * @type {GActivity}
      * @memberof ITaskRunner
      */
-    readonly taskInstance: GActivity<T>;
+    readonly activityInstance: GActivity<T>;
 
     /**
      * current run task data.
