@@ -1,6 +1,6 @@
 import { IActivity, IActivityRunner, ActivityType } from './core';
 import { InjectToken } from '@ts-ioc/core';
-import { IGApplicationBuilder } from '@ts-ioc/bootstrap';
+import { IApplicationBuilder } from '@ts-ioc/bootstrap';
 
 /**
  * TaskContainer token.
@@ -14,7 +14,7 @@ export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskCo
  * @interface ITaskContainer
  * @extends {TaskComponent}
  */
-export interface ITaskContainer extends IGApplicationBuilder<IActivityRunner<IActivity>> {
+export interface ITaskContainer extends IApplicationBuilder<IActivityRunner<IActivity>> {
 
     // /**
     //  * build activity runner.

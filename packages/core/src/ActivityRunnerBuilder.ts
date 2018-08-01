@@ -1,10 +1,11 @@
 import { IContainer, Token, Injectable } from '@ts-ioc/core';
-import { IConfigure, ActivityRunnerToken, ActivityBuilderToken, ActivityBuilder, IActivity, ActivityRunner, ActivityType, IActivityRunner } from './core';
+import { IConfigure, ActivityRunnerToken, ActivityBuilderToken, IActivityRunner } from './core';
 import { AopModule } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
-import { RootModuleBuilderToken, ModuleBuilder } from '@ts-ioc/bootstrap';
+import { ModuleBuilder, InjectModuleBuilder } from '@ts-ioc/bootstrap';
 
+export const ActivityRunnerBuilderToken = new InjectModuleBuilder<ActivityRunnerBuilder>('activity_runner');
 
 /**
  * default task container.
@@ -12,20 +13,12 @@ import { RootModuleBuilderToken, ModuleBuilder } from '@ts-ioc/bootstrap';
  * @export
  * @class DefaultTaskContainer
  */
-@Injectable(RootModuleBuilderToken)
-export class ActivityRunnerBuilder extends ModuleBuilder<any> {
+@Injectable(ActivityRunnerBuilderToken)
+export class ActivityRunnerBuilder extends ModuleBuilder<IActivityRunner<any>> {
 
-    createBuilder() {
-        return new ActivityRunnerBuilder();
-    }
 
-    async build(task: ActivityType<IActivity>, data?: any): Promise<IActivityRunner<any>> {
-        return this.container.resolve(ActivityRunnerToken, { activity: task, builder: ActivityBuilderToken });
-    }
-
-    protected resolveToken(container: IContainer, token: Token<IActivity>, config: IConfigure): any {
-        console.log('resolved----------------\n', token);
-        return container.resolve(ActivityRunnerToken, { activity: config, builder: ActivityBuilderToken });
+    protected createModuleInstance(token: Token<any>, container: IContainer): IActivityRunner<any> {
+        return container.resolve(ActivityRunnerToken, { activity: token, builder: ActivityBuilderToken });
     }
 
     protected async registerExts(container: IContainer, config: IConfigure) {

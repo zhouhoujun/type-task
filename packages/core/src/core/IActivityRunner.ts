@@ -61,7 +61,7 @@ export enum RunState {
  * @export
  * @interface ITaskRunner
  */
-export interface IActivityRunner<T extends IActivity> extends IocModule<T> {
+export interface IActivityRunner<T> {
 
     /**
      * actvity to run.

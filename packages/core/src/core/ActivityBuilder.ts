@@ -1,13 +1,12 @@
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import {
     Type, isFunction, isString,
-    Token, Registration, Express, isToken, getClassName, Injectable
+    Token, Registration, Express, isToken, getClassName, Injectable, IContainer
 } from '@ts-ioc/core';
 import { IConfigure, isActivityResultType, ActivityType, ExpressionType, Expression } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
-import { Task } from './decorators';
 import { Activity } from './Activity';
-import { BaseModuleBuilder, BootstrapBuilder } from '@ts-ioc/bootstrap';
+import { IocModule, ModuleBuilder, MdlInstance } from '@ts-ioc/bootstrap';
 import { AssignActivity } from './ExpressionActivity';
 
 /**
@@ -18,22 +17,24 @@ import { AssignActivity } from './ExpressionActivity';
  * @implements {IBuilder}
  */
 @Injectable(ActivityBuilderToken)
-export class ActivityBuilder extends BootstrapBuilder<IActivity> implements IActivityBuilder {
+export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivityBuilder {
 
     constructor() {
         super()
     }
 
-    build(task: ActivityType<IActivity>, uuid: string): Promise<IActivity> {
-        return super.build(task, uuid);
+    async build(activity: ActivityType<IActivity>, container?: IContainer, uuid?: string): Promise<IActivity> {
+        let instance = await super.build(activity, container);
+        instance.id = uuid;
+        return instance;
     }
 
     async createInstance(token: Token<IActivity>, config: IConfigure, uuid: string): Promise<IActivity> {
-        let instance = await super.createInstance(token, config);
+        let instance = await super.createInstance(token, config, uuid);
         if (!instance || !(instance instanceof Activity)) {
-            config.task = this.getDefaultAcitvity();
-            console.log('try load default activity:', getClassName(config.task));
-            instance = await this.build(config, uuid);
+            let task = this.getDefaultAcitvity();
+            console.log('try load default activity:', getClassName(task));
+            instance = await this.build(task, config, uuid);
         }
         instance.id = uuid;
         if (isFunction(instance['onTaskInit'])) {
@@ -42,7 +43,7 @@ export class ActivityBuilder extends BootstrapBuilder<IActivity> implements IAct
         return instance;
     }
 
-    async buildStrategy(activity: IActivity, config: IConfigure): Promise<IActivity> {
+    async buildStrategy(activity: IActivity, config: IConfigure, container?: IContainer): Promise<IActivity> {
         if (config.name) {
             activity.name = config.name;
         }
@@ -50,9 +51,15 @@ export class ActivityBuilder extends BootstrapBuilder<IActivity> implements IAct
         return activity;
     }
 
-    getDecorator() {
-        return Task.toString();
+    protected resolveToken(token: Token<IActivity>, uuid?: string): IActivity {
+        let activity = this.container.resolve(token);
+        activity.id = uuid;
+        return activity;
     }
+
+    // getDecorator() {
+    //     return Task.toString();
+    // }
 
 
     getDefaultAcitvity(): Type<IActivity> {
@@ -102,18 +109,18 @@ export class ActivityBuilder extends BootstrapBuilder<IActivity> implements IAct
         return result;
     }
 
-
-    getBootstrapToken(cfg: IConfigure, token?: Token<IActivity> | Type<any>): Token<IActivity> {
-        let bootstrapToken = cfg.task || cfg.bootstrap || token;
-        if (isString(bootstrapToken)) {
-            bootstrapToken = this.traslateStrToken(bootstrapToken);
+    protected getBootstrapToken(iocModule: IocModule<IActivity>): Token<IActivity> {
+        let token = iocModule.bootstrap || iocModule.moduleToken;
+        if (isString(token)) {
+            token = this.traslateStrToken(iocModule.container, token);
         }
-        return bootstrapToken;
+        return token;
     }
 
-    protected traslateStrToken(token: string): Token<IActivity> {
+
+    protected traslateStrToken(container: IContainer, token: string): Token<IActivity> {
         let taskToken = new Registration(ActivityToken, token);
-        if (this.container.has(taskToken)) {
+        if (container.has(taskToken)) {
             return taskToken;
         }
         return token;

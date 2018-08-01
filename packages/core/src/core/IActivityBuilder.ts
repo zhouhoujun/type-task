@@ -1,7 +1,7 @@
-import { InjectToken, Registration, Type, Token } from '@ts-ioc/core';
+import { InjectToken, Registration, IContainer } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
-import { IConfigure } from './IConfigure';
-import { IBootstrapBuilder, IocModule } from '@ts-ioc/bootstrap';
+import { ActivityType } from './IConfigure';
+import { IModuleBuilder } from '@ts-ioc/bootstrap';
 
 
 /**
@@ -29,36 +29,29 @@ export const ActivityBuilderToken = new InjectToken<IActivityBuilder>('__TASK_Bu
  * @export
  * @interface ITaskBuilder
  */
-export interface IActivityBuilder extends IBootstrapBuilder<IActivity> {
+export interface IActivityBuilder extends IModuleBuilder<IActivity> {
 
-    /**
-     * build activity.
-     *
-     * @param {ActivityType<T>} task
-     * @param {string} uuid
-     * @returns {Promise<T>}
-     * @memberof IActivityBuilder
-     */
-    build(task: IocModule<IActivity>, uuid: string): Promise<IActivity>;
+    build(activity: ActivityType<IActivity>, container?: IContainer, uuid?: string): Promise<IActivity>;
 
-    /**
-     * create activity instance via token and config.
-     *
-     * @param {Token<IActivity>} token
-     * @param {IConfigure} config
-     * @param {string} uuid
-     * @returns {Promise<IActivity>}
-     * @memberof IActivityBuilder
-     */
-    createInstance(token: Token<IActivity>, config: IConfigure, uuid: string): Promise<IActivity>;
+    // /**
+    //  * build activity.
+    //  *
+    //  * @param {ActivityType<T>} task
+    //  * @param {IConfigure} config
+    //  * @param {string} uuid
+    //  * @returns {Promise<T>}
+    //  * @memberof IActivityBuilder
+    //  */
+    // build(activity: Token<IActivity>, config: IConfigure, uuid: string): Promise<IActivity>;
 
-    /**
-     * bundle task config.
-     * @param {IActivity} activity
-     * @param {IConfigure} config
-     * @returns {Promise<IActivity>}
-     * @memberof ITaskBuilder
-     */
-    buildStrategy(activity: IActivity, config: IConfigure): Promise<IActivity>;
+    // /**
+    //  * build activity instance via config.
+    //  *
+    //  * @param {IActivity} activity
+    //  * @param {IConfigure} config
+    //  * @returns {Promise<IActivity>}
+    //  * @memberof IActivityBuilder
+    //  */
+    // buildStrategy(activity: IActivity, config: IConfigure): Promise<IActivity>;
 
 }
