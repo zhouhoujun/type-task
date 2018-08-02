@@ -1,6 +1,7 @@
 import { IActivityBuilder, GActivity } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { Registration } from '@ts-ioc/core';
+import { InjectBootBuilder, IBootBuilder } from '@ts-ioc/bootstrap';
 
 /**
  * pipe task.
@@ -61,4 +62,4 @@ export class InjectPipeAcitityBuilderToken<T extends IActivityBuilder> extends R
 /**
  * pipe activity builder token.
  */
-export const PipeActivityBuilderToken = new InjectPipeAcitityBuilderToken<IActivityBuilder>('')
+export const PipeBootBuilderToken = new InjectBootBuilder<IBootBuilder<IPipeActivity>>('pipe');

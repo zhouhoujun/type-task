@@ -1,6 +1,6 @@
-import { IActivity, IActivityRunner, ActivityType } from './core';
-import { InjectToken } from '@ts-ioc/core';
-import { IApplicationBuilder } from '@ts-ioc/bootstrap';
+import { IActivity, IActivityRunner, ActivityType, Active } from './core';
+import { InjectToken, Type } from '@ts-ioc/core';
+import { IApplicationBuilder, IApplicationExtends } from '@ts-ioc/bootstrap';
 
 /**
  * TaskContainer token.
@@ -14,32 +14,37 @@ export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskCo
  * @interface ITaskContainer
  * @extends {TaskComponent}
  */
-export interface ITaskContainer extends IApplicationBuilder<IActivityRunner<IActivity>> {
+export interface ITaskContainer extends IApplicationExtends {
 
-    // /**
-    //  * build activity runner.
-    //  *
-    //  * @param {...ActivityType<IActivity>[]} tasks
-    //  * @returns {Promise<IActivityRunner<any>>}
-    //  * @memberof ITaskContainer
-    //  */
-    // build(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>>;
+    useLog(logAspect: Type<any>): this;
+
+    getBuilder(): IApplicationBuilder<any>;
 
     /**
-     * create workflow
+     * get workflow.
      *
-     * @param {...ActivityType<IActivity>[]} tasks
-     * @returns {Promise<IActivityRunner>}
+     * @template T
+     * @param {string} workflowId
+     * @returns {IActivityRunner<T>}
      * @memberof ITaskContainer
      */
-    createWorkflow(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<IActivity>>;
+    getWorkflow<T>(workflowId: string): IActivityRunner<T>;
 
-    // /**
-    //  * bootstrap app via main module.
-    //  *
-    //  * @param {...ActivityType<IActivity>[]} tasks bootstrap tasks.
-    //  * @returns {Promise<IActivityRunner>}
-    //  * @memberof IApplicationBuilder
-    //  */
-    // bootstrap(...tasks: ActivityType<IActivity>[]): Promise<IActivityRunner<any>>;
+    /**
+     * create workflow.
+     *
+     * @param {Active} activity
+     * @param {string} [workflowId]
+     * @memberof ITaskContainer
+     */
+    createWorkflow(activity: Active, workflowId?: string);
+
+    /**
+     * create workflow and bootstrap.
+     *
+     * @param {...Active[]} activities bootstrap activities.
+     * @returns {Promise<IActivityRunner>}
+     * @memberof IApplicationBuilder
+     */
+    bootstrap(...activities: Active[]): Promise<IActivityRunner<any>>;
 }

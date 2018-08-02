@@ -6,7 +6,7 @@ import { Injectable } from '@ts-ioc/core';
 import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
-import { PipeActivityBuilder } from './PipeActivityBuilder';
+import { PipeBootBuilder } from './PipeActivityBuilder';
 /**
  * dest activity token.
  */
@@ -102,10 +102,10 @@ export class DestActivity extends PipeActivity {
  *
  * @export
  * @class DestActivityBuilder
- * @extends {PipeActivityBuilder}
+ * @extends {PipeBootBuilder}
  */
 @Injectable(DestAcitvityBuilderToken)
-export class DestActivityBuilder extends PipeActivityBuilder {
+export class DestActivityBuilder extends PipeBootBuilder {
 
     createBuilder() {
         return this.container.get(DestAcitvityBuilderToken);

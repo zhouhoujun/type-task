@@ -8,7 +8,7 @@ import { WatchActivity, WatchConfigure } from './WatchActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationConfigure } from './Annotation';
-import { PipeActivityBuilder } from './PipeActivityBuilder';
+import { PipeBootBuilder } from './PipeActivityBuilder';
 import { TestActivity, TestConfigure } from './TestActivity';
 
 
@@ -21,7 +21,7 @@ import { TestActivity, TestConfigure } from './TestActivity';
  * @extends {DestTaskBuilder}
  */
 @Injectable(AssetBuilderToken)
-export class AssetBuilder extends PipeActivityBuilder {
+export class AssetBuilder extends PipeBootBuilder {
 
     createBuilder(): IActivityBuilder {
         return this.container.get(AssetBuilderToken);

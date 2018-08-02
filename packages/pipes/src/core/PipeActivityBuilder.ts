@@ -1,8 +1,8 @@
-import { ActivityBuilder, IActivity, isActivityType } from '@taskfr/core';
+import { IActivity, ActivityBootBuilder, isActivityType, ActivityRunner, isActivityRunner } from '@taskfr/core';
 import { isMetadataObject, Token, Registration, isPromise, Injectable } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { TransformConfig, TransformType, TransformExpress } from './pipeTypes';
-import { PipeActivityToken, IPipeActivity, PipeActivityBuilderToken } from './IPipeActivity';
+import { PipeActivityToken, IPipeActivity, PipeBootBuilderToken } from './IPipeActivity';
 import { PipeActivity } from './PipeActivity';
 import { InjectAssetActivityToken } from './AssetConfigure';
 
@@ -14,12 +14,8 @@ import { InjectAssetActivityToken } from './AssetConfigure';
  * @class PipeTaskBuilder
  * @extends {ActivityBuilder}
  */
-@Injectable(PipeActivityBuilderToken)
-export class PipeActivityBuilder extends ActivityBuilder {
-
-    createBuilder() {
-        return this.container.get(PipeActivityBuilderToken);
-    }
+@Injectable(PipeBootBuilderToken)
+export class PipeBootBuilder extends ActivityBootBuilder {
 
     /**
      * pipe activity build strategy.
@@ -98,8 +94,10 @@ export class PipeActivityBuilder extends ActivityBuilder {
      * @memberof PipeActivityBuilder
      */
     protected async translateConfig(activity: PipeActivity, tsCfg: TransformConfig): Promise<TransformType> {
-        if (isActivityType(tsCfg)) {
-            return await this.build(tsCfg, activity.id);
+        if (isActivityRunner(tsCfg)) {
+            return tsCfg;
+        } else if (isActivityType(tsCfg)) {
+            return await this.builder.build(tsCfg, this.container, activity.id);
         }
 
         if (isPromise(tsCfg)) {

@@ -3,6 +3,7 @@ import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
 import { ModuleConfiguration } from '@ts-ioc/bootstrap';
 import { IActivityRunner } from './IActivityRunner';
 import { ExpressionActivity } from './ExpressionActivity';
+import { ActivityRunner } from './ActivityRunner';
 
 
 /**
@@ -21,7 +22,7 @@ export interface KeyValue<TKey, TVal> {
 /**
  * async result.
  */
-export type AsyncResult<T> = (activity?: ExpressionActivity<T>, data?: any) => Promise<T>;
+export type AsyncResult<T> = (activity?: IActivity, data?: any) => Promise<T>;
 
 /**
  * activity result.
@@ -45,7 +46,7 @@ export type ExpressionToken<T> = Expression<T> | Token<ExpressionActivity<T>>;
 /**
  * ActivityResult type
  */
-export type ActivityResultType<T> = Token<ExpressionActivity<T>> | IActivityConfigure<ExpressionActivity<T>>;
+export type ActivityResultType<T> = Token<ExpressionActivity<T>> | IActivityConfigure<T>;
 
 /**
  * expression type.
@@ -55,7 +56,7 @@ export type ExpressionType<T> = Expression<T> | ActivityResultType<T>;
 /**
  * core activities configures.
  */
-export type CoreActivityConfigure = IConfigure | ConfirmConfigure | DelayConfigure | DoWhileConfigure
+export type CoreActivityConfigure = IActivityConfigure<any> | IConfigure | ConfirmConfigure | DelayConfigure | DoWhileConfigure
     | IfConfigure | IntervalConfigure | ParallelConfigure | SequenceConfigure | SwitchConfigure
     | ThrowConfigure | TryCatchConfigure | WhileConfigure;
 
@@ -63,10 +64,24 @@ export type CoreActivityConfigure = IConfigure | ConfirmConfigure | DelayConfigu
  * activity type.
  */
 export type ActivityType<T extends IActivity> = Token<T> | CoreActivityConfigure;
+
+export type Active = ActivityType<IActivity>;
+
 /**
  * activity configure type.
  */
 export type ConfigureType<T extends IActivity, TC extends IConfigure> = Token<T> | TC;
+
+/**
+ * target is activity runner.
+ *
+ * @export
+ * @param {*} target
+ * @returns {target is IActivityRunner<any>}
+ */
+export function isActivityRunner(target: any): target is IActivityRunner<any> {
+    return target instanceof ActivityRunner;
+}
 
 /**
  * check target is activity type or not.
@@ -75,13 +90,13 @@ export type ConfigureType<T extends IActivity, TC extends IConfigure> = Token<T>
  * @param {*} target
  * @returns {target is ActivityType<any>}
  */
-export function isActivityResultType(target: any, check = true): target is ActivityResultType<any> {
+export function isActivityType(target: any, check = true): target is ActivityType<any> {
     if (!target) {
         return false;
     }
 
-    if (target instanceof ExpressionActivity) {
-        return true;
+    if (isActivityRunner(target)) {
+        return false;
     }
 
     // forbid string token for activity.

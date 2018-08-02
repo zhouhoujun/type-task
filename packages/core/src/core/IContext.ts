@@ -51,14 +51,6 @@ export interface IContext {
   builder: IActivityBuilder;
 
   /**
-   * get root container.
-   *
-   * @returns {IContainer}
-   * @memberof IContext
-   */
-  getRootContainer(): IContainer;
-
-  /**
    * get ioc container.
    *
    * @returns {IContainer}

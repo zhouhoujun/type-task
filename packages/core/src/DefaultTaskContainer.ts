@@ -1,105 +1,108 @@
-// import { IContainer, Type, hasClassMetadata, lang } from '@ts-ioc/core';
-// import { ITaskRunner, IConfigure, TaskRunnerToken, IActivity, ActivityBuilderToken, IActivityBuilder, SequenceConfigure, ActivityResultType, ActivityType } from './core';
-// import { ITaskContainer, TaskContainerToken } from './ITaskContainer';
-// import { AopModule, Aspect } from '@ts-ioc/aop';
-// import { LogModule } from '@ts-ioc/logs';
-// import { CoreModule } from './CoreModule';
-// import * as activites from './activities';
-// import { ApplicationBuilder } from '@ts-ioc/bootstrap';
+import { Type, hasClassMetadata, lang, IContainer, LoadType } from '@ts-ioc/core';
+import { IActivity, SequenceConfigure, ActivityType, IActivityRunner, ActivityRunnerToken, Active } from './core';
+import { ITaskContainer } from './ITaskContainer';
+import * as activites from './activities';
+import { IApplicationBuilder, DefaultApplicationBuilder, AppConfiguration, ModuleConfigure } from '@ts-ioc/bootstrap';
+import { Aspect } from '@ts-ioc/aop';
+import { SequenceActivity } from './activities';
+import { ActivityRunnerBuilderToken } from './ActivityRunnerBuilder';
 
 
-// /**
-//  * default task container.
-//  *
-//  * @export
-//  * @class DefaultTaskContainer
-//  */
-// export class DefaultTaskContainer extends ApplicationBuilder<IActivity> implements ITaskContainer {
+/**
+ * default task container.
+ *
+ * @export
+ * @class DefaultTaskContainer
+ */
+export class DefaultTaskContainer implements ITaskContainer {
 
-//     protected logAspects: Type<any>[];
-//     constructor(public rootPath: string) {
-//         super(rootPath)
-//         this.logAspects = [];
-//     }
+    constructor(public baseURL: string) {
+    }
 
-//     useLog(logAspect: Type<any>): this {
-//         if (hasClassMetadata(Aspect, logAspect)) {
-//             this.logAspects.push(logAspect);
-//         } else {
-//             console.error('logAspect param is not right aspect');
-//         }
-//         return this;
-//     }
-
-//     /**
-//      * create workflow
-//      *
-//      * @param {...ActivityResultType<IActivity>[]} tasks
-//      * @returns {Promise<ITaskRunner>}
-//      * @memberof ITaskContainer
-//      */
-//     async createWorkflow(...tasks: ActivityResultType<IActivity>[]): Promise<ITaskRunner<any>> {
-//         let runner = await this.build(...tasks) as ITaskRunner<any>;
-//         return runner;
-//     }
-
-//     /**
-//      * bootstrap application via main module
-//      *
-//      * @param {...tasks: ActivityType<IActivity>[]} bootModule
-//      * @returns {Promise<T>}
-//      * @memberof ApplicationBuilder
-//      */
-//     async bootstrap(...tasks: ActivityType<IActivity>[]): Promise<ITaskRunner<any>> {
-//         let runner = await this.build(...tasks);
-//         await runner.start();
-//         return runner;
-//     }
+    protected container: IContainer;
+    getContainer(): IContainer {
+        if (!this.container) {
+            this.container = this.getBuilder().createContainer();
+        }
+        return this.container;
+    }
 
 
-//     getRootPath() {
-//         return this.rootPath;
-//     }
+    protected builder: IApplicationBuilder<any>;
+    getBuilder(): IApplicationBuilder<any> {
+        if (!this.builder) {
+            this.builder = this.createAppBuilder();
+        }
+        return this.builder;
+    }
 
-//     async build(...tasks: ActivityType<IActivity>[]): Promise<ITaskRunner<any>> {
-//         let task = (tasks.length > 1) ? <SequenceConfigure>{ sequence: tasks, task: activites.SequenceActivity } : lang.first(tasks);
-//         let runner = await super.build(task) as ITaskRunner<any>;
-//         return runner;
-//     }
+    protected createAppBuilder() {
+        return new DefaultApplicationBuilder(this.baseURL);
+    }
 
-//     protected async createInstance(builder: IActivityBuilder, config: IConfigure): Promise<ITaskRunner<any>> {
-//         return this.getContainer().resolve(TaskRunnerToken, { activity: config, activityBuilder: builder });
-//     }
+    /**
+     * use custom configuration.
+     *
+     * @param {(string | AppConfiguration)} [config]
+     * @param {IContainer} [container]
+     * @returns {this}
+     * @memberof IApplicationBuilder
+     */
+    useConfiguration(config?: string | AppConfiguration, container?: IContainer): this {
+        this.getBuilder().useConfiguration(config, container);
+        return this;
+    }
 
-//     protected createModuleBuilder(): IActivityBuilder {
-//         return this.getContainer().get(ActivityBuilderToken);
-//     }
+    /**
+     * use module
+     *
+     * @param {...LoadType[]} modules
+     * @returns {this}
+     * @memberof IApplicationBuilder
+     */
+    use(...modules: LoadType[]): this {
+        this.getBuilder().use(...modules);
+        return this;
+    }
 
+    useLog(logAspect: Type<any>): this {
+        if (hasClassMetadata(Aspect, logAspect)) {
+            this.getBuilder().use(logAspect);
+        } else {
+            console.error('logAspect param is not right aspect');
+        }
+        return this;
+    }
 
-//     protected async registerExts(container: IContainer) {
-//         if (!container.has(AopModule)) {
-//             container.register(AopModule);
-//         }
-//         if (!container.has(LogModule)) {
-//             container.register(LogModule);
-//         }
+    getWorkflow<T>(workflowId: string): IActivityRunner<T> {
+        return this.getContainer().resolve(workflowId);
+    }
 
-//         container.bindProvider(TaskContainerToken, this);
-//         if (!container.has(CoreModule)) {
-//             container.register(CoreModule);
-//         }
+    /**
+     * create workflow.
+     *
+     * @param {Active} activity
+     * @param {string} [workflowId]
+     * @memberof ITaskContainer
+     */
+    async createWorkflow(activity: Active, workflowId?: string): Promise<IActivityRunner<any>> {
+        let runner = await this.getBuilder().bootstrap({ bootstrap: activity, builder: ActivityRunnerBuilderToken } as ModuleConfigure, workflowId) as IActivityRunner<any>;
+        this.getContainer().bindProvider(runner.getUUID(), runner);
+        return runner;
+    }
 
-//         this.use(activites);
-//         this.beforRegister(container);
+    /**
+     * create workflow and bootstrap.
+     *
+     * @param {...Active[]} activites
+     * @returns {Promise<IActivityRunner<any>>}
+     * @memberof DefaultTaskContainer
+     */
+    async bootstrap(...activites: Active[]): Promise<IActivityRunner<any>> {
+        let workflow = (activites.length > 1) ? <SequenceConfigure>{ sequence: activites, task: SequenceActivity } : lang.first(activites);
+        let runner = await this.createWorkflow(workflow);
+        return runner;
+    }
 
-//         await super.registerExts(container);
-//         return container;
-//     }
-
-//     protected beforRegister(container: IContainer) {
-//         this.logAspects.forEach(logger => {
-//             logger && container.register(logger);
-//         });
-//     }
-// }
+}
 

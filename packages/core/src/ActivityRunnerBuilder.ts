@@ -1,9 +1,9 @@
-import { IContainer, Token, Injectable } from '@ts-ioc/core';
-import { IConfigure, ActivityRunnerToken, ActivityBuilderToken, IActivityRunner } from './core';
+import { IContainer, Token, Injectable, lang } from '@ts-ioc/core';
+import { IConfigure, ActivityRunnerToken, ActivityBuilderToken, IActivityRunner, ActivityType, IActivity, SequenceConfigure, ActivityBuilder, UUIDToken, RandomUUIDFactory } from './core';
 import { AopModule } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
-import { ModuleBuilder, InjectModuleBuilder } from '@ts-ioc/bootstrap';
+import { InjectModuleBuilder } from '@ts-ioc/bootstrap';
 
 export const ActivityRunnerBuilderToken = new InjectModuleBuilder<ActivityRunnerBuilder>('activity_runner');
 
@@ -14,15 +14,33 @@ export const ActivityRunnerBuilderToken = new InjectModuleBuilder<ActivityRunner
  * @class DefaultTaskContainer
  */
 @Injectable(ActivityRunnerBuilderToken)
-export class ActivityRunnerBuilder extends ModuleBuilder<IActivityRunner<any>> {
+export class ActivityRunnerBuilder extends ActivityBuilder {
 
-
-    protected createModuleInstance(token: Token<any>, container: IContainer): IActivityRunner<any> {
-        return container.resolve(ActivityRunnerToken, { activity: token, builder: ActivityBuilderToken });
+    /**
+     * bootstrap application via main module
+     *
+     * @param {activity: ActivityType<IActivity>} bootModule
+     * @returns {Promise<T>}
+     * @memberof ApplicationBuilder
+     */
+    async bootstrap(activity: ActivityType<IActivity>, workflowId?: string, defaultContainer?: IContainer): Promise<IActivityRunner<any>> {
+        let container = this.getContainer(activity, defaultContainer);
+        workflowId = workflowId || this.createUUID(container);
+        let instance = await super.bootstrap(activity, workflowId, defaultContainer);
+        let runner = container.resolve(ActivityRunnerToken, { activities: activity, instance: instance, uuid: workflowId });
+        await runner.start();
+        return runner;
     }
 
+    protected createUUID(container: IContainer) {
+        if (!container.has(UUIDToken)) {
+            container.register(RandomUUIDFactory);
+        }
+        return container.get(UUIDToken).generate();
+    }
+
+
     protected async registerExts(container: IContainer, config: IConfigure) {
-        console.log('registerExts----------------\n', config);
         await super.registerExts(container, config);
         if (!container.has(AopModule)) {
             container.register(AopModule);

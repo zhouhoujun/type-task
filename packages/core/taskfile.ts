@@ -7,6 +7,7 @@ const rollupSourcemaps = require('rollup-plugin-sourcemaps');
 const commonjs = require('rollup-plugin-commonjs');
 // const builtins = require('rollup-plugin-node-builtins');
 
+
 TaskContainer.create(__dirname)
     .use(PipeModule)
     .bootstrap(
@@ -15,8 +16,8 @@ TaskContainer.create(__dirname)
             // src: 'src',
             assets: {
                 ts: <TsConfigure>{
-                     // watch: true,
-                     src: 'src/**/*.ts', test: 'test/**/*.spec.ts', dest: 'lib', annotation: true, uglify: true
+                    // watch: true,
+                    src: 'src/**/*.ts', test: 'test/**/*.spec.ts', dest: 'lib', annotation: true, uglify: true
                 }
             },
             task: PackageActivity

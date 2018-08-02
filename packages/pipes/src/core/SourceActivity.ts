@@ -6,7 +6,7 @@ import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
 import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken, IPipeActivity } from './IPipeActivity';
 import { Injectable } from '@ts-ioc/core';
-import { PipeActivityBuilder } from './PipeActivityBuilder';
+import { PipeBootBuilder } from './PipeActivityBuilder';
 
 
 export const SourceAcitvityToken = new InjectPipeActivityToken<SourceActivity>('source');
@@ -72,7 +72,7 @@ export class SourceActivity extends PipeActivity {
 }
 
 @Injectable(SourceAcitvityBuilderToken)
-export class SourceActivityBuilder extends PipeActivityBuilder {
+export class SourceActivityBuilder extends PipeBootBuilder {
 
     createBuilder() {
         return this.container.get(SourceAcitvityBuilderToken);

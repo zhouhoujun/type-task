@@ -1,5 +1,6 @@
 
 export * from './ITaskContainer';
+export * from './DefaultTaskContainer';
 export * from './ActivityRunnerBuilder';
 export * from './utils';
 export * from './core';

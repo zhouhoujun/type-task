@@ -2,6 +2,8 @@ import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdap
 import { TaskMetadata } from '../metadatas';
 import { ActivityToken, IActivity } from '../IActivity';
 import { ActivityBuilderToken, IActivityBuilder } from '../IActivityBuilder';
+import { IBootBuilder } from '@ts-ioc/bootstrap';
+import { ActivityBootBuilder } from '../ActivityBuilder';
 
 
 /**
@@ -63,8 +65,10 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
  */
 export function createTaskDecorator<T extends TaskMetadata>(
     taskType: string,
-    builder: Token<IActivityBuilder> | IActivityBuilder,
-    provideType: InjectToken<IActivity>,
+    builder?: Token<IActivityBuilder> | IActivityBuilder,
+    moduleBuilder?: Token<IBootBuilder<any>> | IBootBuilder<any>,
+    bootstrapBuilder?: Token<IBootBuilder<any>> | IBootBuilder<any>,
+    provideType?: Token<IActivity>,
     adapter?: MetadataAdapter,
     metadataExtends?: MetadataExtends<T>): ITaskDecorator<T> {
 
@@ -90,7 +94,7 @@ export function createTaskDecorator<T extends TaskMetadata>(
                     if (isString(arg)) {
                         metadata.name = arg;
                     } else {
-                        metadata.builder = arg;
+                        metadata.moduleBuilder = arg;
                     }
                 }
             });
@@ -120,8 +124,14 @@ export function createTaskDecorator<T extends TaskMetadata>(
             metadata.alias = metadata.alias || metadata.name;
 
             metadata.decorType = taskType;
-            if (!metadata.builder) {
+            if (builder && !metadata.builder) {
                 metadata.builder = builder;
+            }
+            if (moduleBuilder && !metadata.moduleBuilder) {
+                metadata.moduleBuilder = moduleBuilder;
+            }
+            if (bootstrapBuilder && !metadata.bootstrapBuilder) {
+                metadata.bootstrapBuilder = bootstrapBuilder;
             }
             return metadata;
         }) as ITaskDecorator<T>;
@@ -132,5 +142,5 @@ export function createTaskDecorator<T extends TaskMetadata>(
  *
  * @Task
  */
-export const Task: ITaskDecorator<TaskMetadata> = createTaskDecorator('Task', ActivityBuilderToken, ActivityToken);
+export const Task: ITaskDecorator<TaskMetadata> = createTaskDecorator('Task', ActivityBuilderToken, ActivityBootBuilder, ActivityBootBuilder, ActivityToken);
 
