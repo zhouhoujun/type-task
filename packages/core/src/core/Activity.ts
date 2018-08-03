@@ -64,7 +64,7 @@ export class Activity<T> implements GActivity<T> {
 
 
     protected async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
-        return this.context.toExpression(exptype, target);
+        return this.context.builder.toExpression(exptype, target);
     }
 
     protected async toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(
@@ -73,7 +73,7 @@ export class Activity<T> implements GActivity<T> {
         isRightActivity: Express<any, boolean>,
         toConfig: Express<Tr, TCfg>,
         valify?: Express<TCfg, TCfg>): Promise<Ta> {
-        return this.context.toActivity<Tr, Ta, TCfg>(exptype, target, isRightActivity, toConfig, valify);
+        return this.context.builder.toActivity<Tr, Ta, TCfg>(exptype, target, isRightActivity, toConfig, valify);
     }
 
 }

@@ -1,6 +1,6 @@
-import { InjectToken, Registration, IContainer } from '@ts-ioc/core';
+import { InjectToken, Registration, IContainer, Express } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
-import { ActivityType } from './IConfigure';
+import { ActivityType, ExpressionType, Expression, IConfigure } from './IConfigure';
 import { IModuleBuilder, IBootBuilder } from '@ts-ioc/bootstrap';
 
 
@@ -21,6 +21,9 @@ export class InjectAcitityBuilderToken<T extends IActivityBootBuilder> extends R
 
 export interface IActivityBootBuilder extends IBootBuilder<IActivity> {
 
+    buildMdlCfg(activity: ActivityType<any>, data: any): Promise<IActivity>;
+    toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>>;
+    toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta>
 }
 
 

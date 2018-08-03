@@ -1,7 +1,7 @@
-import { IActivityBuilder, ActivityBuilderToken, ActivityBootBuilderToken } from './IActivityBuilder';
+import { IActivityBuilder, ActivityBuilderToken, ActivityBootBuilderToken, IActivityBootBuilder } from './IActivityBuilder';
 import {
     Type, isFunction, isString,
-    Token, Registration, Express, isToken, getClassName, Injectable, IContainer, Inject
+    Token, Registration, Express, isToken, getClassName, Injectable, IContainer, Singleton
 } from '@ts-ioc/core';
 import { IConfigure, isActivityType, ActivityType, ExpressionType, Expression } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
@@ -10,8 +10,8 @@ import { ModuleBuilder, BootBuilder, IBootBuilder } from '@ts-ioc/bootstrap';
 import { AssignActivity } from './ExpressionActivity';
 
 
-@Injectable(ActivityBootBuilderToken)
-export class ActivityBootBuilder extends BootBuilder<IActivity> {
+@Singleton(ActivityBootBuilderToken)
+export class ActivityBootBuilder extends BootBuilder<IActivity> implements IActivityBootBuilder {
 
     async createInstance(token: Token<IActivity>, config: IConfigure, uuid: string): Promise<IActivity> {
         let instance = await super.createInstance(token, config, uuid);
@@ -61,7 +61,7 @@ export class ActivityBootBuilder extends BootBuilder<IActivity> {
         return token;
     }
 
-    protected async buildMdl2Cfg(activity: ActivityType<any>, data: any) {
+    async buildMdlCfg(activity: ActivityType<any>, data: any) {
         if (isToken(activity)) {
             return await this.build(activity, undefined, data);
         } else {
@@ -69,21 +69,21 @@ export class ActivityBootBuilder extends BootBuilder<IActivity> {
         }
     }
 
-    protected async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
+    async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
         if (isActivityType(exptype)) {
-            return await this.buildMdl2Cfg(exptype, target.id) as AssignActivity<T>;
+            return await this.buildMdlCfg(exptype, target.id) as AssignActivity<T>;
         } else {
             return exptype;
         }
     }
 
-    protected async toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta> {
+    async toActivity<Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<any> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<any, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta> {
         let result;
         if (isActivityType(exptype, !valify)) {
             if (valify) {
-                result = await this.buildMdl2Cfg(isToken(exptype) ? exptype : valify(exptype as TCfg), target.id);
+                result = await this.buildMdlCfg(isToken(exptype) ? exptype : valify(exptype as TCfg), target.id);
             } else {
-                result = await this.buildMdl2Cfg(exptype, target.id);
+                result = await this.buildMdlCfg(exptype, target.id);
             }
         } else {
             result = exptype;
@@ -104,7 +104,7 @@ export class ActivityBootBuilder extends BootBuilder<IActivity> {
             config = valify(config);
         }
         if (config) {
-            result = await this.buildMdl2Cfg(config, target.id);
+            result = await this.buildMdlCfg(config, target.id);
         } else {
             result = null;
         }
@@ -127,6 +127,10 @@ export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivi
     //     let instance = await super.build(activity, container, uuid);
     //     return instance;
     // }
+
+    protected getBootstrapToken(cfg: IConfigure): Token<IActivity> {
+        return cfg.task || cfg.bootstrap;
+    }
 
     protected getDefaultBootBuilder(container: IContainer): IBootBuilder<any> {
         return container.resolve(ActivityBootBuilderToken);

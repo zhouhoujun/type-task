@@ -1,8 +1,8 @@
-import { IConfigure, ActivityResultType, Expression, ExpressionType, ActivityType } from './IConfigure';
+import { IConfigure, ActivityResultType, Expression } from './IConfigure';
 import { IActivity } from './IActivity';
 import { IActivityRunner } from './IActivityRunner';
-import { IActivityBuilder } from './IActivityBuilder';
-import { IContainer, Type, Token, ObjectMap, Registration, Express } from '@ts-ioc/core';
+import { IActivityBuilder, IActivityBootBuilder } from './IActivityBuilder';
+import { IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
 
 
 
@@ -48,7 +48,7 @@ export interface IContext {
    * @type {IActivityBuilder}
    * @memberof IContext
    */
-  builder: IActivityBuilder;
+  builder: IActivityBootBuilder;
 
   /**
    * get ioc container.
@@ -108,34 +108,6 @@ export interface IContext {
    * @memberof IContext
    */
   exec<T>(target: IActivity, expression: Expression<T>, data?: any): Promise<T>;
-
-  /**
-   * traslate config to expression.
-   *
-   * @template T
-   * @param {ExpressionType<T>} exptype
-   * @param {IActivity} target
-   * @returns {Promise<Expression<T>>}
-   * @memberof IContext
-   */
-  toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>>;
-
-  /**
-   * traslate config to acitvity.
-   *
-   * @template Tr
-   * @template Ta
-   * @template TCfg
-   * @param {(ExpressionType<Tr> | ActivityType<Ta>)} exptype
-   * @param {IActivity} target
-   * @param {Express<any, boolean>} isRightActivity
-   * @param {Express<Tr, TCfg>} toConfig
-   * @param {Express<TCfg, TCfg>} [valify]
-   * @returns {Promise<Ta>}
-   * @memberof IContext
-   */
-  toActivity<Tr extends any, Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta>;
-
 
   /**
    * check is task or not.
