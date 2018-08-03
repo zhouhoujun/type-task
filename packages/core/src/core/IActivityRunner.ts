@@ -1,7 +1,7 @@
 import { ActivityResultType } from './IConfigure';
 import { Registration } from '@ts-ioc/core';
 import { GActivity } from './IActivity';
-import { IActivityBuilder } from './IActivityBuilder';
+import { IActivityModuleBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
 
@@ -129,10 +129,10 @@ export interface IActivityRunner<T> {
     /**
      * get activity builder.
      *
-     * @returns {IActivityBuilder}
+     * @returns {IActivityModuleBuilder}
      * @memberof ITaskRunner
      */
-    getBuilder(): IActivityBuilder;
+    getBuilder(): IActivityModuleBuilder;
 
     /**
      * start activity.

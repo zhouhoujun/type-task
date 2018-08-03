@@ -62,7 +62,6 @@ export class Activity<T> implements GActivity<T> {
         return Promise.resolve(data);
     }
 
-
     protected async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
         return this.context.builder.toExpression(exptype, target);
     }

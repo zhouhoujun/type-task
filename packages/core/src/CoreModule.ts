@@ -1,5 +1,5 @@
 import { IContainer, CoreActions, Inject, ContainerToken, IocExt } from '@ts-ioc/core';
-import { ActivityBootBuilder, ActivityRunner, Task, Runner, Activity, Context, ActivityBuilder } from './core';
+import { ActivityBootBuilder, ActivityRunner, Task, Runner, Activity, Context, ActivityModuleBuilder } from './core';
 import { RunAspect } from './aop';
 import * as activites from './activities';
 import { ActivityRunnerBuilder } from './ActivityRunnerBuilder';
@@ -22,7 +22,7 @@ export class CoreModule {
         lifeScope.registerDecorator(Task, CoreActions.bindProvider, CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
 
         container.register(ActivityBootBuilder);
-        container.register(ActivityBuilder);
+        container.register(ActivityModuleBuilder);
         container.register(ActivityRunner);
         container.register(Context);
         container.register(RunAspect);

@@ -1,4 +1,4 @@
-import { Src, ExpressionToken, IActivityBuilder, ConfigureType, IActivityBootBuilder } from '@taskfr/core';
+import { Src, ExpressionToken, IActivityModuleBuilder, ConfigureType, IActivityBootBuilder } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { DestConfigure, DestActivity } from './DestActivity';
 import { IPipeConfigure } from './IPipeConfigure';

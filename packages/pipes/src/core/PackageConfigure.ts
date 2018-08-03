@@ -1,4 +1,4 @@
-import { CtxType, Src, ExpressionToken, IActivityBuilder, SequenceConfigure, ConfigureType, IActivity, ActivityBootBuilder, IActivityBootBuilder } from '@taskfr/core';
+import { CtxType, Src, ExpressionToken, IActivityModuleBuilder, SequenceConfigure, ConfigureType, IActivity, ActivityBootBuilder, IActivityBootBuilder } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { AssetActivity } from './AssetActivity';

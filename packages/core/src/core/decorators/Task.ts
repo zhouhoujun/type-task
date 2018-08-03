@@ -1,7 +1,7 @@
 import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken, InjectToken } from '@ts-ioc/core';
 import { TaskMetadata } from '../metadatas';
 import { ActivityToken, IActivity } from '../IActivity';
-import { ActivityBuilderToken, IActivityBuilder } from '../IActivityBuilder';
+import { ActivityBuilderToken, IActivityModuleBuilder } from '../IActivityBuilder';
 import { IBootBuilder } from '@ts-ioc/bootstrap';
 import { ActivityBootBuilder } from '../ActivityBuilder';
 
@@ -57,7 +57,7 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
  * @export
  * @template T
  * @param {string} taskType
- * @param {(Token<IActivityBuilder> | IActivityBuilder)} builder
+ * @param {(Token<IActivityModuleBuilder> | IActivityModuleBuilder)} builder
  * @param {InjectToken<IActivity>} provideType
  * @param {MetadataAdapter} [adapter]
  * @param {MetadataExtends<T>} [metadataExtends]
@@ -65,7 +65,7 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
  */
 export function createTaskDecorator<T extends TaskMetadata>(
     taskType: string,
-    builder?: Token<IActivityBuilder> | IActivityBuilder,
+    builder?: Token<IActivityModuleBuilder> | IActivityModuleBuilder,
     moduleBuilder?: Token<IBootBuilder<any>> | IBootBuilder<any>,
     bootstrapBuilder?: Token<IBootBuilder<any>> | IBootBuilder<any>,
     provideType?: Token<IActivity>,

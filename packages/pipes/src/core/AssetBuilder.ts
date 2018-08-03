@@ -1,4 +1,4 @@
-import { IActivity, Src, IActivityBuilder } from '@taskfr/core';
+import { IActivity, Src } from '@taskfr/core';
 import { isBoolean, isString, Injectable, Singleton } from '@ts-ioc/core';
 import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';

@@ -1,7 +1,7 @@
 import { Inject, IContainer, ContainerToken, OnInit, isToken } from '@ts-ioc/core';
 import { ActivityResultType } from './IConfigure';
 import { IActivity, GActivity } from './IActivity';
-import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
+import { IActivityModuleBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import { IActivityRunner, ActivityRunnerToken, RunState } from './IActivityRunner';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Runner } from './decorators';
@@ -50,14 +50,14 @@ export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
      * @param {ActivityResultType<T>} activities
      * @param {string} [uuid]
      * @param {IActivity<T>} [instance]
-     * @param {IActivityBuilder} [activityBuilder]
+     * @param {IActivityModuleBuilder} [activityBuilder]
      * @memberof TaskRunner
      */
     constructor(
         private activities: ActivityResultType<T>,
         public uuid?: string,
         private instance?: IActivity,
-        private activityBuilder?: IActivityBuilder) {
+        private activityBuilder?: IActivityModuleBuilder) {
         this.stateChanged = new BehaviorSubject(RunState.init);
     }
 
@@ -78,7 +78,7 @@ export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
     }
 
 
-    getBuilder(): IActivityBuilder {
+    getBuilder(): IActivityModuleBuilder {
         if (!this.activityBuilder) {
             this.activityBuilder = this.container.resolve(ActivityBuilderToken);
         }

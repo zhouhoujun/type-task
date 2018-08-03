@@ -1,6 +1,5 @@
 import { Activity } from './Activity';
 import { Task } from './decorators';
-import { CtxType } from './IContext';
 
 @Task
 export class ExpressionActivity<T> extends Activity<T> {

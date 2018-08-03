@@ -1,5 +1,5 @@
 import { IContainer, Injectable } from '@ts-ioc/core';
-import { ActivityRunnerToken, IActivityRunner, ActivityType, IActivity, UUIDToken, RandomUUIDFactory, ActivityBuilder } from './core';
+import { ActivityRunnerToken, IActivityRunner, ActivityType, IActivity, UUIDToken, RandomUUIDFactory, ActivityModuleBuilder } from './core';
 import { InjectModuleBuilder } from '@ts-ioc/bootstrap';
 
 export const ActivityRunnerBuilderToken = new InjectModuleBuilder<ActivityRunnerBuilder>('activity_runner');
@@ -11,7 +11,7 @@ export const ActivityRunnerBuilderToken = new InjectModuleBuilder<ActivityRunner
  * @class DefaultTaskContainer
  */
 @Injectable(ActivityRunnerBuilderToken)
-export class ActivityRunnerBuilder extends ActivityBuilder {
+export class ActivityRunnerBuilder extends ActivityModuleBuilder {
 
     /**
      * bootstrap application via main module

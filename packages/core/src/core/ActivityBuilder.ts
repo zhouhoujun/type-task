@@ -1,4 +1,4 @@
-import { IActivityBuilder, ActivityBuilderToken, ActivityBootBuilderToken, IActivityBootBuilder } from './IActivityBuilder';
+import { IActivityModuleBuilder, ActivityBuilderToken, ActivityBootBuilderToken, IActivityBootBuilder } from './IActivityBuilder';
 import {
     Type, isFunction, isString,
     Token, Registration, Express, isToken, getClassName, Injectable, IContainer, Singleton
@@ -121,7 +121,7 @@ export class ActivityBootBuilder extends BootBuilder<IActivity> implements IActi
  * @implements {IBuilder}
  */
 @Injectable(ActivityBuilderToken)
-export class ActivityBuilder extends ModuleBuilder<IActivity> implements IActivityBuilder {
+export class ActivityModuleBuilder extends ModuleBuilder<IActivity> implements IActivityModuleBuilder {
 
     // async build(activity: ActivityType<IActivity>, container?: IContainer, uuid?: string): Promise<IActivity> {
     //     let instance = await super.build(activity, container, uuid);

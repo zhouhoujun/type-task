@@ -6,12 +6,14 @@ import { IContext, ContextToken, CtxType } from './IContext';
 import { IConfigure, ActivityResultType, Expression } from './IConfigure';
 import { IActivity } from './IActivity';
 import { Task } from './decorators';
-import { IActivityBuilder, ActivityBootBuilderToken, IActivityBootBuilder } from './IActivityBuilder';
+import { IActivityModuleBuilder, ActivityBootBuilderToken, IActivityBootBuilder } from './IActivityBuilder';
 import { IActivityRunner, ActivityRunnerToken } from './IActivityRunner';
 import { ActivityBootBuilder } from './ActivityBuilder';
 import { Activity } from './Activity';
 import { ActivityRunner } from './ActivityRunner';
 import { AppConfigureToken } from '@ts-ioc/bootstrap';
+
+
 /**
  * task context.
  *
@@ -42,8 +44,8 @@ export class Context implements IContext {
     }
 
 
-    createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): IActivityRunner<any> {
-        let builderInst: IActivityBuilder;
+    createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityModuleBuilder | Token<IActivityModuleBuilder>, instance?: any): IActivityRunner<any> {
+        let builderInst: IActivityModuleBuilder;
         if (isToken(builder)) {
             builderInst = this.container.resolve(builder);
         } else if (builder instanceof ActivityBootBuilder) {

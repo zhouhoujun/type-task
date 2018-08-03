@@ -29,11 +29,11 @@ export type AsyncResult<T> = (activity?: IActivity, data?: any) => Promise<T>;
  */
 export type ActivityResult<T> = Promise<T> | AsyncResult<T> | ExpressionActivity<T> | IActivityRunner<T>;
 
-
 /**
  * expression.
  */
 export type Expression<T> = T | ActivityResult<T>;
+
 /**
  * condition expression.
  */
