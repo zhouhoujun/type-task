@@ -1,6 +1,6 @@
-import { IActivity } from './IActivity';
+import { IActivity, GActivity } from './IActivity';
 import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
-import { ModuleConfiguration } from '@ts-ioc/bootstrap';
+import { ModuleConfig } from '@ts-ioc/bootstrap';
 import { IActivityRunner } from './IActivityRunner';
 import { ExpressionActivity } from './ExpressionActivity';
 import { ActivityRunner } from './ActivityRunner';
@@ -46,7 +46,7 @@ export type ExpressionToken<T> = Expression<T> | Token<ExpressionActivity<T>>;
 /**
  * ActivityResult type
  */
-export type ActivityResultType<T> = Token<ExpressionActivity<T>> | IActivityConfigure<T>;
+export type ActivityResultType<T> = Token<GActivity<T>> | IActivityConfigure<T>;
 
 /**
  * expression type.
@@ -124,7 +124,7 @@ export function isActivityType(target: any, check = true): target is ActivityTyp
  * @export
  * @interface ITaskConfigure
  */
-export interface IActivityConfigure<T> extends ModuleConfiguration<T> {
+export interface IActivityConfigure<T> extends ModuleConfig<T> {
 
     /**
      * workflow uuid.

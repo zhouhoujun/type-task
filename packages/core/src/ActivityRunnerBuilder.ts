@@ -1,8 +1,5 @@
-import { IContainer, Token, Injectable, lang } from '@ts-ioc/core';
-import { IConfigure, ActivityRunnerToken, ActivityBuilderToken, IActivityRunner, ActivityType, IActivity, SequenceConfigure, ActivityBuilder, UUIDToken, RandomUUIDFactory } from './core';
-import { AopModule } from '@ts-ioc/aop';
-import { LogModule } from '@ts-ioc/logs';
-import { CoreModule } from './CoreModule';
+import { IContainer, Injectable } from '@ts-ioc/core';
+import { ActivityRunnerToken, IActivityRunner, ActivityType, IActivity, UUIDToken, RandomUUIDFactory, ActivityBuilder } from './core';
 import { InjectModuleBuilder } from '@ts-ioc/bootstrap';
 
 export const ActivityRunnerBuilderToken = new InjectModuleBuilder<ActivityRunnerBuilder>('activity_runner');
@@ -37,23 +34,6 @@ export class ActivityRunnerBuilder extends ActivityBuilder {
             container.register(RandomUUIDFactory);
         }
         return container.get(UUIDToken).generate();
-    }
-
-
-    protected async registerExts(container: IContainer, config: IConfigure) {
-        await super.registerExts(container, config);
-        if (!container.has(AopModule)) {
-            container.register(AopModule);
-        }
-        if (!container.has(LogModule)) {
-            container.register(LogModule);
-        }
-
-        if (!container.has(CoreModule)) {
-            container.register(CoreModule);
-        }
-
-        return container;
     }
 }
 

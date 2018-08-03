@@ -1,8 +1,8 @@
 import {
     IActivity, Task, InjectAcitityToken, Condition,
-    Activity, InjectAcitityBuilderToken, ActivityBuilder, DoWhileConfigure
+    Activity, InjectAcitityBuilderToken, DoWhileConfigure, ActivityBootBuilder
 } from '../core';
-import { Singleton, Injectable } from '@ts-ioc/core';
+import { Singleton } from '@ts-ioc/core';
 
 /**
  * do while activity token.
@@ -49,17 +49,13 @@ export class DoWhileActivity extends Activity<any> {
     }
 }
 
-@Injectable(DoWhileActivityBuilderToken)
-export class DoWhileActivityBuilder extends ActivityBuilder {
-
-    createBuilder() {
-        return this.container.get(DoWhileActivityBuilderToken);
-    }
+@Singleton(DoWhileActivityBuilderToken)
+export class DoWhileActivityBuilder extends ActivityBootBuilder {
 
     async buildStrategy(activity: IActivity, config: DoWhileConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof DoWhileActivity) {
-            activity.body = await this.build(config.do, activity.id);
+            activity.body = await this.buildByConfig(config.do, activity.id);
             activity.condition = await this.toExpression(config.while, activity);
         }
         return activity;

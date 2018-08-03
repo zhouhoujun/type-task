@@ -41,7 +41,7 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
      * @param {string} builder task builder token.
      * @param {string} [alias]  task alias name
      */
-    (provide: Registration<any> | symbol | string, builder?: Token<IActivityBuilder>, alias?: string): ClassDecorator;
+    (provide: Registration<any> | symbol | string, builder?: Token<ActivityBootBuilder>, alias?: string): ClassDecorator;
 
     /**
      * task decorator, use to define class as task element.

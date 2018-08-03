@@ -1,6 +1,6 @@
 import {
     Src, Activity, InjectAcitityToken, Task, IConfigure,
-    Expression, InjectAcitityBuilderToken, ActivityBuilder,
+    Expression, InjectAcitityBuilderToken, ActivityBootBuilder,
     IActivity, ExpressionType
 } from '@taskfr/core';
 import { Inject, Injectable } from '@ts-ioc/core';
@@ -74,10 +74,10 @@ export class CleanActivity extends Activity<any> {
  *
  * @export
  * @class CleanActivityBuilder
- * @extends {ActivityBuilder}
+ * @extends {ActivityBootBuilder}
  */
 @Injectable(CleanActivityBuilderToken)
-export class CleanActivityBuilder extends ActivityBuilder {
+export class CleanActivityBuilder extends ActivityBootBuilder {
 
     createBuilder() {
         return this.container.get(CleanActivityBuilderToken);

@@ -1,8 +1,8 @@
 import {
     Task, IActivity, InjectAcitityToken, InjectAcitityBuilderToken,
-    ActivityBuilder, Activity, ParallelConfigure, IActivityBuilder
+    ActivityBootBuilder, Activity, ParallelConfigure,
 } from '../core';
-import { Singleton, Token, isToken, Injectable } from '@ts-ioc/core';
+import { Singleton, Token, isToken } from '@ts-ioc/core';
 
 
 /**
@@ -81,12 +81,8 @@ export class ParallelActivity extends Activity<any> {
 
 }
 
-@Injectable(ParallelActivityBuilderToken)
-export class ParallelActivityBuilder extends ActivityBuilder {
-
-    createBuilder(): IActivityBuilder {
-        return this.container.get(ParallelActivityBuilderToken);
-    }
+@Singleton(ParallelActivityBuilderToken)
+export class ParallelActivityBuilder extends ActivityBootBuilder {
 
     async buildStrategy(activity: IActivity, config: ParallelConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
@@ -101,7 +97,7 @@ export class ParallelActivityBuilder extends ActivityBuilder {
 
     async buildChildren(activity: ParallelActivity, configs: (ParallelConfigure | Token<IActivity>)[]) {
         let children = await Promise.all(configs.map(async cfg => {
-            let node = await this.build(cfg, activity.id);
+            let node = await this.buildByConfig(cfg, activity.id);
             if (!node) {
                 return null;
             }

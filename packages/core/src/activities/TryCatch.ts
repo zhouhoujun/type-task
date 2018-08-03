@@ -1,9 +1,9 @@
 import {
     IActivity, Task, InjectAcitityToken, Condition,
-    InjectAcitityBuilderToken, ActivityBuilder, TryCatchConfigure
+    InjectAcitityBuilderToken, ActivityBootBuilder, TryCatchConfigure
 } from '../core';
 import { Activity } from '../core/Activity';
-import { Singleton, Injectable } from '@ts-ioc/core';
+import { Singleton } from '@ts-ioc/core';
 
 /**
  * while activity token.
@@ -76,8 +76,8 @@ export class TryCatchActivity extends Activity<any> {
     }
 }
 
-@Injectable(TryCatchActivityBuilderToken)
-export class TryCatchActivityBuilder extends ActivityBuilder {
+@Singleton(TryCatchActivityBuilderToken)
+export class TryCatchActivityBuilder extends ActivityBootBuilder {
 
     createBuilder() {
         return this.container.get(TryCatchActivityBuilderToken);
@@ -86,15 +86,15 @@ export class TryCatchActivityBuilder extends ActivityBuilder {
     async buildStrategy(activity: IActivity, config: TryCatchConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof TryCatchActivity) {
-            activity.try = await this.build(config.try, activity.id);
+            activity.try = await this.buildByConfig(config.try, activity.id);
             if (config.catchs && config.catchs.length) {
                 let catchs = await Promise.all(config.catchs.map(cat => {
-                    return this.build(cat, activity.id);
+                    return this.buildByConfig(cat, activity.id);
                 }));
                 activity.catchs = catchs;
             }
             if (config.finally) {
-                activity.finally = await this.build(config.finally, activity.id);
+                activity.finally = await this.buildByConfig(config.finally, activity.id);
             }
         }
 

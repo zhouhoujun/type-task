@@ -1,4 +1,4 @@
-import { IActivity, IActivityRunner, ActivityType, Active } from './core';
+import { IActivityRunner, Active } from './core';
 import { InjectToken, Type } from '@ts-ioc/core';
 import { IApplicationBuilder, IApplicationExtends } from '@ts-ioc/bootstrap';
 

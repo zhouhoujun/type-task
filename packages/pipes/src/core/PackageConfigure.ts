@@ -1,4 +1,4 @@
-import { CtxType, Src, ExpressionToken, IActivityBuilder, SequenceConfigure, ConfigureType, IActivity } from '@taskfr/core';
+import { CtxType, Src, ExpressionToken, IActivityBuilder, SequenceConfigure, ConfigureType, IActivity, ActivityBootBuilder, IActivityBootBuilder } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { AssetActivity } from './AssetActivity';
@@ -97,7 +97,7 @@ export class InjectPackageToken<T extends IPackageActivity> extends Registration
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectPackageBuilderToken<T extends IActivityBuilder> extends Registration<T> {
+export class InjectPackageBuilderToken<T extends IActivityBootBuilder> extends Registration<T> {
     constructor(desc: string) {
         super('PackageActivityBuilder', desc);
     }
@@ -110,4 +110,4 @@ export const PackageToken = new InjectPackageToken<IPackageActivity>('');
 /**
  * package builder token.
  */
-export const PackageBuilderToken = new InjectPackageBuilderToken<IActivityBuilder>('')
+export const PackageBuilderToken = new InjectPackageBuilderToken<IActivityBootBuilder>('')

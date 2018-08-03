@@ -87,7 +87,7 @@ export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
 
     async getInstance() {
         if (!this.instance) {
-            this.instance = await this.getBuilder().build(this.activity, this.container, this.getUUID());
+            this.instance = await this.getBuilder().bootstrap(this.activity, this.getUUID(), this.container);
         }
         return this.instance;
     }

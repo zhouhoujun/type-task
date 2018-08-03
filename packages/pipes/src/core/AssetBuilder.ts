@@ -1,5 +1,5 @@
 import { IActivity, Src, IActivityBuilder } from '@taskfr/core';
-import { isBoolean, isString, Injectable } from '@ts-ioc/core';
+import { isBoolean, isString, Injectable, Singleton } from '@ts-ioc/core';
 import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
 import { SourceActivity, SourceConfigure } from './SourceActivity';
@@ -20,12 +20,8 @@ import { TestActivity, TestConfigure } from './TestActivity';
  * @class AssetTaskBuilder
  * @extends {DestTaskBuilder}
  */
-@Injectable(AssetBuilderToken)
+@Singleton(AssetBuilderToken)
 export class AssetBuilder extends PipeBootBuilder {
-
-    createBuilder(): IActivityBuilder {
-        return this.container.get(AssetBuilderToken);
-    }
 
     /**
      * asset build strategy.

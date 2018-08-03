@@ -1,5 +1,5 @@
-import { IActivity, SequenceActivityBuilder, Src, IActivityBuilder } from '@taskfr/core';
-import { isArray, isString, lang, Injectable } from '@ts-ioc/core';
+import { IActivity, SequenceActivityBuilder, Src } from '@taskfr/core';
+import { isArray, isString, lang, Singleton } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
@@ -17,12 +17,8 @@ import { Token } from 'typescript';
  * @class AssetsBuilder
  * @extends {DestTaskBuilder}
  */
-@Injectable(PackageBuilderToken)
+@Singleton(PackageBuilderToken)
 export class PackageBuilder extends SequenceActivityBuilder {
-
-    createBuilder(): IActivityBuilder {
-        return this.container.get(PackageBuilderToken);
-    }
 
     /**
      * package build stragegy.

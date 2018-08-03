@@ -1,8 +1,8 @@
 import {
     IActivity, Activity, Task, InjectAcitityToken, Condition,
-    ActivityBuilder, InjectAcitityBuilderToken, WhileConfigure
+    ActivityBootBuilder, InjectAcitityBuilderToken, WhileConfigure
 } from '../core';
-import { Injectable } from '@ts-ioc/core';
+import { Singleton } from '@ts-ioc/core';
 
 
 /**
@@ -55,10 +55,10 @@ export class WhileActivity extends Activity<any> {
  *
  * @export
  * @class WhileActivityBuilder
- * @extends {ActivityBuilder}
+ * @extends {ActivityBootBuilder}
  */
-@Injectable(WhileActivityBuilderToken)
-export class WhileActivityBuilder extends ActivityBuilder {
+@Singleton(WhileActivityBuilderToken)
+export class WhileActivityBuilder extends ActivityBootBuilder {
 
     createBuilder() {
         return this.container.get(WhileActivityBuilderToken);
@@ -67,7 +67,7 @@ export class WhileActivityBuilder extends ActivityBuilder {
     async buildStrategy(activity: IActivity, config: WhileConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof WhileActivity) {
-            activity.body = await this.build(config.body, activity.id);
+            activity.body = await this.buildByConfig(config.body, activity.id);
             activity.condition = await this.toExpression(config.while, activity);
         }
         return activity;

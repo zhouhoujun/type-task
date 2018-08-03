@@ -9,10 +9,10 @@ import { IActivity } from './IActivity';
 import { Task } from './decorators';
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
 import { IActivityRunner, ActivityRunnerToken } from './IActivityRunner';
-import { ActivityBuilder } from './ActivityBuilder';
+import { ActivityBootBuilder } from './ActivityBuilder';
 import { Activity } from './Activity';
 import { ActivityRunner } from './ActivityRunner';
-import { AppConfigurationToken } from '@ts-ioc/bootstrap';
+import { AppConfigureToken } from '@ts-ioc/bootstrap';
 import { ExpressionActivity } from './ExpressionActivity';
 /**
  * task context.
@@ -39,7 +39,7 @@ export class Context implements IContext {
     }
 
     getRootPath(): string {
-        let cfg = this.getContainer().get(AppConfigurationToken) || {};
+        let cfg = this.getContainer().get(AppConfigureToken) || {};
         return cfg.baseURL || '.';
     }
 
@@ -48,7 +48,7 @@ export class Context implements IContext {
         let builderInst: IActivityBuilder;
         if (isToken(builder)) {
             builderInst = this.container.resolve(builder);
-        } else if (builder instanceof ActivityBuilder) {
+        } else if (builder instanceof ActivityBootBuilder) {
             builderInst = builder;
         }
         return this.container.resolve(ActivityRunnerToken, { activity: task, uuid: uuid, instance: instance, activityBuilder: builderInst })
@@ -102,7 +102,7 @@ export class Context implements IContext {
         if (exptype instanceof ExpressionActivity) {
             return exptype;
         } else if (isActivityType(exptype)) {
-            return await this.builder.build(exptype, this.container, target.id) as ExpressionActivity<T>;
+            return await this.builder.bootstrap(exptype as ActivityType<any>, target.id, this.container) as ExpressionActivity<T>;
         } else {
             return exptype;
         }
@@ -112,9 +112,9 @@ export class Context implements IContext {
         let result: Ta;
         if (isActivityType(exptype, !valify)) {
             if (valify) {
-                result = await this.builder.build(isToken(exptype) ? exptype : valify(exptype as TCfg), this.container, target.id) as Ta;
+                result = await this.builder.bootstrap(isToken(exptype) ? exptype : valify(exptype as TCfg), target.id, this.container) as Ta;
             } else {
-                result = await this.builder.build(exptype, this.container, target.id) as Ta;
+                result = await this.builder.bootstrap(exptype, target.id, this.container) as Ta;
             }
         } else {
             result = exptype as Ta;
@@ -135,7 +135,7 @@ export class Context implements IContext {
             config = valify(config);
         }
         if (config) {
-            result = await this.builder.build(config, this.container, target.id) as Ta;
+            result = await this.builder.bootstrap(config, target.id, this.container) as Ta;
         } else {
             result = null;
         }

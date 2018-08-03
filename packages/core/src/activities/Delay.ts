@@ -1,8 +1,8 @@
 import {
     IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
-    ActivityBuilder, Activity, Expression, DelayConfigure, OnActivityInit
+    ActivityBootBuilder, Activity, Expression, DelayConfigure, OnActivityInit
 } from '../core';
-import { Defer, Injectable } from '@ts-ioc/core';
+import { Defer, Injectable, Singleton } from '@ts-ioc/core';
 
 /**
  * deloy activity token.
@@ -49,12 +49,8 @@ export class DelayActivity extends Activity<any> implements OnActivityInit {
     }
 }
 
-@Injectable(DelayActivityBuilderToken)
-export class DelayActivityBuilder extends ActivityBuilder {
-
-    createBuilder() {
-        return this.container.get(DelayActivityBuilderToken);
-    }
+@Singleton(DelayActivityBuilderToken)
+export class DelayActivityBuilder extends ActivityBootBuilder {
 
     async buildStrategy(activity: IActivity, config: DelayConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);

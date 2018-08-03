@@ -1,11 +1,12 @@
 import { Type, hasClassMetadata, lang, IContainer, LoadType } from '@ts-ioc/core';
-import { IActivity, SequenceConfigure, ActivityType, IActivityRunner, ActivityRunnerToken, Active } from './core';
+import { SequenceConfigure, IActivityRunner, Active } from './core';
 import { ITaskContainer } from './ITaskContainer';
-import * as activites from './activities';
-import { IApplicationBuilder, DefaultApplicationBuilder, AppConfiguration, ModuleConfigure } from '@ts-ioc/bootstrap';
-import { Aspect } from '@ts-ioc/aop';
+import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure, ModuleConfigure } from '@ts-ioc/bootstrap';
+import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
 import { ActivityRunnerBuilderToken } from './ActivityRunnerBuilder';
+import { LogModule } from '@ts-ioc/logs';
+import { CoreModule } from './CoreModule';
 
 
 /**
@@ -22,7 +23,7 @@ export class DefaultTaskContainer implements ITaskContainer {
     protected container: IContainer;
     getContainer(): IContainer {
         if (!this.container) {
-            this.container = this.getBuilder().createContainer();
+            this.container = this.getBuilder().getPools().getDefault();
         }
         return this.container;
     }
@@ -32,6 +33,9 @@ export class DefaultTaskContainer implements ITaskContainer {
     getBuilder(): IApplicationBuilder<any> {
         if (!this.builder) {
             this.builder = this.createAppBuilder();
+            this.builder.use(AopModule)
+                .use(LogModule)
+                .use(CoreModule);
         }
         return this.builder;
     }
@@ -48,7 +52,7 @@ export class DefaultTaskContainer implements ITaskContainer {
      * @returns {this}
      * @memberof IApplicationBuilder
      */
-    useConfiguration(config?: string | AppConfiguration, container?: IContainer): this {
+    useConfiguration(config?: string | AppConfigure, container?: IContainer): this {
         this.getBuilder().useConfiguration(config, container);
         return this;
     }

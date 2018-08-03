@@ -1,6 +1,6 @@
 import {
     Task, InjectAcitityToken, Activity, Expression,
-    ActivityBuilder, IActivity, InjectAcitityBuilderToken, ThrowConfigure
+    ActivityBootBuilder, IActivity, InjectAcitityBuilderToken, ThrowConfigure
 } from '../core';
 import { Singleton, Injectable } from '@ts-ioc/core';
 
@@ -38,7 +38,7 @@ export class ThrowActivity extends Activity<any> {
 
 
 @Injectable(ThrowActivityBuilderToken)
-export class ThrowActivityBuilder extends ActivityBuilder {
+export class ThrowActivityBuilder extends ActivityBootBuilder {
 
     createBuilder() {
         return this.container.get(ThrowActivityBuilderToken);

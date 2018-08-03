@@ -1,5 +1,5 @@
-import { IActivity, ActivityBootBuilder, isActivityType, ActivityRunner, isActivityRunner } from '@taskfr/core';
-import { isMetadataObject, Token, Registration, isPromise, Injectable } from '@ts-ioc/core';
+import { IActivity, ActivityBootBuilder, isActivityType, isActivityRunner } from '@taskfr/core';
+import { isMetadataObject, Token, Registration, isPromise, Injectable, Singleton } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { TransformConfig, TransformType, TransformExpress } from './pipeTypes';
 import { PipeActivityToken, IPipeActivity, PipeBootBuilderToken } from './IPipeActivity';
@@ -14,7 +14,7 @@ import { InjectAssetActivityToken } from './AssetConfigure';
  * @class PipeTaskBuilder
  * @extends {ActivityBuilder}
  */
-@Injectable(PipeBootBuilderToken)
+@Singleton(PipeBootBuilderToken)
 export class PipeBootBuilder extends ActivityBootBuilder {
 
     /**
@@ -97,7 +97,7 @@ export class PipeBootBuilder extends ActivityBootBuilder {
         if (isActivityRunner(tsCfg)) {
             return tsCfg;
         } else if (isActivityType(tsCfg)) {
-            return await this.builder.build(tsCfg, this.container, activity.id);
+            return await this.buildByConfig(tsCfg, activity.id);
         }
 
         if (isPromise(tsCfg)) {

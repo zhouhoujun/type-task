@@ -1,5 +1,5 @@
 import { AssetTask } from '../decorators';
-import { AssetConfigure, AssetActivity, DestActivity, DestAcitvityToken, isTransform, CleanActivity } from '../core';
+import { AssetConfigure, AssetActivity, DestActivity, DestAcitvityToken, isTransform } from '../core';
 import { isBoolean, ObjectMap, isString } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
 import * as ts from 'gulp-typescript';

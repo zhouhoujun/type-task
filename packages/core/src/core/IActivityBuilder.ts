@@ -1,7 +1,7 @@
 import { InjectToken, Registration, IContainer } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
 import { ActivityType } from './IConfigure';
-import { IModuleBuilder } from '@ts-ioc/bootstrap';
+import { IModuleBuilder, IBootBuilder } from '@ts-ioc/bootstrap';
 
 
 /**
@@ -12,9 +12,24 @@ import { IModuleBuilder } from '@ts-ioc/bootstrap';
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectAcitityBuilderToken<T> extends Registration<T> {
+export class InjectAcitityBuilderToken<T extends IActivityBootBuilder> extends Registration<T> {
     constructor(desc: string) {
         super('ActivityBuilder', desc);
+    }
+}
+
+
+export interface IActivityBootBuilder extends IBootBuilder<IActivity> {
+
+}
+
+
+export const ActivityBootBuilderToken = new InjectAcitityBuilderToken<IActivityBootBuilder>('activity');
+
+
+export class InjectAcitityModuleToken<T extends IActivityBuilder> extends Registration<T> {
+    constructor(desc: string) {
+        super('ActivityModule', desc);
     }
 }
 
@@ -31,7 +46,7 @@ export const ActivityBuilderToken = new InjectToken<IActivityBuilder>('__TASK_Bu
  */
 export interface IActivityBuilder extends IModuleBuilder<IActivity> {
 
-    build(activity: ActivityType<IActivity>, container?: IContainer, uuid?: string): Promise<IActivity>;
+    bootstrap(activity: ActivityType<IActivity>,  uuid?: string, container?: IContainer): Promise<IActivity>;
 
     // /**
     //  * build activity.

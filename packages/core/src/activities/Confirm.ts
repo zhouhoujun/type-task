@@ -1,6 +1,6 @@
 import {
     IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
-    ActivityBuilder, Activity, Expression, ConfirmConfigure
+    Activity, Expression, ConfirmConfigure, ActivityBootBuilder
 } from '../core';
 import { Defer, Singleton } from '@ts-ioc/core';
 
@@ -45,7 +45,7 @@ export class ConfirmActivity extends Activity<any> {
 }
 
 @Singleton(ConfirmActivityBuilderToken)
-export class ConfirmActivityBuilder extends ActivityBuilder {
+export class ConfirmActivityBuilder extends ActivityBootBuilder {
 
     async buildStrategy(activity: IActivity, config: ConfirmConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);

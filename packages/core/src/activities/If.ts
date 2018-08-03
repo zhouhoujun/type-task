@@ -1,8 +1,8 @@
 import {
     IActivity, Task, InjectAcitityToken, Activity,
-    Condition, ActivityBuilder, InjectAcitityBuilderToken, IfConfigure
+    Condition, InjectAcitityBuilderToken, IfConfigure, ActivityBootBuilder
 } from '../core';
-import { Injectable } from '@ts-ioc/core';
+import { Singleton } from '@ts-ioc/core';
 
 /**
  * if activity token.
@@ -48,20 +48,16 @@ export class IfActivity extends Activity<any> {
 
 }
 
-@Injectable(IfActivityBuilderToken)
-export class IfActivityBuilder extends ActivityBuilder {
-
-    createBuilder() {
-        return this.container.get(IfActivityBuilderToken);
-    }
+@Singleton(IfActivityBuilderToken)
+export class IfActivityBuilder extends ActivityBootBuilder {
 
     async buildStrategy(activity: IActivity, config: IfConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof IfActivity) {
-            activity.ifBody = await this.build(config.ifBody, activity.id);
+            activity.ifBody = await this.buildByConfig(config.ifBody, activity.id);
             activity.condition = await this.toExpression(config.if, activity);
             if (config.elseBody) {
-                activity.elseBody = await this.build(config.elseBody, activity.id);
+                activity.elseBody = await this.buildByConfig(config.elseBody, activity.id);
             }
         }
         return activity;

@@ -1,9 +1,9 @@
 import {
     IActivity, Task, InjectAcitityToken,
     Activity, InjectAcitityBuilderToken,
-    ActivityBuilder, Expression, SwitchConfigure
+    ActivityBootBuilder, Expression, SwitchConfigure
 } from '../core';
-import { MapSet, isUndefined, Injectable } from '@ts-ioc/core';
+import { MapSet, isUndefined, Injectable, Singleton } from '@ts-ioc/core';
 
 /**
  * Switch activity token.
@@ -60,12 +60,8 @@ export class SwitchActivity extends Activity<any> {
     }
 }
 
-@Injectable(SwitchActivityBuilderToken)
-export class SwitchActivityBuilder extends ActivityBuilder {
-
-    createBuilder() {
-        return this.container.get(SwitchActivityBuilderToken);
-    }
+@Singleton(SwitchActivityBuilderToken)
+export class SwitchActivityBuilder extends ActivityBootBuilder {
 
     async buildStrategy(activity: IActivity, config: SwitchConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
@@ -73,14 +69,14 @@ export class SwitchActivityBuilder extends ActivityBuilder {
             activity.expression = await this.toExpression(config.expression, activity);
             if (config.cases && config.cases.length) {
                 await Promise.all(config.cases.map(async (cs) => {
-                    let val = await this.build(cs.value, activity.id);
+                    let val = await this.buildByConfig(cs.value, activity.id);
                     activity.cases.set(cs.key, val);
                     return val;
                 }));
             }
 
             if (config.defaultBody) {
-                activity.defaultBody = await this.build(config.defaultBody, activity.id);
+                activity.defaultBody = await this.buildByConfig(config.defaultBody, activity.id);
             }
         }
         return activity;
