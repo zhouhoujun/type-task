@@ -1,8 +1,9 @@
 import { IConfigure, ActivityResultType, Expression } from './IConfigure';
 import { IActivity } from './IActivity';
 import { IActivityRunner } from './IActivityRunner';
-import { IActivityModuleBuilder, IActivityBootBuilder } from './IActivityBuilder';
+import { IActivityModuleBuilder } from './IActivityBuilder';
 import { IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
+import { ActivityBootBuilder } from './ActivityBuilder';
 
 
 
@@ -48,7 +49,7 @@ export interface IContext {
    * @type {IActivityModuleBuilder}
    * @memberof IContext
    */
-  builder: IActivityBootBuilder;
+  builder: ActivityBootBuilder;
 
   /**
    * get ioc container.

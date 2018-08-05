@@ -35,31 +35,31 @@ export interface IActivityBootBuilder extends IBootBuilder<IActivity> {
      * @memberof IActivityBootBuilder
      */
     buildMdlCfg(activity: ActivityType<any>, data: any): Promise<IActivity>;
-    /**
-     * expression.
-     *
-     * @template T
-     * @param {ExpressionType<T>} exptype
-     * @param {IActivity} target
-     * @returns {Promise<Expression<T>>}
-     * @memberof IActivityBootBuilder
-     */
-    toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>>;
-    /**
-     * to activity.
-     *
-     * @template Tr
-     * @template Ta
-     * @template TCfg
-     * @param {(ExpressionType<Tr> | ActivityType<Ta>)} exptype
-     * @param {IActivity} target
-     * @param {Express<any, boolean>} isRightActivity
-     * @param {Express<Tr, TCfg>} toConfig
-     * @param {Express<TCfg, TCfg>} [valify]
-     * @returns {Promise<Ta>}
-     * @memberof IActivityBootBuilder
-     */
-    toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta>
+    // /**
+    //  * expression.
+    //  *
+    //  * @template T
+    //  * @param {ExpressionType<T>} exptype
+    //  * @param {IActivity} target
+    //  * @returns {Promise<Expression<T>>}
+    //  * @memberof IActivityBootBuilder
+    //  */
+    // toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>>;
+    // /**
+    //  * to activity.
+    //  *
+    //  * @template Tr
+    //  * @template Ta
+    //  * @template TCfg
+    //  * @param {(ExpressionType<Tr> | ActivityType<Ta>)} exptype
+    //  * @param {IActivity} target
+    //  * @param {Express<any, boolean>} isRightActivity
+    //  * @param {Express<Tr, TCfg>} toConfig
+    //  * @param {Express<TCfg, TCfg>} [valify]
+    //  * @returns {Promise<Ta>}
+    //  * @memberof IActivityBootBuilder
+    //  */
+    // toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<Tr, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta>
 }
 
 
