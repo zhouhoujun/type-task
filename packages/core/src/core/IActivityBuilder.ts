@@ -27,14 +27,14 @@ export class InjectAcitityBuilderToken<T extends IActivityBootBuilder> extends R
  */
 export interface IActivityBootBuilder extends IBootBuilder<IActivity> {
     /**
-     * build module config.
+     * build by config.
      *
      * @param {ActivityType<any>} activity
      * @param {*} data
      * @returns {Promise<IActivity>}
      * @memberof IActivityBootBuilder
      */
-    buildMdlCfg(activity: ActivityType<any>, data: any): Promise<IActivity>;
+    buildByConfig(activity: ActivityType<any>, data: any): Promise<IActivity>;
 }
 
 
@@ -70,10 +70,10 @@ export interface IActivityModuleBuilder extends IModuleBuilder<IActivity> {
      * bootstap
      *
      * @param {ActivityType<IActivity>} activity
-     * @param {string} [uuid]
      * @param {IContainer} [container]
+     * @param {string} [uuid]
      * @returns {Promise<IActivity>}
      * @memberof IActivityModuleBuilder
      */
-    bootstrap(activity: ActivityType<IActivity>, uuid?: string, container?: IContainer): Promise<IActivity>;
+    bootstrap(activity: ActivityType<IActivity>, container?: IContainer, uuid?: string): Promise<IActivity>;
 }

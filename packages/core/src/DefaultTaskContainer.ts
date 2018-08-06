@@ -1,12 +1,12 @@
-import { Type, hasClassMetadata, lang, IContainer, LoadType } from '@ts-ioc/core';
-import { SequenceConfigure, IActivityRunner, Active } from './core';
+import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken } from '@ts-ioc/core';
+import { SequenceConfigure, IActivityRunner, Active, IConfigure } from './core';
 import { ITaskContainer } from './ITaskContainer';
 import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure, ModuleConfigure } from '@ts-ioc/bootstrap';
 import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
 import { ActivityRunnerBuilderToken } from './ActivityRunnerBuilder';
-import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
+import { LogModule } from '@ts-ioc/logs';
 
 
 /**
@@ -33,10 +33,9 @@ export class DefaultTaskContainer implements ITaskContainer {
     getBuilder(): IApplicationBuilder<any> {
         if (!this.builder) {
             this.builder = this.createAppBuilder();
-            this.builder
-            //     .use(AopModule)
-            //     .use(LogModule)
-                .use(CoreModule);
+            this.builder.use(CoreModule);
+            // .use(AopModule)
+            // .use(LogModule);
         }
         return this.builder;
     }
@@ -91,7 +90,14 @@ export class DefaultTaskContainer implements ITaskContainer {
      * @memberof ITaskContainer
      */
     async createWorkflow(activity: Active, workflowId?: string): Promise<IActivityRunner<any>> {
-        let runner = await this.getBuilder().bootstrap({ bootstrap: activity, builder: ActivityRunnerBuilderToken } as ModuleConfigure, workflowId) as IActivityRunner<any>;
+        let boot: IConfigure;
+        if (isToken(activity)) {
+            boot = { bootstrap: activity, builder: ActivityRunnerBuilderToken };
+        } else {
+            boot = activity;
+            boot.builder = ActivityRunnerBuilderToken;
+        }
+        let runner = await this.getBuilder().bootstrap(boot, null, workflowId) as IActivityRunner<any>;
         this.getContainer().bindProvider(runner.getUUID(), runner);
         return runner;
     }

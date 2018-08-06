@@ -1,30 +1,45 @@
 import { IActivityModuleBuilder, ActivityBuilderToken, ActivityBootBuilderToken, IActivityBootBuilder } from './IActivityBuilder';
 import {
     Type, isFunction, isString, Token, Registration, Express, isToken,
-    getClassName, Injectable, IContainer, Singleton
+    getClassName, Injectable, IContainer, Singleton, Inject, ContainerToken
 } from '@ts-ioc/core';
 import { IConfigure, isActivityType, ActivityType, ExpressionType, Expression } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Activity } from './Activity';
 import { ModuleBuilder, BootBuilder, IBootBuilder } from '@ts-ioc/bootstrap';
 import { AssignActivity } from './ExpressionActivity';
-import { AopModule } from '@ts-ioc/aop';
-import { LogModule } from '@ts-ioc/logs';
+import { Task } from './decorators';
 
 
 @Singleton(ActivityBootBuilderToken)
 export class ActivityBootBuilder extends BootBuilder<IActivity> implements IActivityBootBuilder {
 
+    @Inject(ActivityBuilderToken)
+    builder: IActivityModuleBuilder;
+
+    build(token: Token<IActivity>, config: IConfigure, data?: any): Promise<IActivity> {
+        return super.build(token, config, data);
+    }
+
+
+    buildByConfig(activity: ActivityType<any>, data: any) {
+        return super.buildByConfig(activity, data);
+    }
+
+    getBuilder(token: Token<IActivity>, config?: IConfigure): IBootBuilder<IActivity> {
+        return super.getBuilder(token, config);
+    }
+
     async createInstance(token: Token<IActivity>, config: IConfigure, uuid: string): Promise<IActivity> {
-        console.log(token);
         let instance = await super.createInstance(token, config, uuid);
-        console.log(instance);
         if (!instance || !(instance instanceof Activity)) {
             let task = this.getDefaultAcitvity();
             console.log('try load default activity:', getClassName(task));
             instance = await this.build(task, config, uuid);
         }
-        instance.id = uuid;
+        if (isString(uuid)) {
+            instance.id = uuid;
+        }
         if (isFunction(instance['onTaskInit'])) {
             await Promise.resolve(instance['onTaskInit'](config));
         }
@@ -65,14 +80,6 @@ export class ActivityBootBuilder extends BootBuilder<IActivity> implements IActi
         return token;
     }
 
-    async buildMdlCfg(activity: ActivityType<any>, data: any) {
-        if (isToken(activity)) {
-            return await this.build(activity, undefined, data);
-        } else {
-            return await this.buildByConfig(activity, data);
-        }
-    }
-
     /**
      * to expression
      *
@@ -84,33 +91,33 @@ export class ActivityBootBuilder extends BootBuilder<IActivity> implements IActi
      */
     async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
         if (isActivityType(exptype)) {
-            return await this.buildMdlCfg(exptype, target.id) as AssignActivity<T>;
+            return await this.builder.bootstrap(exptype, this.container, target.id) as AssignActivity<T>;
         } else {
             return exptype;
         }
     }
 
-     /**
-     * to activity.
-     *
-     * @template Tr
-     * @template Ta
-     * @template TCfg
-     * @param {(ExpressionType<Tr> | ActivityType<Ta>)} exptype
-     * @param {IActivity} target
-     * @param {Express<any, boolean>} isRightActivity
-     * @param {Express<Tr, TCfg>} toConfig
-     * @param {Express<TCfg, TCfg>} [valify]
-     * @returns {Promise<Ta>}
-     * @memberof ActivityBootBuilder
-     */
+    /**
+    * to activity.
+    *
+    * @template Tr
+    * @template Ta
+    * @template TCfg
+    * @param {(ExpressionType<Tr> | ActivityType<Ta>)} exptype
+    * @param {IActivity} target
+    * @param {Express<any, boolean>} isRightActivity
+    * @param {Express<Tr, TCfg>} toConfig
+    * @param {Express<TCfg, TCfg>} [valify]
+    * @returns {Promise<Ta>}
+    * @memberof ActivityBootBuilder
+    */
     async toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<Ta, boolean>, toConfig: Express<Tr, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta> {
         let result;
         if (isActivityType(exptype, !valify)) {
             if (valify) {
-                result = await this.buildMdlCfg(isToken(exptype) ? exptype : valify(exptype as TCfg), target.id);
+                result = await this.builder.bootstrap(isToken(exptype) ? exptype : valify(exptype as TCfg), this.container, target.id);
             } else {
-                result = await this.buildMdlCfg(exptype, target.id);
+                result = await this.builder.bootstrap(exptype, this.container, target.id);
             }
         } else {
             result = exptype;
@@ -131,7 +138,7 @@ export class ActivityBootBuilder extends BootBuilder<IActivity> implements IActi
             config = valify(config);
         }
         if (config) {
-            result = await this.buildMdlCfg(config, target.id);
+            result = await this.buildByConfig(config, target.id);
         } else {
             result = null;
         }
@@ -147,13 +154,19 @@ export class ActivityBootBuilder extends BootBuilder<IActivity> implements IActi
  * @class Builder
  * @implements {IBuilder}
  */
-@Injectable(ActivityBuilderToken)
+@Singleton(ActivityBuilderToken)
 export class ActivityModuleBuilder extends ModuleBuilder<IActivity> implements IActivityModuleBuilder {
 
-    // async build(activity: ActivityType<IActivity>, container?: IContainer, uuid?: string): Promise<IActivity> {
-    //     let instance = await super.build(activity, container, uuid);
-    //     return instance;
-    // }
+    async bootstrap(activity: ActivityType<IActivity>, container?: IContainer, uuid?: string): Promise<any> {
+        let instance = await super.bootstrap(activity, container, uuid);
+        return instance;
+    }
+
+    protected async registerExts(container: IContainer, config: IConfigure): Promise<IContainer> {
+        await super.registerExts(container, config);
+        // container.register(ActivityBootBuilder);
+        return container;
+    }
 
     protected getBootstrapToken(cfg: IConfigure): Token<IActivity> {
         return cfg.task || cfg.bootstrap;
@@ -163,20 +176,8 @@ export class ActivityModuleBuilder extends ModuleBuilder<IActivity> implements I
         return container.resolve(ActivityBootBuilderToken);
     }
 
-    protected async registerExts(container: IContainer, config: IConfigure): Promise<IContainer> {
-        if (!container.has(AopModule)) {
-            container.register(AopModule);
-        }
-
-        if (!container.has(LogModule)) {
-            container.register(LogModule);
-        }
-
-        // if (!container.has(LogModule)) {
-        //     container.register(LogModule);
-        // }
-
-        return container;
+    getDecorator() {
+        return Task.toString();
     }
 
 }

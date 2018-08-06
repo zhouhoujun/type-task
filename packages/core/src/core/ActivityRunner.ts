@@ -87,7 +87,7 @@ export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
 
     async getInstance() {
         if (!this.instance) {
-            this.instance = await this.getBuilder().bootstrap(this.activity, this.getUUID(), this.container);
+            this.instance = await this.getBuilder().bootstrap(this.activity, this.container, this.getUUID());
         }
         return this.instance;
     }
@@ -102,6 +102,7 @@ export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
 
     async start(data?: any): Promise<T> {
         let instance = await this.getInstance();
+        console.log(instance);
         return instance.run(data)
             .then(data => {
                 this.state = RunState.complete;
