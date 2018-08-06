@@ -28,7 +28,7 @@ export class Context implements IContext {
     private container: IContainer;
 
     @Inject(ActivityBootBuilderToken)
-    builder: IActivityBootBuilder;
+    builder: ActivityBootBuilder;
 
     constructor() {
 

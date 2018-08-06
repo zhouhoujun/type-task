@@ -69,6 +69,15 @@ export class ActivityBootBuilder extends BootBuilder<IActivity> implements IActi
         }
     }
 
+    /**
+     * to expression
+     *
+     * @template T
+     * @param {ExpressionType<T>} exptype
+     * @param {IActivity} target
+     * @returns {Promise<Expression<T>>}
+     * @memberof ActivityBootBuilder
+     */
     async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
         if (isActivityType(exptype)) {
             return await this.buildMdlCfg(exptype, target.id) as AssignActivity<T>;
@@ -77,7 +86,21 @@ export class ActivityBootBuilder extends BootBuilder<IActivity> implements IActi
         }
     }
 
-    async toActivity<Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<any> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<any, boolean>, toConfig: Express<any, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta> {
+     /**
+     * to activity.
+     *
+     * @template Tr
+     * @template Ta
+     * @template TCfg
+     * @param {(ExpressionType<Tr> | ActivityType<Ta>)} exptype
+     * @param {IActivity} target
+     * @param {Express<any, boolean>} isRightActivity
+     * @param {Express<Tr, TCfg>} toConfig
+     * @param {Express<TCfg, TCfg>} [valify]
+     * @returns {Promise<Ta>}
+     * @memberof ActivityBootBuilder
+     */
+    async toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(exptype: ExpressionType<Tr> | ActivityType<Ta>, target: IActivity, isRightActivity: Express<Ta, boolean>, toConfig: Express<Tr, TCfg>, valify?: Express<TCfg, TCfg>): Promise<Ta> {
         let result;
         if (isActivityType(exptype, !valify)) {
             if (valify) {
