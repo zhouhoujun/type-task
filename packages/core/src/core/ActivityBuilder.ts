@@ -1,20 +1,24 @@
 import { IActivityModuleBuilder, ActivityBuilderToken, ActivityBootBuilderToken, IActivityBootBuilder } from './IActivityBuilder';
 import {
-    Type, isFunction, isString,
-    Token, Registration, Express, isToken, getClassName, Injectable, IContainer, Singleton
+    Type, isFunction, isString, Token, Registration, Express, isToken,
+    getClassName, Injectable, IContainer, Singleton
 } from '@ts-ioc/core';
 import { IConfigure, isActivityType, ActivityType, ExpressionType, Expression } from './IConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Activity } from './Activity';
 import { ModuleBuilder, BootBuilder, IBootBuilder } from '@ts-ioc/bootstrap';
 import { AssignActivity } from './ExpressionActivity';
+import { AopModule } from '@ts-ioc/aop';
+import { LogModule } from '@ts-ioc/logs';
 
 
 @Singleton(ActivityBootBuilderToken)
 export class ActivityBootBuilder extends BootBuilder<IActivity> implements IActivityBootBuilder {
 
     async createInstance(token: Token<IActivity>, config: IConfigure, uuid: string): Promise<IActivity> {
+        console.log(token);
         let instance = await super.createInstance(token, config, uuid);
+        console.log(instance);
         if (!instance || !(instance instanceof Activity)) {
             let task = this.getDefaultAcitvity();
             console.log('try load default activity:', getClassName(task));
@@ -157,6 +161,22 @@ export class ActivityModuleBuilder extends ModuleBuilder<IActivity> implements I
 
     protected getDefaultBootBuilder(container: IContainer): IBootBuilder<any> {
         return container.resolve(ActivityBootBuilderToken);
+    }
+
+    protected async registerExts(container: IContainer, config: IConfigure): Promise<IContainer> {
+        if (!container.has(AopModule)) {
+            container.register(AopModule);
+        }
+
+        if (!container.has(LogModule)) {
+            container.register(LogModule);
+        }
+
+        // if (!container.has(LogModule)) {
+        //     container.register(LogModule);
+        // }
+
+        return container;
     }
 
 }

@@ -23,6 +23,7 @@ export class ActivityRunnerBuilder extends ActivityModuleBuilder {
     async bootstrap(activity: ActivityType<IActivity>, workflowId?: string, defaultContainer?: IContainer): Promise<IActivityRunner<any>> {
         let container = this.getContainer(activity, defaultContainer);
         workflowId = workflowId || this.createUUID(container);
+        console.log(workflowId);
         let instance = await super.bootstrap(activity, workflowId, defaultContainer);
         let runner = container.resolve(ActivityRunnerToken, { activities: activity, instance: instance, uuid: workflowId });
         await runner.start();

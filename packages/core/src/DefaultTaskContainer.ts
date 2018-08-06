@@ -33,8 +33,9 @@ export class DefaultTaskContainer implements ITaskContainer {
     getBuilder(): IApplicationBuilder<any> {
         if (!this.builder) {
             this.builder = this.createAppBuilder();
-            this.builder.use(AopModule)
-                .use(LogModule)
+            this.builder
+            //     .use(AopModule)
+            //     .use(LogModule)
                 .use(CoreModule);
         }
         return this.builder;

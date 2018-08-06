@@ -35,7 +35,6 @@ export interface IActivityBootBuilder extends IBootBuilder<IActivity> {
      * @memberof IActivityBootBuilder
      */
     buildMdlCfg(activity: ActivityType<any>, data: any): Promise<IActivity>;
-
 }
 
 
