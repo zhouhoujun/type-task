@@ -1,4 +1,4 @@
-import { IActivity, SequenceActivityBuilder, Src } from '@taskfr/core';
+import { IActivity, Src, ActivityBuilder } from '@taskfr/core';
 import { isArray, isString, lang, Singleton } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
@@ -7,7 +7,6 @@ import { TestActivity, TestConfigure } from './TestActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { AssetActivity } from './AssetActivity';
 import { InjectAssetActivityToken, AssetConfigure } from './AssetConfigure';
-import { Token } from 'typescript';
 
 
 /**
@@ -18,7 +17,7 @@ import { Token } from 'typescript';
  * @extends {DestTaskBuilder}
  */
 @Singleton(PackageBuilderToken)
-export class PackageBuilder extends SequenceActivityBuilder {
+export class PackageBuilder extends ActivityBuilder {
 
     /**
      * package build stragegy.

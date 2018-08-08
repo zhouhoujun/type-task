@@ -1,9 +1,9 @@
 import { IActivity, GActivity } from './IActivity';
 import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
-import { ModuleConfig } from '@ts-ioc/bootstrap';
-import { IActivityRunner } from './IActivityRunner';
+import { TypeConfigure } from '@ts-ioc/bootstrap';
+import { IWorkflow } from './IWorkflow';
 import { ExpressionActivity } from './ExpressionActivity';
-import { ActivityRunner } from './ActivityRunner';
+import { DefaultWorkflow } from './DefaultWorkflow';
 
 
 /**
@@ -27,7 +27,7 @@ export type AsyncResult<T> = (activity?: IActivity, data?: any) => Promise<T>;
 /**
  * activity result.
  */
-export type ActivityResult<T> = Promise<T> | AsyncResult<T> | ExpressionActivity<T> | IActivityRunner<T>;
+export type ActivityResult<T> = Promise<T> | AsyncResult<T> | ExpressionActivity<T> | IWorkflow<T>;
 
 /**
  * expression.
@@ -56,7 +56,7 @@ export type ExpressionType<T> = Expression<T> | ActivityResultType<T>;
 /**
  * core activities configures.
  */
-export type CoreActivityConfigure = IActivityConfigure<any> | IConfigure | ConfirmConfigure | DelayConfigure | DoWhileConfigure
+export type CoreActivityConfigure = IActivityConfigure<any> | ActivityConfigure | ConfirmConfigure | DelayConfigure | DoWhileConfigure
     | IfConfigure | IntervalConfigure | ParallelConfigure | SequenceConfigure | SwitchConfigure
     | ThrowConfigure | TryCatchConfigure | WhileConfigure;
 
@@ -70,7 +70,7 @@ export type Active = ActivityType<IActivity>;
 /**
  * activity configure type.
  */
-export type ConfigureType<T extends IActivity, TC extends IConfigure> = Token<T> | TC;
+export type ConfigureType<T extends IActivity, TC extends ActivityConfigure> = Token<T> | TC;
 
 /**
  * target is activity runner.
@@ -79,8 +79,8 @@ export type ConfigureType<T extends IActivity, TC extends IConfigure> = Token<T>
  * @param {*} target
  * @returns {target is IActivityRunner<any>}
  */
-export function isActivityRunner(target: any): target is IActivityRunner<any> {
-    return target instanceof ActivityRunner;
+export function isActivityRunner(target: any): target is IWorkflow<any> {
+    return target instanceof DefaultWorkflow;
 }
 
 /**
@@ -119,12 +119,14 @@ export function isActivityType(target: any, check = true): target is ActivityTyp
 }
 
 /**
- * task config.
+ * ActivityConfigure
  *
  * @export
- * @interface ITaskConfigure
+ * @interface IActivityConfigure
+ * @extends {TypeConfigure<T>}
+ * @template T
  */
-export interface IActivityConfigure<T> extends ModuleConfig<T> {
+export interface IActivityConfigure<T> extends TypeConfigure<T> {
 
     /**
      * workflow uuid.
@@ -167,7 +169,7 @@ export interface IActivityConfigure<T> extends ModuleConfig<T> {
  * @interface IConfigure
  * @extends {IActivityConfigure<IActivity>}
  */
-export interface IConfigure extends IActivityConfigure<IActivity> {
+export interface ActivityConfigure extends IActivityConfigure<IActivity> {
 
 }
 
@@ -176,9 +178,9 @@ export interface IConfigure extends IActivityConfigure<IActivity> {
  *
  * @export
  * @interface ConfirmConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface ConfirmConfigure extends IConfigure {
+export interface ConfirmConfigure extends ActivityConfigure {
     /**
      * confirm expression.
      *
@@ -194,9 +196,9 @@ export interface ConfirmConfigure extends IConfigure {
  *
  * @export
  * @interface DelayConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface DelayConfigure extends IConfigure {
+export interface DelayConfigure extends ActivityConfigure {
     /**
      * delay ms.
      *
@@ -211,9 +213,9 @@ export interface DelayConfigure extends IConfigure {
  *
  * @export
  * @interface DoWhileConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface DoWhileConfigure extends IConfigure {
+export interface DoWhileConfigure extends ActivityConfigure {
     /**
      * do while
      *
@@ -237,9 +239,9 @@ export interface DoWhileConfigure extends IConfigure {
  *
  * @export
  * @interface IfConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface IfConfigure extends IConfigure {
+export interface IfConfigure extends ActivityConfigure {
 
     /**
      * while condition
@@ -274,9 +276,9 @@ export interface IfConfigure extends IConfigure {
  *
  * @export
  * @interface IntervalConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface IntervalConfigure extends IConfigure {
+export interface IntervalConfigure extends ActivityConfigure {
     /**
      * Interval ms.
      *
@@ -299,9 +301,9 @@ export interface IntervalConfigure extends IConfigure {
  *
  * @export
  * @interface ParallelConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface ParallelConfigure extends IConfigure {
+export interface ParallelConfigure extends ActivityConfigure {
     /**
      * parallel activities.
      *
@@ -316,9 +318,9 @@ export interface ParallelConfigure extends IConfigure {
  *
  * @export
  * @interface SequenceConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface SequenceConfigure extends IConfigure {
+export interface SequenceConfigure extends ActivityConfigure {
     /**
      * sequence activities.
      *
@@ -333,9 +335,9 @@ export interface SequenceConfigure extends IConfigure {
  *
  * @export
  * @interface SwitchConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface SwitchConfigure extends IConfigure {
+export interface SwitchConfigure extends ActivityConfigure {
 
     /**
      * while condition
@@ -368,9 +370,9 @@ export interface SwitchConfigure extends IConfigure {
  *
  * @export
  * @interface ThrowConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface ThrowConfigure extends IConfigure {
+export interface ThrowConfigure extends ActivityConfigure {
     /**
      * delay ms.
      *
@@ -386,9 +388,9 @@ export interface ThrowConfigure extends IConfigure {
  *
  * @export
  * @interface TryCatchConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface TryCatchConfigure extends IConfigure {
+export interface TryCatchConfigure extends ActivityConfigure {
     /**
      * try activity.
      *
@@ -420,9 +422,9 @@ export interface TryCatchConfigure extends IConfigure {
  *
  * @export
  * @interface WhileConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface WhileConfigure extends IConfigure {
+export interface WhileConfigure extends ActivityConfigure {
 
     /**
      * while condition

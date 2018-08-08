@@ -11,7 +11,6 @@ import { PipeActivity } from './PipeActivity';
 import { IActivity } from '@taskfr/core';
 import { IAssetActivity } from './AssetConfigure';
 import { TestActivity } from './TestActivity';
-import { isTransform } from './pipeTypes';
 
 
 /**

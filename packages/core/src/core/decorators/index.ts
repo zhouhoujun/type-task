@@ -1,3 +1,3 @@
 
 export * from './Task';
-export * from './Runner';
+export * from './Workflow';

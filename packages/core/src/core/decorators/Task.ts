@@ -1,9 +1,7 @@
-import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken, InjectToken } from '@ts-ioc/core';
-import { TaskMetadata } from '../metadatas';
+import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken } from '@ts-ioc/core';
+import { ActivityMetadata } from '../metadatas';
 import { ActivityToken, IActivity } from '../IActivity';
-import { ActivityBuilderToken, IActivityModuleBuilder } from '../IActivityBuilder';
-import { IBootBuilder } from '@ts-ioc/bootstrap';
-import { ActivityBootBuilder } from '../ActivityBuilder';
+import { IActivityBuilder, ActivityBuilderToken } from '../IActivityBuilder';
 
 
 /**
@@ -14,7 +12,7 @@ import { ActivityBootBuilder } from '../ActivityBuilder';
  * @extends {ITypeDecorator<T>}
  * @template T
  */
-export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T> {
+export interface ITaskDecorator<T extends ActivityMetadata> extends ITypeDecorator<T> {
     /**
      * task decorator, use to define class as task element.
      *
@@ -41,7 +39,7 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
      * @param {string} builder task builder token.
      * @param {string} [alias]  task alias name
      */
-    (provide: Registration<any> | symbol | string, builder?: Token<ActivityBootBuilder>, alias?: string): ClassDecorator;
+    (provide: Registration<any> | symbol | string, builder?: Token<IActivityBuilder>, alias?: string): ClassDecorator;
 
     /**
      * task decorator, use to define class as task element.
@@ -57,27 +55,25 @@ export interface ITaskDecorator<T extends TaskMetadata> extends ITypeDecorator<T
  * @export
  * @template T
  * @param {string} taskType
- * @param {(Token<IActivityModuleBuilder> | IActivityModuleBuilder)} builder
+ * @param {(Token<IActivityBuilder> | IActivityBuilder)} builder
  * @param {InjectToken<IActivity>} provideType
  * @param {MetadataAdapter} [adapter]
  * @param {MetadataExtends<T>} [metadataExtends]
  * @returns {ITaskDecorator<T>}
  */
-export function createTaskDecorator<T extends TaskMetadata>(
+export function createTaskDecorator<T extends ActivityMetadata>(
     taskType: string,
-    builder?: Token<IActivityModuleBuilder> | IActivityModuleBuilder,
-    moduleBuilder?: Token<IBootBuilder<any>> | IBootBuilder<any>,
-    bootstrapBuilder?: Token<IBootBuilder<any>> | IBootBuilder<any>,
+    typeBuilder?: Token<IActivityBuilder> | IActivityBuilder,
     provideType?: Token<IActivity>,
     adapter?: MetadataAdapter,
     metadataExtends?: MetadataExtends<T>): ITaskDecorator<T> {
 
-    return createClassDecorator<TaskMetadata>('Task',
+    return createClassDecorator<ActivityMetadata>('Task',
         args => {
             if (adapter) {
                 adapter(args);
             }
-            args.next<TaskMetadata>({
+            args.next<ActivityMetadata>({
                 match: (arg) => arg && (isString(arg) || (isObject(arg) && arg instanceof Registration)),
                 setMetadata: (metadata, arg) => {
                     if (isString(arg)) {
@@ -88,18 +84,18 @@ export function createTaskDecorator<T extends TaskMetadata>(
                 }
             });
 
-            args.next<TaskMetadata>({
+            args.next<ActivityMetadata>({
                 match: (arg) => isString(arg) || isToken(arg),
                 setMetadata: (metadata, arg) => {
                     if (isString(arg)) {
                         metadata.name = arg;
                     } else {
-                        metadata.moduleBuilder = arg;
+                        metadata.typeBuilder = arg;
                     }
                 }
             });
 
-            args.next<TaskMetadata>({
+            args.next<ActivityMetadata>({
                 match: (arg) => isString(arg),
                 setMetadata: (metadata, arg) => {
                     metadata.name = arg;
@@ -124,15 +120,10 @@ export function createTaskDecorator<T extends TaskMetadata>(
             metadata.alias = metadata.alias || metadata.name;
 
             metadata.decorType = taskType;
-            if (builder && !metadata.builder) {
-                metadata.builder = builder;
+            if (typeBuilder && !metadata.typeBuilder) {
+                metadata.typeBuilder = typeBuilder;
             }
-            if (moduleBuilder && !metadata.moduleBuilder) {
-                metadata.moduleBuilder = moduleBuilder;
-            }
-            if (bootstrapBuilder && !metadata.bootstrapBuilder) {
-                metadata.bootstrapBuilder = bootstrapBuilder;
-            }
+
             return metadata;
         }) as ITaskDecorator<T>;
 }
@@ -142,5 +133,5 @@ export function createTaskDecorator<T extends TaskMetadata>(
  *
  * @Task
  */
-export const Task: ITaskDecorator<TaskMetadata> = createTaskDecorator('Task', ActivityBuilderToken, ActivityBootBuilder, ActivityBootBuilder, ActivityToken);
+export const Task: ITaskDecorator<ActivityMetadata> = createTaskDecorator('Task', ActivityBuilderToken, ActivityToken);
 

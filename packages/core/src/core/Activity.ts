@@ -1,8 +1,9 @@
 import { Inject, Express } from '@ts-ioc/core';
 import { Task } from './decorators';
 import { IActivity, GActivity } from './IActivity';
-import { IConfigure, ExpressionType, Expression, ActivityType } from './IConfigure';
+import { ActivityConfigure, ExpressionType, Expression, ActivityType } from './ActivityConfigure';
 import { ContextToken, IContext } from './IContext';
+import { OnActivityInit } from './OnActivityInit';
 
 /**
  * base activity.
@@ -13,7 +14,7 @@ import { ContextToken, IContext } from './IContext';
  * @template T
  */
 @Task
-export class Activity<T> implements GActivity<T> {
+export class Activity<T> implements GActivity<T>, OnActivityInit {
 
     /**
      * workflow instance uuid.
@@ -32,10 +33,10 @@ export class Activity<T> implements GActivity<T> {
     /**
      * config.
      *
-     * @type {IConfigure}
+     * @type {ActivityConfigure}
      * @memberof Activity
      */
-    config: IConfigure;
+    config: ActivityConfigure;
 
     /**
      * task context.
@@ -47,6 +48,10 @@ export class Activity<T> implements GActivity<T> {
     context: IContext;
 
     constructor() {
+
+    }
+
+    async onActivityInit(config: ActivityConfigure): Promise<any> {
 
     }
 
@@ -62,17 +67,21 @@ export class Activity<T> implements GActivity<T> {
         return Promise.resolve(data);
     }
 
-    protected async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
-        return this.context.builder.toExpression(exptype, target);
+    protected toExpression<T>(exptype: ExpressionType<T>, target?: IActivity): Promise<Expression<T>> {
+        return this.context.builder.toExpression(exptype, target || this);
     }
 
-    protected async toActivity<Tr, Ta extends IActivity, TCfg extends IConfigure>(
+    protected toActivity<Tr, Ta extends IActivity, TCfg extends ActivityConfigure>(
         exptype: ExpressionType<Tr> | ActivityType<Ta>,
-        target: IActivity,
         isRightActivity: Express<any, boolean>,
         toConfig: Express<Tr, TCfg>,
-        valify?: Express<TCfg, TCfg>): Promise<Ta> {
-        return this.context.builder.toActivity<Tr, Ta, TCfg>(exptype, target, isRightActivity, toConfig, valify);
+        valify?: Express<TCfg, TCfg>,
+        target?: IActivity): Promise<Ta> {
+        return this.context.builder.toActivity<Tr, Ta, TCfg>(exptype, target || this, isRightActivity, toConfig, valify);
+    }
+
+    protected buildActivity<T extends IActivity>(config: ActivityType<T>): Promise<T> {
+        return this.context.builder.buildByConfig(config, this.id) as Promise<T>;
     }
 
 }

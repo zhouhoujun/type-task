@@ -1,19 +1,10 @@
-import {
-    IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
-    ActivityBootBuilder, Activity, Expression, DelayConfigure, OnActivityInit
-} from '../core';
-import { Defer, Injectable, Singleton } from '@ts-ioc/core';
+import { Task, InjectAcitityToken, Activity, Expression, DelayConfigure, OnActivityInit } from '../core';
+import { Defer } from '@ts-ioc/core';
 
 /**
  * deloy activity token.
  */
 export const DelayActivityToken = new InjectAcitityToken<DelayActivity>('delay');
-
-/**
- * deloy activity builder token
- */
-export const DelayActivityBuilderToken = new InjectAcitityBuilderToken<DelayActivityBuilder>('delay');
-
 
 /**
  * while control activity.
@@ -22,7 +13,7 @@ export const DelayActivityBuilderToken = new InjectAcitityBuilderToken<DelayActi
  * @class DelayActivity
  * @extends {Activity}
  */
-@Task(DelayActivityToken, DelayActivityBuilderToken)
+@Task(DelayActivityToken)
 export class DelayActivity extends Activity<any> implements OnActivityInit {
 
     /**
@@ -33,7 +24,8 @@ export class DelayActivity extends Activity<any> implements OnActivityInit {
      */
     delay: Expression<number>;
 
-    async activityInit(config: DelayConfigure): Promise<any> {
+    async onActivityInit(config: DelayConfigure): Promise<any> {
+        await super.onActivityInit(config);
         this.delay = await this.toExpression(config.delay, this);
     }
 
@@ -49,15 +41,3 @@ export class DelayActivity extends Activity<any> implements OnActivityInit {
     }
 }
 
-@Singleton(DelayActivityBuilderToken)
-export class DelayActivityBuilder extends ActivityBootBuilder {
-
-    async buildStrategy(activity: IActivity, config: DelayConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof DelayActivity) {
-            activity.delay = await this.toExpression(config.delay, activity);
-        }
-
-        return activity;
-    }
-}

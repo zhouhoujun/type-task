@@ -1,8 +1,5 @@
-import {
-    Task, IActivity, InjectAcitityToken, InjectAcitityBuilderToken,
-    ActivityBootBuilder, Activity, ParallelConfigure,
-} from '../core';
-import { Singleton, Token, isToken } from '@ts-ioc/core';
+import { Task, IActivity, InjectAcitityToken, Activity, ParallelConfigure, } from '../core';
+import { Token, isToken } from '@ts-ioc/core';
 
 
 /**
@@ -11,21 +8,43 @@ import { Singleton, Token, isToken } from '@ts-ioc/core';
 export const ParallelActivityToken = new InjectAcitityToken<ParallelActivity>('parallel');
 
 /**
- * Parallel activity builder token.
- */
-export const ParallelActivityBuilderToken = new InjectAcitityBuilderToken<ParallelActivityBuilder>('parallel');
-
-/**
  * parallel activity.
  *
  * @export
  * @class ParallelActivity
  * @extends {Activity}
  */
-@Task(ParallelActivityToken, ParallelActivityBuilderToken)
+@Task(ParallelActivityToken)
 export class ParallelActivity extends Activity<any> {
 
     activites: IActivity[] = [];
+
+    async onActivityInit(config: ParallelConfigure): Promise<any> {
+        await super.onActivityInit(config);
+
+        if (config.parallel && config.parallel.length) {
+            await this.buildChildren(this, config.parallel);
+        }
+
+    }
+
+    async buildChildren(activity: ParallelActivity, configs: (ParallelConfigure | Token<IActivity>)[]) {
+        let children = await Promise.all(configs.map(async cfg => {
+            let node = await this.buildActivity(cfg);
+            if (!node) {
+                return null;
+            }
+            if (node instanceof ParallelActivity) {
+                if (!isToken(cfg) && cfg.parallel && cfg.parallel.length) {
+                    await node.buildChildren(node, cfg.parallel);
+                }
+            }
+            return node;
+        }));
+
+        activity.activites = children;
+        return activity;
+    }
 
     /**
      * run parallel activity.
@@ -79,37 +98,4 @@ export class ParallelActivity extends Activity<any> {
         return data;
     }
 
-}
-
-@Singleton(ParallelActivityBuilderToken)
-export class ParallelActivityBuilder extends ActivityBootBuilder {
-
-    async buildStrategy(activity: IActivity, config: ParallelConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof ParallelActivity) {
-            if (config.parallel && config.parallel.length) {
-                await this.buildChildren(activity, config.parallel);
-            }
-        }
-
-        return activity;
-    }
-
-    async buildChildren(activity: ParallelActivity, configs: (ParallelConfigure | Token<IActivity>)[]) {
-        let children = await Promise.all(configs.map(async cfg => {
-            let node = await this.buildByConfig(cfg, activity.id);
-            if (!node) {
-                return null;
-            }
-            if (node instanceof ParallelActivity) {
-                if (!isToken(cfg) && cfg.parallel && cfg.parallel.length) {
-                    await this.buildChildren(node, cfg.parallel);
-                }
-            }
-            return node;
-        }));
-
-        activity.activites = children;
-        return activity;
-    }
 }

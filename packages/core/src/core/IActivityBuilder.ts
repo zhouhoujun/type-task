@@ -1,7 +1,7 @@
-import { InjectToken, Registration, IContainer, Express } from '@ts-ioc/core';
+import { Registration } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
-import { ActivityType, ExpressionType, Expression, IConfigure } from './IConfigure';
-import { IModuleBuilder, IBootBuilder } from '@ts-ioc/bootstrap';
+import { ActivityType } from './ActivityConfigure';
+import { ITypeBuilder } from '@ts-ioc/bootstrap';
 
 
 /**
@@ -12,7 +12,7 @@ import { IModuleBuilder, IBootBuilder } from '@ts-ioc/bootstrap';
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectAcitityBuilderToken<T extends IActivityBootBuilder> extends Registration<T> {
+export class InjectAcitityBuilderToken<T extends IActivityBuilder> extends Registration<T> {
     constructor(desc: string) {
         super('ActivityBuilder', desc);
     }
@@ -22,58 +22,20 @@ export class InjectAcitityBuilderToken<T extends IActivityBootBuilder> extends R
  * activity boot builder.
  *
  * @export
- * @interface IActivityBootBuilder
- * @extends {IBootBuilder<IActivity>}
+ * @interface IActivityBuilder
+ * @extends {ITypeBuilder<IActivity>}
  */
-export interface IActivityBootBuilder extends IBootBuilder<IActivity> {
+export interface IActivityBuilder extends ITypeBuilder<IActivity> {
     /**
      * build by config.
      *
      * @param {ActivityType<any>} activity
      * @param {*} data
      * @returns {Promise<IActivity>}
-     * @memberof IActivityBootBuilder
+     * @memberof IActivityTypeBuilder
      */
     buildByConfig(activity: ActivityType<any>, data: any): Promise<IActivity>;
 }
 
 
-export const ActivityBootBuilderToken = new InjectAcitityBuilderToken<IActivityBootBuilder>('activity');
-
-/**
- * inject acitiity module token.
- *
- * @export
- * @class InjectAcitityModuleToken
- * @extends {Registration<T>}
- * @template T
- */
-export class InjectAcitityModuleToken<T extends IActivityModuleBuilder> extends Registration<T> {
-    constructor(desc: string) {
-        super('ActivityModule', desc);
-    }
-}
-
-/**
- * activity builder token.
- */
-export const ActivityBuilderToken = new InjectToken<IActivityModuleBuilder>('__TASK_Builder');
-
-/**
- * builder.
- *
- * @export
- * @interface ITaskBuilder
- */
-export interface IActivityModuleBuilder extends IModuleBuilder<IActivity> {
-    /**
-     * bootstap
-     *
-     * @param {ActivityType<IActivity>} activity
-     * @param {IContainer} [container]
-     * @param {string} [uuid]
-     * @returns {Promise<IActivity>}
-     * @memberof IActivityModuleBuilder
-     */
-    bootstrap(activity: ActivityType<IActivity>, container?: IContainer, uuid?: string): Promise<IActivity>;
-}
+export const ActivityBuilderToken = new InjectAcitityBuilderToken<IActivityBuilder>('activity');

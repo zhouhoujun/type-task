@@ -1,18 +1,10 @@
-import {
-    IActivity, Task, InjectAcitityToken, Condition,
-    InjectAcitityBuilderToken, ActivityBootBuilder, TryCatchConfigure
-} from '../core';
+import { IActivity, Task, InjectAcitityToken, Condition, TryCatchConfigure } from '../core';
 import { Activity } from '../core/Activity';
-import { Singleton } from '@ts-ioc/core';
 
 /**
  * while activity token.
  */
 export const TryCatchActivityToken = new InjectAcitityToken<TryCatchActivity>('trycatch');
-/**
- * TryCatch activity builder token
- */
-export const TryCatchActivityBuilderToken = new InjectAcitityBuilderToken<TryCatchActivityBuilder>('delay');
 
 /**
  * while control activity.
@@ -21,7 +13,7 @@ export const TryCatchActivityBuilderToken = new InjectAcitityBuilderToken<TryCat
  * @class TryCatchActivity
  * @extends {Activity}
  */
-@Task(TryCatchActivityToken, TryCatchActivityBuilderToken)
+@Task(TryCatchActivityToken)
 export class TryCatchActivity extends Activity<any> {
     /**
      * while condition.
@@ -51,6 +43,20 @@ export class TryCatchActivity extends Activity<any> {
      */
     finally?: IActivity;
 
+    async onActivityInit(config: TryCatchConfigure): Promise<any> {
+        await super.onActivityInit(config);
+        this.try = await this.buildActivity(config.try);
+        if (config.catchs && config.catchs.length) {
+            let catchs = await Promise.all(config.catchs.map(cat => {
+                return this.buildActivity(cat);
+            }));
+            this.catchs = catchs;
+        }
+        if (config.finally) {
+            this.finally = await this.buildActivity(config.finally);
+        }
+    }
+
     async run(data?: any): Promise<any> {
         let rp;
         try {
@@ -73,31 +79,5 @@ export class TryCatchActivity extends Activity<any> {
         }
 
         return rp;
-    }
-}
-
-@Singleton(TryCatchActivityBuilderToken)
-export class TryCatchActivityBuilder extends ActivityBootBuilder {
-
-    createBuilder() {
-        return this.container.get(TryCatchActivityBuilderToken);
-    }
-
-    async buildStrategy(activity: IActivity, config: TryCatchConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof TryCatchActivity) {
-            activity.try = await this.buildByConfig(config.try, activity.id);
-            if (config.catchs && config.catchs.length) {
-                let catchs = await Promise.all(config.catchs.map(cat => {
-                    return this.buildByConfig(cat, activity.id);
-                }));
-                activity.catchs = catchs;
-            }
-            if (config.finally) {
-                activity.finally = await this.buildByConfig(config.finally, activity.id);
-            }
-        }
-
-        return activity;
     }
 }

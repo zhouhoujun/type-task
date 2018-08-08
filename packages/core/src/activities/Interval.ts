@@ -1,8 +1,4 @@
-import {
-    IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
-    Activity, Expression, IntervalConfigure, ActivityBootBuilder
-} from '../core';
-import { Singleton } from '@ts-ioc/core';
+import { IActivity, Task, InjectAcitityToken, Activity, Expression, IntervalConfigure } from '../core';
 
 
 /**
@@ -11,18 +7,13 @@ import { Singleton } from '@ts-ioc/core';
 export const IntervalActivityToken = new InjectAcitityToken<IntervalActivity>('interval');
 
 /**
- * Interval activity builder token
- */
-export const IntervalActivityBuilderToken = new InjectAcitityBuilderToken<IntervalActivityBuilder>('interval');
-
-/**
  * while control activity.
  *
  * @export
  * @class IntervalActivity
  * @extends {Activity}
  */
-@Task(IntervalActivityToken, IntervalActivityBuilderToken)
+@Task(IntervalActivityToken)
 export class IntervalActivity extends Activity<any> {
 
     /**
@@ -35,6 +26,12 @@ export class IntervalActivity extends Activity<any> {
 
     body: IActivity;
 
+    async onActivityInit(config: IntervalConfigure): Promise<any> {
+        await super.onActivityInit(config);
+        this.interval = await this.toExpression(config.interval);
+        this.body = await this.buildActivity(config.body);
+    }
+
     async run(data?: any): Promise<any> {
         let interval = await this.context.exec(this, this.interval, data);
         let result = data;
@@ -42,19 +39,5 @@ export class IntervalActivity extends Activity<any> {
             this.body.run(result);
         }, interval);
         return data;
-    }
-}
-
-@Singleton(IntervalActivityBuilderToken)
-export class IntervalActivityBuilder extends ActivityBootBuilder {
-
-    async buildStrategy(activity: IActivity, config: IntervalConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof IntervalActivity) {
-            activity.interval = await this.toExpression(config.interval, activity);
-            activity.body = await this.buildByConfig(config.body, activity.id);
-        }
-
-        return activity;
     }
 }

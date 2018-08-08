@@ -1,4 +1,4 @@
-import { IConfigure } from './IConfigure';
+import { ActivityConfigure } from './ActivityConfigure';
 
 /**
  * on task init.
@@ -10,8 +10,8 @@ export interface OnActivityInit {
     /**
      * activity init via config.
      *
-     * @param {IConfigure} config
+     * @param {ActivityConfigure} config
      * @memberof OnTaskInit
      */
-    activityInit(config: IConfigure): void | Promise<any>;
+    onActivityInit(config: ActivityConfigure): void | Promise<any>;
 }

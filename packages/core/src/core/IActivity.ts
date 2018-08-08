@@ -1,6 +1,6 @@
 import { Registration } from '@ts-ioc/core';
 import { IContext } from './IContext';
-import { IConfigure } from './IConfigure';
+import { ActivityConfigure } from './ActivityConfigure';
 
 
 /**
@@ -56,10 +56,10 @@ export interface IActivity {
     /**
      * config.
      *
-     * @type {IConfigure}
+     * @type {ActivityConfigure}
      * @memberof IActivity
      */
-    config: IConfigure;
+    config: ActivityConfigure;
 
     /**
      * run task.

@@ -1,4 +1,4 @@
-import { IActivityRunner, Active } from './core';
+import { IWorkflow, Active } from './core';
 import { InjectToken, Type } from '@ts-ioc/core';
 import { IApplicationBuilder, IApplicationExtends } from '@ts-ioc/bootstrap';
 
@@ -25,10 +25,10 @@ export interface ITaskContainer extends IApplicationExtends {
      *
      * @template T
      * @param {string} workflowId
-     * @returns {IActivityRunner<T>}
+     * @returns {IWorkflow<T>}
      * @memberof ITaskContainer
      */
-    getWorkflow<T>(workflowId: string): IActivityRunner<T>;
+    getWorkflow<T>(workflowId: string): IWorkflow<T>;
 
     /**
      * create workflow.
@@ -43,8 +43,8 @@ export interface ITaskContainer extends IApplicationExtends {
      * create workflow and bootstrap.
      *
      * @param {...Active[]} activities bootstrap activities.
-     * @returns {Promise<IActivityRunner>}
+     * @returns {Promise<IWorkflow>}
      * @memberof IApplicationBuilder
      */
-    bootstrap(...activities: Active[]): Promise<IActivityRunner<any>>;
+    bootstrap(...activities: Active[]): Promise<IWorkflow<any>>;
 }

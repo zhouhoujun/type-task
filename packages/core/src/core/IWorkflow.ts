@@ -1,20 +1,21 @@
-import { ActivityResultType } from './IConfigure';
+import { ActivityResultType } from './ActivityConfigure';
 import { Registration } from '@ts-ioc/core';
 import { GActivity } from './IActivity';
-import { IActivityModuleBuilder } from './IActivityBuilder';
+import { IActivityBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
+import { ModuleConfigure } from '@ts-ioc/bootstrap';
 
 
 /**
  * Inject AcitityRuner Token
  *
  * @export
- * @class InjectActivityRunnerToken
+ * @class InjectWorkflowToken
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectActivityRunnerToken<T extends IActivityRunner<any>> extends Registration<T> {
+export class InjectWorkflowToken<T extends IWorkflow<any>> extends Registration<T> {
     constructor(desc: string) {
         super('ActivityRunner', desc);
     }
@@ -23,7 +24,7 @@ export class InjectActivityRunnerToken<T extends IActivityRunner<any>> extends R
 /**
  * activity runner token.
  */
-export const ActivityRunnerToken = new InjectActivityRunnerToken<IActivityRunner<any>>('');
+export const WorkflowToken = new InjectWorkflowToken<IWorkflow<any>>('');
 
 /**
  *run state.
@@ -54,13 +55,17 @@ export enum RunState {
     complete
 }
 
+export interface WorkflowConfig extends ModuleConfigure {
+
+}
+
 /**
  * task runner.
  *
  * @export
  * @interface ITaskRunner
  */
-export interface IActivityRunner<T> {
+export interface IWorkflow<T> {
 
     /**
      * actvity to run.
@@ -129,10 +134,10 @@ export interface IActivityRunner<T> {
     /**
      * get activity builder.
      *
-     * @returns {IActivityModuleBuilder}
+     * @returns {IActivityBuilder}
      * @memberof ITaskRunner
      */
-    getBuilder(): IActivityModuleBuilder;
+    getBuilder(): IActivityBuilder;
 
     /**
      * start activity.

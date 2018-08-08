@@ -1,2 +1,3 @@
 
-export * from './TaskMetadata';
+export * from './ActivityMetadata';
+export * from './WorkflowMetadata';

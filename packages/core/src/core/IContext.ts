@@ -1,16 +1,16 @@
-import { IConfigure, ActivityResultType, Expression } from './IConfigure';
+import { ActivityConfigure, ActivityResultType, Expression } from './ActivityConfigure';
 import { IActivity } from './IActivity';
-import { IActivityRunner } from './IActivityRunner';
-import { IActivityModuleBuilder } from './IActivityBuilder';
+import { IWorkflow } from './IWorkflow';
 import { IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
-import { ActivityBootBuilder } from './ActivityBuilder';
+import { ActivityBuilder } from './ActivityBuilder';
+import { IActivityBuilder } from './IActivityBuilder';
 
 
 
 /**
  * context type.
  */
-export type CtxType<T> = T | ((context?: IContext, config?: IConfigure) => T);
+export type CtxType<T> = T | ((context?: IContext, config?: ActivityConfigure) => T);
 
 
 /**
@@ -46,10 +46,10 @@ export interface IContext {
   /**
    * default builder.
    *
-   * @type {IActivityModuleBuilder}
+   * @type {IActivityBuilder}
    * @memberof IContext
    */
-  builder: ActivityBootBuilder;
+  builder: ActivityBuilder;
 
   /**
    * get ioc container.
@@ -72,12 +72,12 @@ export interface IContext {
    *
    * @param {ActivityResultType<any>} task
    * @param {string} uuid
-   * @param {(IActivityModuleBuilder | Token<IActivityModuleBuilder>)} [builder]
+   * @param {(IActivityBuilder | Token<IActivityBuilder>)} [builder]
    * @param {*} [instance]
-   * @returns {IActivityRunner}
+   * @returns {IWorkflow}
    * @memberof IContext
    */
-  createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityModuleBuilder | Token<IActivityModuleBuilder>, instance?: any): IActivityRunner<any>;
+  createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): IWorkflow<any>;
 
   /**
    * get task evn args.
@@ -92,11 +92,11 @@ export interface IContext {
    *
    * @template T
    * @param {CtxType<T>} target
-   * @param {IConfigure} [config]
+   * @param {ActivityConfigure} [config]
    * @returns {T}
    * @memberof IContext
    */
-  to<T>(target: CtxType<T>, config?: IConfigure): T;
+  to<T>(target: CtxType<T>, config?: ActivityConfigure): T;
 
   /**
    * exec activity result.
@@ -104,7 +104,7 @@ export interface IContext {
    * @template T
    * @param {IActivity} target
    * @param {Expression<T>} expression
-   * @param {IConfigure} [data]
+   * @param {ActivityConfigure} [data]
    * @returns {Promise<T>}
    * @memberof IContext
    */

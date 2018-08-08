@@ -1,5 +1,5 @@
 import { IActivity, Src } from '@taskfr/core';
-import { isBoolean, isString, Injectable, Singleton } from '@ts-ioc/core';
+import { isBoolean, isString, Singleton } from '@ts-ioc/core';
 import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
 import { SourceActivity, SourceConfigure } from './SourceActivity';
@@ -8,7 +8,7 @@ import { WatchActivity, WatchConfigure } from './WatchActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationConfigure } from './Annotation';
-import { PipeBootBuilder } from './PipeActivityBuilder';
+import { PipeActivityBuilder } from './PipeActivityBuilder';
 import { TestActivity, TestConfigure } from './TestActivity';
 
 
@@ -21,7 +21,7 @@ import { TestActivity, TestConfigure } from './TestActivity';
  * @extends {DestTaskBuilder}
  */
 @Singleton(AssetBuilderToken)
-export class AssetBuilder extends PipeBootBuilder {
+export class AssetBuilder extends PipeActivityBuilder {
 
     /**
      * asset build strategy.

@@ -1,8 +1,8 @@
-import { IActivity, ActivityBootBuilder, isActivityType, isActivityRunner } from '@taskfr/core';
+import { IActivity, ActivityBuilder, isActivityType, isActivityRunner } from '@taskfr/core';
 import { isMetadataObject, Token, Registration, isPromise, Injectable, Singleton } from '@ts-ioc/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { TransformConfig, TransformType, TransformExpress } from './pipeTypes';
-import { PipeActivityToken, IPipeActivity, PipeBootBuilderToken } from './IPipeActivity';
+import { PipeActivityToken, IPipeActivity, PipeActivityBuilderToken } from './IPipeActivity';
 import { PipeActivity } from './PipeActivity';
 import { InjectAssetActivityToken } from './AssetConfigure';
 
@@ -14,8 +14,8 @@ import { InjectAssetActivityToken } from './AssetConfigure';
  * @class PipeTaskBuilder
  * @extends {ActivityBuilder}
  */
-@Singleton(PipeBootBuilderToken)
-export class PipeBootBuilder extends ActivityBootBuilder {
+@Singleton(PipeActivityBuilderToken)
+export class PipeActivityBuilder extends ActivityBuilder {
 
     /**
      * pipe activity build strategy.

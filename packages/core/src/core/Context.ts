@@ -3,14 +3,14 @@ import {
     Type, hasOwnClassMetadata, Token, isToken, ObjectMap, isPromise, isClass
 } from '@ts-ioc/core';
 import { IContext, ContextToken, CtxType } from './IContext';
-import { IConfigure, ActivityResultType, Expression } from './IConfigure';
+import { ActivityConfigure, ActivityResultType, Expression } from './ActivityConfigure';
 import { IActivity } from './IActivity';
 import { Task } from './decorators';
-import { IActivityModuleBuilder, ActivityBootBuilderToken, IActivityBootBuilder } from './IActivityBuilder';
-import { IActivityRunner, ActivityRunnerToken } from './IActivityRunner';
-import { ActivityBootBuilder } from './ActivityBuilder';
+import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
+import { IWorkflow, WorkflowToken } from './IWorkflow';
+import { ActivityBuilder } from './ActivityBuilder';
 import { Activity } from './Activity';
-import { ActivityRunner } from './ActivityRunner';
+import { DefaultWorkflow } from './DefaultWorkflow';
 import { AppConfigureToken } from '@ts-ioc/bootstrap';
 
 
@@ -27,8 +27,8 @@ export class Context implements IContext {
     @Inject(ContainerToken)
     private container: IContainer;
 
-    @Inject(ActivityBootBuilderToken)
-    builder: ActivityBootBuilder;
+    @Inject(ActivityBuilderToken)
+    builder: ActivityBuilder;
 
     constructor() {
 
@@ -44,14 +44,14 @@ export class Context implements IContext {
     }
 
 
-    createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityModuleBuilder | Token<IActivityModuleBuilder>, instance?: any): IActivityRunner<any> {
-        let builderInst: IActivityModuleBuilder;
+    createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): IWorkflow<any> {
+        let builderInst: IActivityBuilder;
         if (isToken(builder)) {
             builderInst = this.container.resolve(builder);
-        } else if (builder instanceof ActivityBootBuilder) {
+        } else if (builder instanceof ActivityBuilder) {
             builderInst = builder;
         }
-        return this.container.resolve(ActivityRunnerToken, { activity: task, uuid: uuid, instance: instance, activityBuilder: builderInst })
+        return this.container.resolve(WorkflowToken, { activity: task, uuid: uuid, instance: instance, activityBuilder: builderInst })
     }
 
 
@@ -59,7 +59,7 @@ export class Context implements IContext {
         return {};
     }
 
-    to<T>(target: CtxType<T>, config?: IConfigure): T {
+    to<T>(target: CtxType<T>, config?: ActivityConfigure): T {
         if (isFunction(target)) {
             if (isClass(target)) {
                 return target as any;
@@ -76,7 +76,7 @@ export class Context implements IContext {
      * @template T
      * @param {IActivity} target
      * @param {Expression<T>} result
-     * @param {IConfigure} [data]
+     * @param {ActivityConfigure} [data]
      * @returns {Promise<T>}
      * @memberof IContext
      */
@@ -87,7 +87,7 @@ export class Context implements IContext {
             return expression;
         } else if (expression instanceof Activity) {
             return expression.run(data, target);
-        } else if (expression instanceof ActivityRunner) {
+        } else if (expression instanceof DefaultWorkflow) {
             return expression.start(data);
         } else {
             return Promise.resolve(expression as T);

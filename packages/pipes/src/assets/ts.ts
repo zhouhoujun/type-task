@@ -43,7 +43,8 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      * @param {TsConfigure} cfg
      * @memberof TsCompile
      */
-    activityInit(cfg: TsConfigure) {
+    async onActivityInit(cfg: TsConfigure) {
+        await super.onActivityInit(cfg);
         this.defaultAnnotation = { annotationFramework: () => classAnnotations(), task: AnnotationActivity };
         let tds = this.context.to(cfg.tds);
         if (tds !== false) {

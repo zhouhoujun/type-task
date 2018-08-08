@@ -1,7 +1,7 @@
 import {
-    Src, Activity, InjectAcitityToken, Task, IConfigure,
-    Expression, InjectAcitityBuilderToken, ActivityBootBuilder,
-    IActivity, ExpressionType
+    Src, Activity, InjectAcitityToken, Task, ActivityConfigure,
+    Expression, InjectAcitityBuilderToken,
+    IActivity, ExpressionType, ActivityBuilder
 } from '@taskfr/core';
 import { Inject, Injectable } from '@ts-ioc/core';
 import { PipeContextToken, IPipeContext } from './IPipeContext';
@@ -22,9 +22,9 @@ export const CleanActivityBuilderToken = new InjectAcitityBuilderToken<CleanActi
  *
  * @export
  * @interface ICleanConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface CleanConfigure extends IConfigure {
+export interface CleanConfigure extends ActivityConfigure {
     /**
      * clean match.
      *
@@ -74,14 +74,10 @@ export class CleanActivity extends Activity<any> {
  *
  * @export
  * @class CleanActivityBuilder
- * @extends {ActivityBootBuilder}
+ * @extends {ActivityBuilder}
  */
 @Injectable(CleanActivityBuilderToken)
-export class CleanActivityBuilder extends ActivityBootBuilder {
-
-    createBuilder() {
-        return this.container.get(CleanActivityBuilderToken);
-    }
+export class CleanActivityBuilder extends ActivityBuilder {
 
     /**
      * clean build startegy.

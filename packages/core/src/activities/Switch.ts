@@ -1,19 +1,10 @@
-import {
-    IActivity, Task, InjectAcitityToken,
-    Activity, InjectAcitityBuilderToken,
-    ActivityBootBuilder, Expression, SwitchConfigure
-} from '../core';
-import { MapSet, isUndefined, Injectable, Singleton } from '@ts-ioc/core';
+import { IActivity, Task, InjectAcitityToken, Activity, Expression, SwitchConfigure } from '../core';
+import { MapSet, isUndefined } from '@ts-ioc/core';
 
 /**
  * Switch activity token.
  */
 export const SwitchActivityToken = new InjectAcitityToken<SwitchActivity>('switch');
-/**
- * Switch activity builder token
- */
-export const SwitchActivityBuilderToken = new InjectAcitityBuilderToken<SwitchActivityBuilder>('switch');
-
 
 /**
  * Switch control activity.
@@ -22,7 +13,7 @@ export const SwitchActivityBuilderToken = new InjectAcitityBuilderToken<SwitchAc
  * @class SwitchActivity
  * @extends {Activity}
  */
-@Task(SwitchActivityToken, SwitchActivityBuilderToken)
+@Task(SwitchActivityToken)
 export class SwitchActivity extends Activity<any> {
     /**
      * Switch condition.
@@ -47,6 +38,23 @@ export class SwitchActivity extends Activity<any> {
      */
     defaultBody?: IActivity;
 
+    async onActivityInit(config: SwitchConfigure): Promise<any> {
+        await super.onActivityInit(config);
+        this.expression = await this.toExpression(config.expression);
+        if (config.cases && config.cases.length) {
+            await Promise.all(config.cases.map(async (cs) => {
+                let val = await this.buildActivity(cs.value);
+                this.cases.set(cs.key, val);
+                return val;
+            }));
+        }
+
+        if (config.defaultBody) {
+            this.defaultBody = await this.buildActivity(config.defaultBody);
+        }
+    }
+
+
     async run(data?: any): Promise<any> {
         let matchkey = await this.context.exec<any>(this, this.expression, data);
         if (!isUndefined(matchkey) && this.cases.has(matchkey)) {
@@ -57,28 +65,5 @@ export class SwitchActivity extends Activity<any> {
             return Promise.resolve(data);
         }
 
-    }
-}
-
-@Singleton(SwitchActivityBuilderToken)
-export class SwitchActivityBuilder extends ActivityBootBuilder {
-
-    async buildStrategy(activity: IActivity, config: SwitchConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof SwitchActivity) {
-            activity.expression = await this.toExpression(config.expression, activity);
-            if (config.cases && config.cases.length) {
-                await Promise.all(config.cases.map(async (cs) => {
-                    let val = await this.buildByConfig(cs.value, activity.id);
-                    activity.cases.set(cs.key, val);
-                    return val;
-                }));
-            }
-
-            if (config.defaultBody) {
-                activity.defaultBody = await this.buildByConfig(config.defaultBody, activity.id);
-            }
-        }
-        return activity;
     }
 }

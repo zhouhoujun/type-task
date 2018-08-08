@@ -1,17 +1,10 @@
-import {
-    IActivity, Task, InjectAcitityToken, Activity,
-    Condition, InjectAcitityBuilderToken, IfConfigure, ActivityBootBuilder
-} from '../core';
-import { Singleton } from '@ts-ioc/core';
+import { IActivity, Task, InjectAcitityToken, Activity, Condition, IfConfigure } from '../core';
+
 
 /**
  * if activity token.
  */
 export const IfActivityToken = new InjectAcitityToken<IfActivity>('if');
-/**
- * If activity builder token
- */
-export const IfActivityBuilderToken = new InjectAcitityBuilderToken<IfActivityBuilder>('if');
 
 /**
  * if control activity.
@@ -20,11 +13,20 @@ export const IfActivityBuilderToken = new InjectAcitityBuilderToken<IfActivityBu
  * @class IfActivity
  * @extends {Activity}
  */
-@Task(IfActivityToken, IfActivityBuilderToken)
+@Task(IfActivityToken)
 export class IfActivity extends Activity<any> {
     ifBody: IActivity;
     condition: Condition;
     elseBody?: IActivity;
+
+    async onActivityInit(config: IfConfigure): Promise<any> {
+        await super.onActivityInit(config);
+        this.ifBody = await this.buildActivity(config.ifBody);
+        this.condition = await this.toExpression(config.if);
+        if (config.elseBody) {
+            this.elseBody = await this.buildActivity(config.elseBody);
+        }
+    }
 
     async run(data?: any): Promise<any> {
         let condition = await this.context.exec(this, this.condition, data);
@@ -46,20 +48,4 @@ export class IfActivity extends Activity<any> {
 
     }
 
-}
-
-@Singleton(IfActivityBuilderToken)
-export class IfActivityBuilder extends ActivityBootBuilder {
-
-    async buildStrategy(activity: IActivity, config: IfConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof IfActivity) {
-            activity.ifBody = await this.buildByConfig(config.ifBody, activity.id);
-            activity.condition = await this.toExpression(config.if, activity);
-            if (config.elseBody) {
-                activity.elseBody = await this.buildByConfig(config.elseBody, activity.id);
-            }
-        }
-        return activity;
-    }
 }

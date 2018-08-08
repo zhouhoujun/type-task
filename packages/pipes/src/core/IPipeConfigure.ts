@@ -1,4 +1,4 @@
-import { IConfigure } from '@taskfr/core';
+import { ActivityConfigure } from '@taskfr/core';
 import { TransformExpress, TransformConfig } from './pipeTypes';
 
 /**
@@ -6,9 +6,9 @@ import { TransformExpress, TransformConfig } from './pipeTypes';
  *
  * @export
  * @interface IPipeConfigure
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface IPipeConfigure extends IConfigure {
+export interface IPipeConfigure extends ActivityConfigure {
     /**
      * transform pipes
      *

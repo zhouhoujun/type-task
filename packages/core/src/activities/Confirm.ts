@@ -1,18 +1,15 @@
-import {
-    IActivity, Task, InjectAcitityToken, InjectAcitityBuilderToken,
-    Activity, Expression, ConfirmConfigure, ActivityBootBuilder
-} from '../core';
-import { Defer, Singleton } from '@ts-ioc/core';
+import { IActivity, Task, InjectAcitityToken, Activity, Expression, ConfirmConfigure } from '../core';
+import { Defer } from '@ts-ioc/core';
 
 /**
  * Confirm activity token.
  */
 export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity>('Confirm');
 
-/**
- * Confirm activity builder token
- */
-export const ConfirmActivityBuilderToken = new InjectAcitityBuilderToken<ConfirmActivityBuilder>('Confirm');
+// /**
+//  * Confirm activity builder token
+//  */
+// export const ConfirmActivityBuilderToken = new InjectAcitityBuilderToken<ConfirmActivityBuilder>('Confirm');
 
 /**
  * while control activity.
@@ -21,7 +18,7 @@ export const ConfirmActivityBuilderToken = new InjectAcitityBuilderToken<Confirm
  * @class ConfirmActivity
  * @extends {Activity}
  */
-@Task(ConfirmActivityToken, ConfirmActivityBuilderToken)
+@Task(ConfirmActivityToken)
 export class ConfirmActivity extends Activity<any> {
 
     defer = new Defer<any>();
@@ -33,6 +30,11 @@ export class ConfirmActivity extends Activity<any> {
      */
     confirm: Expression<boolean>;
 
+    async onActivityInit(config: ConfirmConfigure): Promise<any> {
+        await super.onActivityInit(config);
+        this.confirm = await this.toExpression(config.confirm, this);
+    }
+
     async run(data?: any, execute?: IActivity): Promise<any> {
         let confirm = this.context.exec(this, this.confirm, data);
         if (confirm) {
@@ -41,18 +43,5 @@ export class ConfirmActivity extends Activity<any> {
             this.defer.reject();
         }
         return await this.defer.promise;
-    }
-}
-
-@Singleton(ConfirmActivityBuilderToken)
-export class ConfirmActivityBuilder extends ActivityBootBuilder {
-
-    async buildStrategy(activity: IActivity, config: ConfirmConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof ConfirmActivity) {
-            activity.confirm = await this.toExpression(config.confirm, activity);
-        }
-
-        return activity;
     }
 }

@@ -1,6 +1,6 @@
 
-import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, InjectAcitityBuilderToken, Task, ActivityBootBuilder, IConfigure } from '@taskfr/core';
-import { Defer, isArray, Injectable } from '@ts-ioc/core';
+import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, InjectAcitityBuilderToken, Task, ActivityBuilder, ActivityConfigure } from '@taskfr/core';
+import { Defer, isArray, Injectable, Singleton } from '@ts-ioc/core';
 import { ITransform } from './ITransform';
 import { Observable } from 'rxjs';
 import { src } from 'vinyl-fs';
@@ -18,7 +18,7 @@ export const WatchAcitvityBuilderToken = new InjectAcitityBuilderToken<WatchActi
  * @interface WatchConfigure
  * @extends {SourceConfigure}
  */
-export interface WatchConfigure extends IConfigure {
+export interface WatchConfigure extends ActivityConfigure {
 
     /**
     * transform source.
@@ -279,12 +279,8 @@ export class WatchActivity extends Activity<any> {
 
 
 
-@Injectable(WatchAcitvityBuilderToken)
-export class WatchActivityBuilder extends ActivityBootBuilder {
-
-    createBuilder() {
-        return this.container.get(WatchAcitvityBuilderToken);
-    }
+@Singleton(WatchAcitvityBuilderToken)
+export class WatchActivityBuilder extends ActivityBuilder {
 
     async buildStrategy(activity: IActivity, config: WatchConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);

@@ -1,6 +1,6 @@
 import { ExecOptions, exec } from 'child_process';
 import { isString, isBoolean, isArray, lang, ObjectMap, Inject } from '@ts-ioc/core';
-import { Src, IConfigure, CtxType, OnActivityInit, Activity, Task } from '@taskfr/core';
+import { Src, ActivityConfigure, CtxType, OnActivityInit, Activity, Task } from '@taskfr/core';
 import { IPipeContext, PipeContextToken } from '../core';
 
 /**
@@ -8,9 +8,9 @@ import { IPipeContext, PipeContextToken } from '../core';
  *
  * @export
  * @interface ShellTaskConfig
- * @extends {IConfigure}
+ * @extends {ActivityConfigure}
  */
-export interface ShellTaskConfig extends IConfigure {
+export interface ShellTaskConfig extends ActivityConfigure {
     /**
      * shell cmd
      *
@@ -81,7 +81,8 @@ export class ExecShellTask extends Activity<any> implements OnActivityInit {
     @Inject(PipeContextToken)
     context: IPipeContext;
 
-    activityInit(config: ShellTaskConfig) {
+    async onActivityInit(config: ShellTaskConfig) {
+        await super.onActivityInit(config);
         this.shell = this.context.to(config.shell);
         let args = this.context.to(config.args);
         this.args = isArray(args) ? args : this.formatArgs(args);

@@ -1,11 +1,11 @@
 import { IContainer, Singleton } from '@ts-ioc/core';
-import { ActivityRunnerToken, IActivityRunner, ActivityType, IActivity, UUIDToken, RandomUUIDFactory, ActivityModuleBuilder, IConfigure } from './core';
-import { InjectModuleBuilder } from '@ts-ioc/bootstrap';
+import { WorkflowToken, IWorkflow, ActivityType, IActivity, UUIDToken, RandomUUIDFactory, ActivityConfigure, Task, Workflow } from './core';
+import { InjectModuleBuilder, ModuleBuilder } from '@ts-ioc/bootstrap';
 import { AopModule } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
 
-export const ActivityRunnerBuilderToken = new InjectModuleBuilder<ActivityRunnerBuilder>('activity_runner');
+export const WorkflowBuilderToken = new InjectModuleBuilder<WorkflowBuilder>('Workflow');
 
 /**
  * default task container.
@@ -13,8 +13,8 @@ export const ActivityRunnerBuilderToken = new InjectModuleBuilder<ActivityRunner
  * @export
  * @class DefaultTaskContainer
  */
-@Singleton(ActivityRunnerBuilderToken)
-export class ActivityRunnerBuilder extends ActivityModuleBuilder {
+@Singleton(WorkflowBuilderToken)
+export class WorkflowBuilder extends ModuleBuilder<IActivity> {
 
     /**
      * bootstrap application via main module
@@ -23,12 +23,12 @@ export class ActivityRunnerBuilder extends ActivityModuleBuilder {
      * @returns {Promise<T>}
      * @memberof ApplicationBuilder
      */
-    async bootstrap(activity: ActivityType<IActivity>, defaultContainer?: IContainer, workflowId?: string): Promise<IActivityRunner<any>> {
+    async bootstrap(activity: ActivityType<IActivity>, defaultContainer?: IContainer, workflowId?: string): Promise<IWorkflow<any>> {
         let container = this.getContainer(activity, defaultContainer);
         workflowId = workflowId || this.createUUID(container);
         console.log('workflowId:', workflowId);
         let instance = await super.bootstrap(activity, defaultContainer, workflowId);
-        let runner = container.resolve(ActivityRunnerToken, { activities: activity, instance: instance, uuid: workflowId });
+        let runner = container.resolve(WorkflowToken, { activities: activity, instance: instance, uuid: workflowId });
         await runner.start();
         return runner;
     }
@@ -40,7 +40,7 @@ export class ActivityRunnerBuilder extends ActivityModuleBuilder {
         return container.get(UUIDToken).generate();
     }
 
-    protected async registerExts(container: IContainer, config: IConfigure): Promise<IContainer> {
+    protected async registerExts(container: IContainer, config: ActivityConfigure): Promise<IContainer> {
         await super.registerExts(container, config);
         if (!container.has(AopModule)) {
             container.register(AopModule);
@@ -55,6 +55,10 @@ export class ActivityRunnerBuilder extends ActivityModuleBuilder {
         }
 
         return container;
+    }
+
+    getDecorator() {
+        return Workflow.toString();
     }
 }
 

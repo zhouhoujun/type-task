@@ -1,10 +1,5 @@
-import {
-    Task, IActivity, InjectAcitityToken,
-    InjectAcitityBuilderToken, Activity,
-    SequenceConfigure,
-    ActivityBootBuilder
-} from '../core';
-import { Token, isToken, Singleton } from '@ts-ioc/core';
+import { Task, IActivity, InjectAcitityToken, Activity, SequenceConfigure } from '../core';
+import { Token, isToken } from '@ts-ioc/core';
 
 
 /**
@@ -13,21 +8,41 @@ import { Token, isToken, Singleton } from '@ts-ioc/core';
 export const SequenceActivityToken = new InjectAcitityToken<SequenceActivity>('sequence');
 
 /**
- * sequence activity builder token
- */
-export const SequenceActivityBuilderToken = new InjectAcitityBuilderToken<SequenceActivityBuilder>('sequence');
-
-/**
  * sequence activity.
  *
  * @export
  * @class SequenceActivity
  * @extends {Activity}
  */
-@Task(SequenceActivityToken, SequenceActivityBuilderToken)
+@Task(SequenceActivityToken)
 export class SequenceActivity extends Activity<any> {
 
     activites: IActivity[] = [];
+
+    async onActivityInit(config: SequenceConfigure): Promise<any> {
+        await super.onActivityInit(config);
+        if (config.sequence && config.sequence.length) {
+            await this.buildChildren(this, config.sequence);
+        }
+    }
+
+    async buildChildren(activity: SequenceActivity, configs: (SequenceConfigure | Token<IActivity>)[]) {
+        let sequence = await Promise.all(configs.map(async cfg => {
+            let node = await this.buildActivity(cfg);
+            if (!node) {
+                return null;
+            }
+            if (node instanceof SequenceActivity) {
+                if (!isToken(cfg) && cfg.sequence && cfg.sequence.length) {
+                    await node.buildChildren(node, cfg.sequence);
+                }
+            }
+            return node;
+        }));
+
+        activity.activites = sequence;
+        return activity;
+    }
 
     async run(data?: any, execute?: IActivity): Promise<any> {
         let result = await this.before(data, execute);
@@ -66,38 +81,5 @@ export class SequenceActivity extends Activity<any> {
      */
     protected async after(data?: any, execute?: IActivity): Promise<any> {
         return data;
-    }
-}
-
-@Singleton(SequenceActivityBuilderToken)
-export class SequenceActivityBuilder extends ActivityBootBuilder {
-
-    async buildStrategy(activity: IActivity, config: SequenceConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof SequenceActivity) {
-            if (config.sequence && config.sequence.length) {
-                await this.buildChildren(activity, config.sequence);
-            }
-        }
-
-        return activity;
-    }
-
-    async buildChildren(activity: SequenceActivity, configs: (SequenceConfigure | Token<IActivity>)[]) {
-        let sequence = await Promise.all(configs.map(async cfg => {
-            let node = await this.buildByConfig(cfg, activity.id);
-            if (!node) {
-                return null;
-            }
-            if (node instanceof SequenceActivity) {
-                if (!isToken(cfg) && cfg.sequence && cfg.sequence.length) {
-                    await this.buildChildren(node, cfg.sequence);
-                }
-            }
-            return node;
-        }));
-
-        activity.activites = sequence;
-        return activity;
     }
 }

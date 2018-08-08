@@ -1,10 +1,10 @@
 import { Inject, IContainer, ContainerToken, OnInit, isToken } from '@ts-ioc/core';
-import { ActivityResultType } from './IConfigure';
+import { ActivityResultType } from './ActivityConfigure';
 import { IActivity, GActivity } from './IActivity';
-import { IActivityModuleBuilder, ActivityBuilderToken } from './IActivityBuilder';
-import { IActivityRunner, ActivityRunnerToken, RunState } from './IActivityRunner';
+import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
+import { IWorkflow, WorkflowToken, RunState } from './IWorkflow';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Runner } from './decorators';
+import { Workflow } from './decorators';
 import { Joinpoint } from '@ts-ioc/aop';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
@@ -17,8 +17,8 @@ import { UUIDToken, RandomUUIDFactory } from './uuid';
  * @class TaskRunner
  * @implements {ITaskRunner}
  */
-@Runner(ActivityRunnerToken)
-export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
+@Workflow(WorkflowToken)
+export class DefaultWorkflow<T> implements IWorkflow<T>, OnInit {
 
     get activity(): ActivityResultType<T> {
         return this.activities;
@@ -50,14 +50,14 @@ export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
      * @param {ActivityResultType<T>} activities
      * @param {string} [uuid]
      * @param {IActivity<T>} [instance]
-     * @param {IActivityModuleBuilder} [activityBuilder]
+     * @param {IActivityBuilder} [activityBuilder]
      * @memberof TaskRunner
      */
     constructor(
         private activities: ActivityResultType<T>,
         public uuid?: string,
         private instance?: IActivity,
-        private activityBuilder?: IActivityModuleBuilder) {
+        private activityBuilder?: IActivityBuilder) {
         this.stateChanged = new BehaviorSubject(RunState.init);
     }
 
@@ -78,7 +78,7 @@ export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
     }
 
 
-    getBuilder(): IActivityModuleBuilder {
+    getBuilder(): IActivityBuilder {
         if (!this.activityBuilder) {
             this.activityBuilder = this.container.resolve(ActivityBuilderToken);
         }
@@ -87,7 +87,7 @@ export class ActivityRunner<T> implements IActivityRunner<T>, OnInit {
 
     async getInstance() {
         if (!this.instance) {
-            this.instance = await this.getBuilder().bootstrap(this.activity, this.container, this.getUUID());
+            this.instance = await this.getBuilder().buildByConfig(this.activity, this.getUUID());
         }
         return this.instance;
     }
