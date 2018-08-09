@@ -1,6 +1,6 @@
 
-import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, InjectAcitityBuilderToken, Task, ActivityBuilder, ActivityConfigure } from '@taskfr/core';
-import { Defer, isArray, Injectable, Singleton } from '@ts-ioc/core';
+import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure } from '@taskfr/core';
+import { Defer, isArray } from '@ts-ioc/core';
 import { ITransform } from './ITransform';
 import { Observable } from 'rxjs';
 import { src } from 'vinyl-fs';
@@ -9,7 +9,6 @@ const chokidar = require('chokidar');
 
 
 export const WatchAcitvityToken = new InjectAcitityToken<WatchActivity>('Watch');
-export const WatchAcitvityBuilderToken = new InjectAcitityBuilderToken<WatchActivityBuilder>('Watch')
 
 /**
  * watch configure.
@@ -193,7 +192,7 @@ export interface FileChanged {
 }
 
 
-@Task(WatchAcitvityToken, WatchAcitvityBuilderToken)
+@Task(WatchAcitvityToken)
 export class WatchActivity extends Activity<any> {
 
     /**
@@ -214,6 +213,14 @@ export class WatchActivity extends Activity<any> {
 
     async run(data: any, watched: IActivity): Promise<any> {
         return await this.watch(data, watched);
+    }
+
+    async onActivityInit(config: WatchConfigure) {
+        await super.onActivityInit(config);
+        this.src = await this.toExpression(config.src);
+        if (config.options) {
+            this.options = await this.toExpression(config.options)
+        }
     }
 
     protected async watch(data: any, watched: IActivity) {
@@ -274,22 +281,5 @@ export class WatchActivity extends Activity<any> {
                 return null;
             }
         }
-    }
-}
-
-
-
-@Singleton(WatchAcitvityBuilderToken)
-export class WatchActivityBuilder extends ActivityBuilder {
-
-    async buildStrategy(activity: IActivity, config: WatchConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof WatchActivity) {
-            activity.src = await this.toExpression(config.src, activity);
-            if (config.options) {
-                activity.options = await this.toExpression(config.options, activity)
-            }
-        }
-        return activity;
     }
 }

@@ -1,17 +1,14 @@
 import { src, SrcOptions } from 'vinyl-fs';
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
-import { Src, IActivity, Expression, ExpressionType } from '@taskfr/core';
+import { Src, Expression, ExpressionType } from '@taskfr/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
-import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
-import { Singleton } from '@ts-ioc/core';
-import { PipeActivityBuilder } from './PipeActivityBuilder';
+import { InjectPipeActivityToken } from './IPipeActivity';
 
 
 export const SourceAcitvityToken = new InjectPipeActivityToken<SourceActivity>('source');
 
-export const SourceAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<SourceActivityBuilder>('source')
 /**
  * source pipe configure.
  *
@@ -37,7 +34,7 @@ export interface SourceConfigure extends IPipeConfigure {
     srcOptions?: ExpressionType<SrcOptions>;
 }
 
-@PipeTask(SourceAcitvityToken, SourceAcitvityBuilderToken)
+@PipeTask(SourceAcitvityToken)
 export class SourceActivity extends PipeActivity {
     /**
      * source
@@ -55,6 +52,15 @@ export class SourceActivity extends PipeActivity {
      */
     srcOptions: Expression<SrcOptions>;
 
+    async onActivityInit(config: SourceConfigure) {
+        await super.onActivityInit(config);
+        this.src = await this.toExpression(config.src);
+
+        if (config.srcOptions) {
+            this.srcOptions = await this.toExpression(config.srcOptions)
+        }
+    }
+
     protected async merge(...data: ITransform[]): Promise<ITransform> {
         let src = await this.context.exec(this, this.src, data);
         let srcOptions = await this.context.exec(this, this.srcOptions, data);
@@ -68,26 +74,5 @@ export class SourceActivity extends PipeActivity {
 
     source(source: Src, srcOptions: SrcOptions): ITransform {
         return src(source, srcOptions);
-    }
-}
-
-@Singleton(SourceAcitvityBuilderToken)
-export class SourceActivityBuilder extends PipeActivityBuilder {
-
-    createBuilder() {
-        return this.container.get(SourceAcitvityBuilderToken);
-    }
-
-    async buildStrategy(activity: IActivity, config: SourceConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof SourceActivity) {
-
-            activity.src = await this.toExpression(config.src, activity);
-
-            if (config.srcOptions) {
-                activity.srcOptions = await this.toExpression(config.srcOptions, activity)
-            }
-        }
-        return activity;
     }
 }

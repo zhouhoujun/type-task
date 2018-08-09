@@ -46,7 +46,7 @@ export type ExpressionToken<T> = Expression<T> | Token<ExpressionActivity<T>>;
 /**
  * ActivityResult type
  */
-export type ActivityResultType<T> = Token<GActivity<T>> | IActivityConfigure<T>;
+export type ActivityResultType<T> = Token<GActivity<T>> | Token<any> | IActivityConfigure<T>;
 
 /**
  * expression type.
@@ -153,12 +153,20 @@ export interface IActivityConfigure<T> extends TypeConfigure<T> {
     baseURL?: string;
 
     /**
-     * task module.
+     * activity module.
      *
      * @type {Token<T>}
      * @memberof ITaskConfigure
      */
     task?: Token<T>;
+
+    /**
+     * activity module.
+     *
+     * @type {Token<T>}
+     * @memberof ITaskConfigure
+     */
+    activity?: Token<T>;
 
 }
 

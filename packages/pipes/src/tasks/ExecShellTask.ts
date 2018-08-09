@@ -101,15 +101,11 @@ export class ExecShellTask extends Activity<any> implements OnActivityInit {
                 if (isString(cmds)) {
                     return this.execShell(cmds, options, allowError !== false);
                 } else if (isArray(cmds)) {
-                    // if (this.runWay & RunWay.sequence) {
-                        let pip = Promise.resolve();
-                        cmds.forEach(cmd => {
-                            pip = pip.then(() => this.execShell(cmd, options));
-                        });
-                        return pip;
-                    // } else {
-                    //     return Promise.all(cmds.map(cmd => this.execShell(cmd, options, allowError !== false)));
-                    // }
+                    let pip = Promise.resolve();
+                    cmds.forEach(cmd => {
+                        pip = pip.then(() => this.execShell(cmd, options));
+                    });
+                    return pip;
                 } else {
                     return Promise.reject('shell task config error');
                 }

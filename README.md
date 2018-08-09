@@ -43,10 +43,10 @@ class SimpleTask extends AbstractTask implements ITask {
     }
 
     run(): Promise<any> {
-        // console.log('before simple task:', this.name);
+        // console.log('before simple activity:', this.name);
         return Promise.resolve('simple task')
             .then(val => {
-                console.log('return simple task:', val);
+                console.log('return simple activity:', val);
                 return val;
             });
     }
@@ -77,7 +77,7 @@ let container = new TaskContainer(__dirname, moudles)
 TaskContainer.create(__dirname, moudles)
     .bootstrap(<IConfigure>{
         ...
-        task:...
+        activity:...
     });
 3.
 TaskContainer.create(__dirname, moudles)
@@ -86,7 +86,7 @@ TaskContainer.create(__dirname, moudles)
 TaskContainer.create(__dirname)
     .bootstrap([TestTask, TsCompile, <IConfigure>{
         ...
-        task: ...
+        activity: ...
     }]);
 
 ```
@@ -111,7 +111,7 @@ const builtins = require('rollup-plugin-node-builtins');
     clean: 'lib',
     test: 'test/**/*.spec.ts',
     assets: {
-        ts: { dest: 'lib', uglify: true, task: 'ts' }
+        ts: { dest: 'lib', uglify: true, activity: 'ts' }
     }
 })
 export class Builder {
@@ -133,7 +133,7 @@ TaskContainer.create(__dirname)
             assets: {
                 ts: { src: 'src/**/*.ts', dest: 'lib', /*uglify: true*/ }
             },
-            task: PackageTask
+            activity: PackageTask
         },
         <IAssetConfigure>{
             src: 'lib/**/*.js',
@@ -162,7 +162,7 @@ TaskContainer.create(__dirname)
                 () => rename('core.umd.js')
             ],
             dest: 'bundles',
-            task: AssetActivity
+            activity: AssetActivity
         });
 
 ```

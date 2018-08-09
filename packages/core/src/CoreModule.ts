@@ -2,7 +2,7 @@ import { IContainer, CoreActions, Inject, ContainerToken, IocExt } from '@ts-ioc
 import { ActivityBuilder, DefaultWorkflow, Task, Workflow, Activity, Context } from './core';
 import { RunAspect } from './aop';
 import * as activites from './activities';
-import { WorkflowBuilder } from './ActivityRunnerBuilder';
+import { WorkflowBuilder } from './WorkflowBuilder';
 
 /**
  * register task decorators.

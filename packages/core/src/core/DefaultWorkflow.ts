@@ -102,7 +102,6 @@ export class DefaultWorkflow<T> implements IWorkflow<T>, OnInit {
 
     async start(data?: any): Promise<T> {
         let instance = await this.getInstance();
-        console.log(instance);
         return instance.run(data)
             .then(data => {
                 this.state = RunState.complete;

@@ -12,10 +12,6 @@ import { ITransform } from './ITransform';
  * annotation activity token
  */
 export const AnnotationAcitvityToken = new InjectPipeActivityToken<AnnotationActivity>('Annotation');
-/**
- * annoation acitvity builder token.
- */
-export const AnnotationAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<AnnotationActivityBuilder>('Annotation')
 
 export interface AnnotationConfigure extends IPipeConfigure {
     /**
@@ -34,7 +30,7 @@ export interface AnnotationConfigure extends IPipeConfigure {
  * @class AnnotationActivity
  * @extends {PipeActivity}
  */
-@PipeTask(AnnotationAcitvityToken, AnnotationAcitvityBuilderToken)
+@PipeTask(AnnotationAcitvityToken)
 export class AnnotationActivity extends PipeActivity {
 
     /**
@@ -44,6 +40,11 @@ export class AnnotationActivity extends PipeActivity {
      * @memberof AssetActivity
      */
     annotationFramework: TransformType;
+
+    async onActivityInit(config: AnnotationConfigure) {
+        await super.onActivityInit(config);
+        this.annotationFramework = await this.toExpression(config.annotationFramework);
+    }
 
     /**
      * begin pipe.
@@ -63,31 +64,3 @@ export class AnnotationActivity extends PipeActivity {
         return stream;
     }
 }
-
-/**
- * annotation activity builder.
- *
- * @export
- * @class AnnotationActivityBuilder
- * @extends {PipeActivityBuilder}
- */
-@Injectable(AnnotationAcitvityBuilderToken)
-export class AnnotationActivityBuilder extends PipeActivityBuilder {
-
-    /**
-     * annoation acitvity build strategy.
-     *
-     * @param {IActivity} activity
-     * @param {AnnotationConfigure} config
-     * @returns {Promise<IActivity>}
-     * @memberof AnnotationActivityBuilder
-     */
-    async buildStrategy(activity: IActivity, config: AnnotationConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof AnnotationActivity) {
-            activity.annotationFramework = await this.toExpression(config.annotationFramework, activity);
-        }
-        return activity;
-    }
-}
-

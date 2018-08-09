@@ -1,10 +1,10 @@
 import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken } from '@ts-ioc/core';
-import { SequenceConfigure, IWorkflow, Active, ActivityConfigure, WorkflowConfig } from './core';
+import { SequenceConfigure, IWorkflow, Active, WorkflowConfig } from './core';
 import { ITaskContainer } from './ITaskContainer';
 import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure } from '@ts-ioc/bootstrap';
-import { Aspect } from '@ts-ioc/aop';
+import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
-import { WorkflowBuilderToken } from './ActivityRunnerBuilder';
+import { WorkflowBuilderToken } from './WorkflowBuilder';
 import { CoreModule } from './CoreModule';
 import { LogModule } from '@ts-ioc/logs';
 
@@ -33,9 +33,10 @@ export class DefaultTaskContainer implements ITaskContainer {
     getBuilder(): IApplicationBuilder<any> {
         if (!this.builder) {
             this.builder = this.createAppBuilder();
-            this.builder.use(CoreModule);
-            // .use(AopModule)
-            // .use(LogModule);
+            this.builder
+                .use(AopModule)
+                .use(LogModule)
+                .use(CoreModule);
         }
         return this.builder;
     }

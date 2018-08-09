@@ -24,6 +24,9 @@ export class ActivityBuilder extends TypeBuilder<IActivity> implements IActivity
     }
 
     async createInstance(token: Token<IActivity>, config: ActivityConfigure, uuid: string): Promise<IActivity> {
+        if (isString(token)) {
+            token = this.traslateStrToken(token);
+        }
         let instance = await super.createInstance(token, config, uuid);
         if (!instance || !(instance instanceof Activity)) {
             let task = this.getDefaultAcitvity();
@@ -52,7 +55,7 @@ export class ActivityBuilder extends TypeBuilder<IActivity> implements IActivity
     }
 
     getBootstrapToken(config: ActivityConfigure): Token<IActivity> {
-        let token = config.task || config.bootstrap;
+        let token = config.activity || config.task || config.bootstrap;
         if (isString(token)) {
             token = this.traslateStrToken(token);
         }
@@ -114,7 +117,7 @@ export class ActivityBuilder extends TypeBuilder<IActivity> implements IActivity
             if (valify) {
                 result = await this.buildByConfig(isToken(exptype) ? exptype : valify(exptype as TCfg), target.id);
             } else {
-                result = await this.buildByConfig(exptype,  target.id);
+                result = await this.buildByConfig(exptype, target.id);
             }
         } else {
             result = exptype;

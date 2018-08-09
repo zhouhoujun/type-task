@@ -2,19 +2,13 @@ import { dest, DestOptions } from 'vinyl-fs';
 import { PipeTask } from '../decorators';
 import { ITransform } from './ITransform';
 import { Expression, IActivity, ExpressionType } from '@taskfr/core';
-import { Injectable, Singleton } from '@ts-ioc/core';
-import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
+import { InjectPipeActivityToken } from './IPipeActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
-import { PipeActivityBuilder } from './PipeActivityBuilder';
 /**
  * dest activity token.
  */
 export const DestAcitvityToken = new InjectPipeActivityToken<DestActivity>('dest');
-/**
- * dest activity build token.
- */
-export const DestAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<DestActivityBuilder>('dest')
 
 /**
  * dest pipe configure.
@@ -52,7 +46,7 @@ export interface DestConfigure extends IPipeConfigure {
  * @implements {IPipeDest}
  * @implements {OnTaskInit}
  */
-@PipeTask(DestAcitvityToken, DestAcitvityBuilderToken)
+@PipeTask(DestAcitvityToken)
 export class DestActivity extends PipeActivity {
 
     /**
@@ -70,6 +64,15 @@ export class DestActivity extends PipeActivity {
      * @memberof PipeDest
      */
     destOptions: Expression<DestOptions>;
+
+    async onActivityInit(config: DestConfigure) {
+        await super.onActivityInit(config);
+        this.dest = await this.toExpression(config.dest);
+
+        if (config.destOptions) {
+            this.destOptions = await this.toExpression(config.destOptions);
+        }
+    }
 
     protected async afterPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         stream = await super.afterPipe(stream, execute);
@@ -94,37 +97,5 @@ export class DestActivity extends PipeActivity {
         dist = this.context.toRootPath(dist);
         await this.executePipe(stream, dest(dist, destOptions), true);
         return stream;
-    }
-}
-
-/**
- * dest activity builder.
- *
- * @export
- * @class DestActivityBuilder
- * @extends {PipeActivityBuilder}
- */
-@Singleton(DestAcitvityBuilderToken)
-export class DestActivityBuilder extends PipeActivityBuilder {
-
-    /**
-     * dest activity build strategy.
-     *
-     * @param {IActivity} activity
-     * @param {DestConfigure} config
-     * @returns {Promise<IActivity>}
-     * @memberof DestActivityBuilder
-     */
-    async buildStrategy(activity: IActivity, config: DestConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof DestActivity) {
-
-            activity.dest = await this.toExpression(config.dest, activity);
-
-            if (config.destOptions) {
-                activity.destOptions = await this.toExpression(config.destOptions, activity);
-            }
-        }
-        return activity;
     }
 }

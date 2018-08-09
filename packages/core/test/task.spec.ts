@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { ITaskContainer, Workflow, SequenceActivity, SequenceConfigure } from 'src';
+import { ITaskContainer, SequenceActivity, DefaultWorkflow } from 'src';
 
 import { SimpleTask, SimpleCTask, TaskModuleTest } from './simples.task';
 import { TaskContainer } from '@taskfr/platform-server';
@@ -9,12 +9,12 @@ describe('auto register with build', () => {
 
     let container: ITaskContainer;
     before(async () => {
-        container = new TaskContainer(__dirname);
+        container = TaskContainer.create(__dirname);
     });
 
     it('should bootstrap with single task.', async () => {
         let runner = await container.bootstrap(SimpleTask);
-        expect(runner instanceof Workflow).eq(true);
+        expect(runner instanceof DefaultWorkflow).eq(true);
         let result = await runner.start();
         expect(result).eq('simple task');
     });

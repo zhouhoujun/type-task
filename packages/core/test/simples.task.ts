@@ -1,4 +1,4 @@
-import { Task, IActivity, Activity, SequenceActivity, SequenceActivityBuilderToken, SequenceConfigure } from 'src';
+import { Task, Activity, SequenceActivity } from 'src';
 
 @Task('test')
 export class SimpleTask extends Activity<any> {
@@ -13,7 +13,7 @@ export class SimpleTask extends Activity<any> {
     }
 }
 
-@Task('comptest', SequenceActivityBuilderToken)
+@Task('comptest')
 export class SimpleCTask extends SequenceActivity {
 
     protected after(data?: any): Promise<any> {

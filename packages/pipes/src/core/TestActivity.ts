@@ -1,14 +1,13 @@
 import { ITransform } from './ITransform';
 import { PipeTask } from '../decorators';
 import { CtxType, IActivity, ExpressionType, Expression } from '@taskfr/core';
-import { isUndefined, Injectable } from '@ts-ioc/core';
+import { isUndefined } from '@ts-ioc/core';
 import { TransformType, TransformConfig } from './pipeTypes';
-import { SourceConfigure, SourceActivity, SourceActivityBuilder } from './SourceActivity';
-import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
+import { SourceConfigure, SourceActivity } from './SourceActivity';
+import { InjectPipeActivityToken } from './IPipeActivity';
 
 
 export const TestAcitvityToken = new InjectPipeActivityToken<TestActivity>('test');
-export const TestAcitvityBuilderToken = new InjectPipeAcitityBuilderToken<TestActivityBuilder>('test')
 
 /**
  * test activity configure.
@@ -44,7 +43,7 @@ export interface TestConfigure extends SourceConfigure {
     options?: CtxType<any>;
 }
 
-@PipeTask(TestAcitvityToken, TestAcitvityBuilderToken)
+@PipeTask(TestAcitvityToken)
 export class TestActivity extends SourceActivity {
 
     /**
@@ -71,6 +70,22 @@ export class TestActivity extends SourceActivity {
      */
     enable: Expression<boolean>;
 
+    async onActivityInit(config: TestConfigure) {
+        await super.onActivityInit(config);
+        this.options = this.context.to(config.options);
+        if (!isUndefined(config.enable)) {
+            this.enable = await this.toExpression(config.enable);
+        }
+        if (config.framework) {
+            this.framework = await this.toExpression(config.framework);
+        } else {
+            this.framework = () => {
+                let mocha = require('gulp-mocha');
+                return this.options ? mocha(this.options) : mocha();
+            };
+        }
+    }
+
     protected async afterPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         let source = await super.afterPipe(stream, execute);
         let test = await this.context.exec(this, this.enable, source);
@@ -79,33 +94,5 @@ export class TestActivity extends SourceActivity {
         } else {
             return source;
         }
-    }
-}
-
-
-@Injectable(TestAcitvityBuilderToken)
-export class TestActivityBuilder extends SourceActivityBuilder {
-
-    createBuilder() {
-        return this.container.get(TestAcitvityBuilderToken);
-    }
-
-    async buildStrategy(activity: IActivity, config: TestConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof TestActivity) {
-            activity.options = activity.context.to(config.options);
-            if (!isUndefined(config.enable)) {
-                activity.enable = await this.toExpression(config.enable, activity);
-            }
-            if (config.framework) {
-                activity.framework = await this.toExpression(config.framework, activity);
-            } else {
-                activity.framework = () => {
-                    let mocha = require('gulp-mocha');
-                    return activity.options ? mocha(activity.options) : mocha();
-                };
-            }
-        }
-        return activity;
     }
 }

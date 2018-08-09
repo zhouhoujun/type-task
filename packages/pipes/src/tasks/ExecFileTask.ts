@@ -30,15 +30,11 @@ export class ExecFileTask extends Activity<any> {
                 if (isString(files)) {
                     return this.execFile(files, args, options, allowError !== false);
                 } else if (isArray(files)) {
-                    // if (this.runWay & RunWay.sequence) {
                     let pip = Promise.resolve();
                     files.forEach(file => {
                         pip = pip.then(() => this.execFile(file, args, options, allowError !== false));
                     });
                     return pip;
-                    // } else {
-                    //     return Promise.all(files.map(file => this.execFile(file, args, options, allowError !== false)));
-                    // }
                 } else {
                     return Promise.reject(new Error('exec file task config error'));
                 }

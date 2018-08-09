@@ -12,10 +12,6 @@ const del = require('del');
  * clean task token.
  */
 export const CleanToken = new InjectAcitityToken<CleanActivity>('clean');
-/**
- * clean activity builder token
- */
-export const CleanActivityBuilderToken = new InjectAcitityBuilderToken<CleanActivityBuilder>('clean');
 
 /**
  * clean configure
@@ -38,7 +34,7 @@ export interface CleanConfigure extends ActivityConfigure {
 /**
  * clean task.
  */
-@Task(CleanToken, CleanActivityBuilderToken)
+@Task(CleanToken)
 export class CleanActivity extends Activity<any> {
 
     /**
@@ -56,6 +52,12 @@ export class CleanActivity extends Activity<any> {
      * @memberof CleanActivity
      */
     clean: Expression<Src>;
+
+    async onActivityInit(config: CleanConfigure) {
+        await super.onActivityInit(config);
+        this.clean = await this.toExpression(config.clean);
+    }
+
     /**
      * run clean.
      *
@@ -66,32 +68,5 @@ export class CleanActivity extends Activity<any> {
     async run(data?: any): Promise<any> {
         let clean = await this.context.exec(this, this.clean, data);
         return await del(clean);
-    }
-}
-
-/**
- * clean activity builder.
- *
- * @export
- * @class CleanActivityBuilder
- * @extends {ActivityBuilder}
- */
-@Injectable(CleanActivityBuilderToken)
-export class CleanActivityBuilder extends ActivityBuilder {
-
-    /**
-     * clean build startegy.
-     *
-     * @param {IActivity} activity
-     * @param {CleanConfigure} config
-     * @returns {Promise<IActivity>}
-     * @memberof CleanActivityBuilder
-     */
-    async buildStrategy(activity: IActivity, config: CleanConfigure): Promise<IActivity> {
-        await super.buildStrategy(activity, config);
-        if (activity instanceof CleanActivity) {
-            activity.clean = await this.toExpression(config.clean, activity);
-        }
-        return activity;
     }
 }
