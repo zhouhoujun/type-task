@@ -24,7 +24,7 @@
   "dependencies": {
     "reflect-metadata": "^0.1.12",
     "tslib": "^1.9.2",
-    "@ts-ioc/platform-browser": "^2.5.4"
+    "@ts-ioc/platform-browser": "^3.0.0"
   },
   "peerDependencies": {
     "@taskfr/core": "2.0.0-beta1"
