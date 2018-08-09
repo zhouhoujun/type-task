@@ -110,7 +110,7 @@ export function isActivityType(target: any, check = true): target is ActivityTyp
 
     if (isMetadataObject(target)) {
         if (check) {
-            return !!(target.task || target.bootstrap);
+            return !!(target.activity || target.task || target.bootstrap);
         }
         return true;
     }
