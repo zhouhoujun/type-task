@@ -1,8 +1,8 @@
 import { WorkflowConfig } from '../IWorkflow';
 import { CoreActivityConfigure } from '../ActivityConfigure';
-import { DIModuleMetadata } from '@ts-ioc/bootstrap';
+import { ClassMetadata } from '@ts-ioc/core';
 
-export interface IWorkflowMetadata extends DIModuleMetadata, WorkflowConfig {
+export interface IWorkflowMetadata extends WorkflowConfig, ClassMetadata {
 
 }
 

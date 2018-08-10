@@ -1,7 +1,7 @@
 
 export * from './ITaskContainer';
 export * from './DefaultTaskContainer';
-export * from './WorkflowBuilder';
+export * from './DefaultWorkflowBuilder';
 export * from './utils';
 export * from './core';
 export * from './aop';

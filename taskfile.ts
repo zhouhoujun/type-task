@@ -13,10 +13,24 @@ let versionSetting = (ctx: IPipeContext) => {
             if (json.peerDependencies) {
                 Object.keys(json.peerDependencies).forEach(key => {
                     if (/^@taskfr/.test(key)) {
-                        json.peerDependencies[key] = version;
+                        json.peerDependencies[key] = '^' + version;
                     }
                 })
             }
+        }
+        return json;
+    })
+}
+
+let iocVersion = (ctx: IPipeContext) => {
+    return jeditor((json: any) => {
+        let version = ctx.getPackage().devDependencies['@ts-ioc/core'];
+        if (json.dependencies) {
+            Object.keys(json.dependencies).forEach(key => {
+                if (/^@ts-ioc/.test(key)) {
+                    json.dependencies[key] = version;
+                }
+            })
         }
         return json;
     })
@@ -27,7 +41,8 @@ let versionSetting = (ctx: IPipeContext) => {
         {
             src: ['packages/**/package.json', '!node_modules/**/package.json'],
             pipes: [
-                (act: AssetActivity) => versionSetting(act.context)
+                (act: AssetActivity) => versionSetting(act.context),
+                (act: AssetActivity) => iocVersion(act.context)
             ],
             dest: 'packages',
             activity: AssetActivity

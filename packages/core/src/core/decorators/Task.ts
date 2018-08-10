@@ -63,7 +63,7 @@ export interface ITaskDecorator<T extends ActivityMetadata> extends ITypeDecorat
  */
 export function createTaskDecorator<T extends ActivityMetadata>(
     taskType: string,
-    typeBuilder?: Token<IActivityBuilder> | IActivityBuilder,
+    annotationBuilder?: Token<IActivityBuilder> | IActivityBuilder,
     provideType?: Token<IActivity>,
     adapter?: MetadataAdapter,
     metadataExtends?: MetadataExtends<T>): ITaskDecorator<T> {
@@ -90,7 +90,7 @@ export function createTaskDecorator<T extends ActivityMetadata>(
                     if (isString(arg)) {
                         metadata.name = arg;
                     } else {
-                        metadata.typeBuilder = arg;
+                        metadata.annotationBuilder = arg;
                     }
                 }
             });
@@ -120,8 +120,8 @@ export function createTaskDecorator<T extends ActivityMetadata>(
             metadata.alias = metadata.alias || metadata.name;
 
             metadata.decorType = taskType;
-            if (typeBuilder && !metadata.typeBuilder) {
-                metadata.typeBuilder = typeBuilder;
+            if (annotationBuilder && !metadata.annotationBuilder) {
+                metadata.annotationBuilder = annotationBuilder;
             }
 
             return metadata;

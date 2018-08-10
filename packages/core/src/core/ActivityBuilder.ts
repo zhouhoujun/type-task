@@ -6,13 +6,13 @@ import {
 import { ActivityConfigure, isActivityType, ActivityType, ExpressionType, Expression } from './ActivityConfigure';
 import { IActivity, ActivityToken } from './IActivity';
 import { Activity } from './Activity';
-import { TypeBuilder } from '@ts-ioc/bootstrap';
+import { AnnotationBuilder } from '@ts-ioc/bootstrap';
 import { AssignActivity } from './ExpressionActivity';
 import { Task } from './decorators';
 
 
 @Singleton(ActivityBuilderToken)
-export class ActivityBuilder extends TypeBuilder<IActivity> implements IActivityBuilder {
+export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IActivityBuilder {
 
     build(token: Token<IActivity>, config: ActivityConfigure, data?: any): Promise<IActivity> {
         return super.build(token, config, data);

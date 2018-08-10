@@ -1,15 +1,15 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('tslib'), require('@ts-ioc/core'), require('@ts-ioc/aop'), require('rxjs/BehaviorSubject'), require('@ts-ioc/logs'), require('rxjs/add/operator/filter')) :
-	typeof define === 'function' && define.amd ? define(['tslib', '@ts-ioc/core', '@ts-ioc/aop', 'rxjs/BehaviorSubject', '@ts-ioc/logs', 'rxjs/add/operator/filter'], factory) :
-	(global.core = global.core || {}, global.core.umd = global.core.umd || {}, global.core.umd.js = factory(global.tslib_1,global.core_1,global.aop_1,global.BehaviorSubject_1,global.logs_1,global.filter));
-}(this, (function (tslib_1,core_1,aop_1,BehaviorSubject_1,logs_1,filter) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('tslib'), require('@ts-ioc/core'), require('@ts-ioc/aop'), require('rxjs/BehaviorSubject'), require('rxjs/add/operator/filter'), require('@ts-ioc/logs')) :
+	typeof define === 'function' && define.amd ? define(['tslib', '@ts-ioc/core', '@ts-ioc/aop', 'rxjs/BehaviorSubject', 'rxjs/add/operator/filter', '@ts-ioc/logs'], factory) :
+	(global.core = global.core || {}, global.core.umd = global.core.umd || {}, global.core.umd.js = factory(global.tslib_1,global.core_1,global.aop_1,global.BehaviorSubject_1,global.filter,global.logs_1));
+}(this, (function (tslib_1,core_1,aop_1,BehaviorSubject_1,filter,logs_1) { 'use strict';
 
 tslib_1 = tslib_1 && tslib_1.hasOwnProperty('default') ? tslib_1['default'] : tslib_1;
 core_1 = core_1 && core_1.hasOwnProperty('default') ? core_1['default'] : core_1;
 aop_1 = aop_1 && aop_1.hasOwnProperty('default') ? aop_1['default'] : aop_1;
 BehaviorSubject_1 = BehaviorSubject_1 && BehaviorSubject_1.hasOwnProperty('default') ? BehaviorSubject_1['default'] : BehaviorSubject_1;
-logs_1 = logs_1 && logs_1.hasOwnProperty('default') ? logs_1['default'] : logs_1;
 filter = filter && filter.hasOwnProperty('default') ? filter['default'] : filter;
+logs_1 = logs_1 && logs_1.hasOwnProperty('default') ? logs_1['default'] : logs_1;
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -47,7 +47,7 @@ function createCommonjsModule$$1(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
-var Build = createCommonjsModule$$1(function (module, exports) {
+var Annotation = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
 /**
@@ -57,12 +57,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @template T
  * @param {string} name
  * @param {string} [decorType]
- * @param {(Token<ITypeBuilder<any>> | ITypeBuilder<any>)} [builder]
+ * @param {(Token<IAnnotationBuilder<any>> | IAnnotationBuilder<any>)} [builder]
  * @param {MetadataAdapter} [adapter]
  * @param {MetadataExtends<T>} [metadataExtends]
- * @returns {IBuildDecorator<T>}
+ * @returns {IAnnotationDecorator<T>}
  */
-function createBuildDecorator(name, builder, adapter, metadataExtends) {
+function createAnnotationDecorator(name, builder, adapter, metadataExtends) {
     return core_1$$2.createClassDecorator(name, function (args) {
         if (adapter) {
             adapter(args);
@@ -71,26 +71,26 @@ function createBuildDecorator(name, builder, adapter, metadataExtends) {
         if (metadataExtends) {
             metadata = metadataExtends(metadata);
         }
-        if (builder && !metadata.typeBuilder) {
-            metadata.typeBuilder = builder;
+        if (builder && !metadata.annotationBuilder) {
+            metadata.annotationBuilder = builder;
         }
         return metadata;
     });
 }
-exports.createBuildDecorator = createBuildDecorator;
+exports.createAnnotationDecorator = createAnnotationDecorator;
 /**
- * Build decorator, use to define class build way via config.
+ * Annotation decorator, use to define class build way via config.
  *
- * @Build
+ * @Annotation
  */
-exports.Build = createBuildDecorator('Build');
+exports.Annotation = createAnnotationDecorator('Annotation');
 
 
 });
 
-unwrapExports$$1(Build);
-var Build_1 = Build.createBuildDecorator;
-var Build_2 = Build.Build;
+unwrapExports$$1(Annotation);
+var Annotation_1 = Annotation.createAnnotationDecorator;
+var Annotation_2 = Annotation.Annotation;
 
 var DIModule = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -102,7 +102,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @template T
  * @param {string} name decorator name.
  * @param {(Token<IModuleBuilder> | IModuleBuilder)} [builder]
- * @param {(Token<ITypeBuilder<any>> | ITypeBuilder<any>)} [typeBuilder]
+ * @param {(Token<IAnnotationBuilder<any>> | IAnnotationBuilder<any>)} [typeBuilder]
  * @param {MetadataAdapter} [adapter]
  * @param {MetadataExtends<T>} [metadataExtends]
  * @returns {IDIModuleDecorator<T>}
@@ -129,8 +129,8 @@ function createDIModuleDecorator(name, builder, typeBuilder, adapter, metadataEx
         if (builder && !metadata.builder) {
             metadata.builder = builder;
         }
-        if (typeBuilder && !metadata.typeBuilder) {
-            metadata.typeBuilder = typeBuilder;
+        if (typeBuilder && !metadata.annotationBuilder) {
+            metadata.annotationBuilder = typeBuilder;
         }
         return metadata;
     });
@@ -161,7 +161,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @template T
  * @param {string} name
  * @param {(Token<IApplicationBuilder> | IApplicationBuilder)} [builder] default builder
- * @param {(Token<ITypeBuilder<any>> | ITypeBuilder<Tany>)} [typeBuilder] default type builder.
+ * @param {(Token<IAnnotationBuilder<any>> | IAnnotationBuilder<Tany>)} [typeBuilder] default type builder.
  * @param {MetadataAdapter} [adapter]
  * @param {MetadataExtends<T>} [metadataExtends]
  * @returns {IBootstrapDecorator<T>}
@@ -203,7 +203,7 @@ var Bootstrap_2 = Bootstrap.Bootstrap;
 var decorators = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
-tslib_1$$1.__exportStar(Build, exports);
+tslib_1$$1.__exportStar(Annotation, exports);
 tslib_1$$1.__exportStar(DIModule, exports);
 tslib_1$$1.__exportStar(Bootstrap, exports);
 
@@ -287,7 +287,6 @@ var BootModule = /** @class */ (function () {
         lifeScope.registerDecorator(decorators.DIModule, core_1$$2.CoreActions.bindProvider, core_1$$2.CoreActions.cache, core_1$$2.CoreActions.componentBeforeInit, core_1$$2.CoreActions.componentInit, core_1$$2.CoreActions.componentAfterInit);
         lifeScope.registerDecorator(decorators.Bootstrap, core_1$$2.CoreActions.bindProvider, core_1$$2.CoreActions.cache, core_1$$2.CoreActions.componentBeforeInit, core_1$$2.CoreActions.componentInit, core_1$$2.CoreActions.componentAfterInit);
         container.register(ModuleBuilder_1.ModuleBuilder);
-        // container.register(BootBuilder);
         container.register(ApplicationBuilder.DefaultApplicationBuilder);
     };
     BootModule.classAnnations = { "name": "BootModule", "params": { "constructor": ["container"], "setup": [] } };
@@ -329,58 +328,58 @@ exports.LoadedModule = LoadedModule;
 unwrapExports$$1(ModuleType);
 var ModuleType_1 = ModuleType.LoadedModule;
 
-var ITypeBuilder = createCommonjsModule$$1(function (module, exports) {
+var IAnnotationBuilder = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
 
 /**
- * inject token Bootstrap builder.
+ * inject Annotation class builder.
  *
  * @export
  * @class InjectBootstrapBuilder
  * @extends {Registration<T>}
  * @template T
  */
-var InjectTypeBuilder = /** @class */ (function (_super) {
-    tslib_1$$1.__extends(InjectTypeBuilder, _super);
-    function InjectTypeBuilder(desc) {
+var InjectAnnotationBuilder = /** @class */ (function (_super) {
+    tslib_1$$1.__extends(InjectAnnotationBuilder, _super);
+    function InjectAnnotationBuilder(desc) {
         return _super.call(this, 'DI_TypeBuilder', desc) || this;
     }
-    InjectTypeBuilder.classAnnations = { "name": "InjectTypeBuilder", "params": { "constructor": ["desc"] } };
-    return InjectTypeBuilder;
+    InjectAnnotationBuilder.classAnnations = { "name": "InjectAnnotationBuilder", "params": { "constructor": ["desc"] } };
+    return InjectAnnotationBuilder;
 }(core_1$$2.Registration));
-exports.InjectTypeBuilder = InjectTypeBuilder;
+exports.InjectAnnotationBuilder = InjectAnnotationBuilder;
 /**
- * token bootstrap builder token.
+ * Annotation class builder token.
  */
-exports.TypeBuilderToken = new InjectTypeBuilder('');
+exports.AnnotationBuilderToken = new InjectAnnotationBuilder('');
 
 
 });
 
-unwrapExports$$1(ITypeBuilder);
-var ITypeBuilder_1 = ITypeBuilder.InjectTypeBuilder;
-var ITypeBuilder_2 = ITypeBuilder.TypeBuilderToken;
+unwrapExports$$1(IAnnotationBuilder);
+var IAnnotationBuilder_1 = IAnnotationBuilder.InjectAnnotationBuilder;
+var IAnnotationBuilder_2 = IAnnotationBuilder.AnnotationBuilderToken;
 
-var TypeBuilder_1 = createCommonjsModule$$1(function (module, exports) {
+var AnnotationBuilder_1 = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
 
 
 
 /**
- * token bootstrap builder. build class with metadata and config.
+ * Annotation class builder. build class with metadata and config.
  *
  * @export
- * @class BootBuilder
- * @implements {implements ITypeBuilder<T>}
+ * @class AnnotationBuilder
+ * @implements {implements IAnnotationBuilder<T>}
  * @template T
  */
-var TypeBuilder = /** @class */ (function () {
-    function TypeBuilder() {
+var AnnotationBuilder = /** @class */ (function () {
+    function AnnotationBuilder() {
     }
-    TypeBuilder_1 = TypeBuilder;
-    TypeBuilder.prototype.build = function (token, config, data) {
+    AnnotationBuilder_1 = AnnotationBuilder;
+    AnnotationBuilder.prototype.build = function (token, config, data) {
         return tslib_1$$1.__awaiter(this, void 0, void 0, function () {
             var builder, instance;
             return tslib_1$$1.__generator(this, function (_a) {
@@ -403,7 +402,7 @@ var TypeBuilder = /** @class */ (function () {
             });
         });
     };
-    TypeBuilder.prototype.buildByConfig = function (config, data) {
+    AnnotationBuilder.prototype.buildByConfig = function (config, data) {
         return tslib_1$$1.__awaiter(this, void 0, void 0, function () {
             var token;
             return tslib_1$$1.__generator(this, function (_a) {
@@ -419,7 +418,7 @@ var TypeBuilder = /** @class */ (function () {
             });
         });
     };
-    TypeBuilder.prototype.createInstance = function (token, config, data) {
+    AnnotationBuilder.prototype.createInstance = function (token, config, data) {
         return tslib_1$$1.__awaiter(this, void 0, void 0, function () {
             var instance;
             return tslib_1$$1.__generator(this, function (_a) {
@@ -440,18 +439,18 @@ var TypeBuilder = /** @class */ (function () {
             });
         });
     };
-    TypeBuilder.prototype.getBuilder = function (config) {
-        if (config && config.typeBuilder) {
-            if (core_1$$2.isClass(config.typeBuilder)) {
-                if (!this.container.has(config.typeBuilder)) {
-                    this.container.register(config.typeBuilder);
+    AnnotationBuilder.prototype.getBuilder = function (config) {
+        if (config && config.annotationBuilder) {
+            if (core_1$$2.isClass(config.annotationBuilder)) {
+                if (!this.container.has(config.annotationBuilder)) {
+                    this.container.register(config.annotationBuilder);
                 }
             }
-            if (core_1$$2.isToken(config.typeBuilder)) {
-                return this.container.resolve(config.typeBuilder);
+            if (core_1$$2.isToken(config.annotationBuilder)) {
+                return this.container.resolve(config.annotationBuilder);
             }
-            else if (config.typeBuilder instanceof TypeBuilder_1) {
-                return config.typeBuilder;
+            else if (config.annotationBuilder instanceof AnnotationBuilder_1) {
+                return config.annotationBuilder;
             }
         }
         return this;
@@ -460,22 +459,22 @@ var TypeBuilder = /** @class */ (function () {
      * bundle instance via config.
      *
      * @param {T} instance
-     * @param {TypeConfigure} config
+     * @param {AnnotationConfigure} config
      * @param {IContainer} [container]
      * @returns {Promise<T>}
      * @memberof BootBuilder
      */
-    TypeBuilder.prototype.buildStrategy = function (instance, config) {
+    AnnotationBuilder.prototype.buildStrategy = function (instance, config) {
         return tslib_1$$1.__awaiter(this, void 0, void 0, function () {
             return tslib_1$$1.__generator(this, function (_a) {
                 return [2 /*return*/, instance];
             });
         });
     };
-    TypeBuilder.prototype.getBootstrapToken = function (config) {
+    AnnotationBuilder.prototype.getBootstrapToken = function (config) {
         return config.bootstrap;
     };
-    TypeBuilder.prototype.getTokenMetaConfig = function (token, config) {
+    AnnotationBuilder.prototype.getTokenMetaConfig = function (token, config) {
         var cfg;
         if (core_1$$2.isClass(token)) {
             cfg = this.getMetaConfig(token);
@@ -493,10 +492,10 @@ var TypeBuilder = /** @class */ (function () {
             return config || {};
         }
     };
-    TypeBuilder.prototype.getDecorator = function () {
-        return decorators.Build.toString();
+    AnnotationBuilder.prototype.getDecorator = function () {
+        return decorators.Annotation.toString();
     };
-    TypeBuilder.prototype.getMetaConfig = function (token) {
+    AnnotationBuilder.prototype.getMetaConfig = function (token) {
         var decorator = this.getDecorator();
         if (core_1$$2.hasOwnClassMetadata(decorator, token)) {
             var metas = core_1$$2.getTypeMetadata(decorator, token);
@@ -506,28 +505,28 @@ var TypeBuilder = /** @class */ (function () {
         }
         return null;
     };
-    TypeBuilder.prototype.resolveToken = function (token, data) {
+    AnnotationBuilder.prototype.resolveToken = function (token, data) {
         return this.container.resolve(token, data);
     };
-    var TypeBuilder_1;
-    TypeBuilder.classAnnations = { "name": "TypeBuilder", "params": { "constructor": [], "build": ["token", "config", "data"], "buildByConfig": ["config", "data"], "createInstance": ["token", "config", "data"], "getBuilder": ["config"], "buildStrategy": ["instance", "config"], "getBootstrapToken": ["config"], "getTokenMetaConfig": ["token", "config"], "getDecorator": [], "getMetaConfig": ["token"], "resolveToken": ["token", "data"] } };
+    var AnnotationBuilder_1;
+    AnnotationBuilder.classAnnations = { "name": "AnnotationBuilder", "params": { "constructor": [], "build": ["token", "config", "data"], "buildByConfig": ["config", "data"], "createInstance": ["token", "config", "data"], "getBuilder": ["config"], "buildStrategy": ["instance", "config"], "getBootstrapToken": ["config"], "getTokenMetaConfig": ["token", "config"], "getDecorator": [], "getMetaConfig": ["token"], "resolveToken": ["token", "data"] } };
     tslib_1$$1.__decorate([
         core_1$$2.Inject(core_1$$2.ContainerToken),
         tslib_1$$1.__metadata("design:type", Object)
-    ], TypeBuilder.prototype, "container", void 0);
-    TypeBuilder = TypeBuilder_1 = tslib_1$$1.__decorate([
-        core_1$$2.Singleton(ITypeBuilder.TypeBuilderToken),
+    ], AnnotationBuilder.prototype, "container", void 0);
+    AnnotationBuilder = AnnotationBuilder_1 = tslib_1$$1.__decorate([
+        core_1$$2.Singleton(IAnnotationBuilder.AnnotationBuilderToken),
         tslib_1$$1.__metadata("design:paramtypes", [])
-    ], TypeBuilder);
-    return TypeBuilder;
+    ], AnnotationBuilder);
+    return AnnotationBuilder;
 }());
-exports.TypeBuilder = TypeBuilder;
+exports.AnnotationBuilder = AnnotationBuilder;
 
 
 });
 
-unwrapExports$$1(TypeBuilder_1);
-var TypeBuilder_2 = TypeBuilder_1.TypeBuilder;
+unwrapExports$$1(AnnotationBuilder_1);
+var AnnotationBuilder_2 = AnnotationBuilder_1.AnnotationBuilder;
 
 var ContainerPool_1 = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -771,13 +770,13 @@ var ModuleBuilder = /** @class */ (function () {
                     case 3:
                         boot = loadmdl.moduleToken;
                         if (!!boot) return [3 /*break*/, 5];
-                        bootBuilder = this.getTypeBuilder(container, cfg.typeBuilder);
+                        bootBuilder = this.getTypeBuilder(container, cfg.annotationBuilder);
                         return [4 /*yield*/, bootBuilder.buildByConfig(cfg, data)];
                     case 4:
                         instance = _a.sent();
                         return [2 /*return*/, instance];
                     case 5:
-                        bootbuilder = this.getTypeBuilder(container, cfg.typeBuilder);
+                        bootbuilder = this.getTypeBuilder(container, cfg.annotationBuilder);
                         return [4 /*yield*/, bootbuilder.build(boot, cfg, data)];
                     case 6:
                         instance = _a.sent();
@@ -817,15 +816,15 @@ var ModuleBuilder = /** @class */ (function () {
                         md = _a.sent();
                         bootInstance = void 0;
                         if (!loadmdl.moduleToken) return [3 /*break*/, 8];
-                        if (md && core_1$$2.isFunction(md.btBeforeCreate)) {
-                            md.btBeforeCreate(loadmdl);
+                        if (md && core_1$$2.isFunction(md.anBeforeCreate)) {
+                            md.anBeforeCreate(loadmdl);
                         }
-                        builder_1 = this.getTypeBuilder(loadmdl.container, cfg.typeBuilder);
+                        builder_1 = this.getTypeBuilder(loadmdl.container, cfg.annotationBuilder);
                         return [4 /*yield*/, builder_1.buildByConfig(cfg, data)];
                     case 5:
                         bootInstance = _a.sent();
-                        if (core_1$$2.isFunction(md.btAfterCreate)) {
-                            md.btAfterCreate(bootInstance);
+                        if (core_1$$2.isFunction(md.anAfterCreate)) {
+                            md.anAfterCreate(bootInstance);
                         }
                         if (!core_1$$2.isFunction(md.mdOnStart)) return [3 /*break*/, 7];
                         return [4 /*yield*/, Promise.resolve(md.mdOnStart(bootInstance))];
@@ -888,7 +887,7 @@ var ModuleBuilder = /** @class */ (function () {
         if (core_1$$2.isToken(typeBuilder)) {
             builder = container.resolve(typeBuilder);
         }
-        else if (typeBuilder instanceof TypeBuilder_1.TypeBuilder) {
+        else if (typeBuilder instanceof AnnotationBuilder_1.AnnotationBuilder) {
             builder = typeBuilder;
         }
         if (!builder) {
@@ -897,7 +896,7 @@ var ModuleBuilder = /** @class */ (function () {
         return builder;
     };
     ModuleBuilder.prototype.getDefaultTypeBuilder = function (container) {
-        return container.resolve(ITypeBuilder.TypeBuilderToken);
+        return container.resolve(IAnnotationBuilder.AnnotationBuilderToken);
     };
     ModuleBuilder.prototype.importModule = function (token, container) {
         return tslib_1$$1.__awaiter(this, void 0, void 0, function () {
@@ -1064,8 +1063,8 @@ var ModuleBuilder = /** @class */ (function () {
         return tslib_1$$1.__awaiter(this, void 0, void 0, function () {
             return tslib_1$$1.__generator(this, function (_a) {
                 // register for each container.
-                if (!container.hasRegister(TypeBuilder_1.TypeBuilder)) {
-                    container.register(TypeBuilder_1.TypeBuilder);
+                if (!container.hasRegister(AnnotationBuilder_1.AnnotationBuilder)) {
+                    container.register(AnnotationBuilder_1.AnnotationBuilder);
                 }
                 return [2 /*return*/, container];
             });
@@ -1399,8 +1398,8 @@ tslib_1$$1.__exportStar(IModuleBuilder, exports);
 tslib_1$$1.__exportStar(ModuleBuilder_1, exports);
 tslib_1$$1.__exportStar(ContainerPool_1, exports);
 tslib_1$$1.__exportStar(BootModule_1, exports);
-tslib_1$$1.__exportStar(ITypeBuilder, exports);
-tslib_1$$1.__exportStar(TypeBuilder_1, exports);
+tslib_1$$1.__exportStar(IAnnotationBuilder, exports);
+tslib_1$$1.__exportStar(AnnotationBuilder_1, exports);
 tslib_1$$1.__exportStar(ModuleType, exports);
 
 
@@ -1450,7 +1449,7 @@ var IActivity_1 = IActivity.InjectAcitityToken;
 var IActivity_2 = IActivity.ActivityToken;
 
 var Task = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});function createTaskDecorator(t,r,i,a,n){return core_1.createClassDecorator("Task",function(e){a&&a(e), e.next({match:function(e){return e&&(core_1.isString(e)||core_1.isObject(e)&&e instanceof core_1.Registration)},setMetadata:function(e,t){core_1.isString(t)?e.name=t:e.provide=t;}}), e.next({match:function(e){return core_1.isString(e)||core_1.isToken(e)},setMetadata:function(e,t){core_1.isString(t)?e.name=t:e.typeBuilder=t;}}), e.next({match:function(e){return core_1.isString(e)},setMetadata:function(e,t){e.name=t;}});},function(e){(n&&(e=n(e)), !e.name&&core_1.isClass(e.type))&&(/^[a-z]$/.test(e.type.name)&&e.type.classAnnations?e.name=e.type.classAnnations.name:e.name=e.type.name);return e.provide=e.provide||i, e.alias=e.alias||e.name, e.decorType=t, r&&!e.typeBuilder&&(e.typeBuilder=r), e})}exports.createTaskDecorator=createTaskDecorator, exports.Task=createTaskDecorator("Task",IActivityBuilder.ActivityBuilderToken,IActivity.ActivityToken);
+Object.defineProperty(exports,"__esModule",{value:!0});function createTaskDecorator(t,r,i,n,a){return core_1.createClassDecorator("Task",function(e){n&&n(e), e.next({match:function(e){return e&&(core_1.isString(e)||core_1.isObject(e)&&e instanceof core_1.Registration)},setMetadata:function(e,t){core_1.isString(t)?e.name=t:e.provide=t;}}), e.next({match:function(e){return core_1.isString(e)||core_1.isToken(e)},setMetadata:function(e,t){core_1.isString(t)?e.name=t:e.annotationBuilder=t;}}), e.next({match:function(e){return core_1.isString(e)},setMetadata:function(e,t){e.name=t;}});},function(e){(a&&(e=a(e)), !e.name&&core_1.isClass(e.type))&&(/^[a-z]$/.test(e.type.name)&&e.type.classAnnations?e.name=e.type.classAnnations.name:e.name=e.type.name);return e.provide=e.provide||i, e.alias=e.alias||e.name, e.decorType=t, r&&!e.annotationBuilder&&(e.annotationBuilder=r), e})}exports.createTaskDecorator=createTaskDecorator, exports.Task=createTaskDecorator("Task",IActivityBuilder.ActivityBuilderToken,IActivity.ActivityToken);
 
 
 
@@ -1460,48 +1459,20 @@ unwrapExports(Task);
 var Task_1 = Task.createTaskDecorator;
 var Task_2 = Task.Task;
 
-var RunAspect_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var RunAspect=function(){function t(){}return t.prototype.beforeRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core.RunState.pause:throw new Error("workflow paused!");case core.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.afterRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core.RunState.pause:throw new Error("workflow paused!");case core.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.getRunner=function(t){return t instanceof core.Activity&&t.id&&this.container.has(t.id)?this.container.resolve(t.id):null}, t.classAnnations={name:"RunAspect",params:{constructor:[],beforeRun:["joinPoint"],afterRun:["joinPoint"],getRunner:["task"]}}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), tslib_1.__decorate([aop_1.Before("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"beforeRun",null), tslib_1.__decorate([aop_1.AfterReturning("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"afterRun",null), t=tslib_1.__decorate([aop_1.Aspect({annotation:core.Task,singleton:!0}),tslib_1.__metadata("design:paramtypes",[])],t)}();exports.RunAspect=RunAspect;
+var IWorkflowBuilder = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var InjectWorkflowBuilder=function(r){function e(e){return r.call(this,"Workflow",e)||this}return tslib_1.__extends(e,r), e.classAnnations={name:"InjectWorkflowBuilder",params:{constructor:["desc"]}}, e}(core_1.Registration);exports.InjectWorkflowBuilder=InjectWorkflowBuilder, exports.WorkflowBuilderToken=new InjectWorkflowBuilder(""), exports.DefaultWorkflowBuilderToken=new InjectWorkflowBuilder("default");
 
 
 
 });
 
-unwrapExports(RunAspect_1);
-var RunAspect_2 = RunAspect_1.RunAspect;
-
-var aop = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(RunAspect_1,exports);
-
-
-
-});
-
-unwrapExports(aop);
-
-var CoreModule_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var CoreModule=function(){function e(e){this.container=e;}return e.prototype.setup=function(){var e=this.container,o=e.getLifeScope();o.registerDecorator(core.Workflow,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), o.registerDecorator(core.Task,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), e.register(core.ActivityBuilder), e.register(core.DefaultWorkflow), e.register(core.Context), e.register(aop.RunAspect), e.register(core.Activity), e.register(WorkflowBuilder_1.WorkflowBuilder), e.use(activities);}, e.classAnnations={name:"CoreModule",params:{constructor:["container"],setup:[]}}, e=tslib_1.__decorate([core_1.IocExt("setup"),tslib_1.__param(0,core_1.Inject(core_1.ContainerToken)),tslib_1.__metadata("design:paramtypes",[Object])],e)}();exports.CoreModule=CoreModule;
-
-
-
-});
-
-unwrapExports(CoreModule_1);
-var CoreModule_2 = CoreModule_1.CoreModule;
-
-var WorkflowBuilder_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});exports.WorkflowBuilderToken=new bootstrap_umd.InjectModuleBuilder("Workflow");var WorkflowBuilder=function(a){function e(){return null!==a&&a.apply(this,arguments)||this}return tslib_1.__extends(e,a), e.prototype.bootstrap=function(i,n,s){return tslib_1.__awaiter(this,void 0,void 0,function(){var t,o,r;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return t=this.getContainer(i,n), s=s||this.createUUID(t), [4,a.prototype.bootstrap.call(this,i,n,s)];case 1:return o=e.sent(), [4,(r=t.resolve(core.WorkflowToken,{activities:i,instance:o,uuid:s})).start()];case 2:return e.sent(), [2,r]}})})}, e.prototype.createUUID=function(e){return e.has(core.UUIDToken)||e.register(core.RandomUUIDFactory), e.get(core.UUIDToken).generate()}, e.prototype.registerExts=function(t,o){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,a.prototype.registerExts.call(this,t,o)];case 1:return e.sent(), t.has(aop_1.AopModule)||t.register(aop_1.AopModule), t.has(logs_1.LogModule)||t.register(logs_1.LogModule), t.has(CoreModule_1.CoreModule)||t.register(CoreModule_1.CoreModule), [2,t]}})})}, e.prototype.getBootstrapToken=function(e){return e.activity||e.task||e.bootstrap}, e.prototype.getDefaultTypeBuilder=function(e){return e.resolve(core.ActivityBuilderToken)}, e.prototype.getDecorator=function(){return core.Task.toString()}, e.classAnnations={name:"WorkflowBuilder",params:{bootstrap:["activity","defaultContainer","workflowId"],createUUID:["container"],registerExts:["container","config"],getBootstrapToken:["config"],getDefaultTypeBuilder:["container"],getDecorator:[]}}, e=tslib_1.__decorate([core_1.Singleton(exports.WorkflowBuilderToken)],e)}(bootstrap_umd.ModuleBuilder);exports.WorkflowBuilder=WorkflowBuilder;
-
-
-
-});
-
-unwrapExports(WorkflowBuilder_1);
-var WorkflowBuilder_2 = WorkflowBuilder_1.WorkflowBuilderToken;
-var WorkflowBuilder_3 = WorkflowBuilder_1.WorkflowBuilder;
+unwrapExports(IWorkflowBuilder);
+var IWorkflowBuilder_1 = IWorkflowBuilder.InjectWorkflowBuilder;
+var IWorkflowBuilder_2 = IWorkflowBuilder.WorkflowBuilderToken;
+var IWorkflowBuilder_3 = IWorkflowBuilder.DefaultWorkflowBuilderToken;
 
 var Workflow = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});function createWorkflowDecorator(e,r,t,o,i){return bootstrap_umd.createDIModuleDecorator(e,r,t,function(e){o&&o(e), e.next({match:function(e){return e&&(core_1.isString(e)||core_1.isObject(e)&&e instanceof core_1.Registration)},setMetadata:function(e,r){core_1.isString(r)?e.name=r:e.provide=r;}}), e.next({match:function(e){return core_1.isString(e)||core_1.isToken(e)},setMetadata:function(e,r){core_1.isString(r)?e.name=r:e.typeBuilder=r;}}), e.next({match:function(e){return core_1.isString(e)},setMetadata:function(e,r){e.name=r;}});},i)}exports.createWorkflowDecorator=createWorkflowDecorator, exports.Workflow=createWorkflowDecorator("Workflow",WorkflowBuilder_1.WorkflowBuilderToken,IActivityBuilder.ActivityBuilderToken);
+Object.defineProperty(exports,"__esModule",{value:!0});function createWorkflowDecorator(e,r,t,o,i){return bootstrap_umd.createDIModuleDecorator(e,r,t,function(e){o&&o(e), e.next({match:function(e){return e&&(core_1.isString(e)||core_1.isObject(e)&&e instanceof core_1.Registration)},setMetadata:function(e,r){core_1.isString(r)?e.name=r:e.provide=r;}}), e.next({match:function(e){return core_1.isString(e)||core_1.isToken(e)},setMetadata:function(e,r){core_1.isString(r)?e.name=r:e.annotationBuilder=r;}}), e.next({match:function(e){return core_1.isString(e)},setMetadata:function(e,r){e.name=r;}});},i)}exports.createWorkflowDecorator=createWorkflowDecorator, exports.Workflow=createWorkflowDecorator("Workflow",IWorkflowBuilder.DefaultWorkflowBuilderToken,IActivityBuilder.ActivityBuilderToken);
 
 
 
@@ -1574,7 +1545,7 @@ unwrapExports(Activity_1);
 var Activity_2 = Activity_1.Activity;
 
 var ActivityBuilder_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var ActivityBuilder=function(c){function t(){return null!==c&&c.apply(this,arguments)||this}return tslib_1.__extends(t,c), t.prototype.build=function(t,e,i){return c.prototype.build.call(this,t,e,i)}, t.prototype.buildByConfig=function(t,e){return c.prototype.buildByConfig.call(this,t,e)}, t.prototype.createInstance=function(r,n,o){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return core_1.isString(r)&&(r=this.traslateStrToken(r)), [4,c.prototype.createInstance.call(this,r,n,o)];case 1:return(e=t.sent())&&e instanceof Activity_1.Activity?[3,3]:(i=this.getDefaultAcitvity(), console.log("try load default activity:",core_1.getClassName(i)), [4,this.build(i,n,o)]);case 2:e=t.sent(), t.label=3;case 3:return core_1.isString(o)&&(e.id=o), core_1.isFunction(e.onActivityInit)?[4,Promise.resolve(e.onActivityInit(n))]:[3,5];case 4:t.sent(), t.label=5;case 5:return[2,e]}})})}, t.prototype.buildStrategy=function(e,i,t){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){return i.name&&(e.name=i.name), e.config=i, [2,e]})})}, t.prototype.getDefaultAcitvity=function(){return Activity_1.Activity}, t.prototype.getBootstrapToken=function(t){var e=t.activity||t.task||t.bootstrap;return core_1.isString(e)&&(e=this.traslateStrToken(e)), e}, t.prototype.getDecorator=function(){return decorators.Task.toString()}, t.prototype.resolveToken=function(t,e){var i=this.container.resolve(t);return i.id=e, i}, t.prototype.traslateStrToken=function(t){var e=new core_1.Registration(IActivity.ActivityToken,t);return this.container.has(e)?e:t}, t.prototype.toExpression=function(e,i){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){switch(t.label){case 0:return ActivityConfigure.isActivityType(e)?[4,this.buildByConfig(e,i.id)]:[3,2];case 1:return[2,t.sent()];case 2:return[2,e]}})})}, t.prototype.toActivity=function(n,o,c,s,a){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i,r;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return ActivityConfigure.isActivityType(n,!a)?a?[4,this.buildByConfig(core_1.isToken(n)?n:a(n),o.id)]:[3,2]:[3,5];case 1:return e=t.sent(), [3,4];case 2:return[4,this.buildByConfig(n,o.id)];case 3:e=t.sent(), t.label=4;case 4:return[3,6];case 5:e=n, t.label=6;case 6:return c(e)?[2,e]:core_1.isString(e)?(i=e, [3,9]):[3,7];case 7:return[4,o.context.exec(o,e)];case 8:i=t.sent(), t.label=9;case 9:return r=s(i), a&&(r=a(r)), r?[4,this.buildByConfig(r,o.id)]:[3,11];case 10:return e=t.sent(), [3,12];case 11:e=null, t.label=12;case 12:return[2,e]}})})}, t.classAnnations={name:"ActivityBuilder",params:{build:["token","config","data"],buildByConfig:["activity","data"],createInstance:["token","config","uuid"],buildStrategy:["activity","config","container"],getDefaultAcitvity:[],getBootstrapToken:["config"],getDecorator:[],resolveToken:["token","uuid"],traslateStrToken:["token"],toExpression:["exptype","target"],toActivity:["exptype","target","isRightActivity","toConfig","valify"]}}, t=tslib_1.__decorate([core_1.Singleton(IActivityBuilder.ActivityBuilderToken)],t)}(bootstrap_umd.TypeBuilder);exports.ActivityBuilder=ActivityBuilder;
+Object.defineProperty(exports,"__esModule",{value:!0});var ActivityBuilder=function(c){function t(){return null!==c&&c.apply(this,arguments)||this}return tslib_1.__extends(t,c), t.prototype.build=function(t,e,i){return c.prototype.build.call(this,t,e,i)}, t.prototype.buildByConfig=function(t,e){return c.prototype.buildByConfig.call(this,t,e)}, t.prototype.createInstance=function(r,n,o){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return core_1.isString(r)&&(r=this.traslateStrToken(r)), [4,c.prototype.createInstance.call(this,r,n,o)];case 1:return(e=t.sent())&&e instanceof Activity_1.Activity?[3,3]:(i=this.getDefaultAcitvity(), console.log("try load default activity:",core_1.getClassName(i)), [4,this.build(i,n,o)]);case 2:e=t.sent(), t.label=3;case 3:return core_1.isString(o)&&(e.id=o), core_1.isFunction(e.onActivityInit)?[4,Promise.resolve(e.onActivityInit(n))]:[3,5];case 4:t.sent(), t.label=5;case 5:return[2,e]}})})}, t.prototype.buildStrategy=function(e,i,t){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){return i.name&&(e.name=i.name), e.config=i, [2,e]})})}, t.prototype.getDefaultAcitvity=function(){return Activity_1.Activity}, t.prototype.getBootstrapToken=function(t){var e=t.activity||t.task||t.bootstrap;return core_1.isString(e)&&(e=this.traslateStrToken(e)), e}, t.prototype.getDecorator=function(){return decorators.Task.toString()}, t.prototype.resolveToken=function(t,e){var i=this.container.resolve(t);return i.id=e, i}, t.prototype.traslateStrToken=function(t){var e=new core_1.Registration(IActivity.ActivityToken,t);return this.container.has(e)?e:t}, t.prototype.toExpression=function(e,i){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(t){switch(t.label){case 0:return ActivityConfigure.isActivityType(e)?[4,this.buildByConfig(e,i.id)]:[3,2];case 1:return[2,t.sent()];case 2:return[2,e]}})})}, t.prototype.toActivity=function(n,o,c,s,a){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,i,r;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return ActivityConfigure.isActivityType(n,!a)?a?[4,this.buildByConfig(core_1.isToken(n)?n:a(n),o.id)]:[3,2]:[3,5];case 1:return e=t.sent(), [3,4];case 2:return[4,this.buildByConfig(n,o.id)];case 3:e=t.sent(), t.label=4;case 4:return[3,6];case 5:e=n, t.label=6;case 6:return c(e)?[2,e]:core_1.isString(e)?(i=e, [3,9]):[3,7];case 7:return[4,o.context.exec(o,e)];case 8:i=t.sent(), t.label=9;case 9:return r=s(i), a&&(r=a(r)), r?[4,this.buildByConfig(r,o.id)]:[3,11];case 10:return e=t.sent(), [3,12];case 11:e=null, t.label=12;case 12:return[2,e]}})})}, t.classAnnations={name:"ActivityBuilder",params:{build:["token","config","data"],buildByConfig:["activity","data"],createInstance:["token","config","uuid"],buildStrategy:["activity","config","container"],getDefaultAcitvity:[],getBootstrapToken:["config"],getDecorator:[],resolveToken:["token","uuid"],traslateStrToken:["token"],toExpression:["exptype","target"],toActivity:["exptype","target","isRightActivity","toConfig","valify"]}}, t=tslib_1.__decorate([core_1.Singleton(IActivityBuilder.ActivityBuilderToken)],t)}(bootstrap_umd.AnnotationBuilder);exports.ActivityBuilder=ActivityBuilder;
 
 
 
@@ -1743,8 +1714,47 @@ Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(Dela
 
 unwrapExports(activities);
 
+var RunAspect_1 = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var RunAspect=function(){function t(){}return t.prototype.beforeRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core.RunState.pause:throw new Error("workflow paused!");case core.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.afterRun=function(t){var e=this.getRunner(t.target);if(e)switch(e.saveState(t), e.state){case core.RunState.pause:throw new Error("workflow paused!");case core.RunState.stop:throw new Error("workflow stop!")}}, t.prototype.getRunner=function(t){return t instanceof core.Activity&&t.id&&this.container.has(t.id)?this.container.resolve(t.id):null}, t.classAnnations={name:"RunAspect",params:{constructor:[],beforeRun:["joinPoint"],afterRun:["joinPoint"],getRunner:["task"]}}, tslib_1.__decorate([core_1.Inject(core_1.ContainerToken),tslib_1.__metadata("design:type",Object)],t.prototype,"container",void 0), tslib_1.__decorate([aop_1.Before("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"beforeRun",null), tslib_1.__decorate([aop_1.AfterReturning("execution(*.run)"),tslib_1.__metadata("design:type",Function),tslib_1.__metadata("design:paramtypes",[aop_1.Joinpoint]),tslib_1.__metadata("design:returntype",void 0)],t.prototype,"afterRun",null), t=tslib_1.__decorate([aop_1.Aspect({annotation:core.Task,singleton:!0}),tslib_1.__metadata("design:paramtypes",[])],t)}();exports.RunAspect=RunAspect;
+
+
+
+});
+
+unwrapExports(RunAspect_1);
+var RunAspect_2 = RunAspect_1.RunAspect;
+
+var aop = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(RunAspect_1,exports);
+
+
+
+});
+
+unwrapExports(aop);
+
+var DefaultWorkflowBuilder_1 = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var DefaultWorkflowBuilder=function(u){function e(){return null!==u&&u.apply(this,arguments)||this}return tslib_1.__extends(e,u), e.prototype.bootstrap=function(i,n,s){return tslib_1.__awaiter(this,void 0,void 0,function(){var t,r,o;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return t=this.getContainer(i,n), s=s||this.createUUID(t), [4,u.prototype.bootstrap.call(this,i,n,s)];case 1:return r=e.sent(), [4,(o=t.resolve(core.WorkflowToken,{activities:i,instance:r,uuid:s})).start()];case 2:return e.sent(), [2,o]}})})}, e.prototype.createUUID=function(e){return e.has(core.UUIDToken)||e.register(core.RandomUUIDFactory), e.get(core.UUIDToken).generate()}, e.prototype.registerExts=function(t,r){return tslib_1.__awaiter(this,void 0,void 0,function(){return tslib_1.__generator(this,function(e){switch(e.label){case 0:return[4,u.prototype.registerExts.call(this,t,r)];case 1:return e.sent(), t.has(aop_1.AopModule)||t.register(aop_1.AopModule), t.has(logs_1.LogModule)||t.register(logs_1.LogModule), t.has(CoreModule_1.CoreModule)||t.register(CoreModule_1.CoreModule), [2,t]}})})}, e.prototype.getDefaultTypeBuilder=function(e){return e.resolve(core.ActivityBuilderToken)}, e.prototype.getDecorator=function(){return core.Task.toString()}, e.prototype.getBootstrapToken=function(e){return e.activity||e.task||e.bootstrap}, e.classAnnations={name:"DefaultWorkflowBuilder",params:{bootstrap:["activity","defaultContainer","workflowId"],createUUID:["container"],registerExts:["container","config"],getDefaultTypeBuilder:["container"],getDecorator:[],getBootstrapToken:["config"]}}, e=tslib_1.__decorate([core_1.Singleton(IWorkflowBuilder.DefaultWorkflowBuilderToken)],e)}(bootstrap_umd.ModuleBuilder);exports.DefaultWorkflowBuilder=DefaultWorkflowBuilder;
+
+
+
+});
+
+unwrapExports(DefaultWorkflowBuilder_1);
+var DefaultWorkflowBuilder_2 = DefaultWorkflowBuilder_1.DefaultWorkflowBuilder;
+
+var CoreModule_1 = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports,"__esModule",{value:!0});var CoreModule=function(){function e(e){this.container=e;}return e.prototype.setup=function(){var e=this.container,o=e.getLifeScope();o.registerDecorator(core.Workflow,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), o.registerDecorator(core.Task,core_1.CoreActions.bindProvider,core_1.CoreActions.cache,core_1.CoreActions.componentBeforeInit,core_1.CoreActions.componentInit,core_1.CoreActions.componentAfterInit), e.register(core.ActivityBuilder), e.register(core.DefaultWorkflow), e.register(core.Context), e.register(aop.RunAspect), e.register(core.Activity), e.register(DefaultWorkflowBuilder_1.DefaultWorkflowBuilder), e.use(activities);}, e.classAnnations={name:"CoreModule",params:{constructor:["container"],setup:[]}}, e=tslib_1.__decorate([core_1.IocExt("setup"),tslib_1.__param(0,core_1.Inject(core_1.ContainerToken)),tslib_1.__metadata("design:paramtypes",[Object])],e)}();exports.CoreModule=CoreModule;
+
+
+
+});
+
+unwrapExports(CoreModule_1);
+var CoreModule_2 = CoreModule_1.CoreModule;
+
 var DefaultTaskContainer_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});var DefaultTaskContainer=function(){function e(e){this.baseURL=e;}return e.prototype.getContainer=function(){return this.container||(this.container=this.getBuilder().getPools().getDefault()), this.container}, e.prototype.getBuilder=function(){return this.builder||(this.builder=this.createAppBuilder(), this.builder.use(aop_1.AopModule).use(logs_1.LogModule).use(CoreModule_1.CoreModule)), this.builder}, e.prototype.createAppBuilder=function(){return new bootstrap_umd.DefaultApplicationBuilder(this.baseURL)}, e.prototype.useConfiguration=function(e,t){return this.getBuilder().useConfiguration(e,t), this}, e.prototype.use=function(){for(var e,t=[],r=0;r<arguments.length;r++)t[r]=arguments[r];return(e=this.getBuilder()).use.apply(e,t), this}, e.prototype.useLog=function(e){return core_1.hasClassMetadata(aop_1.Aspect,e)?this.getBuilder().use(e):console.error("logAspect param is not right aspect"), this}, e.prototype.getWorkflow=function(e){return this.getContainer().resolve(e)}, e.prototype.createWorkflow=function(o,i){return tslib_1.__awaiter(this,void 0,void 0,function(){var t,r;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return core_1.isToken(o)?t={bootstrap:o,builder:WorkflowBuilder_1.WorkflowBuilderToken}:(t=o).builder=WorkflowBuilder_1.WorkflowBuilderToken, [4,this.getBuilder().bootstrap(t,null,i)];case 1:return r=e.sent(), this.getContainer().bindProvider(r.getUUID(),r), [2,r]}})})}, e.prototype.bootstrap=function(){for(var r=[],e=0;e<arguments.length;e++)r[e]=arguments[e];return tslib_1.__awaiter(this,void 0,void 0,function(){var t;return tslib_1.__generator(this,function(e){switch(e.label){case 0:return t=1<r.length?{sequence:r,task:activities.SequenceActivity}:core_1.lang.first(r), [4,this.createWorkflow(t)];case 1:return[2,e.sent()]}})})}, e.classAnnations={name:"DefaultTaskContainer",params:{constructor:["baseURL"],getContainer:[],getBuilder:[],createAppBuilder:[],useConfiguration:["config","container"],use:["modules"],useLog:["logAspect"],getWorkflow:["workflowId"],createWorkflow:["activity","workflowId"],bootstrap:["activites"]}}, e}();exports.DefaultTaskContainer=DefaultTaskContainer;
+Object.defineProperty(exports,"__esModule",{value:!0});var DefaultTaskContainer=function(){function t(t){this.baseURL=t;}return t.prototype.getContainer=function(){return this.container||(this.container=this.getBuilder().getPools().getDefault()), this.container}, t.prototype.getBuilder=function(){return this.builder||(this.builder=this.createAppBuilder(), this.builder.use(aop_1.AopModule).use(logs_1.LogModule).use(CoreModule_1.CoreModule)), this.builder}, t.prototype.createAppBuilder=function(){return new bootstrap_umd.DefaultApplicationBuilder(this.baseURL)}, t.prototype.useConfiguration=function(t,e){return this.getBuilder().useConfiguration(t,e), this}, t.prototype.use=function(){for(var t,e=[],r=0;r<arguments.length;r++)e[r]=arguments[r];return(t=this.getBuilder()).use.apply(t,e), this}, t.prototype.useLog=function(t){return core_1.hasClassMetadata(aop_1.Aspect,t)?this.getBuilder().use(t):console.error("logAspect param is not right aspect"), this}, t.prototype.getWorkflow=function(t){return this.getContainer().resolve(t)}, t.prototype.createWorkflow=function(r,o){return tslib_1.__awaiter(this,void 0,void 0,function(){var e;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return[4,this.getBuilder().bootstrap(r,null,o)];case 1:return e=t.sent(), this.getContainer().bindProvider(e.getUUID(),e), [2,e]}})})}, t.prototype.createActivity=function(o,i){return tslib_1.__awaiter(this,void 0,void 0,function(){var e,r;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return core_1.isToken(o)?e={bootstrap:o,builder:IWorkflowBuilder.DefaultWorkflowBuilderToken}:(e=o).builder=e.builder||IWorkflowBuilder.DefaultWorkflowBuilderToken, [4,this.getBuilder().bootstrap(e,null,i)];case 1:return r=t.sent(), this.getContainer().bindProvider(r.getUUID(),r), [2,r]}})})}, t.prototype.bootstrap=function(){for(var r=[],t=0;t<arguments.length;t++)r[t]=arguments[t];return tslib_1.__awaiter(this,void 0,void 0,function(){var e;return tslib_1.__generator(this,function(t){switch(t.label){case 0:return e=1<r.length?{sequence:r,task:activities.SequenceActivity}:core_1.lang.first(r), [4,this.createActivity(e)];case 1:return[2,t.sent()]}})})}, t.classAnnations={name:"DefaultTaskContainer",params:{constructor:["baseURL"],getContainer:[],getBuilder:[],createAppBuilder:[],useConfiguration:["config","container"],use:["modules"],useLog:["logAspect"],getWorkflow:["workflowId"],createWorkflow:["workflow","workflowId"],createActivity:["activity","workflowId"],bootstrap:["activites"]}}, t}();exports.DefaultTaskContainer=DefaultTaskContainer;
 
 
 
@@ -1773,7 +1783,7 @@ Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(obje
 unwrapExports(utils);
 
 var D__workspace_github_typeTask_packages_core_lib = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(ITaskContainer,exports), tslib_1.__exportStar(DefaultTaskContainer_1,exports), tslib_1.__exportStar(WorkflowBuilder_1,exports), tslib_1.__exportStar(utils,exports), tslib_1.__exportStar(core,exports), tslib_1.__exportStar(aop,exports), tslib_1.__exportStar(activities,exports), tslib_1.__exportStar(CoreModule_1,exports);
+Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(ITaskContainer,exports), tslib_1.__exportStar(DefaultTaskContainer_1,exports), tslib_1.__exportStar(DefaultWorkflowBuilder_1,exports), tslib_1.__exportStar(utils,exports), tslib_1.__exportStar(core,exports), tslib_1.__exportStar(aop,exports), tslib_1.__exportStar(activities,exports), tslib_1.__exportStar(CoreModule_1,exports);
 
 
 

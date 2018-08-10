@@ -1,6 +1,6 @@
 import { IActivity, GActivity } from './IActivity';
 import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
-import { TypeConfigure } from '@ts-ioc/bootstrap';
+import { AnnotationConfigure } from '@ts-ioc/bootstrap';
 import { IWorkflow } from './IWorkflow';
 import { ExpressionActivity } from './ExpressionActivity';
 import { DefaultWorkflow } from './DefaultWorkflow';
@@ -123,10 +123,10 @@ export function isActivityType(target: any, check = true): target is ActivityTyp
  *
  * @export
  * @interface IActivityConfigure
- * @extends {TypeConfigure<T>}
+ * @extends {AnnotationConfigure<T>}
  * @template T
  */
-export interface IActivityConfigure<T> extends TypeConfigure<T> {
+export interface IActivityConfigure<T> extends AnnotationConfigure<T> {
 
     /**
      * workflow uuid.

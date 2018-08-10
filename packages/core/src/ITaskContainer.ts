@@ -1,4 +1,4 @@
-import { IWorkflow, Active } from './core';
+import { IWorkflow, Active, WorkflowType } from './core';
 import { InjectToken, Type } from '@ts-ioc/core';
 import { IApplicationBuilder, IApplicationExtends } from '@ts-ioc/bootstrap';
 
@@ -37,7 +37,16 @@ export interface ITaskContainer extends IApplicationExtends {
      * @param {string} [workflowId]
      * @memberof ITaskContainer
      */
-    createWorkflow(activity: Active, workflowId?: string);
+    createWorkflow(workflow: WorkflowType, workflowId?: string): Promise<IWorkflow<any>>;
+
+    /**
+     * create workflow by activity.
+     *
+     * @param {Active} activity
+     * @param {string} [workflowId]
+     * @memberof ITaskContainer
+     */
+    createActivity(activity: Active, workflowId?: string): Promise<IWorkflow<any>>;
 
     /**
      * create workflow and bootstrap.

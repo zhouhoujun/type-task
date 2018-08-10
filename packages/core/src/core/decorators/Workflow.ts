@@ -1,7 +1,7 @@
 import { Registration, Token, MetadataAdapter, MetadataExtends, isString, isObject, isToken } from '@ts-ioc/core';
 import { WorkflowMetadata } from '../metadatas';
-import { createDIModuleDecorator, IDIModuleDecorator, IModuleBuilder } from '@ts-ioc/bootstrap';
-import { WorkflowBuilderToken } from '../../WorkflowBuilder';
+import { createDIModuleDecorator, IDIModuleDecorator } from '@ts-ioc/bootstrap';
+import { DefaultWorkflowBuilderToken, IWorkflowBuilder } from '../../IWorkflowBuilder';
 import { ActivityBuilderToken, IActivityBuilder } from '../IActivityBuilder';
 
 /**
@@ -53,12 +53,12 @@ export interface IWorkflowDecorator<T extends WorkflowMetadata> extends IDIModul
 
 export function createWorkflowDecorator<T extends WorkflowMetadata>(
     name: string,
-    builder?: Token<IModuleBuilder<any>> | IModuleBuilder<any>,
-    typeBuilder?: Token<IActivityBuilder> | IActivityBuilder,
+    builder?: Token<IWorkflowBuilder> | IWorkflowBuilder,
+    annotationBuilder?: Token<IActivityBuilder> | IActivityBuilder,
     adapter?: MetadataAdapter,
     metadataExtends?: MetadataExtends<T>): IWorkflowDecorator<T> {
 
-    return createDIModuleDecorator(name, builder, typeBuilder, args => {
+    return createDIModuleDecorator(name, builder, annotationBuilder, args => {
         if (adapter) {
             adapter(args);
         }
@@ -79,7 +79,7 @@ export function createWorkflowDecorator<T extends WorkflowMetadata>(
                 if (isString(arg)) {
                     metadata.name = arg;
                 } else {
-                    metadata.typeBuilder = arg;
+                    metadata.annotationBuilder = arg;
                 }
             }
         });
@@ -99,4 +99,4 @@ export function createWorkflowDecorator<T extends WorkflowMetadata>(
  *
  * @Workflow
  */
-export const Workflow: IWorkflowDecorator<WorkflowMetadata> = createWorkflowDecorator<WorkflowMetadata>('Workflow', WorkflowBuilderToken, ActivityBuilderToken);
+export const Workflow: IWorkflowDecorator<WorkflowMetadata> = createWorkflowDecorator<WorkflowMetadata>('Workflow', DefaultWorkflowBuilderToken, ActivityBuilderToken);

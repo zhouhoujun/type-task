@@ -1,10 +1,11 @@
-import { ActivityResultType } from './ActivityConfigure';
-import { Registration } from '@ts-ioc/core';
-import { GActivity } from './IActivity';
+import { ActivityResultType, Active } from './ActivityConfigure';
+import { Registration, Token } from '@ts-ioc/core';
+import { GActivity, IActivity } from './IActivity';
 import { IActivityBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
-import { ModuleConfigure } from '@ts-ioc/bootstrap';
+import { ModuleConfig } from '@ts-ioc/bootstrap';
+import { IWorkflowBuilder } from '../IWorkflowBuilder';
 
 
 /**
@@ -55,8 +56,18 @@ export enum RunState {
     complete
 }
 
-export interface WorkflowConfig extends ModuleConfigure {
-
+/**
+ * workflow configuration.
+ *
+ * @export
+ * @interface WorkflowConfig
+ * @extends {ModuleConfig<IWorkflow<any>>}
+ * @extends {ActivityConfigure}
+ */
+export interface WorkflowConfig extends ModuleConfig<IWorkflow<any>> {
+    activity?: Active;
+    bootstrap?: Token<any>;
+    builder?: Token<IWorkflowBuilder> | IWorkflowBuilder;
 }
 
 /**
@@ -171,3 +182,5 @@ export interface IWorkflow<T> {
     saveState(state: Joinpoint);
 
 }
+
+export type WorkflowType = WorkflowConfig | Token<IWorkflow<any>>

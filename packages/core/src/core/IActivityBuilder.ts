@@ -1,7 +1,7 @@
 import { Registration } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
 import { ActivityType } from './ActivityConfigure';
-import { ITypeBuilder } from '@ts-ioc/bootstrap';
+import { IAnnotationBuilder } from '@ts-ioc/bootstrap';
 
 
 /**
@@ -23,9 +23,9 @@ export class InjectAcitityBuilderToken<T extends IActivityBuilder> extends Regis
  *
  * @export
  * @interface IActivityBuilder
- * @extends {ITypeBuilder<IActivity>}
+ * @extends {IAnnotationBuilder<IActivity>}
  */
-export interface IActivityBuilder extends ITypeBuilder<IActivity> {
+export interface IActivityBuilder extends IAnnotationBuilder<IActivity> {
     /**
      * build by config.
      *
