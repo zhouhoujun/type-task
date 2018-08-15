@@ -11,6 +11,9 @@ import * as sourcemaps from 'gulp-sourcemaps';
  * @extends {ActivityConfigure}
  */
 export interface SourceMapsConfigure extends ActivityConfigure {
+    /**
+     * sourcemaps.
+     */
     sourcemaps?: CtxType<string>;
 }
 

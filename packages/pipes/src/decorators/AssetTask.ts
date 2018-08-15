@@ -1,6 +1,5 @@
 import { ITaskDecorator, createTaskDecorator } from '@taskfr/core';
-import { AssetConfigure } from '../core/AssetConfigure';
-import { AssetBuilderToken, AssetToken } from '../core/AssetConfigure';
+import { AssetConfigure, AssetToken, AssetBuilderToken  } from '../core/AssetConfigure';
 
 /**
  * asset task metadata.

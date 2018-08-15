@@ -6,7 +6,6 @@ import { PipeActivityToken, IPipeActivity, PipeActivityBuilderToken } from './IP
 import { PipeActivity } from './PipeActivity';
 import { InjectAssetActivityToken } from './AssetConfigure';
 
-
 /**
  * pipe task builder.
  *

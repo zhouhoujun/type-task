@@ -4,7 +4,7 @@ import { ITaskContainer } from './ITaskContainer';
 import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure } from '@ts-ioc/bootstrap';
 import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
-import { WorkflowBuilderToken } from './IWorkflowBuilder';
+import { ActivityflowBuilderToken } from './IWorkflowBuilder';
 import { CoreModule } from './CoreModule';
 import { LogModule } from '@ts-ioc/logs';
 
@@ -102,11 +102,11 @@ export class DefaultTaskContainer implements ITaskContainer {
         workflowId = workflowId || this.createUUID();
 
         if (isToken(activity)) {
-            boot = { id: workflowId, activity: activity, builder: WorkflowBuilderToken };
+            boot = { id: workflowId, activity: activity, builder: ActivityflowBuilderToken };
         } else {
             boot = activity as WorkflowConfig;
             boot.id = workflowId;
-            boot.builder = boot.builder || WorkflowBuilderToken;
+            boot.builder = boot.builder || ActivityflowBuilderToken;
         }
         let runner = await this.getBuilder().bootstrap(boot, null, workflowId) as IWorkflow<any>;
         this.getContainer().bindProvider(runner.getUUID(), runner);

@@ -1,4 +1,4 @@
-import { GActivity, IActivityBuilder } from '@taskfr/core';
+import { GActivity, InjectAcitityBuilderToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { Registration } from '@ts-ioc/core';
 
@@ -45,20 +45,6 @@ export const PipeActivityToken = new InjectPipeActivityToken<IPipeActivity>('');
 
 
 /**
- * Inject PipeAcitityBuilder Token
- *
- * @export
- * @class InjectPipeAcitityBuilderToken
- * @extends {Registration<T>}
- * @template T
- */
-export class InjectPipeAcitityBuilderToken<T extends IActivityBuilder> extends Registration<T> {
-    constructor(desc: string) {
-        super('PipeActivityBuilder', desc);
-    }
-}
-
-/**
  * pipe activity builder token.
  */
-export const PipeActivityBuilderToken = new InjectPipeAcitityBuilderToken<IActivityBuilder>('pipe');
+export const PipeActivityBuilderToken = new InjectAcitityBuilderToken<IPipeActivity>(PipeActivityToken);

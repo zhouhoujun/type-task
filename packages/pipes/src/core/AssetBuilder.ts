@@ -12,7 +12,6 @@ import { PipeActivityBuilder } from './PipeActivityBuilder';
 import { TestActivity, TestConfigure } from './TestActivity';
 
 
-
 /**
  * Asset task builder
  *

@@ -68,7 +68,7 @@ export interface WorkflowConfig extends ModuleConfig<IWorkflow<any>> {
     id?: string;
     activity?: Active;
     bootstrap?: Token<any>;
-    builder?: Token<IModuleBuilder<IActivity>> | IModuleBuilder<IActivity>;
+    builder?: Token<any>;
 }
 
 /**

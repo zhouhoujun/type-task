@@ -1,5 +1,5 @@
 import { ITaskDecorator, createTaskDecorator } from '@taskfr/core';
-import { PackageConfigure, PackageBuilderToken, PackageToken } from '../core/PackageConfigure';
+import { PackageConfigure, PackageToken, PackageBuilderToken } from '../core/PackageConfigure';
 
 /**
  * asset task metadata.

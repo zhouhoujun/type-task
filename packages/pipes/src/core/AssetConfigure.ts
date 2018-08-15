@@ -1,4 +1,4 @@
-import { Src, ExpressionToken, ConfigureType, IActivityBuilder } from '@taskfr/core';
+import { Src, ExpressionToken, ConfigureType, IActivityBuilder, InjectAcitityBuilderToken } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { DestConfigure, DestActivity } from './DestActivity';
 import { IPipeConfigure } from './IPipeConfigure';
@@ -164,25 +164,12 @@ export class InjectAssetActivityToken<T extends IAssetActivity> extends Registra
 }
 
 /**
- * Inject asset activity builder token.
- *
- * @export
- * @class InjectAssetActivityBuilderToken
- * @extends {Registration<T>}
- * @template T
- */
-export class InjectAssetActivityBuilderToken<T extends IActivityBuilder> extends Registration<T> {
-    constructor(desc: string) {
-        super('AssetActivityBuilder', desc);
-    }
-}
-
-/**
  * asset token.
  */
 export const AssetToken = new InjectAssetActivityToken<IAssetActivity>('');
+
+
 /**
  * asset builder token.
  */
-export const AssetBuilderToken = new InjectAssetActivityBuilderToken<IActivityBuilder>('')
-
+export const AssetBuilderToken = new InjectAcitityBuilderToken<IAssetActivity>(AssetToken);
