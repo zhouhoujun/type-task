@@ -1,6 +1,6 @@
 import { IContainer, Singleton, Token } from '@ts-ioc/core';
-import { WorkflowToken, IWorkflow, ActivityType, IActivity, UUIDToken, RandomUUIDFactory, ActivityConfigure, Task, ActivityBuilderToken, WorkflowType, WorkflowConfig } from './core';
-import { ModuleBuilder } from '@ts-ioc/bootstrap';
+import { IWorkflow, UUIDToken, RandomUUIDFactory, ActivityConfigure, Task, ActivityBuilderToken, WorkflowType, WorkflowConfig } from './core';
+import { ModuleBuilder, LoadedModule } from '@ts-ioc/bootstrap';
 import { AopModule } from '@ts-ioc/aop';
 import { LogModule } from '@ts-ioc/logs';
 import { CoreModule } from './CoreModule';
@@ -17,17 +17,18 @@ import { WorkflowBuilderToken } from './IWorkflowBuilder';
 export class WorkflowBuilder extends ModuleBuilder<IWorkflow<any>> {
 
     /**
-     * bootstrap application via main module
+     * bootstrap workflow
      *
-     * @param {activity: ActivityType<IActivity>} bootModule
-     * @returns {Promise<T>}
-     * @memberof ApplicationBuilder
+     * @param {WorkflowType} workflow
+     * @param {(IContainer | LoadedModule)} [defaults]
+     * @param {string} [workflowId]
+     * @returns {Promise<IWorkflow<any>>}
+     * @memberof WorkflowBuilder
      */
-    async bootstrap(workflow: WorkflowType, defaultContainer?: IContainer, workflowId?: string): Promise<IWorkflow<any>> {
-        let container = this.getContainer(workflow, defaultContainer);
+    async bootstrap(workflow: WorkflowType, defaults?: IContainer | LoadedModule, workflowId?: string): Promise<IWorkflow<any>> {
+        let container = this.getContainer(workflow, defaults);
         workflowId = workflowId || this.createUUID(container);
-        let instance = await super.bootstrap(workflow, defaultContainer, workflowId);
-        await instance.start();
+        let instance = await super.bootstrap(workflow, defaults, workflowId);
         return instance;
     }
 
@@ -63,8 +64,16 @@ export class WorkflowBuilder extends ModuleBuilder<IWorkflow<any>> {
         return Task.toString();
     }
 
-    protected getBootstrapToken(config: ActivityConfigure): Token<any> {
-        return config.activity || config.task || config.bootstrap;
+    protected getBootTyp(config: ActivityConfigure): Token<any> {
+        return config.activity || config.task;
     }
+
+    protected getConfigId(config: ActivityConfigure) {
+        return config.id || config.name;
+    }
+
+    // protected getType(config: ActivityConfigure): Token<any> {
+    //     return config.token || config.type;
+    // }
 }
 

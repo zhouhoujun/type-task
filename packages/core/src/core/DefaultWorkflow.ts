@@ -9,6 +9,7 @@ import { Joinpoint } from '@ts-ioc/aop';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
 import { UUIDToken, RandomUUIDFactory } from './uuid';
+import { Service } from '@ts-ioc/bootstrap';
 
 /**
  * task runner.
@@ -18,7 +19,7 @@ import { UUIDToken, RandomUUIDFactory } from './uuid';
  * @implements {ITaskRunner}
  */
 @Workflow(WorkflowToken)
-export class DefaultWorkflow<T> implements IWorkflow<T>, OnInit {
+export class DefaultWorkflow<T> extends Service implements IWorkflow<T>, OnInit {
 
     get activity(): ActivityResultType<T> {
         return this.activities;
@@ -58,6 +59,7 @@ export class DefaultWorkflow<T> implements IWorkflow<T>, OnInit {
         public uuid?: string,
         private instance?: IActivity,
         private activityBuilder?: IActivityBuilder) {
+        super();
         this.stateChanged = new BehaviorSubject(RunState.init);
     }
 
@@ -102,7 +104,7 @@ export class DefaultWorkflow<T> implements IWorkflow<T>, OnInit {
 
     async start(data?: any): Promise<T> {
         let instance = await this.getInstance();
-        return instance.run(data)
+        return await instance.run(data)
             .then(data => {
                 this.state = RunState.complete;
                 this.stateChanged.next(this.state);
@@ -117,11 +119,12 @@ export class DefaultWorkflow<T> implements IWorkflow<T>, OnInit {
         this._currState = state;
     }
 
-    stop(): void {
+    async stop(): Promise<any> {
         this.state = RunState.stop;
         this.stateChanged.next(this.state);
     }
-    pause(): void {
+
+    async pause(): Promise<any> {
         this.state = RunState.pause;
         this.stateChanged.next(this.state);
     }

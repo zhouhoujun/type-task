@@ -1,10 +1,10 @@
-import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken, Token, isClass } from '@ts-ioc/core';
-import { SequenceConfigure, IWorkflow, Active, WorkflowConfig, WorkflowType } from './core';
+import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken } from '@ts-ioc/core';
+import { SequenceConfigure, IWorkflow, Active, WorkflowConfig, WorkflowType, UUIDToken, RandomUUIDFactory } from './core';
 import { ITaskContainer } from './ITaskContainer';
 import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure } from '@ts-ioc/bootstrap';
 import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
-import { DefaultWorkflowBuilderToken } from './IWorkflowBuilder';
+import { WorkflowBuilderToken } from './IWorkflowBuilder';
 import { CoreModule } from './CoreModule';
 import { LogModule } from '@ts-ioc/logs';
 
@@ -98,15 +98,27 @@ export class DefaultTaskContainer implements ITaskContainer {
      */
     async createActivity(activity: Active, workflowId?: string): Promise<IWorkflow<any>> {
         let boot: WorkflowConfig;
+
+        workflowId = workflowId || this.createUUID();
+
         if (isToken(activity)) {
-            boot = {  bootstrap: activity, builder: DefaultWorkflowBuilderToken };
+            boot = { id: workflowId, activity: activity, builder: WorkflowBuilderToken };
         } else {
             boot = activity as WorkflowConfig;
-            boot.builder = boot.builder || DefaultWorkflowBuilderToken;
+            boot.id = workflowId;
+            boot.builder = boot.builder || WorkflowBuilderToken;
         }
         let runner = await this.getBuilder().bootstrap(boot, null, workflowId) as IWorkflow<any>;
         this.getContainer().bindProvider(runner.getUUID(), runner);
         return runner;
+    }
+
+    protected createUUID() {
+        let container = this.getContainer()
+        if (!container.has(UUIDToken)) {
+            container.register(RandomUUIDFactory);
+        }
+        return container.get(UUIDToken).generate();
     }
 
     /**

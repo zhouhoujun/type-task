@@ -1,7 +1,7 @@
 import { Registration, Token, MetadataAdapter, MetadataExtends, isString, isObject, isToken } from '@ts-ioc/core';
 import { WorkflowMetadata } from '../metadatas';
 import { createDIModuleDecorator, IDIModuleDecorator } from '@ts-ioc/bootstrap';
-import { DefaultWorkflowBuilderToken, IWorkflowBuilder } from '../../IWorkflowBuilder';
+import { IWorkflowBuilder, WorkflowBuilderToken } from '../../IWorkflowBuilder';
 import { ActivityBuilderToken, IActivityBuilder } from '../IActivityBuilder';
 
 /**
@@ -53,7 +53,7 @@ export interface IWorkflowDecorator<T extends WorkflowMetadata> extends IDIModul
 
 export function createWorkflowDecorator<T extends WorkflowMetadata>(
     name: string,
-    builder?: Token<IWorkflowBuilder> | IWorkflowBuilder,
+    builder?: Token<IWorkflowBuilder<any>>,
     annotationBuilder?: Token<IActivityBuilder> | IActivityBuilder,
     adapter?: MetadataAdapter,
     metadataExtends?: MetadataExtends<T>): IWorkflowDecorator<T> {
@@ -79,7 +79,7 @@ export function createWorkflowDecorator<T extends WorkflowMetadata>(
                 if (isString(arg)) {
                     metadata.name = arg;
                 } else {
-                    metadata.annotationBuilder = arg;
+                    metadata.annoBuilder = arg;
                 }
             }
         });
@@ -99,4 +99,4 @@ export function createWorkflowDecorator<T extends WorkflowMetadata>(
  *
  * @Workflow
  */
-export const Workflow: IWorkflowDecorator<WorkflowMetadata> = createWorkflowDecorator<WorkflowMetadata>('Workflow', DefaultWorkflowBuilderToken, ActivityBuilderToken);
+export const Workflow: IWorkflowDecorator<WorkflowMetadata> = createWorkflowDecorator<WorkflowMetadata>('Workflow', WorkflowBuilderToken, ActivityBuilderToken);

@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/zhouhoujun/type-task#readme",
   "dependencies": {
-    "chalk":"^2.4.1",
+    "chalk": "^2.4.1",
     "minimist": "^1.2.0",
     "interpret": "^1.1.0",
     "liftoff": "^2.5.0",

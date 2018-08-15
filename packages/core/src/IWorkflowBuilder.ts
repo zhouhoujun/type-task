@@ -1,20 +1,22 @@
-import { IModuleBuilder } from '@ts-ioc/bootstrap';
-import { IActivity } from './core';
-import { Registration } from '@ts-ioc/core';
+import { IModuleBuilder, InjectModuleBuilderToken } from '@ts-ioc/bootstrap';
+import { IActivity, IWorkflow, Activity, DefaultWorkflow } from './core';
+import { Token, Registration } from '@ts-ioc/core';
 
 
-export interface IWorkflowBuilder extends IModuleBuilder<IActivity> {
+export interface IWorkflowBuilder<T extends IActivity> extends IModuleBuilder<T> {
 
 }
 
-export class InjectWorkflowBuilder<T extends IWorkflowBuilder> extends Registration<T> {
-    constructor(desc: string) {
-        super('Workflow', desc);
+export class InjectWorkflowBuilderToken<T extends IActivity> extends Registration<IWorkflowBuilder<T>> {
+    constructor(type: Token<any>) {
+        super(type, 'WorkflowBuilder');
     }
 }
 
-export const WorkflowBuilderToken = new InjectWorkflowBuilder<IWorkflowBuilder>('');
 
-export const DefaultWorkflowBuilderToken = new InjectWorkflowBuilder<IWorkflowBuilder>('default');
+export const WorkflowBuilderToken = new InjectWorkflowBuilderToken(DefaultWorkflow);
+
+
+export const ActivityflowBuilderToken = new InjectModuleBuilderToken<IWorkflow<any>>(Activity);
 
 

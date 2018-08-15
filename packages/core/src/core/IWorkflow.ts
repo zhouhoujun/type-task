@@ -4,7 +4,7 @@ import { GActivity, IActivity } from './IActivity';
 import { IActivityBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
-import { ModuleConfig } from '@ts-ioc/bootstrap';
+import { ModuleConfig, IModuleBuilder } from '@ts-ioc/bootstrap';
 import { IWorkflowBuilder } from '../IWorkflowBuilder';
 
 
@@ -65,9 +65,10 @@ export enum RunState {
  * @extends {ActivityConfigure}
  */
 export interface WorkflowConfig extends ModuleConfig<IWorkflow<any>> {
+    id?: string;
     activity?: Active;
     bootstrap?: Token<any>;
-    builder?: Token<IWorkflowBuilder> | IWorkflowBuilder;
+    builder?: Token<IModuleBuilder<IActivity>> | IModuleBuilder<IActivity>;
 }
 
 /**

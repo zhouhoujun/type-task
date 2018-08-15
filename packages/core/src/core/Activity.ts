@@ -48,7 +48,6 @@ export class Activity<T> implements GActivity<T>, OnActivityInit {
     context: IContext;
 
     constructor() {
-
     }
 
     async onActivityInit(config: ActivityConfigure): Promise<any> {

@@ -1,7 +1,8 @@
-import { Registration } from '@ts-ioc/core';
+import { Token } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
 import { ActivityType } from './ActivityConfigure';
-import { IAnnotationBuilder } from '@ts-ioc/bootstrap';
+import { IAnnotationBuilder, InjectAnnotationBuilder } from '@ts-ioc/bootstrap';
+import { Activity } from './Activity';
 
 
 /**
@@ -12,9 +13,9 @@ import { IAnnotationBuilder } from '@ts-ioc/bootstrap';
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectAcitityBuilderToken<T extends IActivityBuilder> extends Registration<T> {
-    constructor(desc: string) {
-        super('ActivityBuilder', desc);
+export class InjectAcitityBuilderToken<T extends IActivity> extends InjectAnnotationBuilder<T> {
+    constructor(type: Token<T>) {
+        super(type);
     }
 }
 
@@ -38,4 +39,4 @@ export interface IActivityBuilder extends IAnnotationBuilder<IActivity> {
 }
 
 
-export const ActivityBuilderToken = new InjectAcitityBuilderToken<IActivityBuilder>('activity');
+export const ActivityBuilderToken = new InjectAcitityBuilderToken<IActivity>(Activity);
