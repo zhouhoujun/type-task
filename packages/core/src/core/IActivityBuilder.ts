@@ -38,5 +38,7 @@ export interface IActivityBuilder extends IAnnotationBuilder<IActivity> {
     buildByConfig(activity: ActivityType<any>, data: any): Promise<IActivity>;
 }
 
-
+/**
+ * activity builder token.
+ */
 export const ActivityBuilderToken = new InjectAcitityBuilderToken<IActivity>(Activity);

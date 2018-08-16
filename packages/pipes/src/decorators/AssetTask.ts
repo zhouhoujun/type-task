@@ -1,5 +1,5 @@
 import { ITaskDecorator, createTaskDecorator } from '@taskfr/core';
-import { AssetConfigure, AssetToken, AssetBuilderToken  } from '../core/AssetConfigure';
+import { AssetConfigure, AssetBuilderToken } from '../core/AssetConfigure';
 
 /**
  * asset task metadata.
@@ -17,4 +17,4 @@ export interface AssetTaskMetadata extends AssetConfigure {
  *
  * @AssetTask
  */
-export const AssetTask: ITaskDecorator<AssetTaskMetadata> = createTaskDecorator<AssetTaskMetadata>('AssetTask', AssetBuilderToken, AssetToken);
+export const AssetTask: ITaskDecorator<AssetTaskMetadata> = createTaskDecorator<AssetTaskMetadata>('AssetTask', AssetBuilderToken);

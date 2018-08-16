@@ -12,5 +12,7 @@ export interface IActivityMetadata extends ClassMetadata {
     decorType?: string;
 }
 
-
+/**
+ * activity metadata.
+ */
 export type ActivityMetadata = (IActivityMetadata & CoreActivityConfigure);

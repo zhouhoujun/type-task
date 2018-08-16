@@ -1,6 +1,5 @@
 import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken } from '@ts-ioc/core';
 import { ActivityMetadata } from '../metadatas';
-import { ActivityToken, IActivity } from '../IActivity';
 import { IActivityBuilder, ActivityBuilderToken } from '../IActivityBuilder';
 
 
@@ -64,7 +63,6 @@ export interface ITaskDecorator<T extends ActivityMetadata> extends ITypeDecorat
 export function createTaskDecorator<T extends ActivityMetadata>(
     taskType: string,
     annotationBuilder?: Token<IActivityBuilder> | IActivityBuilder,
-    provideType?: Token<IActivity>,
     adapter?: MetadataAdapter,
     metadataExtends?: MetadataExtends<T>): ITaskDecorator<T> {
 
@@ -130,5 +128,5 @@ export function createTaskDecorator<T extends ActivityMetadata>(
  *
  * @Task
  */
-export const Task: ITaskDecorator<ActivityMetadata> = createTaskDecorator('Task', ActivityBuilderToken, ActivityToken);
+export const Task: ITaskDecorator<ActivityMetadata> = createTaskDecorator('Task', ActivityBuilderToken);
 

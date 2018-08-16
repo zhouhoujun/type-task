@@ -23,6 +23,9 @@ export class InjectAcitityToken<T extends IActivity> extends Registration<T> {
  */
 export const ActivityToken = new InjectAcitityToken<IActivity>('');
 
+/**
+ * activity instance.
+ */
 export type ActivityInstance = IActivity & OnActivityInit;
 
 /**
@@ -83,7 +86,6 @@ export interface IActivity {
  * @template T
  */
 export interface GActivity<T> extends IActivity {
-
     /**
      * run activity.
      *
@@ -93,6 +95,5 @@ export interface GActivity<T> extends IActivity {
      * @memberof IActivity
      */
     run(data?: any, target?: IActivity): Promise<T>;
-
 }
 

@@ -1,4 +1,4 @@
-import { ActivityResultType, Active } from './ActivityConfigure';
+import { ActivityResultType } from './ActivityConfigure';
 import { Registration, Token } from '@ts-ioc/core';
 import { GActivity, IActivity } from './IActivity';
 import { IActivityBuilder } from './IActivityBuilder';

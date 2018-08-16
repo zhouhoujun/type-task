@@ -1,6 +1,6 @@
 import { createTaskDecorator, IActivityMetadata, ITaskDecorator, CoreActivityConfigure } from '@taskfr/core';
 import { IPipeConfigure } from '../core/IPipeConfigure';
-import { PipeActivityToken, PipeActivityBuilderToken } from '../core/IPipeActivity';
+import { PipeActivityBuilderToken } from '../core/IPipeActivity';
 
 export interface IPipeTaskMetadata extends IActivityMetadata, IPipeConfigure {
 
@@ -13,4 +13,4 @@ export type PipeTaskMetadata = IPipeTaskMetadata & CoreActivityConfigure;
  *
  * @PipeTask
  */
-export const PipeTask: ITaskDecorator<PipeTaskMetadata> = createTaskDecorator<PipeTaskMetadata>('PipeTask',  PipeActivityBuilderToken,  PipeActivityToken);
+export const PipeTask: ITaskDecorator<PipeTaskMetadata> = createTaskDecorator<PipeTaskMetadata>('PipeTask',  PipeActivityBuilderToken);

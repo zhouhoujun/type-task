@@ -5,7 +5,7 @@ import { IPipeConfigure } from './IPipeConfigure';
 import { SourceActivity, SourceConfigure } from './SourceActivity';
 import { WatchActivity, WatchConfigure } from './WatchActivity';
 import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
-import { AnnotationActivity, AnnotationConfigure } from './Annotation';
+import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { IPipeActivity } from './IPipeActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
@@ -52,10 +52,10 @@ export interface AssetConfigure extends IPipeConfigure {
     /**
      * asset dest activity.
      *
-     * @type {(ExpressionToken<string | boolean> | ConfigureType<AnnotationActivity, AnnotationConfigure>)}
+     * @type {(ExpressionToken<string | boolean> | ConfigureType<AnnotationActivity, AnnotationsConfigure>)}
      * @memberof AssetConfigure
      */
-    annotation?: ExpressionToken<string | boolean> | ConfigureType<AnnotationActivity, AnnotationConfigure>;
+    annotation?: ExpressionToken<string | boolean> | ConfigureType<AnnotationActivity, AnnotationsConfigure>;
 
     /**
      * asset dest activity.
@@ -144,10 +144,10 @@ export interface IAssetActivity extends IPipeActivity {
     /**
      * default annottion.
      *
-     * @type {AnnotationConfigure}
+     * @type {AnnotationsConfigure}
      * @memberof AssetActivity
      */
-    defaultAnnotation?: AnnotationConfigure;
+    defaultAnnotation?: AnnotationsConfigure;
 }
 
 /**

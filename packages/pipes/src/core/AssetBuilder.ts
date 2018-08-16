@@ -7,7 +7,7 @@ import { DestActivity, DestConfigure } from './DestActivity';
 import { WatchActivity, WatchConfigure } from './WatchActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
-import { AnnotationActivity, AnnotationConfigure } from './Annotation';
+import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { PipeActivityBuilder } from './PipeActivityBuilder';
 import { TestActivity, TestConfigure } from './TestActivity';
 
@@ -32,6 +32,7 @@ export class AssetBuilder extends PipeActivityBuilder {
      */
     async buildStrategy(activity: IActivity, config: AssetConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
+        console.log('AssetBuilder:', config);
         if (activity instanceof AssetActivity) {
             activity.src = await this.toActivity<Src, SourceActivity, SourceConfigure>(config.src, activity,
                 act => act instanceof SourceActivity,
@@ -60,7 +61,7 @@ export class AssetBuilder extends PipeActivityBuilder {
             }
 
             if (config.annotation) {
-                activity.annotation = await this.toActivity<string | boolean, AnnotationActivity, AnnotationConfigure>(config.annotation, activity,
+                activity.annotation = await this.toActivity<string | boolean, AnnotationActivity, AnnotationsConfigure>(config.annotation, activity,
                     act => act instanceof AnnotationActivity,
                     dest => {
                         if (isBoolean(dest)) {
@@ -69,11 +70,11 @@ export class AssetBuilder extends PipeActivityBuilder {
                             }
                             return null;
                         }
-                        return <AnnotationConfigure>{ annotationFramework: require(dest), task: AnnotationActivity };
+                        return <AnnotationsConfigure>{ annotationFramework: require(dest), task: AnnotationActivity };
                     },
                     cfg => {
                         if (isString(cfg)) {
-                            <AnnotationConfigure>{ annotationFramework: require(cfg), task: AnnotationActivity };
+                            <AnnotationsConfigure>{ annotationFramework: require(cfg), task: AnnotationActivity };
                         }
                         return cfg;
                     });
@@ -140,10 +141,10 @@ export class AssetBuilder extends PipeActivityBuilder {
      *
      * @protected
      * @param {AssetActivity} activity
-     * @returns {AnnotationConfigure}
+     * @returns {AnnotationsConfigure}
      * @memberof AssetBuilder
      */
-    protected getDefaultAnnotation(activity: AssetActivity): AnnotationConfigure {
+    protected getDefaultAnnotation(activity: AssetActivity): AnnotationsConfigure {
         return activity.defaultAnnotation;
     }
 

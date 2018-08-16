@@ -11,7 +11,8 @@ import { ITransform } from './ITransform';
  */
 export const AnnotationAcitvityToken = new InjectPipeActivityToken<AnnotationActivity>('Annotation');
 
-export interface AnnotationConfigure extends IPipeConfigure {
+
+export interface AnnotationsConfigure extends IPipeConfigure {
     /**
      * annotation framework.
      *
@@ -39,7 +40,7 @@ export class AnnotationActivity extends PipeActivity {
      */
     annotationFramework: TransformType;
 
-    async onActivityInit(config: AnnotationConfigure) {
+    async onActivityInit(config: AnnotationsConfigure) {
         await super.onActivityInit(config);
         this.annotationFramework = await this.toExpression(config.annotationFramework);
     }
