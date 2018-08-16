@@ -1,6 +1,7 @@
 import { Registration } from '@ts-ioc/core';
 import { IContext } from './IContext';
 import { ActivityConfigure } from './ActivityConfigure';
+import { OnActivityInit } from './OnActivityInit';
 
 
 /**
@@ -21,6 +22,8 @@ export class InjectAcitityToken<T extends IActivity> extends Registration<T> {
  * task token.
  */
 export const ActivityToken = new InjectAcitityToken<IActivity>('');
+
+export type ActivityInstance = IActivity & OnActivityInit;
 
 /**
  * activity object.

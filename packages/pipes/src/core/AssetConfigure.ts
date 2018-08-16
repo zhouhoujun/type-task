@@ -9,6 +9,7 @@ import { AnnotationActivity, AnnotationConfigure } from './Annotation';
 import { IPipeActivity } from './IPipeActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
+import { AssetActivity } from './AssetActivity';
 
 /**
  * dest type.
@@ -172,4 +173,4 @@ export const AssetToken = new InjectAssetActivityToken<IAssetActivity>('');
 /**
  * asset builder token.
  */
-export const AssetBuilderToken = new InjectAcitityBuilderToken<IAssetActivity>(AssetToken);
+export const AssetBuilderToken = new InjectAcitityBuilderToken<IAssetActivity>(AssetActivity);

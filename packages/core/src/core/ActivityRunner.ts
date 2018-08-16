@@ -2,7 +2,7 @@ import { Inject, IContainer, ContainerToken, OnInit, isToken } from '@ts-ioc/cor
 import { ActivityResultType } from './ActivityConfigure';
 import { IActivity, GActivity } from './IActivity';
 import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
-import { IWorkflow, WorkflowToken, RunState } from './IWorkflow';
+import { IActivityRunner, ActivityRunnerToken, RunState } from './IActivityRunner';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Workflow } from './decorators';
 import { Joinpoint } from '@ts-ioc/aop';
@@ -18,8 +18,8 @@ import { Service } from '@ts-ioc/bootstrap';
  * @class TaskRunner
  * @implements {ITaskRunner}
  */
-@Workflow(WorkflowToken)
-export class DefaultWorkflow<T> extends Service implements IWorkflow<T>, OnInit {
+@Workflow(ActivityRunnerToken)
+export class ActivityRunner<T> extends Service implements IActivityRunner<T>, OnInit {
 
     get activity(): ActivityResultType<T> {
         return this.activities;

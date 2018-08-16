@@ -1,4 +1,3 @@
-import { AssetTask } from '../decorators/AssetTask';
 import { SourceActivity } from './SourceActivity';
 import { DestActivity } from './DestActivity';
 import { isArray } from '@ts-ioc/core';
@@ -8,8 +7,8 @@ import { SourceMapsActivity } from './SourceMapsActivity';
 import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationConfigure } from './Annotation';
 import { PipeActivity } from './PipeActivity';
-import { IActivity } from '@taskfr/core';
-import { IAssetActivity } from './AssetConfigure';
+import { IActivity, Task } from '@taskfr/core';
+import { IAssetActivity, AssetBuilderToken } from './AssetConfigure';
 import { TestActivity } from './TestActivity';
 
 
@@ -21,7 +20,9 @@ import { TestActivity } from './TestActivity';
  * @extends {TaskElement}
  * @implements {IPipeComponent<ITransform>}
  */
-@AssetTask
+@Task({
+    annotationBuilder: AssetBuilderToken
+})
 export class AssetActivity extends PipeActivity implements IAssetActivity {
     /**
      * src activity.

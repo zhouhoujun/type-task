@@ -1,14 +1,13 @@
 import { ActivityBuilderToken, IActivityBuilder } from './IActivityBuilder';
-import { Type, isFunction, isString, Token, Registration, Express, isToken, getClassName, IContainer, Singleton } from '@ts-ioc/core';
+import { Type, isFunction, isString, Token, Express, isToken, getClassName, IContainer, isClass, Injectable, getTypeMetadata } from '@ts-ioc/core';
 import { ActivityConfigure, isActivityType, ActivityType, ExpressionType, Expression } from './ActivityConfigure';
-import { IActivity, ActivityToken } from './IActivity';
+import { IActivity, ActivityInstance, InjectAcitityToken } from './IActivity';
 import { Activity } from './Activity';
 import { AnnotationBuilder } from '@ts-ioc/bootstrap';
 import { AssignActivity } from './ExpressionActivity';
 import { Task } from './decorators';
 
-
-@Singleton(ActivityBuilderToken)
+@Injectable(ActivityBuilderToken)
 export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IActivityBuilder {
 
     build(token: Token<IActivity>, config: ActivityConfigure, data?: any): Promise<IActivity> {
@@ -24,17 +23,18 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
         if (isString(token)) {
             token = this.traslateStrToken(token);
         }
-        let instance = await super.createInstance(token, config, uuid);
+
+        let instance = await super.createInstance(token, config, uuid) as ActivityInstance;
         if (!instance || !(instance instanceof Activity)) {
             let task = this.getDefaultAcitvity();
-            console.log('try load default activity:', getClassName(task));
-            instance = await this.build(task, config, uuid);
+            console.log(isClass(token) ? getClassName(token) : token.toString(), 'not found, try load default activity:', getClassName(task));
+            instance = await this.build(task, config, uuid) as ActivityInstance;
         }
         if (isString(uuid)) {
             instance.id = uuid;
         }
-        if (isFunction(instance['onActivityInit'])) {
-            await Promise.resolve(instance['onActivityInit'](config));
+        if (isFunction(instance.onActivityInit)) {
+            await Promise.resolve(instance.onActivityInit(config));
         }
         return instance;
     }
@@ -70,7 +70,7 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
     }
 
     protected traslateStrToken(token: string): Token<IActivity> {
-        let taskToken = new Registration(ActivityToken, token);
+        let taskToken = new InjectAcitityToken(token);
         if (this.container.has(taskToken)) {
             return taskToken;
         }

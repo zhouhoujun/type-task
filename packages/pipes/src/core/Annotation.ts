@@ -3,9 +3,7 @@ import { TransformType } from './pipeTypes';
 import { IActivity } from '@taskfr/core';
 import { PipeTask } from '../decorators';
 import { IPipeConfigure } from './IPipeConfigure';
-import { InjectPipeActivityToken, InjectPipeAcitityBuilderToken } from './IPipeActivity';
-import { PipeActivityBuilder } from './PipeActivityBuilder';
-import { Injectable } from '@ts-ioc/core';
+import { InjectPipeActivityToken } from './IPipeActivity';
 import { ITransform } from './ITransform';
 
 /**

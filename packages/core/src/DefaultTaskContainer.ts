@@ -1,10 +1,9 @@
 import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken } from '@ts-ioc/core';
-import { SequenceConfigure, IWorkflow, Active, WorkflowConfig, WorkflowType, UUIDToken, RandomUUIDFactory } from './core';
-import { ITaskContainer } from './ITaskContainer';
+import { SequenceConfigure, Active, IActivityRunner, UUIDToken, RandomUUIDFactory, ActivityConfigure, ActivityBuilderToken } from './core';
+import { ITaskContainer, WorkflowBuilderToken } from './ITaskContainer';
 import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure } from '@ts-ioc/bootstrap';
 import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
-import { ActivityflowBuilderToken } from './IWorkflowBuilder';
 import { CoreModule } from './CoreModule';
 import { LogModule } from '@ts-ioc/logs';
 
@@ -79,14 +78,8 @@ export class DefaultTaskContainer implements ITaskContainer {
         return this;
     }
 
-    getWorkflow<T>(workflowId: string): IWorkflow<T> {
+    getWorkflow<T>(workflowId: string): IActivityRunner<T> {
         return this.getContainer().resolve(workflowId);
-    }
-
-    async createWorkflow(workflow: WorkflowType, workflowId?: string): Promise<IWorkflow<any>> {
-        let runner = await this.getBuilder().bootstrap(workflow, null, workflowId) as IWorkflow<any>;
-        this.getContainer().bindProvider(runner.getUUID(), runner);
-        return runner;
     }
 
     /**
@@ -96,20 +89,21 @@ export class DefaultTaskContainer implements ITaskContainer {
      * @param {string} [workflowId]
      * @memberof ITaskContainer
      */
-    async createActivity(activity: Active, workflowId?: string): Promise<IWorkflow<any>> {
-        let boot: WorkflowConfig;
+    async createActivity(activity: Active, workflowId?: string): Promise<IActivityRunner<any>> {
 
+        let boot: ActivityConfigure;
         workflowId = workflowId || this.createUUID();
 
         if (isToken(activity)) {
-            boot = { id: workflowId, activity: activity, builder: ActivityflowBuilderToken };
+            boot = { id: workflowId, activity: activity, builder: WorkflowBuilderToken, annotationBuilder: ActivityBuilderToken };
         } else {
-            boot = activity as WorkflowConfig;
+            boot = activity || {};
             boot.id = workflowId;
-            boot.builder = boot.builder || ActivityflowBuilderToken;
+            boot.builder = boot.builder || WorkflowBuilderToken;
+            boot.annotationBuilder = boot.annotationBuilder || ActivityBuilderToken;
         }
-        let runner = await this.getBuilder().bootstrap(boot, null, workflowId) as IWorkflow<any>;
-        this.getContainer().bindProvider(runner.getUUID(), runner);
+        let runner = await this.getBuilder().bootstrap(boot, null, workflowId) as IActivityRunner<any>;
+        this.getContainer().bindProvider(workflowId, runner);
         return runner;
     }
 
@@ -125,10 +119,10 @@ export class DefaultTaskContainer implements ITaskContainer {
      * create workflow and bootstrap.
      *
      * @param {...Active[]} activites
-     * @returns {Promise<IWorkflow<any>>}
+     * @returns {Promise<IActivityRunner<any>>}
      * @memberof DefaultTaskContainer
      */
-    async bootstrap(...activites: Active[]): Promise<IWorkflow<any>> {
+    async bootstrap(...activites: Active[]): Promise<IActivityRunner<any>> {
         let workflow = (activites.length > 1) ? <SequenceConfigure>{ sequence: activites, task: SequenceActivity } : lang.first(activites);
         let runner = await this.createActivity(workflow);
         return runner;

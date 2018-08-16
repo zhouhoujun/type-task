@@ -5,6 +5,7 @@ import { AssetActivity } from './AssetActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
 import { AssetConfigure } from './AssetConfigure';
+import { PackageActivity } from './PackageActivity';
 
 /**
  * package configure.
@@ -97,5 +98,5 @@ export const PackageToken = new InjectPackageToken<IPackageActivity>('');
 /**
  * package builder token.
  */
-export const PackageBuilderToken = new InjectAcitityBuilderToken<IPackageActivity>(PackageToken);
+export const PackageBuilderToken = new InjectAcitityBuilderToken<IPackageActivity>(PackageActivity);
 

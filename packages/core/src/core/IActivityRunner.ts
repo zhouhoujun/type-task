@@ -4,8 +4,8 @@ import { GActivity, IActivity } from './IActivity';
 import { IActivityBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
-import { ModuleConfig, IModuleBuilder } from '@ts-ioc/bootstrap';
-import { IWorkflowBuilder } from '../IWorkflowBuilder';
+import { IService } from '@ts-ioc/bootstrap';
+import { Activity } from './Activity';
 
 
 /**
@@ -16,16 +16,16 @@ import { IWorkflowBuilder } from '../IWorkflowBuilder';
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectWorkflowToken<T extends IWorkflow<any>> extends Registration<T> {
-    constructor(desc: string) {
-        super('ActivityRunner', desc);
+export class InjecActivityRunnerToken<T extends IActivity> extends Registration<IActivityRunner<T>> {
+    constructor(type: Token<T>) {
+        super(type, 'ActivityRunner');
     }
 }
 
 /**
  * activity runner token.
  */
-export const WorkflowToken = new InjectWorkflowToken<IWorkflow<any>>('');
+export const ActivityRunnerToken = new InjecActivityRunnerToken<IActivity>(Activity);
 
 /**
  *run state.
@@ -57,27 +57,12 @@ export enum RunState {
 }
 
 /**
- * workflow configuration.
- *
- * @export
- * @interface WorkflowConfig
- * @extends {ModuleConfig<IWorkflow<any>>}
- * @extends {ActivityConfigure}
- */
-export interface WorkflowConfig extends ModuleConfig<IWorkflow<any>> {
-    id?: string;
-    activity?: Active;
-    bootstrap?: Token<any>;
-    builder?: Token<any>;
-}
-
-/**
  * task runner.
  *
  * @export
  * @interface ITaskRunner
  */
-export interface IWorkflow<T> {
+export interface IActivityRunner<T> extends IService {
 
     /**
      * actvity to run.
@@ -184,4 +169,3 @@ export interface IWorkflow<T> {
 
 }
 
-export type WorkflowType = WorkflowConfig | Token<IWorkflow<any>>

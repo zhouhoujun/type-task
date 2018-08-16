@@ -1,8 +1,8 @@
-import { WorkflowConfig } from '../IWorkflow';
-import { CoreActivityConfigure } from '../ActivityConfigure';
+
+import { CoreActivityConfigure, ActivityConfigure } from '../ActivityConfigure';
 import { ClassMetadata } from '@ts-ioc/core';
 
-export interface IWorkflowMetadata extends WorkflowConfig, ClassMetadata {
+export interface IWorkflowMetadata extends ActivityConfigure, ClassMetadata {
 
 }
 

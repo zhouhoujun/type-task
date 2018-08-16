@@ -1,6 +1,11 @@
-import { IWorkflow, Active, WorkflowType } from './core';
+import { IActivityRunner, Active, IActivity, Activity } from './core';
 import { InjectToken, Type } from '@ts-ioc/core';
-import { IApplicationBuilder, IApplicationExtends } from '@ts-ioc/bootstrap';
+import { IApplicationBuilder, IApplicationExtends, InjectModuleBuilderToken } from '@ts-ioc/bootstrap';
+
+
+
+export const WorkflowBuilderToken = new InjectModuleBuilderToken<IActivity>(Activity);
+
 
 /**
  * TaskContainer token.
@@ -25,19 +30,10 @@ export interface ITaskContainer extends IApplicationExtends {
      *
      * @template T
      * @param {string} workflowId
-     * @returns {IWorkflow<T>}
+     * @returns {IActivityRunner<T>}
      * @memberof ITaskContainer
      */
-    getWorkflow<T>(workflowId: string): IWorkflow<T>;
-
-    /**
-     * create workflow.
-     *
-     * @param {Active} activity
-     * @param {string} [workflowId]
-     * @memberof ITaskContainer
-     */
-    createWorkflow(workflow: WorkflowType, workflowId?: string): Promise<IWorkflow<any>>;
+    getWorkflow<T>(workflowId: string): IActivityRunner<T>;
 
     /**
      * create workflow by activity.
@@ -46,14 +42,14 @@ export interface ITaskContainer extends IApplicationExtends {
      * @param {string} [workflowId]
      * @memberof ITaskContainer
      */
-    createActivity(activity: Active, workflowId?: string): Promise<IWorkflow<any>>;
+    createActivity(activity: Active, workflowId?: string): Promise<IActivityRunner<any>>;
 
     /**
      * create workflow and bootstrap.
      *
      * @param {...Active[]} activities bootstrap activities.
-     * @returns {Promise<IWorkflow>}
+     * @returns {Promise<IActivityRunner>}
      * @memberof IApplicationBuilder
      */
-    bootstrap(...activities: Active[]): Promise<IWorkflow<any>>;
+    bootstrap(...activities: Active[]): Promise<IActivityRunner<any>>;
 }

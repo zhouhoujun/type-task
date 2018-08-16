@@ -1,8 +1,7 @@
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 import { Inject, isArray, isUndefined } from '@ts-ioc/core';
-import { IPipeActivity } from './IPipeActivity';
-import { Activity, IActivity } from '@taskfr/core';
-import { PipeTask } from '../decorators';
+import { IPipeActivity, PipeActivityBuilderToken } from './IPipeActivity';
+import { Activity, IActivity, Task } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { TransformType, isTransform } from './pipeTypes';
 import { IPipeConfigure } from './IPipeConfigure';
@@ -15,7 +14,9 @@ import { SourceMapsActivity } from './SourceMapsActivity';
  * @class BaseTask
  * @implements {ITask}
  */
-@PipeTask
+@Task({
+    annotationBuilder: PipeActivityBuilderToken
+})
 export class PipeActivity extends Activity<ITransform> implements IPipeActivity {
     /**
      * context.

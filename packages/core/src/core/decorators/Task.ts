@@ -90,7 +90,7 @@ export function createTaskDecorator<T extends ActivityMetadata>(
                     if (isString(arg)) {
                         metadata.name = arg;
                     } else {
-                        metadata.annoBuilder = arg;
+                        metadata.annotationBuilder = arg;
                     }
                 }
             });
@@ -116,12 +116,9 @@ export function createTaskDecorator<T extends ActivityMetadata>(
                 }
             }
 
-            metadata.provide = metadata.provide || provideType;
-            metadata.alias = metadata.alias || metadata.name;
-
             metadata.decorType = taskType;
-            if (annotationBuilder && !metadata.annoBuilder) {
-                metadata.annoBuilder = annotationBuilder;
+            if (annotationBuilder && !metadata.annotationBuilder) {
+                metadata.annotationBuilder = annotationBuilder;
             }
 
             return metadata;

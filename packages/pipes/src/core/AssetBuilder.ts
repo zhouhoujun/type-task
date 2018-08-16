@@ -1,5 +1,5 @@
 import { IActivity, Src } from '@taskfr/core';
-import { isBoolean, isString, Singleton } from '@ts-ioc/core';
+import { isBoolean, isString, Injectable } from '@ts-ioc/core';
 import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
 import { SourceActivity, SourceConfigure } from './SourceActivity';
@@ -19,7 +19,7 @@ import { TestActivity, TestConfigure } from './TestActivity';
  * @class AssetTaskBuilder
  * @extends {DestTaskBuilder}
  */
-@Singleton(AssetBuilderToken)
+@Injectable(AssetBuilderToken)
 export class AssetBuilder extends PipeActivityBuilder {
 
     /**
@@ -32,7 +32,6 @@ export class AssetBuilder extends PipeActivityBuilder {
      */
     async buildStrategy(activity: IActivity, config: AssetConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
-
         if (activity instanceof AssetActivity) {
             activity.src = await this.toActivity<Src, SourceActivity, SourceConfigure>(config.src, activity,
                 act => act instanceof SourceActivity,

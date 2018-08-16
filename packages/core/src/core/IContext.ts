@@ -1,6 +1,6 @@
 import { ActivityConfigure, ActivityResultType, Expression } from './ActivityConfigure';
 import { IActivity } from './IActivity';
-import { IWorkflow } from './IWorkflow';
+import { IActivityRunner } from './IActivityRunner';
 import { IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
 import { ActivityBuilder } from './ActivityBuilder';
 import { IActivityBuilder } from './IActivityBuilder';
@@ -74,10 +74,10 @@ export interface IContext {
    * @param {string} uuid
    * @param {(IActivityBuilder | Token<IActivityBuilder>)} [builder]
    * @param {*} [instance]
-   * @returns {IWorkflow}
+   * @returns {IActivityRunner}
    * @memberof IContext
    */
-  createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): IWorkflow<any>;
+  createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): IActivityRunner<any>;
 
   /**
    * get task evn args.

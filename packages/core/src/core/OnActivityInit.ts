@@ -13,5 +13,5 @@ export interface OnActivityInit {
      * @param {ActivityConfigure} config
      * @memberof OnTaskInit
      */
-    onActivityInit(config: ActivityConfigure): void | Promise<any>;
+    onActivityInit(config: ActivityConfigure): Promise<any>;
 }

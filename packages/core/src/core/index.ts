@@ -11,6 +11,6 @@ export * from './decorators';
 export * from './metadatas';
 export * from './IContext';
 export * from './Context';
-export * from './IWorkflow';
-export * from './DefaultWorkflow';
+export * from './IActivityRunner';
+export * from './ActivityRunner';
 export * from './OnActivityInit';

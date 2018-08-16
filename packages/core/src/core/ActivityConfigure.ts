@@ -1,9 +1,9 @@
 import { IActivity, GActivity } from './IActivity';
 import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
-import { AnnotationConfigure } from '@ts-ioc/bootstrap';
-import { IWorkflow } from './IWorkflow';
+import { ModuleConfig } from '@ts-ioc/bootstrap';
+import { IActivityRunner } from './IActivityRunner';
 import { ExpressionActivity } from './ExpressionActivity';
-import { DefaultWorkflow } from './DefaultWorkflow';
+import { ActivityRunner } from './ActivityRunner';
 
 
 /**
@@ -27,7 +27,7 @@ export type AsyncResult<T> = (activity?: IActivity, data?: any) => Promise<T>;
 /**
  * activity result.
  */
-export type ActivityResult<T> = Promise<T> | AsyncResult<T> | ExpressionActivity<T> | IWorkflow<T>;
+export type ActivityResult<T> = Promise<T> | AsyncResult<T> | ExpressionActivity<T> | IActivityRunner<T>;
 
 /**
  * expression.
@@ -79,8 +79,8 @@ export type ConfigureType<T extends IActivity, TC extends ActivityConfigure> = T
  * @param {*} target
  * @returns {target is IActivityRunner<any>}
  */
-export function isActivityRunner(target: any): target is IWorkflow<any> {
-    return target instanceof DefaultWorkflow;
+export function isActivityRunner(target: any): target is IActivityRunner<any> {
+    return target instanceof ActivityRunner;
 }
 
 /**
@@ -123,10 +123,10 @@ export function isActivityType(target: any, check = true): target is ActivityTyp
  *
  * @export
  * @interface IActivityConfigure
- * @extends {AnnotationConfigure<T>}
+ * @extends {ModuleConfig<T>}
  * @template T
  */
-export interface IActivityConfigure<T> extends AnnotationConfigure<T> {
+export interface IActivityConfigure<T> extends ModuleConfig<T> {
 
     /**
      * workflow uuid.

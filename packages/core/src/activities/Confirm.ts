@@ -6,11 +6,6 @@ import { Defer } from '@ts-ioc/core';
  */
 export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity>('Confirm');
 
-// /**
-//  * Confirm activity builder token
-//  */
-// export const ConfirmActivityBuilderToken = new InjectAcitityBuilderToken<ConfirmActivityBuilder>('Confirm');
-
 /**
  * while control activity.
  *
