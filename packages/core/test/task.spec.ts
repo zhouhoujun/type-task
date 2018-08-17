@@ -55,7 +55,6 @@ describe('auto register with build', () => {
 
     it('should bootstrap with meta IConfigure.', async () => {
         let result = await container.bootstrap(TaskModuleTest);
-        console.log(result);
         expect(result.resultValue).eq('component task');
     });
 

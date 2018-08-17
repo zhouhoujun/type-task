@@ -1,6 +1,7 @@
 import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken } from '@ts-ioc/core';
 import { ActivityMetadata } from '../metadatas/ActivityMetadata';
 import { IActivityBuilder, ActivityBuilderToken } from '../IActivityBuilder';
+import { WorkflowBuilderToken } from '../../ITaskContainer';
 
 /**
  * task decorator, use to define class is a task element.
@@ -121,10 +122,13 @@ export function createTaskDecorator<T extends ActivityMetadata>(
                 metadata.provide = new Registration(provideType, metadata.provide.toString());
             }
 
+            // if (!metadata.builder) {
+            //     metadata.builder = WorkflowBuilderToken;
+            // }
             metadata.decorType = taskType;
-            if (annotationBuilder && !metadata.annotationBuilder) {
-                metadata.annotationBuilder = annotationBuilder;
-            }
+            // if (annotationBuilder && !metadata.annotationBuilder) {
+            //     metadata.annotationBuilder = annotationBuilder;
+            // }
 
             return metadata;
         }) as ITaskDecorator<T>;
@@ -135,5 +139,5 @@ export function createTaskDecorator<T extends ActivityMetadata>(
  *
  * @Task
  */
-export const Task: ITaskDecorator<ActivityMetadata> = createTaskDecorator('Task', ActivityBuilderToken);
+export const Task: ITaskDecorator<ActivityMetadata> = createTaskDecorator('Task');
 

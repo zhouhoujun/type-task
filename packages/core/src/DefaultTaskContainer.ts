@@ -1,7 +1,7 @@
-import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken } from '@ts-ioc/core';
-import { SequenceConfigure, Active, IActivityRunner, UUIDToken, RandomUUIDFactory, ActivityConfigure, ActivityBuilderToken } from './core';
+import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken, Token, Factory } from '@ts-ioc/core';
+import { SequenceConfigure, Active, IActivityRunner, UUIDToken, RandomUUIDFactory, ActivityConfigure, ActivityBuilderToken, ActivityRunnerToken } from './core';
 import { ITaskContainer, WorkflowBuilderToken } from './ITaskContainer';
-import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure } from '@ts-ioc/bootstrap';
+import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure, DefaultAnnotationBuilderToken, DefaultServiceToken, DefaultModuleBuilderToken } from '@ts-ioc/bootstrap';
 import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
 import { CoreModule } from './CoreModule';
@@ -35,7 +35,10 @@ export class DefaultTaskContainer implements ITaskContainer {
             this.builder
                 .use(AopModule)
                 .use(LogModule)
-                .use(CoreModule);
+                .use(CoreModule)
+                .provider(DefaultAnnotationBuilderToken, ActivityBuilderToken)
+                .provider(DefaultServiceToken, ActivityRunnerToken)
+                .provider(DefaultModuleBuilderToken, WorkflowBuilderToken);
         }
         return this.builder;
     }
@@ -69,6 +72,20 @@ export class DefaultTaskContainer implements ITaskContainer {
         return this;
     }
 
+    /**
+     * bind provider
+     *
+     * @template T
+     * @param {Token<T>} provide
+     * @param {Token<T> | Factory<T>} provider
+     * @returns {this}
+     * @memberof IContainer
+     */
+    provider(provide: Token<any>, provider: Token<any> | Factory<any>): this {
+        this.getBuilder().provider(provide, provider);
+        return this;
+    }
+
     useLog(logAspect: Type<any>): this {
         if (hasClassMetadata(Aspect, logAspect)) {
             this.getBuilder().use(logAspect);
@@ -94,7 +111,7 @@ export class DefaultTaskContainer implements ITaskContainer {
         workflowId = workflowId || this.createUUID();
 
         if (isToken(activity)) {
-            boot =  { id: workflowId, token: activity, builder: WorkflowBuilderToken, annotationBuilder: ActivityBuilderToken };
+            boot =  activity; // { id: workflowId, token: activity, builder: WorkflowBuilderToken };
         } else {
             boot = activity || {};
             boot.id = workflowId;
