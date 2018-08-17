@@ -25,6 +25,7 @@ export class DefaultWorkflowBuilder extends ModuleBuilder<IActivity> {
         let container = this.getContainer(activity, env);
         workflowId = workflowId || this.createUUID(container);
         let runner = await super.bootstrap(activity, env, workflowId);
+        console.log(runner, activity);
         return runner;
     }
 

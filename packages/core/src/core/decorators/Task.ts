@@ -1,8 +1,6 @@
 import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken } from '@ts-ioc/core';
 import { ActivityMetadata } from '../metadatas/ActivityMetadata';
 import { IActivityBuilder, ActivityBuilderToken } from '../IActivityBuilder';
-import { DefaultWorkflowBuilder } from '../../DefaultWorkflowBuilder';
-
 
 /**
  * task decorator, use to define class is a task element.

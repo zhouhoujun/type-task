@@ -94,7 +94,7 @@ export class DefaultTaskContainer implements ITaskContainer {
         workflowId = workflowId || this.createUUID();
 
         if (isToken(activity)) {
-            boot =  { id: workflowId, token: activity, builder: WorkflowBuilderToken };
+            boot =  { id: workflowId, token: activity, builder: WorkflowBuilderToken, annotationBuilder: ActivityBuilderToken };
         } else {
             boot = activity || {};
             boot.id = workflowId;
