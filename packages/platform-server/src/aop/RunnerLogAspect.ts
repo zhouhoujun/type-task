@@ -28,7 +28,7 @@ export class RunnerLogAspect extends LoggerAspect {
     logStart(joinPoint: Joinpoint) {
         let logger = this.logger;
         let runner = joinPoint.target as IActivityRunner<any>;
-        let uuid = runner.getUUID();
+        let uuid = runner.instance.id;
         let start, end;
         let taskname = '\'' + chalk.cyan(uuid) + '\'';
         if (joinPoint.state === JoinpointState.Before) {

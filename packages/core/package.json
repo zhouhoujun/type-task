@@ -24,9 +24,9 @@
   "dependencies": {
     "reflect-metadata": "^0.1.12",
     "tslib": "^1.9.2",
-    "@ts-ioc/aop": "^3.0.1",
-    "@ts-ioc/core": "^3.0.1",
-    "@ts-ioc/logs": "^3.0.1",
+    "@ts-ioc/aop": "^3.0.3",
+    "@ts-ioc/core": "^3.0.3",
+    "@ts-ioc/logs": "^3.0.3",
     "rxjs": "^5.5.11"
   },
   "directories": {

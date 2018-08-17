@@ -17,7 +17,12 @@ export const SequenceActivityToken = new InjectAcitityToken<SequenceActivity>('s
 @Task(SequenceActivityToken)
 export class SequenceActivity extends Activity<any> {
 
-    activites: IActivity[] = [];
+    activites: IActivity[];
+
+    constructor() {
+        super();
+        this.activites = [];
+    }
 
     async onActivityInit(config: SequenceConfigure): Promise<any> {
         await super.onActivityInit(config);

@@ -32,7 +32,6 @@ export class AssetBuilder extends PipeActivityBuilder {
      */
     async buildStrategy(activity: IActivity, config: AssetConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
-        console.log('AssetBuilder:', config);
         if (activity instanceof AssetActivity) {
             activity.src = await this.toActivity<Src, SourceActivity, SourceConfigure>(config.src, activity,
                 act => act instanceof SourceActivity,

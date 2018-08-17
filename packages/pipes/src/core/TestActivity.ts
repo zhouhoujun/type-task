@@ -6,7 +6,9 @@ import { TransformType, TransformConfig } from './pipeTypes';
 import { SourceConfigure, SourceActivity } from './SourceActivity';
 import { InjectPipeActivityToken } from './IPipeActivity';
 
-
+/**
+ * test activity token.
+ */
 export const TestAcitvityToken = new InjectPipeActivityToken<TestActivity>('test');
 
 /**
@@ -43,6 +45,13 @@ export interface TestConfigure extends SourceConfigure {
     options?: CtxType<any>;
 }
 
+/**
+ * test activity.
+ *
+ * @export
+ * @class TestActivity
+ * @extends {SourceActivity}
+ */
 @PipeTask(TestAcitvityToken)
 export class TestActivity extends SourceActivity {
 

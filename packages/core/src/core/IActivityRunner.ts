@@ -1,31 +1,17 @@
-import { ActivityResultType } from './ActivityConfigure';
-import { Registration, Token } from '@ts-ioc/core';
+import { ActivityConfigure } from './ActivityConfigure';
+import { Token } from '@ts-ioc/core';
 import { GActivity, IActivity } from './IActivity';
-import { IActivityBuilder } from './IActivityBuilder';
 import { Observable } from 'rxjs/Observable';
 import { Joinpoint } from '@ts-ioc/aop';
-import { IService } from '@ts-ioc/bootstrap';
 import { Activity } from './Activity';
+import { IService, InjectServiceToken } from '@ts-ioc/bootstrap';
 
 
-/**
- * Inject AcitityRuner Token
- *
- * @export
- * @class InjectWorkflowToken
- * @extends {Registration<T>}
- * @template T
- */
-export class InjecActivityRunnerToken<T extends IActivity> extends Registration<IActivityRunner<T>> {
-    constructor(type: Token<T>) {
-        super(type, 'ActivityRunner');
-    }
-}
 
 /**
  * activity runner token.
  */
-export const ActivityRunnerToken = new InjecActivityRunnerToken<IActivity>(Activity);
+export const ActivityRunnerToken = new InjectServiceToken<IActivity>(Activity);
 
 /**
  *run state.
@@ -62,15 +48,17 @@ export enum RunState {
  * @export
  * @interface ITaskRunner
  */
-export interface IActivityRunner<T> extends IService {
+export interface IActivityRunner<T> extends IService<GActivity<T>> {
 
     /**
      * actvity to run.
      *
-     * @type {ActivityResultType<T>}
+     * @type {Token<IActivity>}
      * @memberof ITaskRunner
      */
-    readonly activity: ActivityResultType<T>;
+    readonly activity: Token<IActivity>;
+
+    readonly configure: ActivityConfigure;
 
     /**
      * activity instance
@@ -78,7 +66,7 @@ export interface IActivityRunner<T> extends IService {
      * @type {GActivity}
      * @memberof ITaskRunner
      */
-    readonly activityInstance: GActivity<T>;
+    readonly instance: GActivity<T>;
 
     /**
      * current run task data.
@@ -113,30 +101,6 @@ export interface IActivityRunner<T> extends IService {
     readonly stateChanged: Observable<RunState>;
 
     /**
-     * get workflow instance uuid.
-     *
-     * @returns {string}
-     * @memberof ITaskRunner
-     */
-    getUUID(): string;
-
-    /**
-     * get task run base path.
-     *
-     * @returns {string}
-     * @memberof IContext
-     */
-    getBaseURL(): string;
-
-    /**
-     * get activity builder.
-     *
-     * @returns {IActivityBuilder}
-     * @memberof ITaskRunner
-     */
-    getBuilder(): IActivityBuilder;
-
-    /**
      * start activity.
      *
      * @param {*} [data]
@@ -150,14 +114,14 @@ export interface IActivityRunner<T> extends IService {
      *
      * @memberof ITaskRunner
      */
-    stop(): void;
+    stop(): Promise<any>;
 
     /**
      * pause running activity.
      *
      * @memberof ITaskRunner
      */
-    pause(): void;
+    pause(): Promise<any>;
 
     /**
      * save state.

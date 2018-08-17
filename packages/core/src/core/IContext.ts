@@ -68,18 +68,6 @@ export interface IContext {
   getRootPath(): string;
 
   /**
-   * create task runner;
-   *
-   * @param {ActivityResultType<any>} task
-   * @param {string} uuid
-   * @param {(IActivityBuilder | Token<IActivityBuilder>)} [builder]
-   * @param {*} [instance]
-   * @returns {IActivityRunner}
-   * @memberof IContext
-   */
-  createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): IActivityRunner<any>;
-
-  /**
    * get task evn args.
    *
    * @returns {ObjectMap<any>}

@@ -7,7 +7,9 @@ import { src } from 'vinyl-fs';
 const chokidar = require('chokidar');
 
 
-
+/**
+ * watch activity token.
+ */
 export const WatchAcitvityToken = new InjectAcitityToken<WatchActivity>('Watch');
 
 /**

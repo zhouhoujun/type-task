@@ -1,13 +1,12 @@
 import {
     isFunction, IContainer, Inject, ContainerToken, Singleton,
-    Type, hasOwnClassMetadata, Token, isToken, ObjectMap, isPromise, isClass
+    Type, hasOwnClassMetadata, ObjectMap, isPromise, isClass
 } from '@ts-ioc/core';
 import { IContext, ContextToken, CtxType } from './IContext';
-import { ActivityConfigure, ActivityResultType, Expression } from './ActivityConfigure';
+import { ActivityConfigure, Expression } from './ActivityConfigure';
 import { IActivity } from './IActivity';
 import { Task } from './decorators';
-import { IActivityBuilder, ActivityBuilderToken } from './IActivityBuilder';
-import { IActivityRunner, ActivityRunnerToken } from './IActivityRunner';
+import { ActivityBuilderToken } from './IActivityBuilder';
 import { ActivityBuilder } from './ActivityBuilder';
 import { Activity } from './Activity';
 import { ActivityRunner } from './ActivityRunner';
@@ -41,17 +40,6 @@ export class Context implements IContext {
     getRootPath(): string {
         let cfg = this.getContainer().get(AppConfigureToken) || {};
         return cfg.baseURL || '.';
-    }
-
-
-    createRunner(task: ActivityResultType<any>, uuid?: string, builder?: IActivityBuilder | Token<IActivityBuilder>, instance?: any): IActivityRunner<any> {
-        let builderInst: IActivityBuilder;
-        if (isToken(builder)) {
-            builderInst = this.container.resolve(builder);
-        } else if (builder instanceof ActivityBuilder) {
-            builderInst = builder;
-        }
-        return this.container.resolve(ActivityRunnerToken, { activity: task, uuid: uuid, instance: instance, activityBuilder: builderInst })
     }
 
 

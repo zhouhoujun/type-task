@@ -90,12 +90,11 @@ export class DefaultTaskContainer implements ITaskContainer {
      * @memberof ITaskContainer
      */
     async createActivity(activity: Active, workflowId?: string): Promise<IActivityRunner<any>> {
-
-        let boot: ActivityConfigure;
+        let boot: Active;
         workflowId = workflowId || this.createUUID();
 
         if (isToken(activity)) {
-            boot = { id: workflowId, activity: activity, builder: WorkflowBuilderToken, annotationBuilder: ActivityBuilderToken };
+            boot =  { id: workflowId, token: activity, builder: WorkflowBuilderToken };
         } else {
             boot = activity || {};
             boot.id = workflowId;

@@ -14,6 +14,9 @@ export interface UglifyConfigure extends ActivityConfigure {
     uglifyOtions?: CtxType<any>;
 }
 
+/**
+ *  uglify token.
+ */
 export const UglifyToken = new InjectAcitityToken<UglifyActivity>('uglify');
 
 @Task(UglifyToken)
