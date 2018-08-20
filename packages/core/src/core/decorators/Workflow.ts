@@ -1,8 +1,7 @@
 import { Registration, Token, MetadataAdapter, MetadataExtends, isString, isObject, isToken } from '@ts-ioc/core';
 import { WorkflowMetadata } from '../metadatas/WorkflowMetadata';
 import { createDIModuleDecorator, IDIModuleDecorator, IModuleBuilder } from '@ts-ioc/bootstrap';
-import { ActivityBuilderToken, IActivityBuilder } from '../IActivityBuilder';
-import { WorkflowBuilderToken } from '../../ITaskContainer';
+import { IActivityBuilder } from '../IActivityBuilder';
 
 /**
  * workflow decorator.
@@ -98,4 +97,4 @@ export function createWorkflowDecorator<T extends WorkflowMetadata>(
  *
  * @Workflow
  */
-export const Workflow: IWorkflowDecorator<WorkflowMetadata> = createWorkflowDecorator<WorkflowMetadata>('Workflow', WorkflowBuilderToken, ActivityBuilderToken);
+export const Workflow: IWorkflowDecorator<WorkflowMetadata> = createWorkflowDecorator<WorkflowMetadata>('Workflow');

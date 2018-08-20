@@ -2120,14 +2120,14 @@ Object.defineProperty(exports,"__esModule",{value:!0});var TaskContainer=functio
 unwrapExports(TaskContainer_1);
 var TaskContainer_2 = TaskContainer_1.TaskContainer;
 
-var D__workspace_github_typeTask_packages_platformBrowser_lib = createCommonjsModule(function (module, exports) {
+var D__Workspace_Projects_modules_typeTask_packages_platformBrowser_lib = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(aop,exports), tslib_1.__exportStar(TaskContainer_1,exports);
 
 
 
 });
 
-var index$1 = unwrapExports(D__workspace_github_typeTask_packages_platformBrowser_lib);
+var index$1 = unwrapExports(D__Workspace_Projects_modules_typeTask_packages_platformBrowser_lib);
 
 return index$1;
 

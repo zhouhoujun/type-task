@@ -1,4 +1,4 @@
-import { Inject, IContainer, ContainerToken, Token, Injectable } from '@ts-ioc/core';
+import { Inject, IContainer, ContainerToken, Token } from '@ts-ioc/core';
 import { ActivityConfigure } from './ActivityConfigure';
 import { IActivity } from './IActivity';
 import { IActivityRunner, ActivityRunnerToken, RunState } from './IActivityRunner';

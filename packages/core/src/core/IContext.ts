@@ -1,10 +1,7 @@
-import { ActivityConfigure, ActivityResultType, Expression } from './ActivityConfigure';
+import { ActivityConfigure, Expression } from './ActivityConfigure';
 import { IActivity } from './IActivity';
-import { IActivityRunner } from './IActivityRunner';
-import { IContainer, Type, Token, ObjectMap, Registration } from '@ts-ioc/core';
+import { IContainer, Type, ObjectMap, Registration } from '@ts-ioc/core';
 import { ActivityBuilder } from './ActivityBuilder';
-import { IActivityBuilder } from './IActivityBuilder';
-
 
 
 /**
@@ -46,7 +43,7 @@ export interface IContext {
   /**
    * default builder.
    *
-   * @type {IActivityBuilder}
+   * @type {ActivityBuilder}
    * @memberof IContext
    */
   builder: ActivityBuilder;

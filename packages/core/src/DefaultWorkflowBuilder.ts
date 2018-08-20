@@ -1,8 +1,12 @@
 import { IContainer, Singleton, Token, Providers } from '@ts-ioc/core';
-import { ActivityType, IActivity, UUIDToken, RandomUUIDFactory, ActivityConfigure, Task, ActivityBuilderToken, ActivityRunnerToken } from './core';
-import { ModuleBuilder, ModuleEnv, Runnable, IService } from '@ts-ioc/bootstrap';
-import { WorkflowBuilderToken } from './ITaskContainer';
+import { ActivityType, IActivity, UUIDToken, RandomUUIDFactory, ActivityConfigure, Task, ActivityRunnerToken, Activity } from './core';
+import { ModuleBuilder, ModuleEnv, Runnable, IService, InjectModuleBuilderToken } from '@ts-ioc/bootstrap';
 
+
+/**
+ * workflow builder token.
+ */
+export const WorkflowBuilderToken = new InjectModuleBuilderToken<IActivity>(Activity);
 /**
  * default Workflow Builder.
  *
@@ -51,9 +55,5 @@ export class DefaultWorkflowBuilder extends ModuleBuilder<IActivity> {
     protected getDefaultService(container: IContainer, ...providers: Providers[]): IService<IActivity> {
         return container.resolve(ActivityRunnerToken, ...providers);
     }
-
-    // protected getType(config: ActivityConfigure): Token<any> {
-    //     return config.activity || config.task || super.getType(config);
-    // }
 }
 

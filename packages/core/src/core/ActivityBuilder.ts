@@ -1,5 +1,5 @@
 import { ActivityBuilderToken, IActivityBuilder } from './IActivityBuilder';
-import { Type, isFunction, isString, Token, Express, isToken, getClassName, IContainer, isClass, Injectable } from '@ts-ioc/core';
+import { Type, isFunction, isString, Token, Express, isToken, IContainer, Injectable } from '@ts-ioc/core';
 import { ActivityConfigure, isActivityType, ActivityType, ExpressionType, Expression } from './ActivityConfigure';
 import { IActivity, ActivityInstance, InjectAcitityToken } from './IActivity';
 import { Activity } from './Activity';

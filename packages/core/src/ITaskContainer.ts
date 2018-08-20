@@ -1,10 +1,7 @@
-import { IActivityRunner, Active, IActivity, Activity } from './core';
+import { IActivityRunner, Active } from './core';
 import { InjectToken, Type } from '@ts-ioc/core';
-import { IApplicationBuilder, IApplicationExtends, InjectModuleBuilderToken } from '@ts-ioc/bootstrap';
+import { IApplicationBuilder, IApplicationExtends } from '@ts-ioc/bootstrap';
 
-
-
-export const WorkflowBuilderToken = new InjectModuleBuilderToken<IActivity>(Activity);
 
 
 /**

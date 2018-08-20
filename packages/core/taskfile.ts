@@ -17,7 +17,7 @@ TaskContainer.create(__dirname)
             assets: {
                 ts: <TsConfigure>{
                     // watch: true,
-                    src: 'src/**/*.ts', test: 'test/**/*.spec.ts', dest: 'lib', annotation: true, uglify: true
+                    src: 'src/**/*.ts', test: 'test/**/*.spec.ts', dest: 'lib', annotation: true, uglify: false
                 }
             },
             task: PackageActivity
