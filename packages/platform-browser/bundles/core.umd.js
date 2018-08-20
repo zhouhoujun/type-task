@@ -191,17 +191,24 @@ function createBootstrapDecorator(name, builder, annotationBuilder, adapter, met
         if (metadataExtends) {
             metadataExtends(metadata);
         }
-        setTimeout(function () {
-            var builderType = metadata.builder;
-            var builder;
-            if (core_1$$2.isClass(builderType)) {
-                builder = core_1$$2.isFunction(builderType['create']) ? builderType['create']() : new builderType();
-            }
-            else {
-                builder = builderType;
-            }
-            builder.bootstrap(metadata.token);
-        }, 800);
+        if (metadata.builder) {
+            setTimeout(function () {
+                var builderType = metadata.builder;
+                var builder;
+                if (core_1$$2.isClass(builderType)) {
+                    builder = core_1$$2.isFunction(builderType['create']) ? builderType['create']() : new builderType();
+                }
+                else if (core_1$$2.isObject(builderType)) {
+                    builder = builderType;
+                }
+                if (builder) {
+                    if (metadata.globals) {
+                        builder.use.apply(builder, metadata.globals);
+                    }
+                    builder.bootstrap(metadata.type);
+                }
+            }, 500);
+        }
         return metadata;
     });
 }
@@ -239,12 +246,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * application configuration token.
  */
 exports.AppConfigureToken = new core_1$$2.InjectToken('DI_APP_Configuration');
+/**
+ * application default configuration token.
+ */
+exports.DefaultConfigureToken = new core_1$$2.InjectToken('DI_Default_Configuration');
+/**
+ *  app configure loader token.
+ */
+exports.AppConfigureLoaderToken = new core_1$$2.InjectToken('DI_Configure_Loader');
 
 
 });
 
 unwrapExports$$1(AppConfigure);
 var AppConfigure_1 = AppConfigure.AppConfigureToken;
+var AppConfigure_2 = AppConfigure.DefaultConfigureToken;
+var AppConfigure_3 = AppConfigure.AppConfigureLoaderToken;
 
 var IModuleBuilder = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -697,6 +714,7 @@ var ContainerPool = /** @class */ (function () {
             modules[_i] = arguments[_i];
         }
         this.globalModules = this.globalModules.concat(modules);
+        this.inited = false;
         return this;
     };
     ContainerPool.prototype.hasInit = function () {
@@ -1372,7 +1390,7 @@ var ModuleBuilder = /** @class */ (function () {
         if (core_1$$2.isToken(token)) {
             cfg = this.getMetaConfig(token, container);
         }
-        else if (core_1$$2.isMetadataObject(token)) {
+        else if (core_1$$2.isObject(token)) {
             var type = this.getType(token);
             cfg = core_1$$2.lang.assign(token || {}, this.getMetaConfig(type, container), token || {});
         }
@@ -1458,7 +1476,7 @@ var ModuleBuilder = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!(core_1$$2.isArray(config.imports) && config.imports.length)) return [3 /*break*/, 3];
-                        buider = container.get(core_1$$2.ContainerBuilderToken);
+                        buider = container.getBuilder();
                         return [4 /*yield*/, buider.loader.loadTypes(config.imports, function (it) { return _this.isIocExt(it) || _this.isDIModule(it); })];
                     case 1:
                         mdls = _a.sent();
@@ -1524,10 +1542,6 @@ var ModuleBuilder = /** @class */ (function () {
     ModuleBuilder.prototype.registerExts = function (container, config) {
         return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
             return tslib_1$$2.__generator(this, function (_a) {
-                // register for each container.
-                // if (!container.hasRegister(AnnotationBuilder)) {
-                //     container.register(AnnotationBuilder);
-                // }
                 return [2 /*return*/, container];
             });
         });
@@ -1681,7 +1695,6 @@ var DefaultApplicationBuilder = /** @class */ (function (_super) {
     function DefaultApplicationBuilder(baseURL) {
         var _this = _super.call(this) || this;
         _this.baseURL = baseURL;
-        // this.globalModules = [];
         _this.customRegs = [];
         _this.providers = new core_1$$2.MapSet();
         _this.pools = new ContainerPool_1.ContainerPool();
@@ -1698,18 +1711,13 @@ var DefaultApplicationBuilder = /** @class */ (function (_super) {
      * @memberof Bootstrap
      */
     DefaultApplicationBuilder.prototype.useConfiguration = function (config, container) {
+        container = container || this.getPools().getDefault();
         if (!this.globalConfig) {
-            this.globalConfig = Promise.resolve(this.getDefaultConfig());
+            this.globalConfig = Promise.resolve(this.getDefaultConfig(container));
         }
         var pcfg;
-        if (core_1$$2.isString(config)) {
-            if (container) {
-                var builder = container.resolve(core_1$$2.ContainerBuilderToken);
-                pcfg = builder.loader.load([config])
-                    .then(function (rs) {
-                    return rs.length ? rs[0] : null;
-                });
-            }
+        if (core_1$$2.isString(config) || core_1$$2.isUndefined(config)) {
+            pcfg = this.loadConfig(container, config);
         }
         else if (config) {
             pcfg = Promise.resolve(config);
@@ -1718,13 +1726,31 @@ var DefaultApplicationBuilder = /** @class */ (function (_super) {
             this.globalConfig = this.globalConfig
                 .then(function (cfg) {
                 return pcfg.then(function (rcfg) {
-                    var excfg = (rcfg['default'] ? rcfg['default'] : rcfg);
-                    cfg = core_1$$2.lang.assign(cfg || {}, excfg || {});
-                    return cfg;
+                    if (rcfg) {
+                        var excfg = (rcfg['default'] ? rcfg['default'] : rcfg);
+                        cfg = core_1$$2.lang.assign(cfg || {}, excfg || {});
+                    }
+                    return cfg || {};
                 });
             });
         }
         return this;
+    };
+    DefaultApplicationBuilder.prototype.loadConfig = function (container, src) {
+        if (container.has(AppConfigure.AppConfigureLoaderToken)) {
+            var loader = container.resolve(AppConfigure.AppConfigureLoaderToken, { baseURL: this.baseURL, container: container });
+            return loader.load(src);
+        }
+        else if (src) {
+            var builder = container.getBuilder();
+            return builder.loader.load([src])
+                .then(function (rs) {
+                return rs.length ? rs[0] : null;
+            });
+        }
+        else {
+            return Promise.resolve(null);
+        }
     };
     /**
      * use module as global Depdences module.
@@ -1762,7 +1788,7 @@ var DefaultApplicationBuilder = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         if (!this.globalConfig) {
-                            this.useConfiguration();
+                            this.useConfiguration(undefined, container);
                         }
                         return [4 /*yield*/, this.globalConfig];
                     case 1:
@@ -1805,10 +1831,6 @@ var DefaultApplicationBuilder = /** @class */ (function (_super) {
                     case 0: return [4 /*yield*/, _super.prototype.registerExts.call(this, container, config)];
                     case 1:
                         _a.sent();
-                        // if (this.globalModules.length) {
-                        //     let usedModules = this.globalModules;
-                        //     await container.loadModule(...usedModules);
-                        // }
                         this.providers.forEach(function (val, key) {
                             container.bindProvider(key, val);
                         });
@@ -1838,10 +1860,20 @@ var DefaultApplicationBuilder = /** @class */ (function (_super) {
         }
         return config;
     };
-    DefaultApplicationBuilder.prototype.getDefaultConfig = function () {
-        return { debug: false };
+    DefaultApplicationBuilder.prototype.getDefaultConfig = function (container) {
+        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
+            return tslib_1$$2.__generator(this, function (_a) {
+                if (container.has(AppConfigure.DefaultConfigureToken)) {
+                    return [2 /*return*/, container.resolve(AppConfigure.DefaultConfigureToken)];
+                }
+                else {
+                    return [2 /*return*/, {}];
+                }
+                return [2 /*return*/];
+            });
+        });
     };
-    DefaultApplicationBuilder.classAnnations = { "name": "DefaultApplicationBuilder", "params": { "constructor": ["baseURL"], "create": ["baseURL"], "useConfiguration": ["config", "container"], "use": ["modules"], "provider": ["provide", "provider"], "registerConfgureDepds": ["container", "config"], "mergeGlobalConfig": ["globalCfg", "moduleCfg"], "regDefaultContainer": [], "registerExts": ["container", "config"], "bindAppConfig": ["config"], "getDefaultConfig": [] } };
+    DefaultApplicationBuilder.classAnnations = { "name": "DefaultApplicationBuilder", "params": { "constructor": ["baseURL"], "create": ["baseURL"], "useConfiguration": ["config", "container"], "loadConfig": ["container", "src"], "use": ["modules"], "provider": ["provide", "provider"], "registerConfgureDepds": ["container", "config"], "mergeGlobalConfig": ["globalCfg", "moduleCfg"], "regDefaultContainer": [], "registerExts": ["container", "config"], "bindAppConfig": ["config"], "getDefaultConfig": ["container"] } };
     return DefaultApplicationBuilder;
 }(ModuleBuilder_1.ModuleBuilder));
 exports.DefaultApplicationBuilder = DefaultApplicationBuilder;
@@ -2001,8 +2033,8 @@ unwrapExports(platformBrowser_umd);
 var platformBrowserBootstrap_umd = createCommonjsModule(function (module, exports) {
 (function (global, factory) {
 	module.exports = factory(tslib_1, core_1, bootstrap_umd, platformBrowser_umd);
-}(commonjsGlobal, (function (tslib_1$$2,core_1$$2,bootstrap,platformBrowser) { tslib_1$$2 = tslib_1$$2 && tslib_1$$2.hasOwnProperty('default') ? tslib_1$$2['default'] : tslib_1$$2;
-core_1$$2 = core_1$$2 && core_1$$2.hasOwnProperty('default') ? core_1$$2['default'] : core_1$$2;
+}(commonjsGlobal, (function (tslib_1$$2,core,bootstrap,platformBrowser) { tslib_1$$2 = tslib_1$$2 && tslib_1$$2.hasOwnProperty('default') ? tslib_1$$2['default'] : tslib_1$$2;
+core = core && core.hasOwnProperty('default') ? core['default'] : core;
 bootstrap = bootstrap && bootstrap.hasOwnProperty('default') ? bootstrap['default'] : bootstrap;
 platformBrowser = platformBrowser && platformBrowser.hasOwnProperty('default') ? platformBrowser['default'] : platformBrowser;
 
@@ -2021,15 +2053,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 
 /**
- * default app configuration.
- */
-var defaultAppConfig = {
-    baseURL: '',
-    debug: false,
-    connections: {},
-    setting: {}
-};
-/**
  * application builder for browser side.
  *
  * @export
@@ -2040,7 +2063,7 @@ var defaultAppConfig = {
 var ApplicationBuilder = /** @class */ (function (_super) {
     tslib_1$$2.__extends(ApplicationBuilder, _super);
     function ApplicationBuilder(baseURL) {
-        return _super.call(this, baseURL || !core_1$$2.isUndefined(System) ? System.baseURL : location.href) || this;
+        return _super.call(this, baseURL || !core.isUndefined(System) ? System.baseURL : location.href) || this;
     }
     /**
      * create instance.
@@ -2059,10 +2082,7 @@ var ApplicationBuilder = /** @class */ (function (_super) {
     ApplicationBuilder.prototype.createBuilder = function () {
         return this;
     };
-    ApplicationBuilder.prototype.getDefaultConfig = function () {
-        return core_1$$2.lang.assign({}, defaultAppConfig);
-    };
-    ApplicationBuilder.classAnnations = { "name": "ApplicationBuilder", "params": { "constructor": ["baseURL"], "create": ["baseURL"], "createContainerBuilder": [], "createBuilder": [], "getDefaultConfig": [] } };
+    ApplicationBuilder.classAnnations = { "name": "ApplicationBuilder", "params": { "constructor": ["baseURL"], "create": ["baseURL"], "createContainerBuilder": [], "createBuilder": [] } };
     return ApplicationBuilder;
 }(bootstrap.DefaultApplicationBuilder));
 exports.ApplicationBuilder = ApplicationBuilder;
