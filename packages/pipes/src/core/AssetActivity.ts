@@ -8,8 +8,9 @@ import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { PipeActivity } from './PipeActivity';
 import { IActivity, Task } from '@taskfr/core';
-import { IAssetActivity, AssetBuilderToken } from './AssetConfigure';
+import { IAssetActivity, AssetBuilderToken, AssetToken } from './AssetConfigure';
 import { TestActivity } from './TestActivity';
+import { AssetTask } from '../decorators';
 
 
 /**
@@ -20,9 +21,7 @@ import { TestActivity } from './TestActivity';
  * @extends {TaskElement}
  * @implements {IPipeComponent<ITransform>}
  */
-@Task({
-    annotationBuilder: AssetBuilderToken
-})
+@AssetTask('')
 export class AssetActivity extends PipeActivity implements IAssetActivity {
     /**
      * src activity.

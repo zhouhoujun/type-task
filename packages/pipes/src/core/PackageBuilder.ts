@@ -1,5 +1,5 @@
 import { IActivity, Src, ActivityBuilder } from '@taskfr/core';
-import { isArray, isString, lang, Singleton, Injectable } from '@ts-ioc/core';
+import { isArray, isString, lang, Injectable } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
 import { DestActivity, DestConfigure } from './DestActivity';

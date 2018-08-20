@@ -98,5 +98,5 @@ export const PackageToken = new InjectPackageToken<IPackageActivity>('');
 /**
  * package builder token.
  */
-export const PackageBuilderToken = new InjectAcitityBuilderToken<IPackageActivity>(PackageActivity);
+export const PackageBuilderToken = new InjectAcitityBuilderToken<IPackageActivity>(PackageToken);
 

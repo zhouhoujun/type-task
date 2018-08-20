@@ -1,4 +1,4 @@
-import { SequenceActivity, ParallelActivity, Task } from '@taskfr/core';
+import { SequenceActivity, ParallelActivity } from '@taskfr/core';
 import { DestActivity } from './DestActivity';
 import { TestActivity } from './TestActivity';
 import { CleanActivity } from './CleanActivity';
@@ -6,7 +6,8 @@ import { AssetActivity } from './AssetActivity';
 import { ITransform } from './ITransform';
 import { Type, Inject } from '@ts-ioc/core';
 import { PipeContextToken, IPipeContext } from './IPipeContext';
-import { IPackageActivity, PackageBuilderToken } from './PackageConfigure';
+import { IPackageActivity } from './PackageConfigure';
+import { Package } from '../decorators';
 
 /**
  * package activity.
@@ -15,9 +16,7 @@ import { IPackageActivity, PackageBuilderToken } from './PackageConfigure';
  * @class PackageActivity
  * @extends {SequenceActivity}
  */
-@Task({
-    annotationBuilder: PackageBuilderToken
-})
+@Package('')
 export class PackageActivity extends SequenceActivity implements IPackageActivity {
 
     /**

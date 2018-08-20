@@ -1,7 +1,7 @@
-import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken } from '@ts-ioc/core';
+import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken, isUndefined } from '@ts-ioc/core';
 import { ActivityMetadata } from '../metadatas/ActivityMetadata';
-import { IActivityBuilder, ActivityBuilderToken } from '../IActivityBuilder';
-import { WorkflowBuilderToken } from '../../ITaskContainer';
+import { IActivityBuilder } from '../IActivityBuilder';
+
 
 /**
  * task decorator, use to define class is a task element.
@@ -73,7 +73,7 @@ export function createTaskDecorator<T extends ActivityMetadata>(
                 adapter(args);
             }
             args.next<ActivityMetadata>({
-                match: (arg) => arg && (isString(arg) || (isObject(arg) && arg instanceof Registration)),
+                match: (arg) => isString(arg) || (isObject(arg) && arg instanceof Registration),
                 setMetadata: (metadata, arg) => {
                     if (isString(arg)) {
                         metadata.name = arg;
@@ -114,21 +114,21 @@ export function createTaskDecorator<T extends ActivityMetadata>(
                 }
             }
 
-            if (!metadata.provide) {
+            if (isUndefined(metadata.provide)) {
                 metadata.provide = metadata.name;
             }
 
             if (provideType) {
                 metadata.provide = new Registration(provideType, metadata.provide.toString());
+                if (!metadata.activity || !metadata.task) {
+                    metadata.activity = provideType;
+                }
             }
 
-            // if (!metadata.builder) {
-            //     metadata.builder = WorkflowBuilderToken;
-            // }
             metadata.decorType = taskType;
-            // if (annotationBuilder && !metadata.annotationBuilder) {
-            //     metadata.annotationBuilder = annotationBuilder;
-            // }
+            if (annotationBuilder && !metadata.annotationBuilder) {
+                metadata.annotationBuilder = annotationBuilder;
+            }
 
             return metadata;
         }) as ITaskDecorator<T>;

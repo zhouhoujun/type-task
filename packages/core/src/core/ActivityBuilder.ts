@@ -11,7 +11,6 @@ import { Task } from './decorators';
 export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IActivityBuilder {
 
     build(token: Token<IActivity>, config: ActivityConfigure, data?: any): Promise<IActivity> {
-        console.log(token, config);
         return super.build(token, config, data);
     }
 
@@ -26,12 +25,15 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
         }
 
         let instance = await super.createInstance(token, config, uuid) as ActivityInstance;
-        if (!instance || !(instance instanceof Activity)) {
-            let task = this.getDefaultAcitvity();
-            console.log(isClass(token) ? getClassName(token) : token.toString(), 'is not right Activity, try load default activity:', getClassName(task));
-            config.activity = task;
-            instance = await this.createInstance(task, config, uuid) as ActivityInstance;
+        if (!instance) {
+            return null;
         }
+        // if (!(instance instanceof Activity)) {
+        //     let task = this.getDefaultAcitvity();
+        //     console.log(isClass(token) ? getClassName(token) : (token || '').toString(), 'is not right Activity, try load default activity:', getClassName(task));
+        //     config.activity = task;
+        //     instance = await this.createInstance(task, config, uuid) as ActivityInstance;
+        // }
         if (isString(uuid)) {
             instance.id = uuid;
         }

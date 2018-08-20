@@ -16,6 +16,7 @@ describe('auto register with build', () => {
         let runner = await container.bootstrap(SimpleTask);
         expect(runner instanceof ActivityRunner).eq(true);
         let result = await runner.start();
+        console.log(result);
         expect(result).eq('simple task');
     });
 

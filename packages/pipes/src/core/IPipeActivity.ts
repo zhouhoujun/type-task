@@ -1,7 +1,6 @@
 import { GActivity, InjectAcitityBuilderToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { Registration } from '@ts-ioc/core';
-import { PipeActivity } from './PipeActivity';
 
 /**
  * pipe task.
@@ -48,4 +47,4 @@ export const PipeActivityToken = new InjectPipeActivityToken<IPipeActivity>('');
 /**
  * pipe activity builder token.
  */
-export const PipeActivityBuilderToken = new InjectAcitityBuilderToken<IPipeActivity>(PipeActivity);
+export const PipeActivityBuilderToken = new InjectAcitityBuilderToken<IPipeActivity>(PipeActivityToken);

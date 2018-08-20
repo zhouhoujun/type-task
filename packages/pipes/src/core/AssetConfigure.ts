@@ -1,4 +1,4 @@
-import { Src, ExpressionToken, ConfigureType, IActivityBuilder, InjectAcitityBuilderToken } from '@taskfr/core';
+import { Src, ExpressionToken, ConfigureType, InjectAcitityBuilderToken } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { DestConfigure, DestActivity } from './DestActivity';
 import { IPipeConfigure } from './IPipeConfigure';
@@ -9,7 +9,6 @@ import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { IPipeActivity } from './IPipeActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
-import { AssetActivity } from './AssetActivity';
 
 /**
  * dest type.
@@ -173,4 +172,4 @@ export const AssetToken = new InjectAssetActivityToken<IAssetActivity>('');
 /**
  * asset builder token.
  */
-export const AssetBuilderToken = new InjectAcitityBuilderToken<IAssetActivity>(AssetActivity);
+export const AssetBuilderToken = new InjectAcitityBuilderToken<IAssetActivity>(AssetToken);
