@@ -1,11 +1,10 @@
-import { CtxType, Src, ExpressionToken, SequenceConfigure, ConfigureType, IActivity, IActivityBuilder, InjectAcitityBuilderToken } from '@taskfr/core';
+import { CtxType, Src, ExpressionToken, SequenceConfigure, ConfigureType, IActivity, InjectAcitityBuilderToken } from '@taskfr/core';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { AssetActivity } from './AssetActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
 import { AssetConfigure } from './AssetConfigure';
-import { PackageActivity } from './PackageActivity';
 
 /**
  * package configure.

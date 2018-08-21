@@ -1,9 +1,5 @@
-import {
-    Src, Activity, InjectAcitityToken, Task, ActivityConfigure,
-    Expression, InjectAcitityBuilderToken,
-    IActivity, ExpressionType, ActivityBuilder
-} from '@taskfr/core';
-import { Inject, Injectable } from '@ts-ioc/core';
+import { Src, Activity, InjectAcitityToken, Task, ActivityConfigure, Expression, ExpressionType } from '@taskfr/core';
+import { Inject } from '@ts-ioc/core';
 import { PipeContextToken, IPipeContext } from './IPipeContext';
 const del = require('del');
 

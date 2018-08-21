@@ -1,4 +1,4 @@
-import { ObjectMap, Express2, InjectToken } from '@ts-ioc/core';
+import { Express2 } from '@ts-ioc/core';
 import { IContext, InjectContextToken } from '@taskfr/core';
 
 /**

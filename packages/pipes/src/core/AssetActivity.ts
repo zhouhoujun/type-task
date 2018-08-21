@@ -7,8 +7,8 @@ import { SourceMapsActivity } from './SourceMapsActivity';
 import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { PipeActivity } from './PipeActivity';
-import { IActivity, Task } from '@taskfr/core';
-import { IAssetActivity, AssetBuilderToken, AssetToken } from './AssetConfigure';
+import { IActivity } from '@taskfr/core';
+import { IAssetActivity } from './AssetConfigure';
 import { TestActivity } from './TestActivity';
 import { AssetTask } from '../decorators';
 
