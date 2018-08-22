@@ -56,8 +56,8 @@ export class DefaultTaskContainer implements ITaskContainer {
      * @returns {this}
      * @memberof IApplicationBuilder
      */
-    useConfiguration(config?: string | AppConfigure, container?: IContainer): this {
-        this.getBuilder().useConfiguration(config, container);
+    useConfiguration(config?: string | AppConfigure): this {
+        this.getBuilder().useConfiguration(config);
         return this;
     }
 

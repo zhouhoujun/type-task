@@ -119,7 +119,9 @@ export function createTaskDecorator<T extends ActivityMetadata>(
             }
 
             if (provideType) {
-                metadata.provide = new Registration(provideType, metadata.provide.toString());
+                if (isString(metadata.provide)) {
+                    metadata.provide = new Registration(provideType, metadata.provide);
+                }
                 if (!metadata.activity || !metadata.task) {
                     metadata.activity = provideType;
                 }

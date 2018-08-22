@@ -6,7 +6,7 @@ import { DestActivity, DestConfigure } from './DestActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { AssetActivity } from './AssetActivity';
-import { InjectAssetActivityToken, AssetConfigure } from './AssetConfigure';
+import { InjectAssetActivityToken, AssetConfigure, AssetToken } from './AssetConfigure';
 
 
 /**
@@ -49,6 +49,9 @@ export class PackageBuilder extends ActivityBuilder {
                             assCfg.task = new InjectAssetActivityToken(name);
                         } else if (isString(assCfg.task)) {
                             assCfg.task = new InjectAssetActivityToken(assCfg.task);
+                        }
+                        if (!this.container.has(assCfg.task)) {
+                            assCfg.task = AssetToken;
                         }
 
                         if (srcRoot && !assCfg.src) {

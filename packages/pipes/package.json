@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/pipes",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc. file stream pipes activities.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/zhouhoujun/type-task#readme",
   "dependencies": {
-    "@ts-ioc/annotations": "^3.0.5",
+    "@ts-ioc/annotations": "^3.0.6",
     "@types/chai": "^3.4.34",
     "@types/execa": "^0.9.0",
     "reflect-metadata": "^0.1.12",
@@ -44,7 +44,7 @@
     "rxjs": "^5.5.11"
   },
   "peerDependencies": {
-    "@taskfr/core": "^2.0.4"
+    "@taskfr/core": "^2.0.5"
   },
   "directories": {
     "lib": "lib",

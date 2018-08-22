@@ -6,7 +6,7 @@ import { AssetActivity } from './AssetActivity';
 import { ITransform } from './ITransform';
 import { Type, Inject } from '@ts-ioc/core';
 import { PipeContextToken, IPipeContext } from './IPipeContext';
-import { IPackageActivity } from './PackageConfigure';
+import { IPackageActivity, PackageToken } from './PackageConfigure';
 import { Package } from '../decorators';
 
 /**
@@ -16,7 +16,7 @@ import { Package } from '../decorators';
  * @class PackageActivity
  * @extends {SequenceActivity}
  */
-@Package('')
+@Package(PackageToken)
 export class PackageActivity extends SequenceActivity implements IPackageActivity {
 
     /**

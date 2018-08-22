@@ -8,7 +8,7 @@ import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { PipeActivity } from './PipeActivity';
 import { IActivity } from '@taskfr/core';
-import { IAssetActivity } from './AssetConfigure';
+import { IAssetActivity, AssetToken } from './AssetConfigure';
 import { TestActivity } from './TestActivity';
 import { AssetTask } from '../decorators';
 
@@ -21,7 +21,7 @@ import { AssetTask } from '../decorators';
  * @extends {TaskElement}
  * @implements {IPipeComponent<ITransform>}
  */
-@AssetTask('')
+@AssetTask(AssetToken)
 export class AssetActivity extends PipeActivity implements IAssetActivity {
     /**
      * src activity.

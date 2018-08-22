@@ -1,6 +1,6 @@
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 import { Inject, isArray, isUndefined } from '@ts-ioc/core';
-import { IPipeActivity } from './IPipeActivity';
+import { IPipeActivity, PipeActivityToken } from './IPipeActivity';
 import { Activity, IActivity } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { TransformType, isTransform } from './pipeTypes';
@@ -15,7 +15,7 @@ import { PipeTask } from '../decorators';
  * @class BaseTask
  * @implements {ITask}
  */
-@PipeTask('')
+@PipeTask(PipeActivityToken)
 export class PipeActivity extends Activity<ITransform> implements IPipeActivity {
     /**
      * context.

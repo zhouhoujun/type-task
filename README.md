@@ -173,7 +173,7 @@ TaskContainer.create(__dirname)
 
 1. build test: `npm test`
 
-2. build with version: `npm test -- --setvs=1.0.0`;
+2. build with version: `npm test -- --setvs=2.0.5`;
 
 3. deploy: `./deploy.cmd` or `npm test -- --deploy=true`;
 
