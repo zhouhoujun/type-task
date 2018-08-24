@@ -34,7 +34,6 @@ export class DefaultTaskContainer implements ITaskContainer {
         if (!this.builder) {
             this.builder = this.createAppBuilder();
             this.builder.events.on(ApplicationEvents.onRootContainerCreated, (container: IContainer) => {
-                console.log(container);
                 container.register(DefaultWorkflowBuilder)
                     .register(WorkflowModuleValidate)
                     .register(WorkflowModuleInjector)
@@ -43,6 +42,7 @@ export class DefaultTaskContainer implements ITaskContainer {
                 let chain = container.getBuilder().getInjectorChain(container);
                 chain.first(container.resolve(ActivityModuleInjectorToken));
                 chain.first(container.resolve(WorkflowModuleInjectorToken));
+                console.log(container);
             })
             this.builder
                 .use(AopModule)
@@ -56,7 +56,7 @@ export class DefaultTaskContainer implements ITaskContainer {
         return this.builder;
     }
 
-    protected createAppBuilder() {
+    protected createAppBuilder(): IApplicationBuilder<any> {
         return new DefaultApplicationBuilder(this.baseURL);
     }
 

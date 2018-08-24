@@ -8,7 +8,16 @@
         "reinstall": "npm cache clean && npm install",
         "test": "ts-node -r tsconfig-paths/register taskfile.ts"
     },
-    "keywords": ["task", "task manager", "pipe", "ioc", "aop", "shell", "develop", "tool"],
+    "keywords": [
+        "task",
+        "task manager",
+        "pipe",
+        "ioc",
+        "aop",
+        "shell",
+        "develop",
+        "tool"
+    ],
     "author": "houjun",
     "license": "MIT",
     "bugs": {

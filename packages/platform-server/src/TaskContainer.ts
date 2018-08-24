@@ -2,6 +2,7 @@ import { ITaskContainer, DefaultTaskContainer } from '@taskfr/core';
 import { LoadType } from '@ts-ioc/core';
 import { TaskLogAspect, RunnerLogAspect } from './aop';
 import { ApplicationBuilder } from '@ts-ioc/platform-server/bootstrap';
+import { IApplicationBuilder } from '@ts-ioc/bootstrap';
 
 /**
  * task container in server.
@@ -18,7 +19,7 @@ export class TaskContainer extends DefaultTaskContainer implements ITaskContaine
             .use(RunnerLogAspect);
     }
 
-    protected createAppBuilder() {
+    protected createAppBuilder(): IApplicationBuilder<any>  {
         return new ApplicationBuilder(this.baseURL);
     }
 
