@@ -1,12 +1,12 @@
 import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken, Token, Factory } from '@ts-ioc/core';
 import { SequenceConfigure, Active, IActivityRunner, UUIDToken, RandomUUIDFactory, ActivityBuilderToken, ActivityRunnerToken } from './core';
 import { ITaskContainer } from './ITaskContainer';
-import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure, DefaultAnnotationBuilderToken, DefaultServiceToken, DefaultModuleBuilderToken } from '@ts-ioc/bootstrap';
+import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure, DefaultAnnotationBuilderToken, DefaultServiceToken, DefaultModuleBuilderToken, ApplicationEvents } from '@ts-ioc/bootstrap';
 import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
 import { CoreModule } from './CoreModule';
 import { LogModule } from '@ts-ioc/logs';
-import { WorkflowBuilderToken } from './DefaultWorkflowBuilder';
+import { DefaultWorkflowBuilder, WorkflowModuleValidate, WorkflowModuleInjector, ActivityModuleInjector, ActvityModuleValidate, WorkflowBuilderToken, WorkflowModuleInjectorToken, ActivityModuleInjectorToken } from './injectors';
 
 
 /**
@@ -33,6 +33,17 @@ export class DefaultTaskContainer implements ITaskContainer {
     getBuilder(): IApplicationBuilder<any> {
         if (!this.builder) {
             this.builder = this.createAppBuilder();
+            this.builder.events.on(ApplicationEvents.onRootContainerCreated, (container: IContainer) => {
+                console.log(container);
+                container.register(DefaultWorkflowBuilder)
+                    .register(WorkflowModuleValidate)
+                    .register(WorkflowModuleInjector)
+                    .register(ActvityModuleValidate)
+                    .register(ActivityModuleInjector);
+                let chain = container.getBuilder().getInjectorChain(container);
+                chain.first(container.resolve(ActivityModuleInjectorToken));
+                chain.first(container.resolve(WorkflowModuleInjectorToken));
+            })
             this.builder
                 .use(AopModule)
                 .use(LogModule)
@@ -40,6 +51,7 @@ export class DefaultTaskContainer implements ITaskContainer {
                 .provider(DefaultAnnotationBuilderToken, ActivityBuilderToken)
                 .provider(DefaultServiceToken, ActivityRunnerToken)
                 .provider(DefaultModuleBuilderToken, WorkflowBuilderToken);
+
         }
         return this.builder;
     }
@@ -112,7 +124,7 @@ export class DefaultTaskContainer implements ITaskContainer {
         workflowId = workflowId || this.createUUID();
 
         if (isToken(activity)) {
-            boot =  activity; // { id: workflowId, token: activity, builder: WorkflowBuilderToken };
+            boot = activity; // { id: workflowId, token: activity, builder: WorkflowBuilderToken };
         } else {
             boot = activity || {};
             boot.id = workflowId;
