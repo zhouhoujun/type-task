@@ -27,15 +27,16 @@ export class DefaultWorkflowBuilder extends ModuleBuilder<IActivity> {
      */
     async bootstrap(activity: ActivityType<IActivity>, env?: ModuleEnv, workflowId?: string): Promise<Runnable<IActivity>> {
         let injmdl = await this.load(activity, env);
+        console.log(injmdl);
         workflowId = workflowId || this.createUUID(injmdl.container);
         let runner = await super.bootstrap(activity, injmdl, workflowId);
         return runner;
     }
 
 
-    getDecorator() {
-        return Task.toString();
-    }
+    // getDecorator() {
+    //     return Task.toString();
+    // }
 
     protected createUUID(container: IContainer) {
         if (!container.has(UUIDToken)) {
@@ -48,9 +49,9 @@ export class DefaultWorkflowBuilder extends ModuleBuilder<IActivity> {
         return config.activity || config.task || super.getBootType(config);
     }
 
-    protected getConfigId(config: ActivityConfigure) {
-        return config.id || config.name;
-    }
+    // protected getConfigId(config: ActivityConfigure) {
+    //     return config.id || config.name;
+    // }
 
     protected getDefaultService(container: IContainer, ...providers: Providers[]): IService<IActivity> {
         return container.resolve(ActivityRunnerToken, ...providers);

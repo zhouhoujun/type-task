@@ -1,12 +1,12 @@
 import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken, Token, Factory } from '@ts-ioc/core';
 import { SequenceConfigure, Active, IActivityRunner, UUIDToken, RandomUUIDFactory, ActivityBuilderToken, ActivityRunnerToken } from './core';
 import { ITaskContainer } from './ITaskContainer';
-import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure, DefaultAnnotationBuilderToken, DefaultServiceToken, DefaultModuleBuilderToken, ApplicationEvents } from '@ts-ioc/bootstrap';
+import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure, DefaultAnnotationBuilderToken, DefaultServiceToken, DefaultModuleBuilderToken, ApplicationEvents, DefaultMetaAccessorToken } from '@ts-ioc/bootstrap';
 import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
 import { CoreModule } from './CoreModule';
 import { LogModule } from '@ts-ioc/logs';
-import { DefaultWorkflowBuilder, WorkflowModuleValidate, WorkflowModuleInjector, ActivityModuleInjector, ActvityModuleValidate, WorkflowBuilderToken, WorkflowModuleInjectorToken, ActivityModuleInjectorToken } from './injectors';
+import { DefaultWorkflowBuilder, WorkflowModuleValidate, WorkflowModuleInjector, ActivityModuleInjector, ActvityModuleValidate, WorkflowBuilderToken, WorkflowModuleInjectorToken, ActivityModuleInjectorToken, ActivityMetaAccessorToken } from './injectors';
 
 
 /**
@@ -42,7 +42,7 @@ export class DefaultTaskContainer implements ITaskContainer {
                 let chain = container.getBuilder().getInjectorChain(container);
                 chain.first(container.resolve(ActivityModuleInjectorToken));
                 chain.first(container.resolve(WorkflowModuleInjectorToken));
-                console.log(container);
+
             })
             this.builder
                 .use(AopModule)
@@ -50,7 +50,8 @@ export class DefaultTaskContainer implements ITaskContainer {
                 .use(CoreModule)
                 .provider(DefaultAnnotationBuilderToken, ActivityBuilderToken)
                 .provider(DefaultServiceToken, ActivityRunnerToken)
-                .provider(DefaultModuleBuilderToken, WorkflowBuilderToken);
+                .provider(DefaultModuleBuilderToken, WorkflowBuilderToken)
+                .provider(DefaultMetaAccessorToken, ActivityMetaAccessorToken);
 
         }
         return this.builder;
