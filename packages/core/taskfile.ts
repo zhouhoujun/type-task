@@ -41,6 +41,7 @@ TaskContainer.create(__dirname)
                         '@ts-ioc/core',
                         '@ts-ioc/aop',
                         '@ts-ioc/logs',
+                        '@ts-ioc/bootstrap',
                         'rxjs/Observer',
                         'rxjs/util',
                         'rxjs/util/ObjectUnsubscribedError',
