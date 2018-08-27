@@ -38,6 +38,7 @@ TaskContainer.create(__dirname)
                     external: [
                         'reflect-metadata',
                         'tslib',
+                        'events',
                         '@ts-ioc/core',
                         '@ts-ioc/aop',
                         '@ts-ioc/logs',

@@ -10,7 +10,7 @@ import { ClassMetadata } from '@ts-ioc/core';
  * @extends {ActivityConfigure}
  * @extends {ClassMetadata}
  */
-export interface IWorkflowMetadata extends ActivityConfigure, ClassMetadata {
+export interface IWorkflowMetadata extends ActivityConfigure {
 
 }
 

@@ -19,12 +19,8 @@ export class SequenceActivity extends Activity<any> {
 
     activites: IActivity[];
 
-    constructor() {
-        super();
-        this.activites = [];
-    }
-
     async onActivityInit(config: SequenceConfigure): Promise<any> {
+        this.activites = this.activites || [];
         await super.onActivityInit(config);
         if (config.sequence && config.sequence.length) {
             await this.buildChildren(this, config.sequence);

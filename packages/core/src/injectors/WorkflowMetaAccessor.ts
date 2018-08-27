@@ -1,8 +1,8 @@
-import { MetaAccessor, InjectMetaAccessorToken } from '@ts-ioc/bootstrap';
-import { Workflow, ActivityRunner } from '../core';
-import { Injectable } from '@ts-ioc/core';
 
-export const WorkflowMetaAccessorToken = new InjectMetaAccessorToken(ActivityRunner);
+import { ActivityRunner, Task, Activity, Workflow } from '../core';
+import { Injectable, InjectMetaAccessorToken, MetaAccessor } from '@ts-ioc/core';
+
+export const WorkflowMetaAccessorToken = new InjectMetaAccessorToken(Activity);
 /**
  * Workflow metadata accessor.
  *
@@ -13,6 +13,6 @@ export const WorkflowMetaAccessorToken = new InjectMetaAccessorToken(ActivityRun
 @Injectable(WorkflowMetaAccessorToken)
 export class WorkflowMetaAccessor extends MetaAccessor {
     constructor() {
-        super(Workflow.toString())
+        super([Workflow.toString(), Task.toString()])
     }
 }

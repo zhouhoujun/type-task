@@ -1,6 +1,6 @@
 import { Inject, Express } from '@ts-ioc/core';
 import { Task } from './decorators';
-import { IActivity, GActivity } from './IActivity';
+import { IActivity, GActivity, ActivityToken } from './IActivity';
 import { ActivityConfigure, ExpressionType, Expression, ActivityType } from './ActivityConfigure';
 import { ContextToken, IContext } from './IContext';
 import { OnActivityInit } from './OnActivityInit';
@@ -13,7 +13,7 @@ import { OnActivityInit } from './OnActivityInit';
  * @implements {GActivity<T>}
  * @template T
  */
-@Task
+@Task(ActivityToken)
 export class Activity<T> implements GActivity<T>, OnActivityInit {
 
     /**
@@ -48,6 +48,7 @@ export class Activity<T> implements GActivity<T>, OnActivityInit {
     context: IContext;
 
     constructor() {
+
     }
 
     async onActivityInit(config: ActivityConfigure): Promise<any> {

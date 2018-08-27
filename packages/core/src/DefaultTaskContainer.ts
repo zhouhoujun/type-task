@@ -1,12 +1,15 @@
-import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken, Token, Factory } from '@ts-ioc/core';
+import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken, Token, Factory, DefaultMetaAccessorToken } from '@ts-ioc/core';
 import { SequenceConfigure, Active, IActivityRunner, UUIDToken, RandomUUIDFactory, ActivityBuilderToken, ActivityRunnerToken } from './core';
 import { ITaskContainer } from './ITaskContainer';
-import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure, DefaultAnnotationBuilderToken, DefaultServiceToken, DefaultModuleBuilderToken, ApplicationEvents, DefaultMetaAccessorToken } from '@ts-ioc/bootstrap';
+import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure, DefaultAnnotationBuilderToken, DefaultServiceToken, DefaultModuleBuilderToken, ApplicationEvents } from '@ts-ioc/bootstrap';
 import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
 import { CoreModule } from './CoreModule';
 import { LogModule } from '@ts-ioc/logs';
-import { DefaultWorkflowBuilder, WorkflowModuleValidate, WorkflowModuleInjector, ActivityModuleInjector, ActvityModuleValidate, WorkflowBuilderToken, WorkflowModuleInjectorToken, ActivityModuleInjectorToken, ActivityMetaAccessorToken } from './injectors';
+import {
+    DefaultWorkflowBuilder, WorkflowModuleValidate, WorkflowModuleInjector,
+    WorkflowBuilderToken, WorkflowModuleInjectorToken
+} from './injectors';
 
 
 /**
@@ -36,11 +39,8 @@ export class DefaultTaskContainer implements ITaskContainer {
             this.builder.events.on(ApplicationEvents.onRootContainerCreated, (container: IContainer) => {
                 container.register(DefaultWorkflowBuilder)
                     .register(WorkflowModuleValidate)
-                    .register(WorkflowModuleInjector)
-                    .register(ActvityModuleValidate)
-                    .register(ActivityModuleInjector);
+                    .register(WorkflowModuleInjector);
                 let chain = container.getBuilder().getInjectorChain(container);
-                chain.first(container.resolve(ActivityModuleInjectorToken));
                 chain.first(container.resolve(WorkflowModuleInjectorToken));
 
             })
@@ -50,8 +50,8 @@ export class DefaultTaskContainer implements ITaskContainer {
                 .use(CoreModule)
                 .provider(DefaultAnnotationBuilderToken, ActivityBuilderToken)
                 .provider(DefaultServiceToken, ActivityRunnerToken)
-                .provider(DefaultModuleBuilderToken, WorkflowBuilderToken)
-                .provider(DefaultMetaAccessorToken, ActivityMetaAccessorToken);
+                .provider(DefaultModuleBuilderToken, WorkflowBuilderToken);
+                // .provider(DefaultMetaAccessorToken, ActivityMetaAccessorToken);
 
         }
         return this.builder;
@@ -132,7 +132,8 @@ export class DefaultTaskContainer implements ITaskContainer {
             boot.builder = boot.builder || WorkflowBuilderToken;
             boot.annotationBuilder = boot.annotationBuilder || ActivityBuilderToken;
         }
-        let runner = await this.getBuilder().bootstrap(boot, null, workflowId) as IActivityRunner<any>;
+        let env = this.getBuilder().getPools().create();
+        let runner = await this.getBuilder().bootstrap(boot, env, workflowId) as IActivityRunner<any>;
         this.getContainer().bindProvider(workflowId, runner);
         return runner;
     }

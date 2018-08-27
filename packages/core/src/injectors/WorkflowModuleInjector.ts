@@ -3,20 +3,19 @@ import { InjectModuleInjectorToken, Injectable, Inject, IModuleValidate, IContai
 import { Task, Workflow } from '../core';
 import { WorkflowModuleValidateToken } from './WorkflowModuleValidate';
 
+/**
+ * workflow module injector token.
+ */
 export const WorkflowModuleInjectorToken = new InjectModuleInjectorToken(Workflow.toString());
-
+/**
+ * workflow module injector
+ *
+ * @export
+ * @class WorkflowModuleInjector
+ * @extends {DIModuleInjector}
+ */
 @Injectable(WorkflowModuleInjectorToken)
 export class WorkflowModuleInjector extends DIModuleInjector {
-
-    constructor(@Inject(WorkflowModuleValidateToken) validate: IModuleValidate) {
-        super(validate)
-    }
-}
-
-export const ActivityModuleInjectorToken = new InjectModuleInjectorToken(Task.toString());
-
-@Injectable(ActivityModuleInjectorToken)
-export class ActivityModuleInjector extends DIModuleInjector {
 
     constructor(@Inject(WorkflowModuleValidateToken) validate: IModuleValidate) {
         super(validate)
@@ -24,7 +23,7 @@ export class ActivityModuleInjector extends DIModuleInjector {
 
     protected async importModule(container: IContainer, type: Type<any>): Promise<InjectedModule<any>> {
         container.register(type);
-        let metaConfig = this.getMetaConfig(type, container);
+        let metaConfig = this.validate.getMetaConfig(type, container);
         await this.registerConfgureDepds(container, metaConfig);
 
         let injMd = new InjectedModule(type, metaConfig, container);
@@ -33,4 +32,34 @@ export class ActivityModuleInjector extends DIModuleInjector {
         return injMd;
     }
 }
+
+// /**
+//  * activity module injector token.
+//  */
+// export const ActivityModuleInjectorToken = new InjectModuleInjectorToken(Task.toString());
+// /**
+//  * activity module injector.
+//  *
+//  * @export
+//  * @class ActivityModuleInjector
+//  * @extends {DIModuleInjector}
+//  */
+// @Injectable(ActivityModuleInjectorToken)
+// export class ActivityModuleInjector extends DIModuleInjector {
+
+//     constructor(@Inject(WorkflowModuleValidateToken) validate: IModuleValidate) {
+//         super(validate)
+//     }
+
+//     protected async importModule(container: IContainer, type: Type<any>): Promise<InjectedModule<any>> {
+//         container.register(type);
+//         let metaConfig = this.validate.getMetaConfig(type, container);
+//         await this.registerConfgureDepds(container, metaConfig);
+
+//         let injMd = new InjectedModule(type, metaConfig, container);
+//         container.bindProvider(new InjectedModuleToken(type), injMd);
+
+//         return injMd;
+//     }
+// }
 

@@ -6,16 +6,6 @@ export const WorkflowModuleValidateToken = new InjectModuleValidateToken(Workflo
 @Singleton(WorkflowModuleValidateToken)
 export class WorkflowModuleValidate extends BaseModuelValidate {
     getDecorator() {
-        return Workflow.toString();
-    }
-}
-
-
-export const ActvityModuleValidateToken = new InjectModuleValidateToken(Task.toString());
-
-@Singleton(ActvityModuleValidateToken)
-export class ActvityModuleValidate extends BaseModuelValidate {
-    getDecorator() {
-        return Task.toString();
+        return [Workflow.toString(), Task.toString()];
     }
 }

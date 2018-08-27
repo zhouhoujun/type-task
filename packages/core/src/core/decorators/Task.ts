@@ -1,7 +1,9 @@
-import { isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter, isClass, ITypeDecorator, Token, Registration, isToken, isUndefined } from '@ts-ioc/core';
+import {
+    isString, isObject, createClassDecorator, MetadataExtends, MetadataAdapter,
+    isClass, ITypeDecorator, Token, Registration, isToken, isUndefined
+} from '@ts-ioc/core';
 import { ActivityMetadata } from '../metadatas/ActivityMetadata';
 import { IActivityBuilder } from '../IActivityBuilder';
-
 
 /**
  * task decorator, use to define class is a task element.

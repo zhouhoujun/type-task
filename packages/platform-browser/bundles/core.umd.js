@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('tslib'), require('@ts-ioc/core'), require('@ts-ioc/aop'), require('@ts-ioc/logs'), require('@taskfr/core'), require('reflect-metadata')) :
-	typeof define === 'function' && define.amd ? define(['tslib', '@ts-ioc/core', '@ts-ioc/aop', '@ts-ioc/logs', '@taskfr/core', 'reflect-metadata'], factory) :
-	(global.core = global.core || {}, global.core.umd = global.core.umd || {}, global.core.umd.js = factory(global.tslib_1,global.core_1,global.aop_1,global.logs_1,global.core_2,global.Reflect));
-}(this, (function (tslib_1,core_1,aop_1,logs_1,core_2,reflectMetadata) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('tslib'), require('@ts-ioc/core'), require('@ts-ioc/aop'), require('@ts-ioc/logs'), require('@taskfr/core'), require('reflect-metadata'), require('events')) :
+	typeof define === 'function' && define.amd ? define(['tslib', '@ts-ioc/core', '@ts-ioc/aop', '@ts-ioc/logs', '@taskfr/core', 'reflect-metadata', 'events'], factory) :
+	(global.core = global.core || {}, global.core.umd = global.core.umd || {}, global.core.umd.js = factory(global.tslib_1,global.core_1,global.aop_1,global.logs_1,global.core_2,global.Reflect,global.events));
+}(this, (function (tslib_1,core_1,aop_1,logs_1,core_2,reflectMetadata,events) { 'use strict';
 
 tslib_1 = tslib_1 && tslib_1.hasOwnProperty('default') ? tslib_1['default'] : tslib_1;
 core_1 = core_1 && core_1.hasOwnProperty('default') ? core_1['default'] : core_1;
@@ -10,6 +10,7 @@ aop_1 = aop_1 && aop_1.hasOwnProperty('default') ? aop_1['default'] : aop_1;
 logs_1 = logs_1 && logs_1.hasOwnProperty('default') ? logs_1['default'] : logs_1;
 core_2 = core_2 && core_2.hasOwnProperty('default') ? core_2['default'] : core_2;
 reflectMetadata = reflectMetadata && reflectMetadata.hasOwnProperty('default') ? reflectMetadata['default'] : reflectMetadata;
+events = events && events.hasOwnProperty('default') ? events['default'] : events;
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -52,492 +53,13 @@ Object.defineProperty(exports,"__esModule",{value:!0});tslib_1.__exportStar(Task
 
 unwrapExports(aop);
 
-var domain;
-
-// This constructor is used to store event handlers. Instantiating this is
-// faster than explicitly calling `Object.create(null)` to get a "clean" empty
-// object (tested with v8 v4.9).
-function EventHandlers() {}
-EventHandlers.prototype = Object.create(null);
-
-function EventEmitter() {
-  EventEmitter.init.call(this);
-}
-// nodejs oddity
-// require('events') === require('events').EventEmitter
-EventEmitter.EventEmitter = EventEmitter;
-
-EventEmitter.usingDomains = false;
-
-EventEmitter.prototype.domain = undefined;
-EventEmitter.prototype._events = undefined;
-EventEmitter.prototype._maxListeners = undefined;
-
-// By default EventEmitters will print a warning if more than 10 listeners are
-// added to it. This is a useful default which helps finding memory leaks.
-EventEmitter.defaultMaxListeners = 10;
-
-EventEmitter.init = function() {
-  this.domain = null;
-  if (EventEmitter.usingDomains) {
-    // if there is an active domain, then attach to it.
-    if (domain.active && !(this instanceof domain.Domain)) {
-      this.domain = domain.active;
-    }
-  }
-
-  if (!this._events || this._events === Object.getPrototypeOf(this)._events) {
-    this._events = new EventHandlers();
-    this._eventsCount = 0;
-  }
-
-  this._maxListeners = this._maxListeners || undefined;
-};
-
-// Obviously not all Emitters should be limited to 10. This function allows
-// that to be increased. Set to zero for unlimited.
-EventEmitter.prototype.setMaxListeners = function setMaxListeners(n) {
-  if (typeof n !== 'number' || n < 0 || isNaN(n))
-    throw new TypeError('"n" argument must be a positive number');
-  this._maxListeners = n;
-  return this;
-};
-
-function $getMaxListeners(that) {
-  if (that._maxListeners === undefined)
-    return EventEmitter.defaultMaxListeners;
-  return that._maxListeners;
-}
-
-EventEmitter.prototype.getMaxListeners = function getMaxListeners() {
-  return $getMaxListeners(this);
-};
-
-// These standalone emit* functions are used to optimize calling of event
-// handlers for fast cases because emit() itself often has a variable number of
-// arguments and can be deoptimized because of that. These functions always have
-// the same number of arguments and thus do not get deoptimized, so the code
-// inside them can execute faster.
-function emitNone(handler, isFn, self) {
-  if (isFn)
-    handler.call(self);
-  else {
-    var len = handler.length;
-    var listeners = arrayClone(handler, len);
-    for (var i = 0; i < len; ++i)
-      listeners[i].call(self);
-  }
-}
-function emitOne(handler, isFn, self, arg1) {
-  if (isFn)
-    handler.call(self, arg1);
-  else {
-    var len = handler.length;
-    var listeners = arrayClone(handler, len);
-    for (var i = 0; i < len; ++i)
-      listeners[i].call(self, arg1);
-  }
-}
-function emitTwo(handler, isFn, self, arg1, arg2) {
-  if (isFn)
-    handler.call(self, arg1, arg2);
-  else {
-    var len = handler.length;
-    var listeners = arrayClone(handler, len);
-    for (var i = 0; i < len; ++i)
-      listeners[i].call(self, arg1, arg2);
-  }
-}
-function emitThree(handler, isFn, self, arg1, arg2, arg3) {
-  if (isFn)
-    handler.call(self, arg1, arg2, arg3);
-  else {
-    var len = handler.length;
-    var listeners = arrayClone(handler, len);
-    for (var i = 0; i < len; ++i)
-      listeners[i].call(self, arg1, arg2, arg3);
-  }
-}
-
-function emitMany(handler, isFn, self, args) {
-  if (isFn)
-    handler.apply(self, args);
-  else {
-    var len = handler.length;
-    var listeners = arrayClone(handler, len);
-    for (var i = 0; i < len; ++i)
-      listeners[i].apply(self, args);
-  }
-}
-
-EventEmitter.prototype.emit = function emit(type) {
-  var er, handler, len, args, i, events, domain;
-  var needDomainExit = false;
-  var doError = (type === 'error');
-
-  events = this._events;
-  if (events)
-    doError = (doError && events.error == null);
-  else if (!doError)
-    return false;
-
-  domain = this.domain;
-
-  // If there is no 'error' event listener then throw.
-  if (doError) {
-    er = arguments[1];
-    if (domain) {
-      if (!er)
-        er = new Error('Uncaught, unspecified "error" event');
-      er.domainEmitter = this;
-      er.domain = domain;
-      er.domainThrown = false;
-      domain.emit('error', er);
-    } else if (er instanceof Error) {
-      throw er; // Unhandled 'error' event
-    } else {
-      // At least give some kind of context to the user
-      var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
-      err.context = er;
-      throw err;
-    }
-    return false;
-  }
-
-  handler = events[type];
-
-  if (!handler)
-    return false;
-
-  var isFn = typeof handler === 'function';
-  len = arguments.length;
-  switch (len) {
-    // fast cases
-    case 1:
-      emitNone(handler, isFn, this);
-      break;
-    case 2:
-      emitOne(handler, isFn, this, arguments[1]);
-      break;
-    case 3:
-      emitTwo(handler, isFn, this, arguments[1], arguments[2]);
-      break;
-    case 4:
-      emitThree(handler, isFn, this, arguments[1], arguments[2], arguments[3]);
-      break;
-    // slower
-    default:
-      args = new Array(len - 1);
-      for (i = 1; i < len; i++)
-        args[i - 1] = arguments[i];
-      emitMany(handler, isFn, this, args);
-  }
-
-  if (needDomainExit)
-    domain.exit();
-
-  return true;
-};
-
-function _addListener(target, type, listener, prepend) {
-  var m;
-  var events;
-  var existing;
-
-  if (typeof listener !== 'function')
-    throw new TypeError('"listener" argument must be a function');
-
-  events = target._events;
-  if (!events) {
-    events = target._events = new EventHandlers();
-    target._eventsCount = 0;
-  } else {
-    // To avoid recursion in the case that type === "newListener"! Before
-    // adding it to the listeners, first emit "newListener".
-    if (events.newListener) {
-      target.emit('newListener', type,
-                  listener.listener ? listener.listener : listener);
-
-      // Re-assign `events` because a newListener handler could have caused the
-      // this._events to be assigned to a new object
-      events = target._events;
-    }
-    existing = events[type];
-  }
-
-  if (!existing) {
-    // Optimize the case of one listener. Don't need the extra array object.
-    existing = events[type] = listener;
-    ++target._eventsCount;
-  } else {
-    if (typeof existing === 'function') {
-      // Adding the second element, need to change to array.
-      existing = events[type] = prepend ? [listener, existing] :
-                                          [existing, listener];
-    } else {
-      // If we've already got an array, just append.
-      if (prepend) {
-        existing.unshift(listener);
-      } else {
-        existing.push(listener);
-      }
-    }
-
-    // Check for listener leak
-    if (!existing.warned) {
-      m = $getMaxListeners(target);
-      if (m && m > 0 && existing.length > m) {
-        existing.warned = true;
-        var w = new Error('Possible EventEmitter memory leak detected. ' +
-                            existing.length + ' ' + type + ' listeners added. ' +
-                            'Use emitter.setMaxListeners() to increase limit');
-        w.name = 'MaxListenersExceededWarning';
-        w.emitter = target;
-        w.type = type;
-        w.count = existing.length;
-        emitWarning(w);
-      }
-    }
-  }
-
-  return target;
-}
-function emitWarning(e) {
-  typeof console.warn === 'function' ? console.warn(e) : console.log(e);
-}
-EventEmitter.prototype.addListener = function addListener(type, listener) {
-  return _addListener(this, type, listener, false);
-};
-
-EventEmitter.prototype.on = EventEmitter.prototype.addListener;
-
-EventEmitter.prototype.prependListener =
-    function prependListener(type, listener) {
-      return _addListener(this, type, listener, true);
-    };
-
-function _onceWrap(target, type, listener) {
-  var fired = false;
-  function g() {
-    target.removeListener(type, g);
-    if (!fired) {
-      fired = true;
-      listener.apply(target, arguments);
-    }
-  }
-  g.listener = listener;
-  return g;
-}
-
-EventEmitter.prototype.once = function once(type, listener) {
-  if (typeof listener !== 'function')
-    throw new TypeError('"listener" argument must be a function');
-  this.on(type, _onceWrap(this, type, listener));
-  return this;
-};
-
-EventEmitter.prototype.prependOnceListener =
-    function prependOnceListener(type, listener) {
-      if (typeof listener !== 'function')
-        throw new TypeError('"listener" argument must be a function');
-      this.prependListener(type, _onceWrap(this, type, listener));
-      return this;
-    };
-
-// emits a 'removeListener' event iff the listener was removed
-EventEmitter.prototype.removeListener =
-    function removeListener(type, listener) {
-      var list, events, position, i, originalListener;
-
-      if (typeof listener !== 'function')
-        throw new TypeError('"listener" argument must be a function');
-
-      events = this._events;
-      if (!events)
-        return this;
-
-      list = events[type];
-      if (!list)
-        return this;
-
-      if (list === listener || (list.listener && list.listener === listener)) {
-        if (--this._eventsCount === 0)
-          this._events = new EventHandlers();
-        else {
-          delete events[type];
-          if (events.removeListener)
-            this.emit('removeListener', type, list.listener || listener);
-        }
-      } else if (typeof list !== 'function') {
-        position = -1;
-
-        for (i = list.length; i-- > 0;) {
-          if (list[i] === listener ||
-              (list[i].listener && list[i].listener === listener)) {
-            originalListener = list[i].listener;
-            position = i;
-            break;
-          }
-        }
-
-        if (position < 0)
-          return this;
-
-        if (list.length === 1) {
-          list[0] = undefined;
-          if (--this._eventsCount === 0) {
-            this._events = new EventHandlers();
-            return this;
-          } else {
-            delete events[type];
-          }
-        } else {
-          spliceOne(list, position);
-        }
-
-        if (events.removeListener)
-          this.emit('removeListener', type, originalListener || listener);
-      }
-
-      return this;
-    };
-
-EventEmitter.prototype.removeAllListeners =
-    function removeAllListeners(type) {
-      var listeners, events;
-
-      events = this._events;
-      if (!events)
-        return this;
-
-      // not listening for removeListener, no need to emit
-      if (!events.removeListener) {
-        if (arguments.length === 0) {
-          this._events = new EventHandlers();
-          this._eventsCount = 0;
-        } else if (events[type]) {
-          if (--this._eventsCount === 0)
-            this._events = new EventHandlers();
-          else
-            delete events[type];
-        }
-        return this;
-      }
-
-      // emit removeListener for all listeners on all events
-      if (arguments.length === 0) {
-        var keys = Object.keys(events);
-        for (var i = 0, key; i < keys.length; ++i) {
-          key = keys[i];
-          if (key === 'removeListener') continue;
-          this.removeAllListeners(key);
-        }
-        this.removeAllListeners('removeListener');
-        this._events = new EventHandlers();
-        this._eventsCount = 0;
-        return this;
-      }
-
-      listeners = events[type];
-
-      if (typeof listeners === 'function') {
-        this.removeListener(type, listeners);
-      } else if (listeners) {
-        // LIFO order
-        do {
-          this.removeListener(type, listeners[listeners.length - 1]);
-        } while (listeners[0]);
-      }
-
-      return this;
-    };
-
-EventEmitter.prototype.listeners = function listeners(type) {
-  var evlistener;
-  var ret;
-  var events = this._events;
-
-  if (!events)
-    ret = [];
-  else {
-    evlistener = events[type];
-    if (!evlistener)
-      ret = [];
-    else if (typeof evlistener === 'function')
-      ret = [evlistener.listener || evlistener];
-    else
-      ret = unwrapListeners(evlistener);
-  }
-
-  return ret;
-};
-
-EventEmitter.listenerCount = function(emitter, type) {
-  if (typeof emitter.listenerCount === 'function') {
-    return emitter.listenerCount(type);
-  } else {
-    return listenerCount.call(emitter, type);
-  }
-};
-
-EventEmitter.prototype.listenerCount = listenerCount;
-function listenerCount(type) {
-  var events = this._events;
-
-  if (events) {
-    var evlistener = events[type];
-
-    if (typeof evlistener === 'function') {
-      return 1;
-    } else if (evlistener) {
-      return evlistener.length;
-    }
-  }
-
-  return 0;
-}
-
-EventEmitter.prototype.eventNames = function eventNames() {
-  return this._eventsCount > 0 ? Reflect.ownKeys(this._events) : [];
-};
-
-// About 1.5x faster than the two-arg version of Array#splice().
-function spliceOne(list, index) {
-  for (var i = index, k = i + 1, n = list.length; k < n; i += 1, k += 1)
-    list[i] = list[k];
-  list.pop();
-}
-
-function arrayClone(arr, i) {
-  var copy = new Array(i);
-  while (i--)
-    copy[i] = arr[i];
-  return copy;
-}
-
-function unwrapListeners(arr) {
-  var ret = new Array(arr.length);
-  for (var i = 0; i < ret.length; ++i) {
-    ret[i] = arr[i].listener || arr[i];
-  }
-  return ret;
-}
-
-
-var events = Object.freeze({
-	default: EventEmitter,
-	EventEmitter: EventEmitter
-});
-
-var require$$3 = ( events && EventEmitter ) || events;
-
 var bootstrap_umd = createCommonjsModule(function (module, exports) {
 (function (global, factory) {
-	module.exports = factory(tslib_1, core_1, reflectMetadata, require$$3);
-}(commonjsGlobal, (function (tslib_1$$2,core_1$$2,reflectMetadata$$1,events) { tslib_1$$2 = tslib_1$$2 && tslib_1$$2.hasOwnProperty('default') ? tslib_1$$2['default'] : tslib_1$$2;
+	module.exports = factory(tslib_1, core_1, reflectMetadata, events);
+}(commonjsGlobal, (function (tslib_1$$2,core_1$$2,reflectMetadata$$1,events$$1) { tslib_1$$2 = tslib_1$$2 && tslib_1$$2.hasOwnProperty('default') ? tslib_1$$2['default'] : tslib_1$$2;
 core_1$$2 = core_1$$2 && core_1$$2.hasOwnProperty('default') ? core_1$$2['default'] : core_1$$2;
 reflectMetadata$$1 = reflectMetadata$$1 && reflectMetadata$$1.hasOwnProperty('default') ? reflectMetadata$$1['default'] : reflectMetadata$$1;
-events = events && events.hasOwnProperty('default') ? events['default'] : events;
+events$$1 = events$$1 && events$$1.hasOwnProperty('default') ? events$$1['default'] : events$$1;
 
 function unwrapExports$$1 (x) {
 	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
@@ -876,6 +398,473 @@ tslib_1$$2.__exportStar(ContainerPool_1, exports);
 
 unwrapExports$$1(utils);
 
+var InjectedModule_1 = createCommonjsModule$$1(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+/**
+ * injected module.
+ *
+ * @export
+ * @class InjectedModule
+ * @template T
+ */
+var InjectedModule = /** @class */ (function () {
+    function InjectedModule(token, config, container) {
+        this.token = token;
+        this.config = config;
+        this.container = container;
+    }
+    InjectedModule.classAnnations = { "name": "InjectedModule", "params": { "constructor": ["token", "config", "container"] } };
+    return InjectedModule;
+}());
+exports.InjectedModule = InjectedModule;
+/**
+ * Injected Module Token.
+ *
+ * @export
+ * @class InjectModuleMetaConfigToken
+ * @extends {Registration<Type<T>>}
+ * @template T
+ */
+var InjectedModuleToken = /** @class */ (function (_super) {
+    tslib_1$$2.__extends(InjectedModuleToken, _super);
+    function InjectedModuleToken(type) {
+        return _super.call(this, type, 'InjectedModule') || this;
+    }
+    InjectedModuleToken.classAnnations = { "name": "InjectedModuleToken", "params": { "constructor": ["type"] } };
+    return InjectedModuleToken;
+}(core_1$$2.Registration));
+exports.InjectedModuleToken = InjectedModuleToken;
+
+
+});
+
+unwrapExports$$1(InjectedModule_1);
+var InjectedModule_2 = InjectedModule_1.InjectedModule;
+var InjectedModule_3 = InjectedModule_1.InjectedModuleToken;
+
+var DIModuleInjector_1 = createCommonjsModule$$1(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+
+
+
+
+var exportsProvidersFiled = '__exportProviders';
+/**
+ * DIModule injector token.
+ */
+exports.DIModuleInjectorToken = new core_1$$2.InjectModuleInjectorToken(decorators.DIModule.toString());
+/**
+ * DIModule injector.
+ *
+ * @export
+ * @class DIModuleInjector
+ * @extends {ModuleInjector}
+ */
+var DIModuleInjector = /** @class */ (function (_super) {
+    tslib_1$$2.__extends(DIModuleInjector, _super);
+    function DIModuleInjector(validate) {
+        return _super.call(this, validate) || this;
+    }
+    DIModuleInjector.prototype.setup = function (container, type) {
+        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
+            return tslib_1$$2.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.importModule(container, type)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    DIModuleInjector.prototype.import = function (container, type) {
+        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
+            var injMd;
+            return tslib_1$$2.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.validate.validate(type)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.importModule(container, type)];
+                    case 1:
+                        injMd = _a.sent();
+                        return [2 /*return*/, injMd];
+                    case 2: return [2 /*return*/, null];
+                }
+            });
+        });
+    };
+    DIModuleInjector.prototype.importByConfig = function (container, config) {
+        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
+            return tslib_1$$2.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.registerConfgureDepds(container, config)];
+                    case 1:
+                        _a.sent();
+                        if (!(core_1$$2.isArray(config.providers) && config.providers.length)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.bindProvider(container, config.providers)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2 /*return*/, null];
+                }
+            });
+        });
+    };
+    DIModuleInjector.prototype.importModule = function (container, type) {
+        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
+            var pools, newContainer, metaConfig, injMd;
+            return tslib_1$$2.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        pools = container.get(utils.ContainerPoolToken);
+                        newContainer = pools.create(container);
+                        newContainer.register(type);
+                        metaConfig = this.validate.getMetaConfig(type, newContainer);
+                        return [4 /*yield*/, this.registerConfgureDepds(newContainer, metaConfig)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.importConfigExports(container, newContainer, metaConfig, type)];
+                    case 2:
+                        _a.sent();
+                        injMd = new InjectedModule_1.InjectedModule(type, metaConfig, newContainer);
+                        container.bindProvider(new InjectedModule_1.InjectedModuleToken(type), injMd);
+                        return [2 /*return*/, injMd];
+                }
+            });
+        });
+    };
+    DIModuleInjector.prototype.registerConfgureDepds = function (container, config) {
+        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
+            return tslib_1$$2.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(core_1$$2.isArray(config.imports) && config.imports.length)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, container.loadModule.apply(container, config.imports)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        if (core_1$$2.isArray(config.providers) && config.providers.length) {
+                            config[exportsProvidersFiled] = this.bindProvider(container, config.providers);
+                        }
+                        return [2 /*return*/, config];
+                }
+            });
+        });
+    };
+    DIModuleInjector.prototype.importConfigExports = function (container, providerContainer, cfg, mdl) {
+        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
+            var expProviders;
+            return tslib_1$$2.__generator(this, function (_a) {
+                if (container === providerContainer) {
+                    return [2 /*return*/, container];
+                }
+                if (cfg.exports && cfg.exports.length) {
+                    cfg.exports.forEach(function (tk) {
+                        container.bindProvider(tk, function () {
+                            var providers = [];
+                            for (var _i = 0; _i < arguments.length; _i++) {
+                                providers[_i] = arguments[_i];
+                            }
+                            return providerContainer.resolve.apply(providerContainer, [tk].concat(providers));
+                        });
+                    });
+                }
+                if (mdl) {
+                    container.bindProvider(mdl, function () {
+                        var providers = [];
+                        for (var _i = 0; _i < arguments.length; _i++) {
+                            providers[_i] = arguments[_i];
+                        }
+                        return providerContainer.resolve.apply(providerContainer, [mdl].concat(providers));
+                    });
+                }
+                expProviders = cfg[exportsProvidersFiled];
+                if (expProviders && expProviders.length) {
+                    expProviders.forEach(function (tk) {
+                        container.bindProvider(tk, function () { return providerContainer.get(tk); });
+                    });
+                }
+                return [2 /*return*/, container];
+            });
+        });
+    };
+    DIModuleInjector.prototype.bindProvider = function (container, providers) {
+        var tokens = [];
+        providers.forEach(function (p, index) {
+            if (core_1$$2.isUndefined(p) || core_1$$2.isNull(p)) {
+                return;
+            }
+            if (core_1$$2.isProviderMap(p)) {
+                p.forEach(function (k, f) {
+                    tokens.push(k);
+                    container.bindProvider(k, f);
+                });
+            }
+            else if (p instanceof core_1$$2.Provider) {
+                tokens.push(p.type);
+                container.bindProvider(p.type, function () {
+                    var providers = [];
+                    for (var _i = 0; _i < arguments.length; _i++) {
+                        providers[_i] = arguments[_i];
+                    }
+                    return p.resolve.apply(p, [container].concat(providers));
+                });
+            }
+            else if (core_1$$2.isClass(p)) {
+                if (!container.has(p)) {
+                    tokens.push(p);
+                    container.register(p);
+                }
+            }
+            else if (core_1$$2.isBaseObject(p)) {
+                var pr_1 = p;
+                var isobjMap = false;
+                if (core_1$$2.isToken(pr_1.provide)) {
+                    if (core_1$$2.isArray(pr_1.deps) && pr_1.deps.length) {
+                        pr_1.deps.forEach(function (d) {
+                            if (core_1$$2.isClass(d) && !container.has(d)) {
+                                container.register(d);
+                            }
+                        });
+                    }
+                    if (!core_1$$2.isUndefined(pr_1.useValue)) {
+                        tokens.push(pr_1.provide);
+                        container.bindProvider(pr_1.provide, function () { return pr_1.useValue; });
+                    }
+                    else if (core_1$$2.isClass(pr_1.useClass)) {
+                        if (!container.has(pr_1.useClass)) {
+                            container.register(pr_1.useClass);
+                        }
+                        tokens.push(pr_1.provide);
+                        container.bindProvider(pr_1.provide, pr_1.useClass);
+                    }
+                    else if (core_1$$2.isFunction(pr_1.useFactory)) {
+                        tokens.push(pr_1.provide);
+                        container.bindProvider(pr_1.provide, function () {
+                            var args = [];
+                            if (core_1$$2.isArray(pr_1.deps) && pr_1.deps.length) {
+                                args = pr_1.deps.map(function (d) {
+                                    if (core_1$$2.isClass(d)) {
+                                        return container.get(d);
+                                    }
+                                    else {
+                                        return d;
+                                    }
+                                });
+                            }
+                            return pr_1.useFactory.apply(pr_1, args);
+                        });
+                    }
+                    else if (core_1$$2.isToken(pr_1.useExisting)) {
+                        if (container.has(pr_1.useExisting)) {
+                            tokens.push(pr_1.provide);
+                            container.bindProvider(pr_1.provide, pr_1.useExisting);
+                        }
+                        else {
+                            console.log('has not register:', pr_1.useExisting);
+                        }
+                    }
+                    else {
+                        isobjMap = true;
+                    }
+                }
+                else {
+                    isobjMap = true;
+                }
+                if (isobjMap) {
+                    core_1$$2.lang.forIn(p, function (val, name) {
+                        if (!core_1$$2.isUndefined(val)) {
+                            if (core_1$$2.isClass(val)) {
+                                container.bindProvider(name, val);
+                            }
+                            else if (core_1$$2.isFunction(val) || core_1$$2.isString(val)) {
+                                container.bindProvider(name, function () { return val; });
+                            }
+                            else {
+                                container.bindProvider(name, val);
+                            }
+                            tokens.push(name);
+                        }
+                    });
+                }
+            }
+            else if (core_1$$2.isFunction(p)) {
+                tokens.push(name);
+                container.bindProvider(name, function () { return p; });
+            }
+        });
+        return tokens;
+    };
+    DIModuleInjector.classAnnations = { "name": "DIModuleInjector", "params": { "constructor": ["validate"], "setup": ["container", "type"], "import": ["container", "type"], "importByConfig": ["container", "config"], "importModule": ["container", "type"], "registerConfgureDepds": ["container", "config"], "importConfigExports": ["container", "providerContainer", "cfg", "mdl"], "bindProvider": ["container", "providers"] } };
+    DIModuleInjector = tslib_1$$2.__decorate([
+        core_1$$2.Injectable(exports.DIModuleInjectorToken),
+        tslib_1$$2.__param(0, core_1$$2.Inject(DIModuleValidate.DIModuelValidateToken)),
+        tslib_1$$2.__metadata("design:paramtypes", [Object])
+    ], DIModuleInjector);
+    return DIModuleInjector;
+}(core_1$$2.ModuleInjector));
+exports.DIModuleInjector = DIModuleInjector;
+
+
+});
+
+unwrapExports$$1(DIModuleInjector_1);
+var DIModuleInjector_2 = DIModuleInjector_1.DIModuleInjectorToken;
+var DIModuleInjector_3 = DIModuleInjector_1.DIModuleInjector;
+
+var IModuleBuilder = createCommonjsModule$$1(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+var moduleBuilderDesc = 'DI_ModuleBuilder';
+/**
+ * inject module builder token.
+ *
+ * @export
+ * @class InjectModuleBuilder
+ * @extends {Registration<T>}
+ * @template T
+ */
+var InjectModuleBuilderToken = /** @class */ (function (_super) {
+    tslib_1$$2.__extends(InjectModuleBuilderToken, _super);
+    function InjectModuleBuilderToken(type) {
+        return _super.call(this, type, moduleBuilderDesc) || this;
+    }
+    InjectModuleBuilderToken.classAnnations = { "name": "InjectModuleBuilderToken", "params": { "constructor": ["type"] } };
+    return InjectModuleBuilderToken;
+}(core_1$$2.Registration));
+exports.InjectModuleBuilderToken = InjectModuleBuilderToken;
+/**
+ * default module builder token.
+ */
+exports.DefaultModuleBuilderToken = new InjectModuleBuilderToken(Object);
+/**
+ * module builder token.
+ */
+exports.ModuleBuilderToken = new core_1$$2.Registration(Object, moduleBuilderDesc);
+
+
+});
+
+unwrapExports$$1(IModuleBuilder);
+var IModuleBuilder_1 = IModuleBuilder.InjectModuleBuilderToken;
+var IModuleBuilder_2 = IModuleBuilder.DefaultModuleBuilderToken;
+var IModuleBuilder_3 = IModuleBuilder.ModuleBuilderToken;
+
+var IRunner = createCommonjsModule$$1(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+/**
+ * boot element.
+ *
+ * @export
+ * @abstract
+ * @class Boot
+ * @implements {IBoot}
+ */
+var Boot = /** @class */ (function () {
+    function Boot() {
+    }
+    Boot.classAnnations = { "name": "Boot", "params": { "run": ["app"] } };
+    return Boot;
+}());
+exports.Boot = Boot;
+/**
+ * application runner token.
+ *
+ * @export
+ * @class InjectRunnerToken
+ * @extends {Registration<IRunner<T>>}
+ * @template T
+ */
+var InjectRunnerToken = /** @class */ (function (_super) {
+    tslib_1$$2.__extends(InjectRunnerToken, _super);
+    function InjectRunnerToken(type) {
+        return _super.call(this, type, 'boot__runner') || this;
+    }
+    InjectRunnerToken.classAnnations = { "name": "InjectRunnerToken", "params": { "constructor": ["type"] } };
+    return InjectRunnerToken;
+}(core_1$$2.Registration));
+exports.InjectRunnerToken = InjectRunnerToken;
+/**
+ * default runner token.
+ */
+exports.DefaultRunnerToken = new InjectRunnerToken('default');
+
+
+});
+
+unwrapExports$$1(IRunner);
+var IRunner_1 = IRunner.Boot;
+var IRunner_2 = IRunner.InjectRunnerToken;
+var IRunner_3 = IRunner.DefaultRunnerToken;
+
+var Service_1 = createCommonjsModule$$1(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+/**
+ * base service.
+ *
+ * @export
+ * @abstract
+ * @class Service
+ * @implements {IService}
+ */
+var Service = /** @class */ (function () {
+    function Service() {
+    }
+    Service.classAnnations = { "name": "Service", "params": { "start": [], "stop": [] } };
+    return Service;
+}());
+exports.Service = Service;
+/**
+ * application service token.
+ *
+ * @export
+ * @class InjectServiceToken
+ * @extends {Registration<IService<T>>}
+ * @template T
+ */
+var InjectServiceToken = /** @class */ (function (_super) {
+    tslib_1$$2.__extends(InjectServiceToken, _super);
+    function InjectServiceToken(type) {
+        return _super.call(this, type, 'boot__service') || this;
+    }
+    InjectServiceToken.classAnnations = { "name": "InjectServiceToken", "params": { "constructor": ["type"] } };
+    return InjectServiceToken;
+}(core_1$$2.Registration));
+exports.InjectServiceToken = InjectServiceToken;
+/**
+ * default service token.
+ */
+exports.DefaultServiceToken = new InjectServiceToken('default');
+
+
+});
+
+unwrapExports$$1(Service_1);
+var Service_2 = Service_1.Service;
+var Service_3 = Service_1.InjectServiceToken;
+var Service_4 = Service_1.DefaultServiceToken;
+
+var runnable = createCommonjsModule$$1(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+tslib_1$$2.__exportStar(IRunner, exports);
+tslib_1$$2.__exportStar(Service_1, exports);
+
+
+});
+
+unwrapExports$$1(runnable);
+
 var IAnnotationBuilder = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
@@ -1077,12 +1066,9 @@ var AnnotationBuilder = /** @class */ (function () {
         return decorators.Annotation.toString();
     };
     AnnotationBuilder.prototype.getMetaConfig = function (token) {
-        var decorator = this.getDecorator();
-        if (core_1$$2.hasOwnClassMetadata(decorator, token)) {
-            var metas = core_1$$2.getTypeMetadata(decorator, token);
-            if (metas && metas.length) {
-                return metas[0];
-            }
+        var accessor = this.container.resolve(core_1$$2.AnnotationMetaAccessorToken, { decorator: this.getDecorator() });
+        if (accessor) {
+            return accessor.getMetadata(token, this.container);
         }
         return null;
     };
@@ -1121,617 +1107,16 @@ exports.AnnotationBuilder = AnnotationBuilder;
 unwrapExports$$1(AnnotationBuilder_1);
 var AnnotationBuilder_2 = AnnotationBuilder_1.AnnotationBuilder;
 
-var MetaAccessor_1 = createCommonjsModule$$1(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-/**
- * application service token.
- *
- * @export
- * @class InjectMetaAccessorToken
- * @extends {Registration<MetaAccessor<T>>}
- * @template T
- */
-var InjectMetaAccessorToken = /** @class */ (function (_super) {
-    tslib_1$$2.__extends(InjectMetaAccessorToken, _super);
-    function InjectMetaAccessorToken(type) {
-        return _super.call(this, type, 'boot__metaAccessor') || this;
-    }
-    InjectMetaAccessorToken.classAnnations = { "name": "InjectMetaAccessorToken", "params": { "constructor": ["type"] } };
-    return InjectMetaAccessorToken;
-}(core_1$$2.Registration));
-exports.InjectMetaAccessorToken = InjectMetaAccessorToken;
-/**
- * default MetaAccessor token.
- */
-exports.DefaultMetaAccessorToken = new InjectMetaAccessorToken('default');
-var MetaAccessor = /** @class */ (function () {
-    function MetaAccessor(decorator) {
-        this.decorator = decorator;
-    }
-    MetaAccessor.prototype.getDecorator = function () {
-        return this.decorator;
-    };
-    MetaAccessor.prototype.getMetadata = function (token, container) {
-        var type = core_1$$2.isClass(token) ? token : container.getTokenImpl(token);
-        if (core_1$$2.isClass(type)) {
-            var metas = core_1$$2.getTypeMetadata(this.getDecorator(), type);
-            if (metas && metas.length) {
-                var meta = metas[0];
-                return meta;
-            }
-        }
-        return {};
-    };
-    MetaAccessor.classAnnations = { "name": "MetaAccessor", "params": { "constructor": ["decorator"], "getDecorator": [], "getMetadata": ["token", "container"] } };
-    MetaAccessor = tslib_1$$2.__decorate([
-        core_1$$2.Injectable(exports.DefaultMetaAccessorToken),
-        tslib_1$$2.__metadata("design:paramtypes", [String])
-    ], MetaAccessor);
-    return MetaAccessor;
-}());
-exports.MetaAccessor = MetaAccessor;
-/**
- * Annotation MetaAccessor token.
- */
-exports.AnnotationMetaAccessorToken = new InjectMetaAccessorToken('Annotation');
-/**
- * Annotation MetaAccessor.
- *
- * @export
- * @class AnnotationMetaAccessor
- * @implements {IMetaAccessor<any>}
- */
-var AnnotationMetaAccessor = /** @class */ (function () {
-    function AnnotationMetaAccessor(decorator) {
-        this.decorator = decorator;
-    }
-    AnnotationMetaAccessor.prototype.getDecorator = function () {
-        return this.decorator;
-    };
-    AnnotationMetaAccessor.prototype.getMetadata = function (token, container) {
-        if (core_1$$2.isToken(token)) {
-            var accessor_1;
-            var provider_1 = { decorator: this.getDecorator() };
-            container.getTokenExtendsChain(token).forEach(function (tk) {
-                if (accessor_1) {
-                    return false;
-                }
-                var accToken = new InjectMetaAccessorToken(tk);
-                if (container.has(accToken)) {
-                    accessor_1 = container.resolve(accToken, provider_1);
-                }
-                return true;
-            });
-            if (!accessor_1) {
-                accessor_1 = this.getDefaultMetaAccessor(container, provider_1);
-            }
-            if (accessor_1) {
-                return accessor_1.getMetadata(token, container);
-            }
-            else {
-                return {};
-            }
-        }
-        return {};
-    };
-    AnnotationMetaAccessor.prototype.getDefaultMetaAccessor = function (container) {
-        var providers = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            providers[_i - 1] = arguments[_i];
-        }
-        return container.resolve.apply(container, [exports.DefaultMetaAccessorToken].concat(providers));
-    };
-    AnnotationMetaAccessor.classAnnations = { "name": "AnnotationMetaAccessor", "params": { "constructor": ["decorator"], "getDecorator": [], "getMetadata": ["token", "container"], "getDefaultMetaAccessor": ["container", "providers"] } };
-    AnnotationMetaAccessor = tslib_1$$2.__decorate([
-        core_1$$2.Injectable(exports.AnnotationMetaAccessorToken),
-        tslib_1$$2.__metadata("design:paramtypes", [String])
-    ], AnnotationMetaAccessor);
-    return AnnotationMetaAccessor;
-}());
-exports.AnnotationMetaAccessor = AnnotationMetaAccessor;
-
-
-});
-
-unwrapExports$$1(MetaAccessor_1);
-var MetaAccessor_2 = MetaAccessor_1.InjectMetaAccessorToken;
-var MetaAccessor_3 = MetaAccessor_1.DefaultMetaAccessorToken;
-var MetaAccessor_4 = MetaAccessor_1.MetaAccessor;
-var MetaAccessor_5 = MetaAccessor_1.AnnotationMetaAccessorToken;
-var MetaAccessor_6 = MetaAccessor_1.AnnotationMetaAccessor;
-
 var annotations = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
 tslib_1$$2.__exportStar(AnnotationBuilder_1, exports);
 tslib_1$$2.__exportStar(IAnnotationBuilder, exports);
-tslib_1$$2.__exportStar(MetaAccessor_1, exports);
 
 
 });
 
 unwrapExports$$1(annotations);
-
-var InjectedModule_1 = createCommonjsModule$$1(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-/**
- * injected module.
- *
- * @export
- * @class InjectedModule
- * @template T
- */
-var InjectedModule = /** @class */ (function () {
-    function InjectedModule(token, config, container) {
-        this.token = token;
-        this.config = config;
-        this.container = container;
-    }
-    InjectedModule.classAnnations = { "name": "InjectedModule", "params": { "constructor": ["token", "config", "container"] } };
-    return InjectedModule;
-}());
-exports.InjectedModule = InjectedModule;
-/**
- * Injected Module Token.
- *
- * @export
- * @class InjectModuleMetaConfigToken
- * @extends {Registration<Type<T>>}
- * @template T
- */
-var InjectedModuleToken = /** @class */ (function (_super) {
-    tslib_1$$2.__extends(InjectedModuleToken, _super);
-    function InjectedModuleToken(type) {
-        return _super.call(this, type, 'InjectedModule') || this;
-    }
-    InjectedModuleToken.classAnnations = { "name": "InjectedModuleToken", "params": { "constructor": ["type"] } };
-    return InjectedModuleToken;
-}(core_1$$2.Registration));
-exports.InjectedModuleToken = InjectedModuleToken;
-
-
-});
-
-unwrapExports$$1(InjectedModule_1);
-var InjectedModule_2 = InjectedModule_1.InjectedModule;
-var InjectedModule_3 = InjectedModule_1.InjectedModuleToken;
-
-var DIModuleInjector_1 = createCommonjsModule$$1(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-
-
-
-
-
-var exportsProvidersFiled = '__exportProviders';
-/**
- * DIModule injector token.
- */
-exports.DIModuleInjectorToken = new core_1$$2.InjectModuleInjectorToken(decorators.DIModule.toString());
-/**
- * DIModule injector.
- *
- * @export
- * @class DIModuleInjector
- * @extends {ModuleInjector}
- */
-var DIModuleInjector = /** @class */ (function (_super) {
-    tslib_1$$2.__extends(DIModuleInjector, _super);
-    function DIModuleInjector(validate) {
-        return _super.call(this, validate) || this;
-    }
-    DIModuleInjector.prototype.setup = function (container, type) {
-        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
-            return tslib_1$$2.__generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.importModule(container, type)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    DIModuleInjector.prototype.import = function (container, type) {
-        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
-            var injMd;
-            return tslib_1$$2.__generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!this.validate.validate(type)) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.importModule(container, type)];
-                    case 1:
-                        injMd = _a.sent();
-                        return [2 /*return*/, injMd];
-                    case 2: return [2 /*return*/, null];
-                }
-            });
-        });
-    };
-    DIModuleInjector.prototype.importByConfig = function (container, config) {
-        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
-            return tslib_1$$2.__generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.registerConfgureDepds(container, config)];
-                    case 1:
-                        _a.sent();
-                        if (!(core_1$$2.isArray(config.providers) && config.providers.length)) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.bindProvider(container, config.providers)];
-                    case 2:
-                        _a.sent();
-                        _a.label = 3;
-                    case 3: return [2 /*return*/, null];
-                }
-            });
-        });
-    };
-    DIModuleInjector.prototype.importModule = function (container, type) {
-        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
-            var pools, newContainer, metaConfig, injMd;
-            return tslib_1$$2.__generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        pools = container.get(utils.ContainerPoolToken);
-                        newContainer = pools.create(container);
-                        newContainer.register(type);
-                        metaConfig = this.getMetaConfig(type, newContainer);
-                        return [4 /*yield*/, this.registerConfgureDepds(newContainer, metaConfig)];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, this.importConfigExports(container, newContainer, metaConfig, type)];
-                    case 2:
-                        _a.sent();
-                        injMd = new InjectedModule_1.InjectedModule(type, metaConfig, newContainer);
-                        container.bindProvider(new InjectedModule_1.InjectedModuleToken(type), injMd);
-                        return [2 /*return*/, injMd];
-                }
-            });
-        });
-    };
-    DIModuleInjector.prototype.getMetaConfig = function (token, container) {
-        if (core_1$$2.isToken(token)) {
-            var accessor = this.getMetaAccessor(container);
-            return accessor.getMetadata(token, container);
-        }
-        return null;
-    };
-    DIModuleInjector.prototype.getMetaAccessor = function (container) {
-        var decorator = this.validate.getDecorator();
-        return container.resolve(annotations.AnnotationMetaAccessorToken, { decorator: decorator });
-    };
-    DIModuleInjector.prototype.registerConfgureDepds = function (container, config) {
-        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
-            return tslib_1$$2.__generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!(core_1$$2.isArray(config.imports) && config.imports.length)) return [3 /*break*/, 2];
-                        return [4 /*yield*/, container.loadModule.apply(container, config.imports)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2:
-                        if (core_1$$2.isArray(config.providers) && config.providers.length) {
-                            config[exportsProvidersFiled] = this.bindProvider(container, config.providers);
-                        }
-                        return [2 /*return*/, config];
-                }
-            });
-        });
-    };
-    DIModuleInjector.prototype.importConfigExports = function (container, providerContainer, cfg, mdl) {
-        return tslib_1$$2.__awaiter(this, void 0, void 0, function () {
-            var expProviders;
-            return tslib_1$$2.__generator(this, function (_a) {
-                if (container === providerContainer) {
-                    return [2 /*return*/, container];
-                }
-                if (cfg.exports && cfg.exports.length) {
-                    cfg.exports.forEach(function (tk) {
-                        container.bindProvider(tk, function () {
-                            var providers = [];
-                            for (var _i = 0; _i < arguments.length; _i++) {
-                                providers[_i] = arguments[_i];
-                            }
-                            return providerContainer.resolve.apply(providerContainer, [tk].concat(providers));
-                        });
-                    });
-                }
-                if (mdl) {
-                    container.bindProvider(mdl, function () {
-                        var providers = [];
-                        for (var _i = 0; _i < arguments.length; _i++) {
-                            providers[_i] = arguments[_i];
-                        }
-                        return providerContainer.resolve.apply(providerContainer, [mdl].concat(providers));
-                    });
-                }
-                expProviders = cfg[exportsProvidersFiled];
-                if (expProviders && expProviders.length) {
-                    expProviders.forEach(function (tk) {
-                        container.bindProvider(tk, function () { return providerContainer.get(tk); });
-                    });
-                }
-                return [2 /*return*/, container];
-            });
-        });
-    };
-    DIModuleInjector.prototype.bindProvider = function (container, providers) {
-        var tokens = [];
-        providers.forEach(function (p, index) {
-            if (core_1$$2.isUndefined(p) || core_1$$2.isNull(p)) {
-                return;
-            }
-            if (core_1$$2.isProviderMap(p)) {
-                p.forEach(function (k, f) {
-                    tokens.push(k);
-                    container.bindProvider(k, f);
-                });
-            }
-            else if (p instanceof core_1$$2.Provider) {
-                tokens.push(p.type);
-                container.bindProvider(p.type, function () {
-                    var providers = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        providers[_i] = arguments[_i];
-                    }
-                    return p.resolve.apply(p, [container].concat(providers));
-                });
-            }
-            else if (core_1$$2.isClass(p)) {
-                if (!container.has(p)) {
-                    tokens.push(p);
-                    container.register(p);
-                }
-            }
-            else if (core_1$$2.isBaseObject(p)) {
-                var pr_1 = p;
-                var isobjMap = false;
-                if (core_1$$2.isToken(pr_1.provide)) {
-                    if (core_1$$2.isArray(pr_1.deps) && pr_1.deps.length) {
-                        pr_1.deps.forEach(function (d) {
-                            if (core_1$$2.isClass(d) && !container.has(d)) {
-                                container.register(d);
-                            }
-                        });
-                    }
-                    if (!core_1$$2.isUndefined(pr_1.useValue)) {
-                        tokens.push(pr_1.provide);
-                        container.bindProvider(pr_1.provide, function () { return pr_1.useValue; });
-                    }
-                    else if (core_1$$2.isClass(pr_1.useClass)) {
-                        if (!container.has(pr_1.useClass)) {
-                            container.register(pr_1.useClass);
-                        }
-                        tokens.push(pr_1.provide);
-                        container.bindProvider(pr_1.provide, pr_1.useClass);
-                    }
-                    else if (core_1$$2.isFunction(pr_1.useFactory)) {
-                        tokens.push(pr_1.provide);
-                        container.bindProvider(pr_1.provide, function () {
-                            var args = [];
-                            if (core_1$$2.isArray(pr_1.deps) && pr_1.deps.length) {
-                                args = pr_1.deps.map(function (d) {
-                                    if (core_1$$2.isClass(d)) {
-                                        return container.get(d);
-                                    }
-                                    else {
-                                        return d;
-                                    }
-                                });
-                            }
-                            return pr_1.useFactory.apply(pr_1, args);
-                        });
-                    }
-                    else if (core_1$$2.isToken(pr_1.useExisting)) {
-                        if (container.has(pr_1.useExisting)) {
-                            tokens.push(pr_1.provide);
-                            container.bindProvider(pr_1.provide, pr_1.useExisting);
-                        }
-                        else {
-                            console.log('has not register:', pr_1.useExisting);
-                        }
-                    }
-                    else {
-                        isobjMap = true;
-                    }
-                }
-                else {
-                    isobjMap = true;
-                }
-                if (isobjMap) {
-                    core_1$$2.lang.forIn(p, function (val, name) {
-                        if (!core_1$$2.isUndefined(val)) {
-                            if (core_1$$2.isClass(val)) {
-                                container.bindProvider(name, val);
-                            }
-                            else if (core_1$$2.isFunction(val) || core_1$$2.isString(val)) {
-                                container.bindProvider(name, function () { return val; });
-                            }
-                            else {
-                                container.bindProvider(name, val);
-                            }
-                            tokens.push(name);
-                        }
-                    });
-                }
-            }
-            else if (core_1$$2.isFunction(p)) {
-                tokens.push(name);
-                container.bindProvider(name, function () { return p; });
-            }
-        });
-        return tokens;
-    };
-    DIModuleInjector.classAnnations = { "name": "DIModuleInjector", "params": { "constructor": ["validate"], "setup": ["container", "type"], "import": ["container", "type"], "importByConfig": ["container", "config"], "importModule": ["container", "type"], "getMetaConfig": ["token", "container"], "getMetaAccessor": ["container"], "registerConfgureDepds": ["container", "config"], "importConfigExports": ["container", "providerContainer", "cfg", "mdl"], "bindProvider": ["container", "providers"] } };
-    DIModuleInjector = tslib_1$$2.__decorate([
-        core_1$$2.Injectable(exports.DIModuleInjectorToken),
-        tslib_1$$2.__param(0, core_1$$2.Inject(DIModuleValidate.DIModuelValidateToken)),
-        tslib_1$$2.__metadata("design:paramtypes", [Object])
-    ], DIModuleInjector);
-    return DIModuleInjector;
-}(core_1$$2.ModuleInjector));
-exports.DIModuleInjector = DIModuleInjector;
-
-
-});
-
-unwrapExports$$1(DIModuleInjector_1);
-var DIModuleInjector_2 = DIModuleInjector_1.DIModuleInjectorToken;
-var DIModuleInjector_3 = DIModuleInjector_1.DIModuleInjector;
-
-var IModuleBuilder = createCommonjsModule$$1(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-var moduleBuilderDesc = 'DI_ModuleBuilder';
-/**
- * inject module builder token.
- *
- * @export
- * @class InjectModuleBuilder
- * @extends {Registration<T>}
- * @template T
- */
-var InjectModuleBuilderToken = /** @class */ (function (_super) {
-    tslib_1$$2.__extends(InjectModuleBuilderToken, _super);
-    function InjectModuleBuilderToken(type) {
-        return _super.call(this, type, moduleBuilderDesc) || this;
-    }
-    InjectModuleBuilderToken.classAnnations = { "name": "InjectModuleBuilderToken", "params": { "constructor": ["type"] } };
-    return InjectModuleBuilderToken;
-}(core_1$$2.Registration));
-exports.InjectModuleBuilderToken = InjectModuleBuilderToken;
-/**
- * default module builder token.
- */
-exports.DefaultModuleBuilderToken = new InjectModuleBuilderToken(Object);
-/**
- * module builder token.
- */
-exports.ModuleBuilderToken = new core_1$$2.Registration(Object, moduleBuilderDesc);
-
-
-});
-
-unwrapExports$$1(IModuleBuilder);
-var IModuleBuilder_1 = IModuleBuilder.InjectModuleBuilderToken;
-var IModuleBuilder_2 = IModuleBuilder.DefaultModuleBuilderToken;
-var IModuleBuilder_3 = IModuleBuilder.ModuleBuilderToken;
-
-var IRunner = createCommonjsModule$$1(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-/**
- * boot element.
- *
- * @export
- * @abstract
- * @class Boot
- * @implements {IBoot}
- */
-var Boot = /** @class */ (function () {
-    function Boot() {
-    }
-    Boot.classAnnations = { "name": "Boot", "params": { "run": ["app"] } };
-    return Boot;
-}());
-exports.Boot = Boot;
-/**
- * application runner token.
- *
- * @export
- * @class InjectRunnerToken
- * @extends {Registration<IRunner<T>>}
- * @template T
- */
-var InjectRunnerToken = /** @class */ (function (_super) {
-    tslib_1$$2.__extends(InjectRunnerToken, _super);
-    function InjectRunnerToken(type) {
-        return _super.call(this, type, 'boot__runner') || this;
-    }
-    InjectRunnerToken.classAnnations = { "name": "InjectRunnerToken", "params": { "constructor": ["type"] } };
-    return InjectRunnerToken;
-}(core_1$$2.Registration));
-exports.InjectRunnerToken = InjectRunnerToken;
-/**
- * default runner token.
- */
-exports.DefaultRunnerToken = new InjectRunnerToken('default');
-
-
-});
-
-unwrapExports$$1(IRunner);
-var IRunner_1 = IRunner.Boot;
-var IRunner_2 = IRunner.InjectRunnerToken;
-var IRunner_3 = IRunner.DefaultRunnerToken;
-
-var Service_1 = createCommonjsModule$$1(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-/**
- * base service.
- *
- * @export
- * @abstract
- * @class Service
- * @implements {IService}
- */
-var Service = /** @class */ (function () {
-    function Service() {
-    }
-    Service.classAnnations = { "name": "Service", "params": { "start": [], "stop": [] } };
-    return Service;
-}());
-exports.Service = Service;
-/**
- * application service token.
- *
- * @export
- * @class InjectServiceToken
- * @extends {Registration<IService<T>>}
- * @template T
- */
-var InjectServiceToken = /** @class */ (function (_super) {
-    tslib_1$$2.__extends(InjectServiceToken, _super);
-    function InjectServiceToken(type) {
-        return _super.call(this, type, 'boot__service') || this;
-    }
-    InjectServiceToken.classAnnations = { "name": "InjectServiceToken", "params": { "constructor": ["type"] } };
-    return InjectServiceToken;
-}(core_1$$2.Registration));
-exports.InjectServiceToken = InjectServiceToken;
-/**
- * default service token.
- */
-exports.DefaultServiceToken = new InjectServiceToken('default');
-
-
-});
-
-unwrapExports$$1(Service_1);
-var Service_2 = Service_1.Service;
-var Service_3 = Service_1.InjectServiceToken;
-var Service_4 = Service_1.DefaultServiceToken;
-
-var runnable = createCommonjsModule$$1(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-
-tslib_1$$2.__exportStar(IRunner, exports);
-tslib_1$$2.__exportStar(Service_1, exports);
-
-
-});
-
-unwrapExports$$1(runnable);
 
 var ModuleBuilder_1 = createCommonjsModule$$1(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -1905,7 +1290,7 @@ var ModuleBuilder = /** @class */ (function () {
                     case 2:
                         injmdl = _a.sent();
                         if (!injmdl) {
-                            cfg = parent.get(annotations.AnnotationMetaAccessorToken).getMetadata(token, parent);
+                            cfg = parent.get(core_1$$2.AnnotationMetaAccessorToken).getMetadata(token, parent);
                             injmdl = new InjectedModule_1.InjectedModule(token, cfg, parent);
                         }
                         return [3 /*break*/, 10];
@@ -2216,7 +1601,7 @@ var DefaultApplicationBuilder = /** @class */ (function (_super) {
         _this.globalModules = [];
         _this.configs = [];
         _this.providers = new core_1$$2.MapSet();
-        _this.events = new events.EventEmitter();
+        _this.events = new events$$1.EventEmitter();
         _this.initEvents();
         return _this;
     }

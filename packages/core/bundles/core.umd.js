@@ -199,6 +199,41 @@ tslib_1.__exportStar(Workflow, exports);
 
 unwrapExports(decorators);
 
+var IActivity = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+/**
+ * Inject AcitityToken
+ *
+ * @export
+ * @class InjectAcitityToken
+ * @extends {Registration<T>}
+ * @template T
+ */
+var InjectAcitityToken = /** @class */ (function (_super) {
+    tslib_1.__extends(InjectAcitityToken, _super);
+    function InjectAcitityToken(desc) {
+        return _super.call(this, 'Activity', desc) || this;
+    }
+    InjectAcitityToken.classAnnations = { "name": "InjectAcitityToken", "params": { "constructor": ["desc"] } };
+    return InjectAcitityToken;
+}(core_1.Registration));
+exports.InjectAcitityToken = InjectAcitityToken;
+/**
+ * task token.
+ */
+exports.ActivityToken = new InjectAcitityToken('');
+
+
+
+
+});
+
+unwrapExports(IActivity);
+var IActivity_1 = IActivity.InjectAcitityToken;
+var IActivity_2 = IActivity.ActivityToken;
+
 var IContext = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
@@ -236,6 +271,7 @@ var IContext_2 = IContext.ContextToken;
 
 var Activity_1 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
+
 
 
 
@@ -284,7 +320,7 @@ var Activity = /** @class */ (function () {
         tslib_1.__metadata("design:type", Object)
     ], Activity.prototype, "context", void 0);
     Activity = tslib_1.__decorate([
-        decorators.Task,
+        decorators.Task(IActivity.ActivityToken),
         tslib_1.__metadata("design:paramtypes", [])
     ], Activity);
     return Activity;
@@ -389,7 +425,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 
 
-
 /**
  * task runner.
  *
@@ -478,7 +513,7 @@ var ActivityRunner = /** @class */ (function () {
         tslib_1.__metadata("design:type", Object)
     ], ActivityRunner.prototype, "container", void 0);
     ActivityRunner = tslib_1.__decorate([
-        decorators.Workflow(IActivityRunner.ActivityRunnerToken),
+        core_1.Injectable(IActivityRunner.ActivityRunnerToken),
         tslib_1.__metadata("design:paramtypes", [Object, Object, Object])
     ], ActivityRunner);
     return ActivityRunner;
@@ -548,41 +583,6 @@ exports.isActivityType = isActivityType;
 unwrapExports(ActivityConfigure);
 var ActivityConfigure_1 = ActivityConfigure.isActivityRunner;
 var ActivityConfigure_2 = ActivityConfigure.isActivityType;
-
-var IActivity = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-/**
- * Inject AcitityToken
- *
- * @export
- * @class InjectAcitityToken
- * @extends {Registration<T>}
- * @template T
- */
-var InjectAcitityToken = /** @class */ (function (_super) {
-    tslib_1.__extends(InjectAcitityToken, _super);
-    function InjectAcitityToken(desc) {
-        return _super.call(this, 'Activity', desc) || this;
-    }
-    InjectAcitityToken.classAnnations = { "name": "InjectAcitityToken", "params": { "constructor": ["desc"] } };
-    return InjectAcitityToken;
-}(core_1.Registration));
-exports.InjectAcitityToken = InjectAcitityToken;
-/**
- * task token.
- */
-exports.ActivityToken = new InjectAcitityToken('');
-
-
-
-
-});
-
-unwrapExports(IActivity);
-var IActivity_1 = IActivity.InjectAcitityToken;
-var IActivity_2 = IActivity.ActivityToken;
 
 var ActivityBuilder_1 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -1544,16 +1544,16 @@ exports.SequenceActivityToken = new core.InjectAcitityToken('sequence');
 var SequenceActivity = /** @class */ (function (_super) {
     tslib_1.__extends(SequenceActivity, _super);
     function SequenceActivity() {
-        var _this = _super.call(this) || this;
-        _this.activites = [];
-        return _this;
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     SequenceActivity_1 = SequenceActivity;
     SequenceActivity.prototype.onActivityInit = function (config) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, _super.prototype.onActivityInit.call(this, config)];
+                    case 0:
+                        this.activites = this.activites || [];
+                        return [4 /*yield*/, _super.prototype.onActivityInit.call(this, config)];
                     case 1:
                         _a.sent();
                         if (!(config.sequence && config.sequence.length)) return [3 /*break*/, 3];
@@ -1657,10 +1657,9 @@ var SequenceActivity = /** @class */ (function (_super) {
         });
     };
     var SequenceActivity_1;
-    SequenceActivity.classAnnations = { "name": "SequenceActivity", "params": { "constructor": [], "onActivityInit": ["config"], "buildChildren": ["activity", "configs"], "run": ["data", "execute"], "before": ["data", "execute"], "execute": ["data", "execute"], "after": ["data", "execute"] } };
+    SequenceActivity.classAnnations = { "name": "SequenceActivity", "params": { "onActivityInit": ["config"], "buildChildren": ["activity", "configs"], "run": ["data", "execute"], "before": ["data", "execute"], "execute": ["data", "execute"], "after": ["data", "execute"] } };
     SequenceActivity = SequenceActivity_1 = tslib_1.__decorate([
-        core.Task(exports.SequenceActivityToken),
-        tslib_1.__metadata("design:paramtypes", [])
+        core.Task(exports.SequenceActivityToken)
     ], SequenceActivity);
     return SequenceActivity;
 }(core.Activity));
@@ -2160,6 +2159,42 @@ tslib_1.__exportStar(RunAspect_1, exports);
 
 unwrapExports(aop);
 
+var WorkflowMetaAccessor_1 = createCommonjsModule(function (module, exports) {
+Object.defineProperty(exports, "__esModule", { value: true });
+
+
+
+exports.WorkflowMetaAccessorToken = new core_1.InjectMetaAccessorToken(core.Activity);
+/**
+ * Workflow metadata accessor.
+ *
+ * @export
+ * @class WorkflowMetaAccessor
+ * @extends {MetaAccessor}
+ */
+var WorkflowMetaAccessor = /** @class */ (function (_super) {
+    tslib_1.__extends(WorkflowMetaAccessor, _super);
+    function WorkflowMetaAccessor() {
+        return _super.call(this, [core.Workflow.toString(), core.Task.toString()]) || this;
+    }
+    WorkflowMetaAccessor.classAnnations = { "name": "WorkflowMetaAccessor", "params": { "constructor": [] } };
+    WorkflowMetaAccessor = tslib_1.__decorate([
+        core_1.Injectable(exports.WorkflowMetaAccessorToken),
+        tslib_1.__metadata("design:paramtypes", [])
+    ], WorkflowMetaAccessor);
+    return WorkflowMetaAccessor;
+}(core_1.MetaAccessor));
+exports.WorkflowMetaAccessor = WorkflowMetaAccessor;
+
+
+
+
+});
+
+unwrapExports(WorkflowMetaAccessor_1);
+var WorkflowMetaAccessor_2 = WorkflowMetaAccessor_1.WorkflowMetaAccessorToken;
+var WorkflowMetaAccessor_3 = WorkflowMetaAccessor_1.WorkflowMetaAccessor;
+
 var WorkflowModuleValidate_1 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
@@ -2172,7 +2207,7 @@ var WorkflowModuleValidate = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     WorkflowModuleValidate.prototype.getDecorator = function () {
-        return core.Workflow.toString();
+        return [core.Workflow.toString(), core.Task.toString()];
     };
     WorkflowModuleValidate.classAnnations = { "name": "WorkflowModuleValidate", "params": { "getDecorator": [] } };
     WorkflowModuleValidate = tslib_1.__decorate([
@@ -2181,22 +2216,6 @@ var WorkflowModuleValidate = /** @class */ (function (_super) {
     return WorkflowModuleValidate;
 }(core_1.BaseModuelValidate));
 exports.WorkflowModuleValidate = WorkflowModuleValidate;
-exports.ActvityModuleValidateToken = new core_1.InjectModuleValidateToken(core.Task.toString());
-var ActvityModuleValidate = /** @class */ (function (_super) {
-    tslib_1.__extends(ActvityModuleValidate, _super);
-    function ActvityModuleValidate() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    ActvityModuleValidate.prototype.getDecorator = function () {
-        return core.Task.toString();
-    };
-    ActvityModuleValidate.classAnnations = { "name": "ActvityModuleValidate", "params": { "getDecorator": [] } };
-    ActvityModuleValidate = tslib_1.__decorate([
-        core_1.Singleton(exports.ActvityModuleValidateToken)
-    ], ActvityModuleValidate);
-    return ActvityModuleValidate;
-}(core_1.BaseModuelValidate));
-exports.ActvityModuleValidate = ActvityModuleValidate;
 
 
 
@@ -2206,8 +2225,6 @@ exports.ActvityModuleValidate = ActvityModuleValidate;
 unwrapExports(WorkflowModuleValidate_1);
 var WorkflowModuleValidate_2 = WorkflowModuleValidate_1.WorkflowModuleValidateToken;
 var WorkflowModuleValidate_3 = WorkflowModuleValidate_1.WorkflowModuleValidate;
-var WorkflowModuleValidate_4 = WorkflowModuleValidate_1.ActvityModuleValidateToken;
-var WorkflowModuleValidate_5 = WorkflowModuleValidate_1.ActvityModuleValidate;
 
 var WorkflowModuleInjector_1 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -2216,35 +2233,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 
 
+/**
+ * workflow module injector token.
+ */
 exports.WorkflowModuleInjectorToken = new core_1.InjectModuleInjectorToken(core.Workflow.toString());
+/**
+ * workflow module injector
+ *
+ * @export
+ * @class WorkflowModuleInjector
+ * @extends {DIModuleInjector}
+ */
 var WorkflowModuleInjector = /** @class */ (function (_super) {
     tslib_1.__extends(WorkflowModuleInjector, _super);
     function WorkflowModuleInjector(validate) {
         return _super.call(this, validate) || this;
     }
-    WorkflowModuleInjector.classAnnations = { "name": "WorkflowModuleInjector", "params": { "constructor": ["validate"] } };
-    WorkflowModuleInjector = tslib_1.__decorate([
-        core_1.Injectable(exports.WorkflowModuleInjectorToken),
-        tslib_1.__param(0, core_1.Inject(WorkflowModuleValidate_1.WorkflowModuleValidateToken)),
-        tslib_1.__metadata("design:paramtypes", [Object])
-    ], WorkflowModuleInjector);
-    return WorkflowModuleInjector;
-}(bootstrap_1.DIModuleInjector));
-exports.WorkflowModuleInjector = WorkflowModuleInjector;
-exports.ActivityModuleInjectorToken = new core_1.InjectModuleInjectorToken(core.Task.toString());
-var ActivityModuleInjector = /** @class */ (function (_super) {
-    tslib_1.__extends(ActivityModuleInjector, _super);
-    function ActivityModuleInjector(validate) {
-        return _super.call(this, validate) || this;
-    }
-    ActivityModuleInjector.prototype.importModule = function (container, type) {
+    WorkflowModuleInjector.prototype.importModule = function (container, type) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var metaConfig, injMd;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         container.register(type);
-                        metaConfig = this.getMetaConfig(type, container);
+                        metaConfig = this.validate.getMetaConfig(type, container);
                         return [4 /*yield*/, this.registerConfgureDepds(container, metaConfig)];
                     case 1:
                         _a.sent();
@@ -2255,15 +2267,40 @@ var ActivityModuleInjector = /** @class */ (function (_super) {
             });
         });
     };
-    ActivityModuleInjector.classAnnations = { "name": "ActivityModuleInjector", "params": { "constructor": ["validate"], "importModule": ["container", "type"] } };
-    ActivityModuleInjector = tslib_1.__decorate([
-        core_1.Injectable(exports.ActivityModuleInjectorToken),
+    WorkflowModuleInjector.classAnnations = { "name": "WorkflowModuleInjector", "params": { "constructor": ["validate"], "importModule": ["container", "type"] } };
+    WorkflowModuleInjector = tslib_1.__decorate([
+        core_1.Injectable(exports.WorkflowModuleInjectorToken),
         tslib_1.__param(0, core_1.Inject(WorkflowModuleValidate_1.WorkflowModuleValidateToken)),
         tslib_1.__metadata("design:paramtypes", [Object])
-    ], ActivityModuleInjector);
-    return ActivityModuleInjector;
+    ], WorkflowModuleInjector);
+    return WorkflowModuleInjector;
 }(bootstrap_1.DIModuleInjector));
-exports.ActivityModuleInjector = ActivityModuleInjector;
+exports.WorkflowModuleInjector = WorkflowModuleInjector;
+// /**
+//  * activity module injector token.
+//  */
+// export const ActivityModuleInjectorToken = new InjectModuleInjectorToken(Task.toString());
+// /**
+//  * activity module injector.
+//  *
+//  * @export
+//  * @class ActivityModuleInjector
+//  * @extends {DIModuleInjector}
+//  */
+// @Injectable(ActivityModuleInjectorToken)
+// export class ActivityModuleInjector extends DIModuleInjector {
+//     constructor(@Inject(WorkflowModuleValidateToken) validate: IModuleValidate) {
+//         super(validate)
+//     }
+//     protected async importModule(container: IContainer, type: Type<any>): Promise<InjectedModule<any>> {
+//         container.register(type);
+//         let metaConfig = this.validate.getMetaConfig(type, container);
+//         await this.registerConfgureDepds(container, metaConfig);
+//         let injMd = new InjectedModule(type, metaConfig, container);
+//         container.bindProvider(new InjectedModuleToken(type), injMd);
+//         return injMd;
+//     }
+// }
 
 
 
@@ -2273,8 +2310,6 @@ exports.ActivityModuleInjector = ActivityModuleInjector;
 unwrapExports(WorkflowModuleInjector_1);
 var WorkflowModuleInjector_2 = WorkflowModuleInjector_1.WorkflowModuleInjectorToken;
 var WorkflowModuleInjector_3 = WorkflowModuleInjector_1.WorkflowModuleInjector;
-var WorkflowModuleInjector_4 = WorkflowModuleInjector_1.ActivityModuleInjectorToken;
-var WorkflowModuleInjector_5 = WorkflowModuleInjector_1.ActivityModuleInjector;
 
 var DefaultWorkflowBuilder_1 = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -2332,9 +2367,6 @@ var DefaultWorkflowBuilder = /** @class */ (function (_super) {
     DefaultWorkflowBuilder.prototype.getBootTyp = function (config) {
         return config.activity || config.task || _super.prototype.getBootType.call(this, config);
     };
-    // protected getConfigId(config: ActivityConfigure) {
-    //     return config.id || config.name;
-    // }
     DefaultWorkflowBuilder.prototype.getDefaultService = function (container) {
         var providers = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -2359,50 +2391,13 @@ unwrapExports(DefaultWorkflowBuilder_1);
 var DefaultWorkflowBuilder_2 = DefaultWorkflowBuilder_1.WorkflowBuilderToken;
 var DefaultWorkflowBuilder_3 = DefaultWorkflowBuilder_1.DefaultWorkflowBuilder;
 
-var ActivityMetaAccessor_1 = createCommonjsModule(function (module, exports) {
-Object.defineProperty(exports, "__esModule", { value: true });
-
-
-
-
-exports.ActivityMetaAccessorToken = new bootstrap_1.InjectMetaAccessorToken(core.Activity);
-/**
- * activity metadata accessor.
- *
- * @export
- * @class ActivityMetaAccessor
- * @extends {MetaAccessor}
- */
-var ActivityMetaAccessor = /** @class */ (function (_super) {
-    tslib_1.__extends(ActivityMetaAccessor, _super);
-    function ActivityMetaAccessor() {
-        return _super.call(this, core.Task.toString()) || this;
-    }
-    ActivityMetaAccessor.classAnnations = { "name": "ActivityMetaAccessor", "params": { "constructor": [] } };
-    ActivityMetaAccessor = tslib_1.__decorate([
-        core_1.Injectable(exports.ActivityMetaAccessorToken),
-        tslib_1.__metadata("design:paramtypes", [])
-    ], ActivityMetaAccessor);
-    return ActivityMetaAccessor;
-}(bootstrap_1.MetaAccessor));
-exports.ActivityMetaAccessor = ActivityMetaAccessor;
-
-
-
-
-});
-
-unwrapExports(ActivityMetaAccessor_1);
-var ActivityMetaAccessor_2 = ActivityMetaAccessor_1.ActivityMetaAccessorToken;
-var ActivityMetaAccessor_3 = ActivityMetaAccessor_1.ActivityMetaAccessor;
-
 var injectors = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
+tslib_1.__exportStar(WorkflowMetaAccessor_1, exports);
 tslib_1.__exportStar(WorkflowModuleValidate_1, exports);
 tslib_1.__exportStar(WorkflowModuleInjector_1, exports);
 tslib_1.__exportStar(DefaultWorkflowBuilder_1, exports);
-tslib_1.__exportStar(ActivityMetaAccessor_1, exports);
 
 
 
@@ -2493,11 +2488,8 @@ var DefaultTaskContainer = /** @class */ (function () {
             this.builder.events.on(bootstrap_1.ApplicationEvents.onRootContainerCreated, function (container) {
                 container.register(injectors.DefaultWorkflowBuilder)
                     .register(injectors.WorkflowModuleValidate)
-                    .register(injectors.WorkflowModuleInjector)
-                    .register(injectors.ActvityModuleValidate)
-                    .register(injectors.ActivityModuleInjector);
+                    .register(injectors.WorkflowModuleInjector);
                 var chain = container.getBuilder().getInjectorChain(container);
-                chain.first(container.resolve(injectors.ActivityModuleInjectorToken));
                 chain.first(container.resolve(injectors.WorkflowModuleInjectorToken));
             });
             this.builder
@@ -2506,8 +2498,8 @@ var DefaultTaskContainer = /** @class */ (function () {
                 .use(CoreModule_1.CoreModule)
                 .provider(bootstrap_1.DefaultAnnotationBuilderToken, core.ActivityBuilderToken)
                 .provider(bootstrap_1.DefaultServiceToken, core.ActivityRunnerToken)
-                .provider(bootstrap_1.DefaultModuleBuilderToken, injectors.WorkflowBuilderToken)
-                .provider(bootstrap_1.DefaultMetaAccessorToken, injectors.ActivityMetaAccessorToken);
+                .provider(bootstrap_1.DefaultModuleBuilderToken, injectors.WorkflowBuilderToken);
+            // .provider(DefaultMetaAccessorToken, ActivityMetaAccessorToken);
         }
         return this.builder;
     };
@@ -2576,7 +2568,7 @@ var DefaultTaskContainer = /** @class */ (function () {
      */
     DefaultTaskContainer.prototype.createActivity = function (activity, workflowId) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var boot, runner;
+            var boot, env, runner;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -2590,7 +2582,8 @@ var DefaultTaskContainer = /** @class */ (function () {
                             boot.builder = boot.builder || injectors.WorkflowBuilderToken;
                             boot.annotationBuilder = boot.annotationBuilder || core.ActivityBuilderToken;
                         }
-                        return [4 /*yield*/, this.getBuilder().bootstrap(boot, null, workflowId)];
+                        env = this.getBuilder().getPools().create();
+                        return [4 /*yield*/, this.getBuilder().bootstrap(boot, env, workflowId)];
                     case 1:
                         runner = _a.sent();
                         this.getContainer().bindProvider(workflowId, runner);

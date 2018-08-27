@@ -30,6 +30,7 @@ const builtins = require('rollup-plugin-node-builtins');
                     external: [
                         'reflect-metadata',
                         'tslib',
+                        'events',
                         '@ts-ioc/core',
                         '@ts-ioc/aop',
                         '@ts-ioc/logs',

@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/platform-server",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
@@ -39,7 +39,7 @@
     "zone.js": "^0.8.12"
   },
   "peerDependencies": {
-    "@taskfr/core": "^2.1.0"
+    "@taskfr/core": "^2.1.1"
   },
   "directories": {
     "lib": "lib",

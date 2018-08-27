@@ -22,6 +22,7 @@ describe('auto register with build', () => {
 
     it('should bootstrap with single task via name or provider.', async () => {
         let result = await container.use(SimpleTask).bootstrap('test');
+        // console.log(result);
         expect(result.resultValue).eq('simple task');
     });
 

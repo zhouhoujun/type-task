@@ -1,9 +1,8 @@
-import { Inject, IContainer, ContainerToken, Token } from '@ts-ioc/core';
+import { Inject, IContainer, ContainerToken, Token, Injectable } from '@ts-ioc/core';
 import { ActivityConfigure } from './ActivityConfigure';
 import { IActivity } from './IActivity';
 import { IActivityRunner, ActivityRunnerToken, RunState } from './IActivityRunner';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Workflow } from './decorators';
 import { Joinpoint } from '@ts-ioc/aop';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
@@ -15,7 +14,7 @@ import 'rxjs/add/operator/filter';
  * @class TaskRunner
  * @implements {ITaskRunner}
  */
-@Workflow(ActivityRunnerToken)
+@Injectable(ActivityRunnerToken)
 export class ActivityRunner<T> implements IActivityRunner<T> {
 
     get activity(): Token<IActivity> {

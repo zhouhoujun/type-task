@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/core",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
   "main": "./bundles/core.umd.js",
   "typings": "./lib/index.d.ts",
@@ -28,7 +28,8 @@
     "@ts-ioc/core": "^3.1.0",
     "@ts-ioc/logs": "^3.1.0",
     "@ts-ioc/bootstrap": "^3.1.0",
-    "rxjs": "^5.5.11"
+    "rxjs": "^5.5.11",
+    "events": "^3.0.0"
   },
   "directories": {
     "lib": "lib"

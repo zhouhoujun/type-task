@@ -1,5 +1,6 @@
-import { ClassMetadata } from '@ts-ioc/core';
+import { ClassMetadata, IAnnotationMetadata } from '@ts-ioc/core';
 import { CoreActivityConfigure } from '../ActivityConfigure';
+import { IActivity } from '../IActivity';
 
 /**
  * task metadata.
@@ -8,7 +9,7 @@ import { CoreActivityConfigure } from '../ActivityConfigure';
  * @interface TaskMetadata
  * @extends {ClassMetadata}
  */
-export interface IActivityMetadata extends ClassMetadata {
+export interface IActivityMetadata extends IAnnotationMetadata<IActivity> {
     decorType?: string;
 }
 
