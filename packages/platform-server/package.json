@@ -23,7 +23,7 @@
   "homepage": "https://github.com/zhouhoujun/type-task#readme",
   "dependencies": {
     "@types/chalk": "^2.2.0",
-    "@ts-ioc/platform-server": "^3.1.0",
+    "@ts-ioc/platform-server": "^3.1.1",
     "bluebird": "^3.4.1",
     "chalk": "^2.3.1",
     "globby": "^7.1.1",
