@@ -1,15 +1,12 @@
 import { Type, hasClassMetadata, lang, IContainer, LoadType, isToken, Token, Factory } from '@ts-ioc/core';
-import { SequenceConfigure, Active, IActivityRunner, UUIDToken, RandomUUIDFactory, ActivityRunnerToken } from './core';
+import { SequenceConfigure, Active, IActivityRunner, UUIDToken, RandomUUIDFactory, ActivityRunnerToken, ActivityBuilderToken } from './core';
 import { ITaskContainer } from './ITaskContainer';
 import { IApplicationBuilder, DefaultApplicationBuilder, AppConfigure, DefaultAnnotationBuilderToken, DefaultServiceToken, DefaultModuleBuilderToken, ApplicationEvents } from '@ts-ioc/bootstrap';
 import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
 import { CoreModule } from './CoreModule';
 import { LogModule } from '@ts-ioc/logs';
-import {
-    DefaultWorkflowBuilder, WorkflowModuleValidate, WorkflowModuleInjector,
-    WorkflowBuilderToken, WorkflowModuleInjectorToken, ActivityBuilderToken
-} from './injectors';
+import { DefaultWorkflowBuilder, WorkflowModuleValidate, WorkflowModuleInjector, WorkflowBuilderToken, WorkflowModuleInjectorToken } from './injectors';
 
 
 /**

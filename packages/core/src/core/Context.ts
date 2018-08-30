@@ -6,10 +6,11 @@ import { IContext, ContextToken, CtxType } from './IContext';
 import { ActivityConfigure, Expression } from './ActivityConfigure';
 import { IActivity } from './IActivity';
 import { Task } from '../decorators';
-import { ActivityBuilder, ActivityBuilderToken } from '../injectors';
 import { Activity } from './Activity';
 import { ActivityRunner } from './ActivityRunner';
 import { AppConfigureToken } from '@ts-ioc/bootstrap';
+import { ActivityBuilderToken } from './IActivityBuilder';
+import { ActivityBuilder } from './ActivityBuilder';
 
 
 /**

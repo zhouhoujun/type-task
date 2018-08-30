@@ -2,7 +2,7 @@ import { IContainer, CoreActions, Inject, ContainerToken, IocExt } from '@ts-ioc
 import { Task, Workflow } from './decorators';
 import { RunAspect } from './aop';
 import * as injectors from './injectors';
-import { ActivityRunner, Context, Activity } from './core';
+import { ActivityRunner, Context, Activity, ActivityBuilder } from './core';
 import * as activites from './activities';
 /**
  * register task decorators.
@@ -22,6 +22,7 @@ export class CoreModule {
         lifeScope.registerDecorator(Task, CoreActions.bindProvider, CoreActions.cache, CoreActions.componentBeforeInit, CoreActions.componentInit, CoreActions.componentAfterInit);
 
         container.use(injectors)
+            .register(ActivityBuilder)
             .register(ActivityRunner)
             .register(Context)
             .register(RunAspect)

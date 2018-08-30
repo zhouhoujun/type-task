@@ -28,8 +28,7 @@
     "@ts-ioc/core": "^3.1.5",
     "@ts-ioc/logs": "^3.1.5",
     "@ts-ioc/bootstrap": "^3.1.5",
-    "rxjs": "^5.5.11",
-    "events": "^3.0.0"
+    "rxjs": "^5.5.11"
   },
   "directories": {
     "lib": "lib"

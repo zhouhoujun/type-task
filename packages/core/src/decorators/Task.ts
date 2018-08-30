@@ -3,7 +3,7 @@ import {
     isClass, ITypeDecorator, Token, Registration, isToken, isUndefined
 } from '@ts-ioc/core';
 import { ActivityMetadata } from '../metadatas/ActivityMetadata';
-import { IActivityBuilder } from '../injectors/IActivityBuilder';
+import { IActivityBuilder } from '../core/IActivityBuilder';
 
 /**
  * task decorator, use to define class is a task element.

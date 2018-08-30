@@ -1,5 +1,7 @@
 export * from './IActivity';
 export * from './Activity'
+export * from './IActivityBuilder';
+export * from './ActivityBuilder';
 export * from './ExpressionActivity';
 export * from './ActivityConfigure';
 

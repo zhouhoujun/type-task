@@ -1,12 +1,13 @@
 import { ActivityBuilderToken, IActivityBuilder } from './IActivityBuilder';
 import { Type, isFunction, isString, Token, Express, isToken, IContainer, Injectable } from '@ts-ioc/core';
-import {
-    IActivity, Activity, ActivityInstance, InjectAcitityToken, ActivityConfigure,
-    AssignActivity, isActivityType, ActivityType, ExpressionType, Expression
-} from '../core';
+
 
 import { AnnotationBuilder } from '@ts-ioc/bootstrap';
 import { Task } from '../decorators';
+import { IActivity, ActivityInstance, InjectAcitityToken } from './IActivity';
+import { ActivityConfigure, ActivityType, ExpressionType, isActivityType, Expression } from './ActivityConfigure';
+import { Activity } from './Activity';
+import { AssignActivity } from './ExpressionActivity';
 
 
 
