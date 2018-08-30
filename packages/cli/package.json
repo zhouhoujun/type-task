@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/cli",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
   "main": "./bin/taskfr.js",
   "typings": "./lib/taskfr.d.ts",

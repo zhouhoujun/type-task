@@ -1,4 +1,5 @@
-import { IActivity, Task, InjectAcitityToken, Condition, Activity, DoWhileConfigure } from '../core';
+import { Task } from '../decorators';
+import { IActivity, InjectAcitityToken, Condition, Activity, DoWhileConfigure } from '../core';
 
 /**
  * do while activity token.

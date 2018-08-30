@@ -1,6 +1,5 @@
 
-import { CoreActivityConfigure, ActivityConfigure } from '../ActivityConfigure';
-import { ClassMetadata } from '@ts-ioc/core';
+import { CoreActivityConfigure, ActivityConfigure } from '../core/ActivityConfigure';
 
 /**
  * workflow metadata.

@@ -1,11 +1,14 @@
 import { ActivityBuilderToken, IActivityBuilder } from './IActivityBuilder';
 import { Type, isFunction, isString, Token, Express, isToken, IContainer, Injectable } from '@ts-ioc/core';
-import { ActivityConfigure, isActivityType, ActivityType, ExpressionType, Expression } from './ActivityConfigure';
-import { IActivity, ActivityInstance, InjectAcitityToken } from './IActivity';
-import { Activity } from './Activity';
+import {
+    IActivity, Activity, ActivityInstance, InjectAcitityToken, ActivityConfigure,
+    AssignActivity, isActivityType, ActivityType, ExpressionType, Expression
+} from '../core';
+
 import { AnnotationBuilder } from '@ts-ioc/bootstrap';
-import { AssignActivity } from './ExpressionActivity';
-import { Task } from './decorators';
+import { Task } from '../decorators';
+
+
 
 @Injectable(ActivityBuilderToken)
 export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IActivityBuilder {
@@ -19,6 +22,7 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
         return super.buildByConfig(activity, data);
     }
 
+
     async createInstance(token: Token<IActivity>, config: ActivityConfigure, uuid: string): Promise<IActivity> {
         if (isString(token)) {
             token = this.traslateStrToken(token);
@@ -28,12 +32,7 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
         if (!instance) {
             return null;
         }
-        // if (!(instance instanceof Activity)) {
-        //     let task = this.getDefaultAcitvity();
-        //     console.log(isClass(token) ? getClassName(token) : (token || '').toString(), 'is not right Activity, try load default activity:', getClassName(task));
-        //     config.activity = task;
-        //     instance = await this.createInstance(task, config, uuid) as ActivityInstance;
-        // }
+
         if (isString(uuid)) {
             instance.id = uuid;
         }
@@ -66,6 +65,7 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
     getDecorator() {
         return Task.toString();
     }
+
 
     protected resolveToken(token: Token<IActivity>, uuid?: string): IActivity {
         let activity = this.container.resolve(token);

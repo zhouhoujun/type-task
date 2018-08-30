@@ -1,6 +1,7 @@
 
-import { ActivityRunner, Task, Activity, Workflow } from '../core';
+import { Activity } from '../core';
 import { Injectable, InjectMetaAccessorToken, MetaAccessor } from '@ts-ioc/core';
+import { Workflow, Task } from '../decorators';
 
 export const WorkflowMetaAccessorToken = new InjectMetaAccessorToken(Activity);
 /**

@@ -1,7 +1,7 @@
 import { ActivityConfigure, Expression } from './ActivityConfigure';
 import { IActivity } from './IActivity';
 import { IContainer, Type, ObjectMap, Registration } from '@ts-ioc/core';
-import { ActivityBuilder } from './ActivityBuilder';
+import { ActivityBuilder } from '../injectors';
 
 
 /**

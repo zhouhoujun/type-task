@@ -1,4 +1,5 @@
-import { Task, InjectAcitityToken, Activity } from '../core';
+import { Task } from '../decorators';
+import { InjectAcitityToken, Activity } from '../core';
 import { Token, ObjectMap } from '@ts-ioc/core';
 
 /**

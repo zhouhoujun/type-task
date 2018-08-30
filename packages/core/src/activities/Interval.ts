@@ -1,4 +1,5 @@
-import { IActivity, Task, InjectAcitityToken, Activity, Expression, IntervalConfigure } from '../core';
+import { Task } from '../decorators';
+import { IActivity, InjectAcitityToken, Activity, Expression, IntervalConfigure } from '../core';
 
 
 /**

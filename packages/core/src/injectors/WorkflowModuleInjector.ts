@@ -1,6 +1,6 @@
 import { DIModuleInjector, InjectedModule, InjectedModuleToken } from '@ts-ioc/bootstrap';
 import { InjectModuleInjectorToken, Injectable, Inject, IModuleValidate, IContainer, Type } from '@ts-ioc/core';
-import { Task, Workflow } from '../core';
+import { Task, Workflow } from '../decorators';
 import { WorkflowModuleValidateToken } from './WorkflowModuleValidate';
 
 /**

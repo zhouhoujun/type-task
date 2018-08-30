@@ -1,5 +1,6 @@
-import { Task, InjectAcitityToken, Activity, Expression, DelayConfigure, OnActivityInit } from '../core';
 import { Defer } from '@ts-ioc/core';
+import { Task } from '../decorators';
+import { InjectAcitityToken, Activity, Expression, DelayConfigure, OnActivityInit } from '../core';
 
 /**
  * deloy activity token.

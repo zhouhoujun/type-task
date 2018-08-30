@@ -1,5 +1,5 @@
 import { InjectModuleValidateToken, BaseModuelValidate, Singleton } from '@ts-ioc/core';
-import { Task, Workflow } from '../core';
+import { Task, Workflow } from '../decorators';
 
 export const WorkflowModuleValidateToken = new InjectModuleValidateToken(Workflow.toString());
 

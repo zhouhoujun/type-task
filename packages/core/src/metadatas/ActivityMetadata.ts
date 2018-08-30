@@ -1,6 +1,6 @@
-import { ClassMetadata, IAnnotationMetadata } from '@ts-ioc/core';
-import { CoreActivityConfigure } from '../ActivityConfigure';
-import { IActivity } from '../IActivity';
+import { IAnnotationMetadata } from '@ts-ioc/core';
+import { CoreActivityConfigure } from '../core/ActivityConfigure';
+import { IActivity } from '../core/IActivity';
 
 /**
  * task metadata.

@@ -1,5 +1,7 @@
-import { IActivity, Task, InjectAcitityToken, Activity, Expression, ConfirmConfigure } from '../core';
 import { Defer } from '@ts-ioc/core';
+import { Task } from '../decorators';
+import { IActivity, InjectAcitityToken, Activity, Expression, ConfirmConfigure } from '../core';
+
 
 /**
  * Confirm activity token.

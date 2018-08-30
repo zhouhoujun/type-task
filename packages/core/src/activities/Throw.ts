@@ -1,4 +1,5 @@
-import { Task, InjectAcitityToken, Activity, Expression, ThrowConfigure } from '../core';
+import { Task } from '../decorators';
+import { InjectAcitityToken, Activity, Expression, ThrowConfigure } from '../core';
 /**
  * throw activity token.
  */

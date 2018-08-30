@@ -1,4 +1,4 @@
-import { Task, Activity, SequenceActivity } from 'src';
+import { Task, Activity, SequenceActivity } from '../src';
 
 @Task('test')
 export class SimpleTask extends Activity<any> {
