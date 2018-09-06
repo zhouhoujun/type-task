@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/platform-browser",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
   "main": "./bundles/platform-browser.umd.js",
   "typings": "./lib/index.d.ts",
@@ -24,10 +24,10 @@
   "dependencies": {
     "reflect-metadata": "^0.1.12",
     "tslib": "^1.9.2",
-    "@ts-ioc/platform-browser": "^3.2.1"
+    "@ts-ioc/platform-browser": "^3.2.2"
   },
   "peerDependencies": {
-    "@taskfr/core": "^2.1.5"
+    "@taskfr/core": "^2.1.6"
   },
   "directories": {
     "lib": "lib",
