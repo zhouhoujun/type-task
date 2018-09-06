@@ -39,9 +39,9 @@ export class DefaultWorkflowBuilder extends ModuleBuilder<IActivity> {
         return container.get(UUIDToken).generate();
     }
 
-    protected getBootTyp(config: ActivityConfigure): Token<any> {
-        return config.activity || config.task || super.getBootType(config);
-    }
+    // protected getBootTyp(config: ActivityConfigure): Token<any> {
+    //     return config.activity || config.task || super.getBootType(config);
+    // }
 
     protected getDefaultService(container: IContainer, ...providers: Providers[]): IService<IActivity> {
         return container.resolve(ActivityRunnerToken, ...providers);

@@ -1,4 +1,4 @@
-import { PipeModule, IPipeContext, PipeTask, AssetActivity } from '@taskfr/pipes';
+import { PipeModule, IPipeContext, PipeTask, AssetActivity, PipeActivity } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const jeditor = require('gulp-json-editor');
 

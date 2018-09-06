@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Joinpoint } from '@ts-ioc/aop';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
+import { DefaultAnnotationBuilderToken } from '@ts-ioc/bootstrap';
 
 /**
  * task runner.

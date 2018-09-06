@@ -122,12 +122,12 @@ export class DefaultTaskContainer implements ITaskContainer {
         workflowId = workflowId || this.createUUID();
 
         if (isToken(activity)) {
-            boot = activity; // { id: workflowId, token: activity, builder: WorkflowBuilderToken };
+            boot = activity;
         } else {
             boot = activity || {};
             boot.id = workflowId;
-            boot.builder = boot.builder || WorkflowBuilderToken;
-            boot.annotationBuilder = boot.annotationBuilder || ActivityBuilderToken;
+            // boot.builder = boot.builder || WorkflowBuilderToken;
+            // boot.annotationBuilder = boot.annotationBuilder || ActivityBuilderToken;
         }
         let env = this.getBuilder().getPools().create();
         let runner = await this.getBuilder().bootstrap(boot, env, workflowId) as IActivityRunner<any>;
