@@ -59,7 +59,7 @@ let iocVersion = (ctx: IPipeContext) => {
             shell: (ctx: IPipeContext) => {
                 let envArgs = ctx.getEnvArgs();
                 let packages = ctx.getFolders('packages');
-                let cmd = envArgs.deploy ? 'npm publish --access=public' : 'npm test';
+                let cmd = envArgs.deploy ? 'npm publish --access=public' : 'npm run build';
                 let cmds = packages.map(fd => {
                     return `cd ${fd} && ${cmd}`;
                 });

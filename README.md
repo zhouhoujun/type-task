@@ -169,13 +169,13 @@ TaskContainer.create(__dirname)
 
 ## Documentation [github](https://github.com/zhouhoujun/type-task.git)
 
-### builde
+### build
 
-1. build test: `npm test`
+1. build: `npm run build`
 
-2. build with version: `npm test -- --setvs=2.0.5`;
+2. build with version: `npm run build -- --setvs=2.0.5`;
 
-3. deploy: `./deploy.cmd` or `npm test -- --deploy=true`;
+3. deploy: `./deploy.cmd` or `npm run build -- --deploy=true`;
 
 Documentation is available on the
 [type-task docs site](https://github.com/zhouhoujun/type-task).

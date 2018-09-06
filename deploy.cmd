@@ -1,1 +1,1 @@
-npm test -- --deploy=true
+npm run build -- --deploy=true

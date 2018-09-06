@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "npm prune",
     "reinstall": "npm cache clean && npm install",
-    "test": "ts-node -r tsconfig-paths/register taskfile.ts",
+    "build": "ts-node -r tsconfig-paths/register taskfile.ts",
     "prepublish": "ts-node -r tsconfig-paths/register taskfile.ts"
   },
   "keywords": ["activity", "workflow", "task", "framework", "IoC", "AOP", "dependency", "injection"],
