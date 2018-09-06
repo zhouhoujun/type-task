@@ -24,10 +24,10 @@
   "dependencies": {
     "reflect-metadata": "^0.1.12",
     "tslib": "^1.9.2",
-    "@ts-ioc/aop": "^3.2.0",
-    "@ts-ioc/core": "^3.2.0",
-    "@ts-ioc/logs": "^3.2.0",
-    "@ts-ioc/bootstrap": "^3.2.0",
+    "@ts-ioc/aop": "^3.2.1",
+    "@ts-ioc/core": "^3.2.1",
+    "@ts-ioc/logs": "^3.2.1",
+    "@ts-ioc/bootstrap": "^3.2.1",
     "rxjs": "^5.5.11"
   },
   "directories": {
