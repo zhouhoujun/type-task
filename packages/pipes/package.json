@@ -2,6 +2,9 @@
   "name": "@taskfr/pipes",
   "version": "2.1.7",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc. file stream pipes activities.",
+  "esnext": "./es2017/pipes.js",
+  "es2015": "./es2015/pipes.js",
+  "module": "./lib/index.js",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "scripts": {

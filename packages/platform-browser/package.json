@@ -2,6 +2,9 @@
   "name": "@taskfr/platform-browser",
   "version": "2.1.7",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
+  "esnext": "./es2017/platform-browser.js",
+  "es2015": "./es2015/platform-browser.js",
+  "module": "./lib/index.js",
   "main": "./bundles/platform-browser.umd.js",
   "typings": "./lib/index.d.ts",
   "scripts": {

@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target":"es2015",
+    "baseUrl": ".",
+    "rootDir": "../../packages",
+    "paths": {
+      "@taskfr/core": [
+        "../core/src"
+      ],
+      "@taskfr/pipes": [
+        "../pipes/src"
+      ],
+      "@taskfr/platform-server": [
+        "../platform-server/src"
+      ]
+    }
+  },
+  "exclude": [
+    "lib",
+    "node_modules"    
+  ]
+}
