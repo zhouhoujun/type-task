@@ -1,5 +1,5 @@
 import { ActivityBuilderToken, IActivityBuilder } from './IActivityBuilder';
-import { Type, isFunction, isString, Token, Express, isToken, IContainer, Injectable, DefaultMetaAccessorToken } from '@ts-ioc/core';
+import { Type, isFunction, isString, Token, Express, isToken, IContainer, Injectable } from '@ts-ioc/core';
 
 
 import { AnnotationBuilder } from '@ts-ioc/bootstrap';
