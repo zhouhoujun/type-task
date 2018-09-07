@@ -2,8 +2,9 @@
 .vscode/.*
 node_modules
 package-lock.json
-bower_components
-jspm_packages
+bundles
+es2015
+es2017
 build
 lib
 bin
