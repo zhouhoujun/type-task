@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/platform-browser",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
   "esnext": "./es2017/platform-browser.js",
   "es2015": "./es2015/platform-browser.js",
@@ -30,7 +30,7 @@
     "@ts-ioc/platform-browser": "^3.2.2"
   },
   "peerDependencies": {
-    "@taskfr/core": "^2.1.8"
+    "@taskfr/core": "^2.1.9"
   },
   "directories": {
     "lib": "lib",
