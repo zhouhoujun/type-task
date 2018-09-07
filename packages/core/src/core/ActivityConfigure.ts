@@ -1,5 +1,5 @@
 import { IActivity, GActivity } from './IActivity';
-import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
+import { Token, isToken, isMetadataObject, isString, isUndefined, isArray } from '@ts-ioc/core';
 import { ModuleConfig } from '@ts-ioc/bootstrap';
 import { IActivityRunner } from './IActivityRunner';
 import { ExpressionActivity } from './ExpressionActivity';
@@ -181,6 +181,9 @@ export interface ActivityConfigure extends IActivityConfigure<IActivity> {
 
 }
 
+export function isConfirmConfigure(target: any): target is ConfirmConfigure {
+    return isMetadataObject(target) && !isUndefined(target.confirm);
+}
 /**
  * Confirm activity configure.
  *
@@ -195,9 +198,13 @@ export interface ConfirmConfigure extends ActivityConfigure {
      * @type {ExpressionType<boolean>}
      * @memberof ConfirmConfigure
      */
-    confirm?: ExpressionType<boolean>;
+    confirm: ExpressionType<boolean>;
 }
 
+
+export function isDelayConfigure(target: any): target is DelayConfigure {
+    return isMetadataObject(target) && !isUndefined(target.delay);
+}
 
 /**
  * delay activity configure.
@@ -213,9 +220,13 @@ export interface DelayConfigure extends ActivityConfigure {
      * @type {ExpressionType<number>}
      * @memberof DelayConfigure
      */
-    delay?: ExpressionType<number>;
+    delay: ExpressionType<number>;
 }
 
+
+export function isDoWhileConfigure(target: any): target is DoWhileConfigure {
+    return isMetadataObject(target) && !isUndefined(target.do) && !isUndefined(target.while);
+}
 /**
  * DoWhile activity configure.
  *
@@ -242,6 +253,9 @@ export interface DoWhileConfigure extends ActivityConfigure {
 }
 
 
+export function isIfConfigure(target: any): target is IfConfigure {
+    return isMetadataObject(target) && !isUndefined(target.if) && !isUndefined(target.ifBody);
+}
 /**
  * If activity configure.
  *
@@ -279,6 +293,11 @@ export interface IfConfigure extends ActivityConfigure {
 
 
 
+
+export function isIntervalConfigure(target: any): target is IntervalConfigure {
+    return isMetadataObject(target) && !isUndefined(target.interval) && !isUndefined(target.body);
+}
+
 /**
  * Interval activity configure.
  *
@@ -296,14 +315,18 @@ export interface IntervalConfigure extends ActivityConfigure {
     interval: ExpressionType<number>;
 
     /**
-     * while body.
+     * Interval body.
      *
      * @type {ActivityType<IActivity>}
      * @memberof WhileConfigure
      */
-    body?: ActivityType<IActivity>
+    body: ActivityType<IActivity>
 }
 
+
+export function isParallelConfigure(target: any): target is ParallelConfigure {
+    return isMetadataObject(target) && isArray(target.parallel);
+}
 /**
  * Parallel activity configure.
  *
@@ -318,9 +341,12 @@ export interface ParallelConfigure extends ActivityConfigure {
      * @type {ActivityType<IActivity>[]}
      * @memberof ParallelConfigure
      */
-    parallel?: ActivityType<IActivity>[];
+    parallel: ActivityType<IActivity>[];
 }
 
+export function isSequenceConfigure(target: any): target is SequenceConfigure {
+    return isMetadataObject(target) && isArray(target.sequence);
+}
 /**
  * sequence activity configure.
  *
@@ -335,9 +361,13 @@ export interface SequenceConfigure extends ActivityConfigure {
      * @type {ActivityType<IActivity>[]}
      * @memberof IConfigure
      */
-    sequence?: ActivityType<IActivity>[];
+    sequence: ActivityType<IActivity>[];
 }
 
+
+export function isSwitchConfigure(target: any): target is SwitchConfigure {
+    return isMetadataObject(target) && !isUndefined(target.cases);
+}
 /**
  * Switch activity configure.
  *

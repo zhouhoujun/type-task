@@ -236,6 +236,20 @@ export class CoreES2015Builder extends PackageActivity {
 export class CoreES2017Builder extends PackageActivity {
 }
 
+// @Package({
+//     sequence: [
+//         {
+//             if: (act) => act.context.getEnvArgs().test === true,
+//             ifBody: CoreBuilder,
+//             interval: CoreES2015Builder,
+//             do: CoreES2015Builder,
+//             while: (act) => act.context.getEnvArgs().test === true,
+//         }
+//     ]
+// })
+// export class Builder {
+
+// }
 
 TaskContainer.create(__dirname)
     .use(PipeModule)

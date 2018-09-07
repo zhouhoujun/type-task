@@ -1,4 +1,4 @@
-import { PipeModule, Package, PackageActivity, CleanConfigure, CleanActivity, TsConfigure, AssetConfigure, AssetActivity } from '@taskfr/pipes';
+import { PipeModule, Package, PackageActivity, CleanActivity, TsConfigure, AssetActivity } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');
@@ -27,7 +27,7 @@ export class PipesBuilder extends PackageActivity {
         ts: <TsConfigure>{ dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2015.json' }
     },
     sequence: [
-        <AssetConfigure>{
+        {
             src: 'esnext/**/*.js',
             dest: 'es2015',
             sourcemaps: true,
@@ -109,7 +109,7 @@ export class PipesES2015Builder extends PackageActivity {
         ts: <TsConfigure>{ dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2017.json' }
     },
     sequence: [
-        <AssetConfigure>{
+        {
             src: 'esnext/**/*.js',
             dest: 'es2017',
             sourcemaps: true,
@@ -179,7 +179,7 @@ export class PipesES2015Builder extends PackageActivity {
             ],
             task: AssetActivity
         },
-        <CleanConfigure>{
+        {
             clean: 'esnext',
             activity: CleanActivity
         }

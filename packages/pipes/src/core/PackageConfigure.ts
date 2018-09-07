@@ -1,10 +1,22 @@
-import { CtxType, Src, ExpressionToken, SequenceConfigure, ConfigureType, IActivity, InjectAcitityBuilderToken } from '@taskfr/core';
-import { ObjectMap, Registration } from '@ts-ioc/core';
+import { CtxType, Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, ActivityConfigure, CoreActivityConfigure } from '@taskfr/core';
+import { ObjectMap, Registration, Token } from '@ts-ioc/core';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { AssetActivity } from './AssetActivity';
 import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
 import { AssetConfigure } from './AssetConfigure';
+import { IPipeConfigure } from './IPipeConfigure';
+import { TsConfigure } from '../assets';
+import { SourceConfigure } from './SourceActivity';
+import { UglifyConfigure } from './UglifyActivity';
+import { WatchConfigure } from './WatchActivity';
+import { AnnotationsConfigure } from './Annotation';
+
+export type PipesConfigure = CoreActivityConfigure & (AssetConfigure | IPipeConfigure
+    | TsConfigure | DestConfigure | SourceConfigure | TestConfigure | UglifyConfigure
+    | WatchConfigure | AnnotationsConfigure | CleanConfigure | DestConfigure);
+
+export type PipesActivityType<T extends IActivity> = Token<T> | PipesConfigure;
 
 /**
  * package configure.
@@ -13,7 +25,7 @@ import { AssetConfigure } from './AssetConfigure';
  * @interface PackageConfigure
  * @extends {SequenceConfigure}
  */
-export interface PackageConfigure extends SequenceConfigure {
+export interface PackageConfigure extends ActivityConfigure {
     /**
      * src root path.
      *
@@ -21,6 +33,7 @@ export interface PackageConfigure extends SequenceConfigure {
      * @memberof PackageConfigure
      */
     src?: CtxType<string>;
+
 
     // /**
     //  * watch activity.
@@ -44,7 +57,7 @@ export interface PackageConfigure extends SequenceConfigure {
      * @type {ObjectMap<ExpressionToken<Src> | ConfigureType<AssetActivity, AssetConfigure>>}
      * @memberof PackageConfigure
      */
-    assets: ObjectMap<ExpressionToken<Src> | ConfigureType<AssetActivity, AssetConfigure>>;
+    assets?: ObjectMap<ExpressionToken<Src> | ConfigureType<AssetActivity, AssetConfigure>>;
 
     /**
      * test config.
@@ -61,6 +74,14 @@ export interface PackageConfigure extends SequenceConfigure {
      * @memberof PackageConfigure
      */
     dest?: ExpressionToken<string> | ConfigureType<DestActivity, DestConfigure>;
+
+    /**
+     * package sequence activity.
+     *
+     * @type {PipesActivityType<IActivity>[]}
+     * @memberof PackageConfigure
+     */
+    sequence?: PipesActivityType<IActivity>[];
 
 }
 

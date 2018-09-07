@@ -1,6 +1,7 @@
 import { ITaskDecorator, createTaskDecorator } from '@taskfr/core';
 import { PackageConfigure, PackageBuilderToken, PackageToken } from '../core/PackageConfigure';
 
+
 /**
  * asset task metadata.
  *
@@ -11,6 +12,7 @@ import { PackageConfigure, PackageBuilderToken, PackageToken } from '../core/Pac
 export interface PackageMetadata extends PackageConfigure {
 
 }
+
 
 /**
  * package task decorator, use to define class is a asset task element.

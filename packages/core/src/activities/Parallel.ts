@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, ParallelConfigure, } from '../core';
+import { IActivity, InjectAcitityToken, Activity, ParallelConfigure, ActivityType, } from '../core';
 import { Token, isToken } from '@ts-ioc/core';
 
 
@@ -29,17 +29,17 @@ export class ParallelActivity extends Activity<any> {
 
     }
 
-    async buildChildren(activity: ParallelActivity, configs: (ParallelConfigure | Token<IActivity>)[]) {
-        let children = await Promise.all(configs.map(async cfg => {
+    async buildChildren(activity: ParallelActivity, configs: ActivityType<IActivity>[]) {
+        let children = await Promise.all(configs.map(async (cfg: ParallelConfigure) => {
             let node = await this.buildActivity(cfg);
             if (!node) {
                 return null;
             }
-            if (node instanceof ParallelActivity) {
-                if (!isToken(cfg) && cfg.parallel && cfg.parallel.length) {
-                    await node.buildChildren(node, cfg.parallel);
-                }
-            }
+            // if (node instanceof ParallelActivity) {
+            //     if (!isToken(cfg) && cfg.parallel && cfg.parallel.length) {
+            //         await node.buildChildren(node, cfg.parallel);
+            //     }
+            // }
             return node;
         }));
 

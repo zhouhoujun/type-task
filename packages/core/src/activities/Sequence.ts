@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, SequenceConfigure } from '../core';
+import { IActivity, InjectAcitityToken, Activity, SequenceConfigure, ActivityType } from '../core';
 import { Token, isToken } from '@ts-ioc/core';
 
 
@@ -28,17 +28,17 @@ export class SequenceActivity extends Activity<any> {
         }
     }
 
-    async buildChildren(activity: SequenceActivity, configs: (SequenceConfigure | Token<IActivity>)[]) {
-        let sequence = await Promise.all(configs.map(async cfg => {
+    async buildChildren(activity: SequenceActivity, configs: ActivityType<IActivity>[]) {
+        let sequence = await Promise.all(configs.map(async (cfg: SequenceConfigure) => {
             let node = await this.buildActivity(cfg);
             if (!node) {
                 return null;
             }
-            if (node instanceof SequenceActivity) {
-                if (!isToken(cfg) && cfg.sequence && cfg.sequence.length) {
-                    await node.buildChildren(node, cfg.sequence);
-                }
-            }
+            // if (node instanceof SequenceActivity) {
+            //     if (!isToken(cfg) && cfg.sequence && cfg.sequence.length) {
+            //         await node.buildChildren(node, cfg.sequence);
+            //     }
+            // }
             return node;
         }));
 

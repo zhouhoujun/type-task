@@ -1,7 +1,5 @@
 import { ActivityBuilderToken, IActivityBuilder } from './IActivityBuilder';
 import { Type, isFunction, isString, Token, Express, isToken, IContainer, Injectable } from '@ts-ioc/core';
-
-
 import { AnnotationBuilder } from '@ts-ioc/bootstrap';
 import { Task } from '../decorators';
 import { IActivity, ActivityInstance, InjectAcitityToken } from './IActivity';
@@ -10,7 +8,14 @@ import { Activity } from './Activity';
 import { AssignActivity } from './ExpressionActivity';
 
 
-
+/**
+ * activity builder.
+ *
+ * @export
+ * @class ActivityBuilder
+ * @extends {AnnotationBuilder<IActivity>}
+ * @implements {IActivityBuilder}
+ */
 @Injectable(ActivityBuilderToken)
 export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IActivityBuilder {
 
@@ -18,11 +23,9 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
         return super.build(token, config, data);
     }
 
-
     buildByConfig(activity: ActivityType<any>, data: any) {
         return super.buildByConfig(activity, data);
     }
-
 
     async createInstance(token: Token<IActivity>, config: ActivityConfigure, uuid: string): Promise<IActivity> {
         if (isString(token)) {
@@ -66,7 +69,6 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
     getDecorator() {
         return Task.toString();
     }
-
 
     protected resolveToken(token: Token<IActivity>, uuid?: string): IActivity {
         let activity = this.container.resolve(token);
