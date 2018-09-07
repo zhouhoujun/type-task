@@ -29,19 +29,7 @@ export class SequenceActivity extends Activity<any> {
     }
 
     async buildChildren(activity: SequenceActivity, configs: ActivityType<IActivity>[]) {
-        let sequence = await Promise.all(configs.map(async (cfg: SequenceConfigure) => {
-            let node = await this.buildActivity(cfg);
-            if (!node) {
-                return null;
-            }
-            // if (node instanceof SequenceActivity) {
-            //     if (!isToken(cfg) && cfg.sequence && cfg.sequence.length) {
-            //         await node.buildChildren(node, cfg.sequence);
-            //     }
-            // }
-            return node;
-        }));
-
+        let sequence = await Promise.all(configs.map(cfg => this.buildActivity(cfg)));
         activity.activites = sequence;
         return activity;
     }

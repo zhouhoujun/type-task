@@ -5,6 +5,7 @@ package-lock.json
 bundles
 es2015
 es2017
+exnext
 build
 lib
 bin
