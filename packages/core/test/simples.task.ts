@@ -29,7 +29,7 @@ export class SimpleCTask extends SequenceActivity {
 
 @Task({
     name: 'test-module',
-    task: SequenceActivity,
+    activity: SequenceActivity,
     sequence: [
         {
             name: 'test------3',
@@ -41,7 +41,7 @@ export class SimpleCTask extends SequenceActivity {
         }
     ]
 })
-export class TaskModuleTest {
+export class TaskModuleTest { // extends SequenceActivity {
 
 }
 

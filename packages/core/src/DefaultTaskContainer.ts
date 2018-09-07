@@ -6,7 +6,7 @@ import { Aspect, AopModule } from '@ts-ioc/aop';
 import { SequenceActivity } from './activities';
 import { CoreModule } from './CoreModule';
 import { LogModule } from '@ts-ioc/logs';
-import { DefaultWorkflowBuilder, WorkflowModuleValidate, WorkflowModuleInjector, WorkflowBuilderToken, WorkflowModuleInjectorToken } from './injectors';
+import { WorkflowBuilderToken, WorkflowModuleInjectorToken, WorkflowModuleValidate, WorkflowModuleInjector } from './injectors';
 
 
 /**
@@ -34,8 +34,7 @@ export class DefaultTaskContainer implements ITaskContainer {
         if (!this.builder) {
             this.builder = this.createAppBuilder();
             this.builder.events.on(ApplicationEvents.onRootContainerCreated, (container: IContainer) => {
-                container.register(DefaultWorkflowBuilder)
-                    .register(WorkflowModuleValidate)
+                container.register(WorkflowModuleValidate)
                     .register(WorkflowModuleInjector);
                 let chain = container.getBuilder().getInjectorChain(container);
                 chain.first(container.resolve(WorkflowModuleInjectorToken));
@@ -48,7 +47,6 @@ export class DefaultTaskContainer implements ITaskContainer {
                 .provider(DefaultAnnotationBuilderToken, ActivityBuilderToken)
                 .provider(DefaultServiceToken, ActivityRunnerToken)
                 .provider(DefaultModuleBuilderToken, WorkflowBuilderToken);
-                // .provider(DefaultMetaAccessorToken, ActivityMetaAccessorToken);
 
         }
         return this.builder;
@@ -126,8 +124,10 @@ export class DefaultTaskContainer implements ITaskContainer {
         } else {
             boot = activity || {};
             boot.id = workflowId;
-            // boot.builder = boot.builder || WorkflowBuilderToken;
-            // boot.annotationBuilder = boot.annotationBuilder || ActivityBuilderToken;
+            if (!boot.token) {
+                boot.builder = boot.builder || WorkflowBuilderToken;
+                boot.annotationBuilder = boot.annotationBuilder || ActivityBuilderToken;
+            }
         }
         let env = this.getBuilder().getPools().create();
         let runner = await this.getBuilder().bootstrap(boot, env, workflowId) as IActivityRunner<any>;
@@ -151,7 +151,7 @@ export class DefaultTaskContainer implements ITaskContainer {
      * @memberof DefaultTaskContainer
      */
     async bootstrap(...activites: Active[]): Promise<IActivityRunner<any>> {
-        let workflow = (activites.length > 1) ? <SequenceConfigure>{ sequence: activites, task: SequenceActivity } : lang.first(activites);
+        let workflow = (activites.length > 1) ? <SequenceConfigure>{ sequence: activites, activity: SequenceActivity } : lang.first(activites);
         let runner = await this.createActivity(workflow);
         return runner;
     }

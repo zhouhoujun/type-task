@@ -473,14 +473,16 @@ var ActivityRunner = /** @class */ (function () {
             var _this = this;
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.instance.run(data)
-                            .then(function (data) {
-                            _this.state = IActivityRunner.RunState.complete;
-                            _this.stateChanged.next(_this.state);
-                            _this._resultValue = data;
-                            _this._result.next(data);
-                            return data;
-                        })];
+                    case 0:
+                        console.log(this.instance);
+                        return [4 /*yield*/, this.instance.run(data)
+                                .then(function (data) {
+                                _this.state = IActivityRunner.RunState.complete;
+                                _this.stateChanged.next(_this.state);
+                                _this._resultValue = data;
+                                _this._result.next(data);
+                                return data;
+                            })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -2282,31 +2284,6 @@ var WorkflowModuleInjector = /** @class */ (function (_super) {
     return WorkflowModuleInjector;
 }(bootstrap_1.DIModuleInjector));
 exports.WorkflowModuleInjector = WorkflowModuleInjector;
-// /**
-//  * activity module injector token.
-//  */
-// export const ActivityModuleInjectorToken = new InjectModuleInjectorToken(Task.toString());
-// /**
-//  * activity module injector.
-//  *
-//  * @export
-//  * @class ActivityModuleInjector
-//  * @extends {DIModuleInjector}
-//  */
-// @Injectable(ActivityModuleInjectorToken)
-// export class ActivityModuleInjector extends DIModuleInjector {
-//     constructor(@Inject(WorkflowModuleValidateToken) validate: IModuleValidate) {
-//         super(validate)
-//     }
-//     protected async importModule(container: IContainer, type: Type<any>): Promise<InjectedModule<any>> {
-//         container.register(type);
-//         let metaConfig = this.validate.getMetaConfig(type, container);
-//         await this.registerConfgureDepds(container, metaConfig);
-//         let injMd = new InjectedModule(type, metaConfig, container);
-//         container.bindProvider(new InjectedModuleToken(type), injMd);
-//         return injMd;
-//     }
-// }
 
 
 
@@ -2370,7 +2347,7 @@ var DefaultWorkflowBuilder = /** @class */ (function (_super) {
         }
         return container.get(core.UUIDToken).generate();
     };
-    DefaultWorkflowBuilder.prototype.getBootTyp = function (config) {
+    DefaultWorkflowBuilder.prototype.getBootType = function (config) {
         return config.activity || config.task || _super.prototype.getBootType.call(this, config);
     };
     DefaultWorkflowBuilder.prototype.getDefaultService = function (container) {
@@ -2380,7 +2357,7 @@ var DefaultWorkflowBuilder = /** @class */ (function (_super) {
         }
         return container.resolve.apply(container, [core.ActivityRunnerToken].concat(providers));
     };
-    DefaultWorkflowBuilder.classAnnations = { "name": "DefaultWorkflowBuilder", "params": { "bootstrap": ["activity", "env", "workflowId"], "createUUID": ["container"], "getBootTyp": ["config"], "getDefaultService": ["container", "providers"] } };
+    DefaultWorkflowBuilder.classAnnations = { "name": "DefaultWorkflowBuilder", "params": { "bootstrap": ["activity", "env", "workflowId"], "createUUID": ["container"], "getBootType": ["config"], "getDefaultService": ["container", "providers"] } };
     DefaultWorkflowBuilder = tslib_1.__decorate([
         core_1.Singleton(exports.WorkflowBuilderToken)
     ], DefaultWorkflowBuilder);
@@ -2493,8 +2470,7 @@ var DefaultTaskContainer = /** @class */ (function () {
         if (!this.builder) {
             this.builder = this.createAppBuilder();
             this.builder.events.on(bootstrap_1.ApplicationEvents.onRootContainerCreated, function (container) {
-                container.register(injectors.DefaultWorkflowBuilder)
-                    .register(injectors.WorkflowModuleValidate)
+                container.register(injectors.WorkflowModuleValidate)
                     .register(injectors.WorkflowModuleInjector);
                 var chain = container.getBuilder().getInjectorChain(container);
                 chain.first(container.resolve(injectors.WorkflowModuleInjectorToken));
@@ -2506,7 +2482,6 @@ var DefaultTaskContainer = /** @class */ (function () {
                 .provider(bootstrap_1.DefaultAnnotationBuilderToken, core.ActivityBuilderToken)
                 .provider(bootstrap_1.DefaultServiceToken, core.ActivityRunnerToken)
                 .provider(bootstrap_1.DefaultModuleBuilderToken, injectors.WorkflowBuilderToken);
-            // .provider(DefaultMetaAccessorToken, ActivityMetaAccessorToken);
         }
         return this.builder;
     };
@@ -2581,13 +2556,15 @@ var DefaultTaskContainer = /** @class */ (function () {
                     case 0:
                         workflowId = workflowId || this.createUUID();
                         if (core_1.isToken(activity)) {
-                            boot = activity; // { id: workflowId, token: activity, builder: WorkflowBuilderToken };
+                            boot = activity;
                         }
                         else {
                             boot = activity || {};
                             boot.id = workflowId;
-                            boot.builder = boot.builder || injectors.WorkflowBuilderToken;
-                            boot.annotationBuilder = boot.annotationBuilder || core.ActivityBuilderToken;
+                            if (!boot.token) {
+                                boot.builder = boot.builder || injectors.WorkflowBuilderToken;
+                                boot.annotationBuilder = boot.annotationBuilder || core.ActivityBuilderToken;
+                            }
                         }
                         env = this.getBuilder().getPools().create();
                         return [4 /*yield*/, this.getBuilder().bootstrap(boot, env, workflowId)];
@@ -2623,7 +2600,7 @@ var DefaultTaskContainer = /** @class */ (function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        workflow = (activites.length > 1) ? { sequence: activites, task: activities.SequenceActivity } : core_1.lang.first(activites);
+                        workflow = (activites.length > 1) ? { sequence: activites, activity: activities.SequenceActivity } : core_1.lang.first(activites);
                         return [4 /*yield*/, this.createActivity(workflow)];
                     case 1:
                         runner = _a.sent();

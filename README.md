@@ -28,6 +28,14 @@ taskname: decorator class with `@Task('taskname')` or `@TaskModule({name:'taskna
 You can `import` modules:
 
 
+### build
+
+1. build: `npm run build`
+
+2. build with version: `npm run build -- --setvs=2.1.7`;
+
+3. deploy: `./deploy.cmd` or `npm run build -- --deploy=true`;
+
 ## Doc
 
 ### Define Task
@@ -169,13 +177,6 @@ TaskContainer.create(__dirname)
 
 ## Documentation [github](https://github.com/zhouhoujun/type-task.git)
 
-### build
-
-1. build: `npm run build`
-
-2. build with version: `npm run build -- --setvs=2.0.5`;
-
-3. deploy: `./deploy.cmd` or `npm run build -- --deploy=true`;
 
 Documentation is available on the
 [type-task docs site](https://github.com/zhouhoujun/type-task).

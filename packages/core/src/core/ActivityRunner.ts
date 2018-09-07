@@ -6,7 +6,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Joinpoint } from '@ts-ioc/aop';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
-import { DefaultAnnotationBuilderToken } from '@ts-ioc/bootstrap';
 
 /**
  * task runner.
@@ -52,6 +51,7 @@ export class ActivityRunner<T> implements IActivityRunner<T> {
 
 
     async start(data?: any): Promise<T> {
+        console.log(this.instance);
         return await this.instance.run(data)
             .then(data => {
                 this.state = RunState.complete;
