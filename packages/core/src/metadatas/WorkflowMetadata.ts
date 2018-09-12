@@ -1,5 +1,5 @@
 
-import { CoreActivityConfigure, ActivityConfigure } from '../core/ActivityConfigure';
+import { CoreActivityConfigs } from '../core/ActivityConfigure';
 
 /**
  * workflow metadata.
@@ -9,8 +9,8 @@ import { CoreActivityConfigure, ActivityConfigure } from '../core/ActivityConfig
  * @extends {ActivityConfigure}
  * @extends {ClassMetadata}
  */
-export interface IWorkflowMetadata extends ActivityConfigure {
+export interface IWorkflowMetadata {
 
 }
 
-export type WorkflowMetadata = IWorkflowMetadata & CoreActivityConfigure;
+export type WorkflowMetadata = IWorkflowMetadata & CoreActivityConfigs;

@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/cli",
-  "version": "2.1.9",
+  "version": "2.1.10",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc",
   "main": "./bin/taskfr.js",
   "typings": "./lib/taskfr.d.ts",
@@ -8,7 +8,6 @@
     "tkf": "./bin/taskfr.js"
   },
   "scripts": {
-    "postinstall": "npm prune",
     "reinstall": "npm cache clean && npm install",
     "build": "ts-node -r tsconfig-paths/register taskfile.ts",
     "prepublish": "ts-node -r tsconfig-paths/register taskfile.ts"

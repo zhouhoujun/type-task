@@ -1,8 +1,7 @@
-import { SequenceActivity, ParallelActivity } from '@taskfr/core';
+import { SequenceActivity, ParallelActivity, IActivity } from '@taskfr/core';
 import { DestActivity } from './DestActivity';
 import { TestActivity } from './TestActivity';
 import { CleanActivity } from './CleanActivity';
-import { AssetActivity } from './AssetActivity';
 import { ITransform } from './ITransform';
 import { Type, Inject } from '@ts-ioc/core';
 import { PipeContextToken, IPipeContext } from './IPipeContext';
@@ -51,10 +50,10 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
     /**
      * assets activities.
      *
-     * @type {AssetActivity[]}
+     * @type {IActivity[]}
      * @memberof PackageActivity
      */
-    assets: AssetActivity[] = [];
+    assets: IActivity[] = [];
     /**
      * assets execute control type.
      *

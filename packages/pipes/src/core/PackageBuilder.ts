@@ -1,6 +1,6 @@
-import { IActivity, Src, ActivityBuilder } from '@taskfr/core';
+import { IActivity, Src, ActivityBuilder, SequenceActivity, SequenceConfigure, SequenceActivityToken, Activity, ParallelConfigure, ParallelActivityToken } from '@taskfr/core';
 import { isArray, isString, lang, Injectable } from '@ts-ioc/core';
-import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
+import { PackageConfigure, PackageBuilderToken, PipesConfigure } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
@@ -32,8 +32,8 @@ export class PackageBuilder extends ActivityBuilder {
         if (activity instanceof PackageActivity) {
             let srcRoot = activity.src = activity.context.to(config.src);
             let assets = await Promise.all(lang.keys(config.assets).map(name => {
-                return this.toActivity<Src, AssetActivity, AssetConfigure>(config.assets[name], activity,
-                    act => act instanceof AssetActivity,
+                return this.toActivity<Src, AssetActivity | SequenceActivity, PipesConfigure>(config.assets[name], activity,
+                    act => act instanceof Activity,
                     src => {
                         if (isString(src) || isArray(src)) {
                             return <AssetConfigure>{ src: src };
@@ -41,13 +41,32 @@ export class PackageBuilder extends ActivityBuilder {
                             return null;
                         }
                     },
-                    assCfg => {
-                        if (!assCfg) {
+                    cfg => {
+                        if (!cfg) {
                             return null;
                         }
-                        if (!assCfg.task) {
+                        let seqcfg = cfg as SequenceConfigure;
+                        if (isArray(seqcfg.sequence)) {
+                            if (!seqcfg.activity && !seqcfg.task) {
+                                seqcfg.task = SequenceActivityToken;
+                            }
+                            return seqcfg;
+                        }
+
+                        let parcfg = cfg as ParallelConfigure;
+                        if (isArray(parcfg.parallel)) {
+                            if (!parcfg.activity && !parcfg.task) {
+                                parcfg.task = ParallelActivityToken;
+                            }
+                            return parcfg;
+                        }
+
+                        let assCfg = cfg as AssetConfigure;
+                        if (!assCfg.activity && !assCfg.task) {
                             assCfg.task = new InjectAssetActivityToken(name);
-                        } else if (isString(assCfg.task)) {
+                        }
+
+                        if (isString(assCfg.task)) {
                             assCfg.task = new InjectAssetActivityToken(assCfg.task);
                         }
                         if (!this.container.has(assCfg.task)) {

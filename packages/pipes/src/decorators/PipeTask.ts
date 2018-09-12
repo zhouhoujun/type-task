@@ -1,4 +1,4 @@
-import { createTaskDecorator, IActivityMetadata, ITaskDecorator, CoreActivityConfigure } from '@taskfr/core';
+import { createTaskDecorator, IActivityMetadata, ITaskDecorator, CoreActivityConfigs } from '@taskfr/core';
 import { IPipeConfigure } from '../core/IPipeConfigure';
 import { PipeActivityBuilderToken, PipeActivityToken } from '../core/IPipeActivity';
 
@@ -6,7 +6,7 @@ export interface IPipeTaskMetadata extends IActivityMetadata, IPipeConfigure {
 
 }
 
-export type PipeTaskMetadata = IPipeTaskMetadata & CoreActivityConfigure;
+export type PipeTaskMetadata = IPipeTaskMetadata & CoreActivityConfigs;
 
 /**
  * pipe task decorator, use to define class is a pipe task element.

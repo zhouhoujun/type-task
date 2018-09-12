@@ -1,4 +1,4 @@
-import { CtxType, Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, ActivityConfigure, CoreActivityConfigure } from '@taskfr/core';
+import { CtxType, Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, ActivityConfigure, CoreActivityConfigs, SequenceActivity, SequenceConfigure, ISequenceConfigure, Activity, GCoreActivityConfigs } from '@taskfr/core';
 import { ObjectMap, Registration, Token } from '@ts-ioc/core';
 import { TestActivity, TestConfigure } from './TestActivity';
 import { AssetActivity } from './AssetActivity';
@@ -12,9 +12,12 @@ import { UglifyConfigure } from './UglifyActivity';
 import { WatchConfigure } from './WatchActivity';
 import { AnnotationsConfigure } from './Annotation';
 
-export type PipesConfigure = CoreActivityConfigure & (AssetConfigure | IPipeConfigure
+type configures = CoreActivityConfigs | AssetConfigure | IPipeConfigure
     | TsConfigure | DestConfigure | SourceConfigure | TestConfigure | UglifyConfigure
-    | WatchConfigure | AnnotationsConfigure | CleanConfigure | DestConfigure);
+    | WatchConfigure | AnnotationsConfigure | CleanConfigure | PackageConfigure;
+
+
+export type PipesConfigure = configures | GCoreActivityConfigs<configures>;
 
 export type PipesActivityType<T extends IActivity> = Token<T> | PipesConfigure;
 
@@ -54,10 +57,10 @@ export interface PackageConfigure extends ActivityConfigure {
     /**
      * assets.
      *
-     * @type {ObjectMap<ExpressionToken<Src> | ConfigureType<AssetActivity, AssetConfigure>>}
+     * @type {ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, PipesConfigure>>}
      * @memberof PackageConfigure
      */
-    assets?: ObjectMap<ExpressionToken<Src> | ConfigureType<AssetActivity, AssetConfigure>>;
+    assets?: ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, PipesConfigure>>;
 
     /**
      * test config.

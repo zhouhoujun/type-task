@@ -97,7 +97,7 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
         if (isActivityType(exptype)) {
             return await this.buildByConfig(exptype, target.id) as AssignActivity<T>;
         } else {
-            return exptype;
+            return exptype as Expression<T>;
         }
     }
 

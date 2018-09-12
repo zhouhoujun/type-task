@@ -56,14 +56,21 @@ export type ExpressionType<T> = Expression<T> | ActivityResultType<T>;
 /**
  * core activities configures.
  */
-export type CoreActivityConfigure = IActivityConfigure<any> | ActivityConfigure | ConfirmConfigure | DelayConfigure | DoWhileConfigure
+export type GCoreActivityConfigs<T> = ActivityConfigure | ConfirmConfigure | DelayConfigure | IDoWhileConfigure<T>
+    | IIfConfigure<T> | IIntervalConfigure<T> | IParallelConfigure<T> | ISequenceConfigure<T> | ISwitchConfigure<T>
+    | ThrowConfigure | ITryCatchConfigure<T> | IWhileConfigure<T>;
+
+/**
+ * core activities configures.
+ */
+export type CoreActivityConfigs = ActivityConfigure | ConfirmConfigure | DelayConfigure | DoWhileConfigure
     | IfConfigure | IntervalConfigure | ParallelConfigure | SequenceConfigure | SwitchConfigure
     | ThrowConfigure | TryCatchConfigure | WhileConfigure;
 
 /**
  * activity type.
  */
-export type ActivityType<T extends IActivity> = Token<T> | CoreActivityConfigure;
+export type ActivityType<T extends IActivity> = Token<T> | CoreActivityConfigs;
 
 export type Active = ActivityType<IActivity>;
 
@@ -153,6 +160,14 @@ export interface IActivityConfigure<T> extends ModuleConfig<T> {
     baseURL?: string;
 
     /**
+     * custom data.
+     *
+     * @type {*}
+     * @memberof IActivityConfigure
+     */
+    data?: any;
+
+    /**
      * activity module.
      *
      * @type {Token<T>}
@@ -227,21 +242,23 @@ export interface DelayConfigure extends ActivityConfigure {
 export function isDoWhileConfigure(target: any): target is DoWhileConfigure {
     return isMetadataObject(target) && !isUndefined(target.do) && !isUndefined(target.while);
 }
+
 /**
  * DoWhile activity configure.
  *
  * @export
- * @interface DoWhileConfigure
+ * @interface IDoWhileConfigure
  * @extends {ActivityConfigure}
+ * @template T
  */
-export interface DoWhileConfigure extends ActivityConfigure {
+export interface IDoWhileConfigure<T> extends ActivityConfigure {
     /**
      * do while
      *
-     * @type {ActivityType<IActivity>}
+     * @type {Active}
      * @memberof DoWhileConfigure
      */
-    do: ActivityType<IActivity>;
+    do: Active;
 
     /**
      * while condition
@@ -252,18 +269,31 @@ export interface DoWhileConfigure extends ActivityConfigure {
     while: ExpressionType<boolean>;
 }
 
+/**
+ * DoWhile activity configure.
+ *
+ * @export
+ * @interface DoWhileConfigure
+ * @extends {ActivityConfigure}
+ */
+export interface DoWhileConfigure extends IDoWhileConfigure<Active> {
+}
+
 
 export function isIfConfigure(target: any): target is IfConfigure {
     return isMetadataObject(target) && !isUndefined(target.if) && !isUndefined(target.ifBody);
 }
+
+
 /**
  * If activity configure.
  *
  * @export
  * @interface IfConfigure
  * @extends {ActivityConfigure}
+ * @template T
  */
-export interface IfConfigure extends ActivityConfigure {
+export interface IIfConfigure<T> extends ActivityConfigure {
 
     /**
      * while condition
@@ -276,18 +306,29 @@ export interface IfConfigure extends ActivityConfigure {
     /**
      * if body
      *
-     * @type {ActivityType<IActivity>}
+     * @type {T}
      * @memberof IfConfigure
      */
-    ifBody: ActivityType<IActivity>;
+    ifBody: T;
 
     /**
      * else body
      *
-     * @type {ActivityType<IActivity>}
+     * @type {T}
      * @memberof IfConfigure
      */
-    elseBody?: ActivityType<IActivity>;
+    elseBody?: T;
+
+}
+
+/**
+ * If activity configure.
+ *
+ * @export
+ * @interface IfConfigure
+ * @extends {IIfConfigure<Active>}
+ */
+export interface IfConfigure extends IIfConfigure<Active> {
 
 }
 
@@ -302,10 +343,11 @@ export function isIntervalConfigure(target: any): target is IntervalConfigure {
  * Interval activity configure.
  *
  * @export
- * @interface IntervalConfigure
+ * @interface IIntervalConfigure
  * @extends {ActivityConfigure}
+ * @template T
  */
-export interface IntervalConfigure extends ActivityConfigure {
+export interface IIntervalConfigure<T> extends ActivityConfigure {
     /**
      * Interval ms.
      *
@@ -317,15 +359,44 @@ export interface IntervalConfigure extends ActivityConfigure {
     /**
      * Interval body.
      *
-     * @type {ActivityType<IActivity>}
+     * @type {T}
      * @memberof WhileConfigure
      */
-    body: ActivityType<IActivity>
+    body: T
+}
+
+/**
+ * Interval activity configure.
+ *
+ * @export
+ * @interface IntervalConfigure
+ * @extends {IIntervalConfigure<Active>}
+ */
+export interface IntervalConfigure extends IIntervalConfigure<Active> {
+
 }
 
 
 export function isParallelConfigure(target: any): target is ParallelConfigure {
     return isMetadataObject(target) && isArray(target.parallel);
+}
+
+/**
+ *  Parallel activity configure.
+ *
+ * @export
+ * @interface IParallelConfigure
+ * @extends {ActivityConfigure}
+ * @template T
+ */
+export interface IParallelConfigure<T> extends ActivityConfigure {
+    /**
+     * parallel activities.
+     *
+     * @type {T[]}
+     * @memberof ParallelConfigure
+     */
+    parallel: T[];
 }
 /**
  * Parallel activity configure.
@@ -334,19 +405,31 @@ export function isParallelConfigure(target: any): target is ParallelConfigure {
  * @interface ParallelConfigure
  * @extends {ActivityConfigure}
  */
-export interface ParallelConfigure extends ActivityConfigure {
-    /**
-     * parallel activities.
-     *
-     * @type {ActivityType<IActivity>[]}
-     * @memberof ParallelConfigure
-     */
-    parallel: ActivityType<IActivity>[];
+export interface ParallelConfigure extends IParallelConfigure<Active> {
 }
 
 export function isSequenceConfigure(target: any): target is SequenceConfigure {
     return isMetadataObject(target) && isArray(target.sequence);
 }
+
+/**
+ * sequence activity configure.
+ *
+ * @export
+ * @interface ISequenceConfigure
+ * @extends {ActivityConfigure}
+ * @template T
+ */
+export interface ISequenceConfigure<T> extends ActivityConfigure {
+    /**
+     * sequence activities.
+     *
+     * @type {T[]}
+     * @memberof IConfigure
+     */
+    sequence: T[];
+}
+
 /**
  * sequence activity configure.
  *
@@ -354,14 +437,8 @@ export function isSequenceConfigure(target: any): target is SequenceConfigure {
  * @interface SequenceConfigure
  * @extends {ActivityConfigure}
  */
-export interface SequenceConfigure extends ActivityConfigure {
-    /**
-     * sequence activities.
-     *
-     * @type {ActivityType<IActivity>[]}
-     * @memberof IConfigure
-     */
-    sequence: ActivityType<IActivity>[];
+export interface SequenceConfigure extends ISequenceConfigure<Active> {
+
 }
 
 
@@ -374,8 +451,9 @@ export function isSwitchConfigure(target: any): target is SwitchConfigure {
  * @export
  * @interface SwitchConfigure
  * @extends {ActivityConfigure}
+ * @template T
  */
-export interface SwitchConfigure extends ActivityConfigure {
+export interface ISwitchConfigure<T> extends ActivityConfigure {
 
     /**
      * while condition
@@ -388,18 +466,28 @@ export interface SwitchConfigure extends ActivityConfigure {
     /**
      * if body
      *
-     * @type {KeyValue<any, ActivityType<IActivity>>[]}
+     * @type {KeyValue<any, T>[]}
      * @memberof SwitchConfigure
      */
-    cases: KeyValue<any, ActivityType<IActivity>>[];
+    cases: KeyValue<any, T>[];
 
     /**
      * default body
      *
-     * @type {ActivityType<IActivity>}
+     * @type {T}
      * @memberof SwitchConfigure
      */
-    defaultBody?: ActivityType<IActivity>;
+    defaultBody?: T;
+}
+/**
+ * Switch activity configure.
+ *
+ * @export
+ * @interface SwitchConfigure
+ * @extends {ISwitchConfigure<Active>}
+ */
+export interface SwitchConfigure extends ISwitchConfigure<Active> {
+
 }
 
 
@@ -425,33 +513,45 @@ export interface ThrowConfigure extends ActivityConfigure {
  * TryCatch activity configure.
  *
  * @export
- * @interface TryCatchConfigure
+ * @interface ITryCatchConfigure
  * @extends {ActivityConfigure}
+ * @template T
  */
-export interface TryCatchConfigure extends ActivityConfigure {
+export interface ITryCatchConfigure<T> extends ActivityConfigure {
     /**
      * try activity.
      *
      * @type {CtxType<number>}
      * @memberof TryCatchConfigure
      */
-    try: ActivityType<IActivity>;
+    try: T;
 
     /**
      * catchs activities.
      *
-     * @type {ActivityType<IActivity>[]}
+     * @type {T[]}
      * @memberof TryCatchConfigure
      */
-    catchs: ActivityType<IActivity>[];
+    catchs: T[];
 
     /**
      * finally activity.
      *
-     * @type {ActivityType<IActivity>}
+     * @type {T}
      * @memberof TryCatchConfigure
      */
-    finally?: ActivityType<IActivity>;
+    finally?: T;
+}
+
+/**
+ * TryCatch activity configure.
+ *
+ * @export
+ * @interface TryCatchConfigure
+ * @extends {ITryCatchConfigure<Active>}
+ */
+export interface TryCatchConfigure extends ITryCatchConfigure<Active> {
+
 }
 
 
@@ -459,10 +559,11 @@ export interface TryCatchConfigure extends ActivityConfigure {
  * While activity configure.
  *
  * @export
- * @interface WhileConfigure
+ * @interface IWhileConfigure
  * @extends {ActivityConfigure}
+ * @template T
  */
-export interface WhileConfigure extends ActivityConfigure {
+export interface IWhileConfigure<T> extends ActivityConfigure {
 
     /**
      * while condition
@@ -475,8 +576,19 @@ export interface WhileConfigure extends ActivityConfigure {
     /**
      * while body.
      *
-     * @type {ActivityType<IActivity>}
+     * @type {T}
      * @memberof WhileConfigure
      */
-    body: ActivityType<IActivity>;
+    body: T;
+}
+
+/**
+ * While activity configure.
+ *
+ * @export
+ * @interface WhileConfigure
+ * @extends {IWhileConfigure<Active>}
+ */
+export interface WhileConfigure extends IWhileConfigure<Active> {
+
 }

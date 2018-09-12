@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "importHelpers": true,
     "target":"es2015",
     "baseUrl": ".",
     "rootDir": "../../packages",

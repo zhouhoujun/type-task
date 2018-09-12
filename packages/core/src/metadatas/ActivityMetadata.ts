@@ -1,5 +1,5 @@
 import { IAnnotationMetadata } from '@ts-ioc/core';
-import { CoreActivityConfigure } from '../core/ActivityConfigure';
+import { CoreActivityConfigs } from '../core/ActivityConfigure';
 import { IActivity } from '../core/IActivity';
 
 /**
@@ -16,4 +16,4 @@ export interface IActivityMetadata extends IAnnotationMetadata<IActivity> {
 /**
  * activity metadata.
  */
-export type ActivityMetadata = (IActivityMetadata & CoreActivityConfigure);
+export type ActivityMetadata = (IActivityMetadata & CoreActivityConfigs);

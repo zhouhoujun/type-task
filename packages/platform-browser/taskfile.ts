@@ -1,4 +1,4 @@
-import { PipeModule, Package, AssetConfigure, AssetActivity, PackageActivity, TsConfigure, CleanConfigure, CleanActivity } from '@taskfr/pipes';
+import { PipeModule, Package, AssetConfigure, AssetActivity, PackageActivity, TsConfigure, CleanConfigure, CleanActivity, AssetTask } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 const rename = require('gulp-rename');
 const rollup = require('gulp-rollup');
@@ -6,6 +6,46 @@ const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');
 const commonjs = require('rollup-plugin-commonjs');
 const builtins = require('rollup-plugin-node-builtins');
+
+
+@AssetTask({
+    src: 'lib/**/*.js',
+    sourcemaps: true,
+    data: {
+        name: 'platform-browser.umd.js',
+        input: 'lib/index.js'
+    },
+    pipes: [
+        (act) => rollup({
+            name: act.config.data.name,
+            format: 'umd',
+            sourceMap: true,
+            plugins: [
+                resolve(),
+                commonjs(),
+                builtins(),
+                rollupSourcemaps()
+            ],
+            external: [
+                'reflect-metadata',
+                'tslib',
+                'events',
+                '@ts-ioc/core',
+                '@ts-ioc/aop',
+                '@ts-ioc/logs',
+                '@taskfr/core'
+            ],
+            globals: {
+                'reflect-metadata': 'Reflect'
+            },
+            input: act.config.data.input
+        }),
+        (act) => rename(act.config.data.name)
+    ],
+    dest: 'bundles'
+})
+export class RollupTs extends AssetActivity {
+}
 
 @Package({
     src: 'src',
@@ -15,41 +55,10 @@ const builtins = require('rollup-plugin-node-builtins');
         ts: { dest: 'lib', annotation: true, uglify: true }
     },
     sequence: [
-        <AssetConfigure>{
-            src: 'lib/**/*.js',
-            pipes: [
-                () => rollup({
-                    name: 'core.umd.js',
-                    format: 'umd',
-                    sourceMap: true,
-                    plugins: [
-                        resolve(),
-                        commonjs(),
-                        builtins(),
-                        rollupSourcemaps()
-                    ],
-                    external: [
-                        'reflect-metadata',
-                        'tslib',
-                        'events',
-                        '@ts-ioc/core',
-                        '@ts-ioc/aop',
-                        '@ts-ioc/logs',
-                        '@taskfr/core'
-                    ],
-                    globals: {
-                        'reflect-metadata': 'Reflect'
-                    },
-                    input: 'lib/index.js'
-                }),
-                () => rename('core.umd.js')
-            ],
-            dest: 'bundles',
-            task: AssetActivity
-        }
+        RollupTs
     ]
 })
-export class  PfBrowserBuilder  extends PackageActivity {
+export class PfBrowserBuilder extends PackageActivity {
 }
 
 
@@ -60,40 +69,14 @@ export class  PfBrowserBuilder  extends PackageActivity {
         ts: <TsConfigure>{ dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2015.json' }
     },
     sequence: [
-        <AssetConfigure>{
+        {
             src: 'esnext/**/*.js',
             dest: 'es2015',
-            sourcemaps: true,
-            pipes: [
-                (ctx) => {
-                    return rollup({
-                        name: 'platform-browser.js',
-                        format: 'umd',
-                        sourceMap: true,
-                        plugins: [
-                            resolve(),
-                            commonjs(),
-                            builtins(),
-                            rollupSourcemaps()
-                        ],
-                        external: [
-                            'reflect-metadata',
-                            'tslib',
-                            'events',
-                            '@ts-ioc/core',
-                            '@ts-ioc/aop',
-                            '@ts-ioc/logs',
-                            '@taskfr/core'
-                        ],
-                        globals: {
-                            'reflect-metadata': 'Reflect'
-                        },
-                        input: './esnext/index.js'
-                    })
-                },
-                () => rename('platform-browser.js')
-            ],
-            task: AssetActivity
+            data: {
+                name: 'platform-browser.js',
+                input: 'esnext/index.js'
+            },
+            activity: RollupTs
         }
     ]
 })
@@ -107,42 +90,16 @@ export class PfBrowserES2015Builder extends PackageActivity {
         ts: <TsConfigure>{ dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2017.json' }
     },
     sequence: [
-        <AssetConfigure>{
+        {
             src: 'esnext/**/*.js',
             dest: 'es2017',
-            sourcemaps: true,
-            pipes: [
-                (ctx) => {
-                    return rollup({
-                        name: 'platform-browser.js',
-                        format: 'umd',
-                        sourceMap: true,
-                        plugins: [
-                            resolve(),
-                            commonjs(),
-                            builtins(),
-                            rollupSourcemaps()
-                        ],
-                        external: [
-                            'reflect-metadata',
-                            'tslib',
-                            'events',
-                            '@ts-ioc/core',
-                            '@ts-ioc/aop',
-                            '@ts-ioc/logs',
-                            '@taskfr/core'
-                        ],
-                        globals: {
-                            'reflect-metadata': 'Reflect'
-                        },
-                        input: './esnext/index.js'
-                    })
-                },
-                () => rename('platform-browser.js')
-            ],
-            task: AssetActivity
+            data: {
+                name: 'platform-browser.js',
+                input: 'esnext/index.js'
+            },
+            task: RollupTs
         },
-        <CleanConfigure>{
+        {
             clean: 'esnext',
             activity: CleanActivity
         }
