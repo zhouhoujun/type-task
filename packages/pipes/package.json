@@ -1,6 +1,6 @@
 {
   "name": "@taskfr/pipes",
-  "version": "2.1.10",
+  "version": "2.1.11",
   "description": "type task framework, base on AOP, Ioc container, via @ts-ioc. file stream pipes activities.",
   "esnext": "./es2017/pipes.js",
   "es2015": "./es2015/pipes.js",
@@ -47,7 +47,7 @@
     "rxjs": "^5.5.11"
   },
   "peerDependencies": {
-    "@taskfr/core": "^2.1.10"
+    "@taskfr/core": "^2.1.11"
   },
   "directories": {
     "lib": "lib",

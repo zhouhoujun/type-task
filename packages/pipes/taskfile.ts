@@ -87,7 +87,7 @@ export class RollupTs extends AssetActivity {
 @Package({
     clean: 'esnext',
     assets: {
-        ts: { src: 'src/**/*.ts', dest: 'lib', uglify: true, annotation: true },
+        ts: { src: 'src/**/*.ts', dest: 'lib', uglify: false, annotation: true },
         ts2015: {
             sequence: [
                 { src: 'src/**/*.ts', dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2015.json', activity: TsCompile },

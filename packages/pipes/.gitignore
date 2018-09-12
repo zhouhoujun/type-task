@@ -2,8 +2,7 @@
 .vscode/.*
 node_modules
 package-lock.json
-bower_components
-jspm_packages
+esnext
 build
 lib
 bin

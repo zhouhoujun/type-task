@@ -1,8 +1,47 @@
-import { isString, isArray, Inject } from '@ts-ioc/core';
+import { isString, isArray, Inject, isBoolean } from '@ts-ioc/core';
 import { existsSync } from 'fs';
-import { Src, Activity, Task } from '@taskfr/core';
+import { Src, Activity, Task, CtxType, ActivityConfigure } from '@taskfr/core';
 import * as execa from 'execa';
 import { PipeContextToken, IPipeContext } from '../core';
+
+
+/**
+ * shell task config.
+ *
+ * @export
+ * @interface ExecFileTaskConfig
+ * @extends {ActivityConfigure}
+ */
+export interface ExecFileTaskConfig extends ActivityConfigure {
+    /**
+     * files
+     *
+     * @type {CtxType<Src>}
+     * @memberof ExecFileTaskConfig
+     */
+    files: CtxType<Src>;
+    /**
+     * shell args.
+     *
+     * @type {CtxType<string[]>}
+     * @memberof ExecFileTaskConfig
+     */
+    args?: CtxType<string[]>;
+    /**
+     * shell exec options.
+     *
+     * @type {CtxType<execa.Options>}
+     * @memberof ExecFileTaskConfig
+     */
+    options?: CtxType<execa.Options>;
+    /**
+     * allow error or not.
+     *
+     * @type {CtxType<boolean>}
+     * @memberof ExecFileTaskConfig
+     */
+    allowError: CtxType<boolean>;
+}
 
 
 /**
@@ -20,6 +59,17 @@ export class ExecFileTask extends Activity<any> {
 
     @Inject(PipeContextToken)
     context: IPipeContext;
+
+    async onActivityInit(config: ExecFileTaskConfig) {
+        await super.onActivityInit(config);
+        this.files = this.context.to(config.files);
+        this.args = this.context.to(config.args);
+        this.options = this.context.to(config.options);
+        this.allowError = this.context.to(config.allowError);
+        if (!isBoolean(this.allowError)) {
+            this.allowError = true;
+        }
+    }
 
     run(): Promise<any> {
         return Promise.resolve(this.files)

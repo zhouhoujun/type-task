@@ -11,10 +11,11 @@ import { SourceConfigure } from './SourceActivity';
 import { UglifyConfigure } from './UglifyActivity';
 import { WatchConfigure } from './WatchActivity';
 import { AnnotationsConfigure } from './Annotation';
+import { ShellTaskConfig, ExecFileTaskConfig } from '../tasks';
 
 type configures = CoreActivityConfigs | AssetConfigure | IPipeConfigure
     | TsConfigure | DestConfigure | SourceConfigure | TestConfigure | UglifyConfigure
-    | WatchConfigure | AnnotationsConfigure | CleanConfigure | PackageConfigure;
+    | WatchConfigure | AnnotationsConfigure | CleanConfigure | ShellTaskConfig | ExecFileTaskConfig | PackageConfigure;
 
 
 export type PipesConfigure = configures | GCoreActivityConfigs<configures>;
