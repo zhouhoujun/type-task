@@ -36,7 +36,7 @@ export class DoWhileActivity extends Activity<any> {
         this.condition = await this.toExpression(config.while);
     }
 
-    async run(data?: any): Promise<any> {
+    protected async execute(data?: any): Promise<any> {
         let result = await this.body.run(data);
         let condition = await this.context.exec(this, this.condition, result);
         while (condition) {

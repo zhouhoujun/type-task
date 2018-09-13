@@ -30,7 +30,7 @@ export class DelayActivity extends Activity<any> implements OnActivityInit {
         this.delay = await this.toExpression(config.delay, this);
     }
 
-    async run(data?: any): Promise<any> {
+    protected async execute(data?: any): Promise<any> {
         let delay = await this.context.exec(this, this.delay, data);
         let defer = new Defer<any>();
         let timmer = setTimeout(() => {

@@ -56,14 +56,14 @@ export type ExpressionType<T> = Expression<T> | ActivityResultType<T>;
 /**
  * core activities configures.
  */
-export type GCoreActivityConfigs<T> = ActivityConfigure | ConfirmConfigure | DelayConfigure | IDoWhileConfigure<T>
+export type GCoreActivityConfigs<T> = ActivityConfigure | IDependenceConfigure<T> | ConfirmConfigure | DelayConfigure | IDoWhileConfigure<T>
     | IIfConfigure<T> | IIntervalConfigure<T> | IParallelConfigure<T> | ISequenceConfigure<T> | ISwitchConfigure<T>
     | ThrowConfigure | ITryCatchConfigure<T> | IWhileConfigure<T>;
 
 /**
  * core activities configures.
  */
-export type CoreActivityConfigs = ActivityConfigure | ConfirmConfigure | DelayConfigure | DoWhileConfigure
+export type CoreActivityConfigs = ActivityConfigure | DependenceConfigure | ConfirmConfigure | DelayConfigure | DoWhileConfigure
     | IfConfigure | IntervalConfigure | ParallelConfigure | SequenceConfigure | SwitchConfigure
     | ThrowConfigure | TryCatchConfigure | WhileConfigure;
 
@@ -216,6 +216,42 @@ export interface ConfirmConfigure extends ActivityConfigure {
     confirm: ExpressionType<boolean>;
 }
 
+
+/**
+ * Dependence activity configure.
+ *
+ * @export
+ * @interface IDependenceConfigure
+ * @extends {ActivityConfigure}
+ */
+export interface IDependenceConfigure<T> extends ActivityConfigure {
+    /**
+     * dependence activity.
+     *
+     * @type {T}
+     * @memberof DelayConfigure
+     */
+    dependence: T;
+
+    /**
+     * target dependence
+     *
+     * @type {T}
+     * @memberof IDependenceConfigure
+     */
+    body: T
+}
+
+/**
+ * depdence configure.
+ *
+ * @export
+ * @interface DependenceConfigure
+ * @extends {IDependenceConfigure<Active>}
+ */
+export interface DependenceConfigure extends IDependenceConfigure<Active> {
+
+}
 
 export function isDelayConfigure(target: any): target is DelayConfigure {
     return isMetadataObject(target) && !isUndefined(target.delay);

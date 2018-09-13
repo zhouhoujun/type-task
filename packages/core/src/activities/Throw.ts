@@ -27,7 +27,7 @@ export class ThrowActivity extends Activity<any> {
         this.exception = await this.toExpression(config.exception);
     }
 
-    async run(data?: any): Promise<any> {
+    protected async execute(data?: any): Promise<any> {
         let error = await this.context.exec(this, this.exception, data);
         throw error;
     }

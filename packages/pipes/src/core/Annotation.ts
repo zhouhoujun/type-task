@@ -58,7 +58,7 @@ export class AnnotationActivity extends PipeActivity {
         stream = await super.beforePipe(stream, execute);
         if (this.annotationFramework) {
             let annotation = await this.context.exec(this, this.annotationFramework);
-            stream = await this.pipe(stream, annotation);
+            stream = await this.pipeStream(stream, annotation);
         }
         return stream;
     }

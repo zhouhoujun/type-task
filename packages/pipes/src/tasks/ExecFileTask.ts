@@ -71,7 +71,7 @@ export class ExecFileTask extends Activity<any> {
         }
     }
 
-    run(): Promise<any> {
+    protected execute(): Promise<any> {
         return Promise.resolve(this.files)
             .then(files => {
                 let allowError = this.allowError;

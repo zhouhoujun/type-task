@@ -93,7 +93,7 @@ export class ExecShellTask extends Activity<any> implements OnActivityInit {
         }
     }
 
-    run(): Promise<any> {
+    protected execute(): Promise<any> {
         return Promise.resolve(this.shell)
             .then(cmds => {
                 let allowError = this.allowError;

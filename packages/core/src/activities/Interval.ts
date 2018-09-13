@@ -33,7 +33,7 @@ export class IntervalActivity extends Activity<any> {
         this.body = await this.buildActivity(config.body);
     }
 
-    async run(data?: any): Promise<any> {
+    protected async execute(data?: any): Promise<any> {
         let interval = await this.context.exec(this, this.interval, data);
         let result = data;
         setInterval(() => {

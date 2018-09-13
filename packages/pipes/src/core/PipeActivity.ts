@@ -58,24 +58,25 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @returns {Promise<T>}
      * @memberof Activity
      */
-    async run(data?: any, execute?: IActivity): Promise<ITransform> {
+    protected async execute(data?: any, execute?: IActivity): Promise<ITransform> {
         let stream = await this.merge(...(isArray(data) ? data : [data]));
         stream = await this.beforePipe(stream, execute);
-        stream = await this.execute(stream);
+        stream = await this.pipe(stream, execute);
         stream = await this.afterPipe(stream, execute);
         return stream;
     }
 
     /**
-     * execute pipes.
+     * execute pipe.
      *
      * @protected
      * @param {ITransform} stream
+     * @param {IActivity} [execute]
      * @returns {Promise<ITransform>}
      * @memberof PipeActivity
      */
-    protected async execute(stream: ITransform): Promise<ITransform> {
-        return await this.pipe(stream, ...this.pipes);
+    protected pipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+        return this.pipeStream(stream, ...this.pipes);
     }
 
     /**
@@ -108,7 +109,7 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
     }
 
     /**
-     * pipe transform.
+     * stream pipe transform.
      *
      * @protected
      * @param {ITransform} stream
@@ -116,7 +117,7 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @returns {Promise<ITransform>}
      * @memberof PipeActivity
      */
-    protected pipe(stream: ITransform, ...pipes: TransformType[]): Promise<ITransform> {
+    protected pipeStream(stream: ITransform, ...pipes: TransformType[]): Promise<ITransform> {
         if (pipes.length < 1) {
             return Promise.resolve(stream);
         }

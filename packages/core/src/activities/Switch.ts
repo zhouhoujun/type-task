@@ -55,8 +55,7 @@ export class SwitchActivity extends Activity<any> {
         }
     }
 
-
-    async run(data?: any): Promise<any> {
+    protected async execute(data?: any): Promise<any> {
         let matchkey = await this.context.exec<any>(this, this.expression, data);
         if (!isUndefined(matchkey) && this.cases.has(matchkey)) {
             return this.cases.get(matchkey).run(data);

@@ -37,7 +37,7 @@ export class WhileActivity extends Activity<any> {
         this.condition = await this.toExpression(config.while);
     }
 
-    async run(data?: any): Promise<any> {
+    protected async execute(data?: any): Promise<any> {
         let condition = await this.context.exec(this, this.condition, data);
         let result;
         while (condition) {
@@ -45,6 +45,5 @@ export class WhileActivity extends Activity<any> {
             condition = await this.context.exec(this, this.condition, result)
         }
         return result;
-
     }
 }

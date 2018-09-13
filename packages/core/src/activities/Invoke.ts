@@ -39,7 +39,7 @@ export class InvokeActivity extends Activity<any> {
      */
     targetType: Token<any>;
 
-    async run(data?: any): Promise<any> {
+    protected async execute(data?: any): Promise<any> {
         return this.context.getContainer().invoke(this.targetType, this.target, this.args, { data: data });
     }
 }

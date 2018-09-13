@@ -61,7 +61,7 @@ export class CleanActivity extends Activity<any> {
      * @returns {Promise<any>}
      * @memberof CleanActivity
      */
-    async run(data?: any): Promise<any> {
+    protected async execute(data?: any): Promise<any> {
         let clean = await this.context.exec(this, this.clean, data);
         return await del(clean);
     }

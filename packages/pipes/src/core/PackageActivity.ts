@@ -70,23 +70,15 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
     @Inject(PipeContextToken)
     context: IPipeContext;
 
-    /**
-     * begin transform
-     *
-     * @protected
-     * @param {*} [data]
-     * @returns {Promise<ITransform>}
-     * @memberof PackageActivity
-     */
-    protected async before(data?: any): Promise<ITransform> {
+    protected async execute(data?: any, execute?: IActivity) {
         if (this.test) {
-            await this.test.run(data);
+            await this.test.run(data, execute);
         }
         if (this.clean) {
-            await this.clean.run(data);
+            await this.clean.run(data, execute);
         }
         let assets = await this.execAssets(data);
-        return assets;
+        return await super.execute(assets, execute);
     }
 
     /**

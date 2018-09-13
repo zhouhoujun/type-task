@@ -58,7 +58,7 @@ export class TryCatchActivity extends Activity<any> {
         }
     }
 
-    async run(data?: any): Promise<any> {
+    protected async execute(data?: any): Promise<any> {
         let rp;
         try {
             rp = this.try.run(data);

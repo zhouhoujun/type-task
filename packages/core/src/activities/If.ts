@@ -29,7 +29,7 @@ export class IfActivity extends Activity<any> {
         }
     }
 
-    async run(data?: any): Promise<any> {
+    protected async execute(data?: any): Promise<any> {
         let condition = await this.context.exec(this, this.condition, data);
         if (condition) {
             return this.execIf(data);
@@ -40,11 +40,11 @@ export class IfActivity extends Activity<any> {
         }
     }
 
-    execIf(data?: any) {
+    protected execIf(data?: any) {
         return this.ifBody.run(data);
     }
 
-    execElse(data?: any) {
+    protected execElse(data?: any) {
         return this.elseBody.run(data);
 
     }

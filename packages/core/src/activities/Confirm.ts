@@ -6,7 +6,7 @@ import { IActivity, InjectAcitityToken, Activity, Expression, ConfirmConfigure }
 /**
  * Confirm activity token.
  */
-export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity>('Confirm');
+export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity<any>>('Confirm');
 
 /**
  * while control activity.
@@ -16,7 +16,7 @@ export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity>('Con
  * @extends {Activity}
  */
 @Task(ConfirmActivityToken)
-export class ConfirmActivity extends Activity<any> {
+export class ConfirmActivity<T> extends Activity<T> {
 
     defer = new Defer<any>();
     /**
@@ -32,7 +32,7 @@ export class ConfirmActivity extends Activity<any> {
         this.confirm = await this.toExpression(config.confirm, this);
     }
 
-    async run(data?: any, execute?: IActivity): Promise<any> {
+    protected async execute(data?: any, execute?: IActivity): Promise<T> {
         let confirm = this.context.exec(this, this.confirm, data);
         if (confirm) {
             this.defer.resolve(data);

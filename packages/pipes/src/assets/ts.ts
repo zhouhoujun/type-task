@@ -67,8 +67,8 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      * @returns {Promise<ITransform>}
      * @memberof TsCompile
      */
-    protected async execute(stream: ITransform): Promise<ITransform> {
-        stream.js = await this.pipe(stream.js, ...this.pipes);
+    protected async pipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+        stream.js = await this.pipeStream(stream.js, ...this.pipes);
         return stream;
     }
     /**
@@ -82,7 +82,7 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      */
     protected async beforePipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
         stream = await super.beforePipe(stream, execute);
-        return await this.pipe(stream, this.getTsCompilePipe());
+        return await this.pipeStream(stream, this.getTsCompilePipe());
     }
     /**
      * get ts configue compile.
