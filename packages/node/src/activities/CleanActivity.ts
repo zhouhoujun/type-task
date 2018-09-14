@@ -1,6 +1,6 @@
 import { Src, Activity, InjectAcitityToken, Task, ActivityConfigure, Expression, ExpressionType } from '@taskfr/core';
 import { Inject } from '@ts-ioc/core';
-import { PipeContextToken, IPipeContext } from './IPipeContext';
+import { NodeContextToken, INodeContext } from '../core';
 const del = require('del');
 
 
@@ -36,11 +36,11 @@ export class CleanActivity extends Activity<any> {
     /**
      * context.
      *
-     * @type {IPipeContext}
+     * @type {INodeContext}
      * @memberof BaseTask
      */
-    @Inject(PipeContextToken)
-    context: IPipeContext;
+    @Inject(NodeContextToken)
+    context: INodeContext;
     /**
      * clean source.
      *

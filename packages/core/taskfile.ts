@@ -1,5 +1,6 @@
-import { PipeModule, Package, PackageActivity, AssetActivity, CleanActivity, AssetTask, TsCompile } from '@taskfr/pipes';
+import { PipeModule, Package, PackageActivity, AssetActivity, AssetTask, TsCompile } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
+import { CleanActivity } from '@taskfr/node';
 const rename = require('gulp-rename');
 const rollup = require('gulp-rollup');
 const resolve = require('rollup-plugin-node-resolve');

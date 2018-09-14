@@ -2,43 +2,43 @@ import { isString, isArray, Inject, isBoolean } from '@ts-ioc/core';
 import { existsSync } from 'fs';
 import { Src, Activity, Task, CtxType, ActivityConfigure } from '@taskfr/core';
 import * as execa from 'execa';
-import { PipeContextToken, IPipeContext } from '../core';
+import { NodeContextToken, INodeContext } from '../core';
 
 
 /**
  * shell task config.
  *
  * @export
- * @interface ExecFileTaskConfig
+ * @interface ExecFileActivityConfig
  * @extends {ActivityConfigure}
  */
-export interface ExecFileTaskConfig extends ActivityConfigure {
+export interface ExecFileActivityConfig extends ActivityConfigure {
     /**
      * files
      *
      * @type {CtxType<Src>}
-     * @memberof ExecFileTaskConfig
+     * @memberof ExecFileActivityConfig
      */
     files: CtxType<Src>;
     /**
      * shell args.
      *
      * @type {CtxType<string[]>}
-     * @memberof ExecFileTaskConfig
+     * @memberof ExecFileActivityConfig
      */
     args?: CtxType<string[]>;
     /**
      * shell exec options.
      *
      * @type {CtxType<execa.Options>}
-     * @memberof ExecFileTaskConfig
+     * @memberof ExecFileActivityConfig
      */
     options?: CtxType<execa.Options>;
     /**
      * allow error or not.
      *
      * @type {CtxType<boolean>}
-     * @memberof ExecFileTaskConfig
+     * @memberof ExecFileActivityConfig
      */
     allowError: CtxType<boolean>;
 }
@@ -47,20 +47,20 @@ export interface ExecFileTaskConfig extends ActivityConfigure {
 /**
  * exec file Task
  *
- * @class ExecFileTask
+ * @class ExecFileActivity
  * @implements {ITask}
  */
 @Task('execfile')
-export class ExecFileTask extends Activity<any> {
+export class ExecFileActivity extends Activity<any> {
     files: Src;
     args?: string[];
     options?: execa.Options;
     allowError = true;
 
-    @Inject(PipeContextToken)
-    context: IPipeContext;
+    @Inject(NodeContextToken)
+    context: INodeContext;
 
-    async onActivityInit(config: ExecFileTaskConfig) {
+    async onActivityInit(config: ExecFileActivityConfig) {
         await super.onActivityInit(config);
         this.files = this.context.to(config.files);
         this.args = this.context.to(config.args);

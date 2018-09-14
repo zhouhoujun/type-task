@@ -1,5 +1,6 @@
-import { PipeModule, Package, PackageActivity, CleanActivity, AssetActivity, AssetTask, TsCompile, CleanToken } from '@taskfr/pipes';
+import { PipeModule, Package, PackageActivity, AssetActivity, AssetTask, TsCompile } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
+import { CleanToken, CleanActivity } from '@taskfr/node';
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');
 const commonjs = require('rollup-plugin-commonjs');
@@ -10,12 +11,12 @@ const builtins = require('rollup-plugin-node-builtins');
 
 
 @AssetTask({
-    src: 'esnext/**/*.js',
+    src: 'lib/**/*.js',
     sourcemaps: true,
     dest: 'es2015',
     data: {
-        name: 'pipes.js',
-        input: 'esnext/index.js'
+        name: 'pack.js',
+        input: 'lib/index.js'
     },
     pipes: [
         (act) => rollup({
@@ -45,6 +46,7 @@ const builtins = require('rollup-plugin-node-builtins');
                 'minimist', 'gulp-sourcemaps', 'vinyl-fs', 'gulp-mocha', 'del', 'chokidar',
                 'rxjs', 'gulp-uglify', 'execa', '@ts-ioc/annotations', 'gulp-typescript',
                 '@taskfr/core',
+                '@taskfr/node',
                 'rxjs/Observer',
                 'rxjs/util',
                 'rxjs/util/ObjectUnsubscribedError',
@@ -85,29 +87,28 @@ export class RollupTs extends AssetActivity {
 
 
 @Package({
-    clean: 'esnext',
+    clean: 'lib',
     assets: {
-        ts: { src: 'src/**/*.ts', dest: 'lib', uglify: false, annotation: true },
         ts2015: {
             sequence: [
-                { src: 'src/**/*.ts', dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2015.json', activity: TsCompile },
-                { dest: 'es2015', activity: RollupTs }
+                { src: 'src/**/*.ts', dest: 'lib', annotation: true, uglify: false, tsconfig: './tsconfig.es2015.json', activity: TsCompile },
+                RollupTs
             ]
         },
         ts2017: {
             sequence: [
-                { clean: 'esnext', activity: CleanToken},
+                { clean: 'esnext', activity: CleanToken },
                 { src: 'src/**/*.ts', dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2017.json', activity: TsCompile },
-                { dest: 'es2017', activity: RollupTs },
+                { src: 'esnext/**/*.js', dest: 'es2017', data: { name: 'pack.js', input: 'esnext/index.js' }, activity: RollupTs },
                 { clean: 'esnext', activity: CleanActivity }
             ]
         }
     }
 })
-export class PipesBuilder extends PackageActivity {
+export class NodeBuilder extends PackageActivity {
 }
 
 
 TaskContainer.create(__dirname)
     .use(PipeModule)
-    .bootstrap(PipesBuilder);
+    .bootstrap(NodeBuilder);

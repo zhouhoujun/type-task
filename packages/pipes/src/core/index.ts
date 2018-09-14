@@ -9,7 +9,6 @@ export * from './PipeActivityBuilder';
 export * from './DestActivity';
 export * from './SourceActivity';
 export * from './TestActivity';
-export * from './CleanActivity';
 export * from './WatchActivity';
 export * from './UglifyActivity';
 export * from './SourceMapsActivity';

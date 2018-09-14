@@ -1,8 +1,6 @@
 import { CtxType, Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, ActivityConfigure, CoreActivityConfigs, SequenceActivity, SequenceConfigure, ISequenceConfigure, Activity, GCoreActivityConfigs } from '@taskfr/core';
 import { ObjectMap, Registration, Token } from '@ts-ioc/core';
 import { TestActivity, TestConfigure } from './TestActivity';
-import { AssetActivity } from './AssetActivity';
-import { CleanActivity, CleanConfigure } from './CleanActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
 import { AssetConfigure } from './AssetConfigure';
 import { IPipeConfigure } from './IPipeConfigure';
@@ -11,11 +9,11 @@ import { SourceConfigure } from './SourceActivity';
 import { UglifyConfigure } from './UglifyActivity';
 import { WatchConfigure } from './WatchActivity';
 import { AnnotationsConfigure } from './Annotation';
-import { ShellTaskConfig, ExecFileTaskConfig } from '../tasks';
+import { ShellActivityConfig, ExecFileActivityConfig, CleanActivity, CleanConfigure } from '@taskfr/node';
 
 type configures = CoreActivityConfigs | AssetConfigure | IPipeConfigure
     | TsConfigure | DestConfigure | SourceConfigure | TestConfigure | UglifyConfigure
-    | WatchConfigure | AnnotationsConfigure | CleanConfigure | ShellTaskConfig | ExecFileTaskConfig | PackageConfigure;
+    | WatchConfigure | AnnotationsConfigure | CleanConfigure | ShellActivityConfig | ExecFileActivityConfig | PackageConfigure;
 
 
 export type PipesConfigure = configures | GCoreActivityConfigs<configures>;

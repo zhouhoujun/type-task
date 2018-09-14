@@ -4,7 +4,7 @@ import { PackageConfigure, PackageBuilderToken, PipesConfigure } from './Package
 import { PackageActivity } from './PackageActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
 import { TestActivity, TestConfigure } from './TestActivity';
-import { CleanActivity, CleanConfigure } from './CleanActivity';
+import { CleanActivity, CleanConfigure } from '@taskfr/node';
 import { AssetActivity } from './AssetActivity';
 import { InjectAssetActivityToken, AssetConfigure, AssetToken } from './AssetConfigure';
 

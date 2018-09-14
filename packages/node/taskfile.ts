@@ -1,6 +1,6 @@
 import { PipeModule, Package, PackageActivity, AssetActivity, AssetTask, TsCompile } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
-import { CleanToken, CleanActivity } from '@taskfr/node';
+import { CleanToken } from '@taskfr/node';
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');
 const commonjs = require('rollup-plugin-commonjs');
@@ -15,7 +15,7 @@ const builtins = require('rollup-plugin-node-builtins');
     sourcemaps: true,
     dest: 'es2015',
     data: {
-        name: 'pipes.js',
+        name: 'activites.js',
         input: 'lib/index.js'
     },
     pipes: [
@@ -46,7 +46,6 @@ const builtins = require('rollup-plugin-node-builtins');
                 'minimist', 'gulp-sourcemaps', 'vinyl-fs', 'gulp-mocha', 'del', 'chokidar',
                 'rxjs', 'gulp-uglify', 'execa', '@ts-ioc/annotations', 'gulp-typescript',
                 '@taskfr/core',
-                '@taskfr/node',
                 'rxjs/Observer',
                 'rxjs/util',
                 'rxjs/util/ObjectUnsubscribedError',
@@ -91,16 +90,16 @@ export class RollupTs extends AssetActivity {
     assets: {
         ts2015: {
             sequence: [
-                { src: 'src/**/*.ts', dest: 'lib', annotation: true, uglify: false, tsconfig: './tsconfig.es2015.json', activity: TsCompile },
-                RollupTs
+                { src: 'src/**/*.ts', dest: 'lib', uglify: false, tsconfig: './tsconfig.es2015.json', annotation: true, activity: TsCompile },
+                { dest: 'es2015', activity: RollupTs }
             ]
         },
         ts2017: {
             sequence: [
-                { clean: 'esnext', activity: CleanToken},
+                { clean: 'esnext', activity: CleanToken },
                 { src: 'src/**/*.ts', dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2017.json', activity: TsCompile },
-                { src: 'esnext/**/*.js', dest: 'es2017', data: { name: 'pipes.js', input: 'esnext/index.js' }, activity: RollupTs },
-                { clean: 'esnext', activity: CleanActivity }
+                { src: 'esnext/**/*.js', data: { name: 'activites.js', input: 'esnext/index.js' }, dest: 'es2017', activity: RollupTs },
+                { clean: 'esnext', activity: CleanToken }
             ]
         }
     }

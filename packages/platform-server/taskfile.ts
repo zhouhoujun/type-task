@@ -1,5 +1,6 @@
-import { PipeModule, Package, PackageActivity, CleanActivity, CleanConfigure, AssetActivity, AssetConfigure, TsConfigure, TsCompile, CleanToken, AssetTask } from '@taskfr/pipes';
+import { PipeModule, Package, PackageActivity, AssetActivity, TsCompile, AssetTask } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
+import { CleanToken } from '@taskfr/node';
 
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');
@@ -10,12 +11,12 @@ const rename = require('gulp-rename');
 const builtins = require('rollup-plugin-node-builtins');
 
 @AssetTask({
-    src: 'esnext/**/*.js',
+    src: 'lib/**/*.js',
     sourcemaps: true,
     dest: 'es2015',
     data: {
-        name: 'pipes.js',
-        input: 'esnext/index.js'
+        name: 'platform-server.js',
+        input: 'lib/index.js'
     },
     pipes: [
         (act) => rollup({
@@ -62,18 +63,17 @@ export class RollupTs extends AssetActivity {
     clean: 'lib',
     test: 'test/**/*.spec.ts',
     assets: {
-        ts: { dest: 'lib', annotation: true, uglify: false },
         ts2015: {
             sequence: [
                 { src: 'src/**/*.ts', dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2015.json', activity: TsCompile },
-                { dest: 'es2015', activity: RollupTs }
+                RollupTs
             ]
         },
         ts2017: {
             sequence: [
                 { clean: 'esnext', activity: CleanToken },
                 { src: 'src/**/*.ts', dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2017.json', activity: TsCompile },
-                { dest: 'es2017', activity: RollupTs },
+                { src: 'esnext/**/*.js', dest: 'es2017', data: { name: 'platform-server.js', input: 'esnext/index.js' }, activity: RollupTs },
                 { clean: 'esnext', activity: CleanToken }
             ]
         }

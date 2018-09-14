@@ -1,8 +1,7 @@
 import { SequenceActivity, ParallelActivity, IActivity } from '@taskfr/core';
 import { DestActivity } from './DestActivity';
 import { TestActivity } from './TestActivity';
-import { CleanActivity } from './CleanActivity';
-import { ITransform } from './ITransform';
+import { CleanActivity } from '@taskfr/node';
 import { Type, Inject } from '@ts-ioc/core';
 import { PipeContextToken, IPipeContext } from './IPipeContext';
 import { IPackageActivity, PackageToken } from './PackageConfigure';

@@ -8,6 +8,9 @@
       "@taskfr/core": [
         "../core/src"
       ],
+      "@taskfr/node": [
+        "../node/src"
+      ],
       "@taskfr/pipes": [
         "../pipes/src"
       ],
