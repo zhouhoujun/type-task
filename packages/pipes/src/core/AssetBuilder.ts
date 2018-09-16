@@ -1,15 +1,16 @@
 import { IActivity, Src } from '@taskfr/core';
+import { WatchActivity, WatchConfigure } from '@taskfr/node';
 import { isBoolean, isString, Injectable } from '@ts-ioc/core';
 import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
 import { SourceActivity, SourceConfigure } from './SourceActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
-import { WatchActivity, WatchConfigure } from './WatchActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { PipeActivityBuilder } from './PipeActivityBuilder';
 import { TestActivity, TestConfigure } from './TestActivity';
+import { DefaultTranslatorToken } from './StreamTranslator';
 
 
 /**
@@ -91,6 +92,8 @@ export class AssetBuilder extends PipeActivityBuilder {
                         }
                         return <WatchConfigure>{ src: watch, task: WatchActivity };
                     });
+
+                activity.watch.defaultTranslatorToken = DefaultTranslatorToken;
             }
 
             if (config.sourcemaps) {

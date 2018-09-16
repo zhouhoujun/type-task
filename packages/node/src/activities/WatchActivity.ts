@@ -1,9 +1,8 @@
 
-import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure } from '@taskfr/core';
-import { Defer, isArray } from '@ts-ioc/core';
-import { ITransform } from './ITransform';
+import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure, TranslatorActivity, Active, ActivityType, InjectTranslatorActivity } from '@taskfr/core';
+import { Defer, isArray, Token } from '@ts-ioc/core';
 import { Observable } from 'rxjs';
-import { src } from 'vinyl-fs';
+import 'rxjs-compat'
 const chokidar = require('chokidar');
 
 
@@ -37,6 +36,13 @@ export interface WatchConfigure extends ActivityConfigure {
      */
     options?: ExpressionType<WatchOptions>;
 
+    /**
+     * translator.
+     *
+     * @type {ActivityType<TranslatorActivity<FileChanged, any>>}
+     * @memberof WatchConfigure
+     */
+    translator?: ActivityType<TranslatorActivity<FileChanged, any>>;
 }
 
 /**
@@ -181,21 +187,43 @@ export interface WatchOptions {
 
 }
 
+export interface IFileChanged {
+    added: string[];
+    updated: string[];
+    removed: string[];
+    changed?(): string[]
+}
+
 /**
  * files changed.
  *
  * @export
  * @interface FileChanged
  */
-export interface FileChanged {
+export class FileChanged implements IFileChanged {
     added: string[];
-    changed: string[];
+    updated: string[];
     removed: string[];
+    constructor(public watch: Src) {
+        this.added = [];
+        this.updated = [];
+        this.removed = [];
+    }
+
+    /**
+     * all changed.
+     *
+     * @returns {string []}
+     * @memberof FileChanged
+     */
+    changed(): string[] {
+        return this.added.concat(this.updated, this.removed);
+    }
 }
 
 
 @Task(WatchAcitvityToken)
-export class WatchActivity extends Activity<any> {
+export class WatchActivity extends Activity<FileChanged> {
 
     /**
      * watch src.
@@ -212,6 +240,21 @@ export class WatchActivity extends Activity<any> {
      */
     options: Expression<WatchOptions>;
 
+    /**
+     * translator activity.
+     *
+     * @type {TranslatorActivity<FileChanged, any>}
+     * @memberof WatchActivity
+     */
+    translator: TranslatorActivity<FileChanged, any>;
+
+    /**
+     * default translator token.
+     *
+     * @type {Token<any>}
+     * @memberof WatchActivity
+     */
+    defaultTranslatorToken: Token<any>;
 
     async run(data: any, watched: IActivity): Promise<any> {
         return await this.watch(data, watched);
@@ -220,6 +263,9 @@ export class WatchActivity extends Activity<any> {
     async onActivityInit(config: WatchConfigure) {
         await super.onActivityInit(config);
         this.src = await this.toExpression(config.src);
+        if (config.translator) {
+            this.translator = await this.buildActivity(config.translator)
+        }
         if (config.options) {
             this.options = await this.toExpression(config.options)
         }
@@ -231,10 +277,10 @@ export class WatchActivity extends Activity<any> {
         let watcher = chokidar.watch(watchSrc, options);
 
         let defer = new Defer();
-        Observable.fromEventPattern<FileChanged>(
+        Observable.fromEventPattern<IFileChanged>(
             handler => {
                 watcher.on('add', paths => handler({ added: isArray(paths) ? paths : [paths] }));
-                watcher.on('change', paths => handler({ changed: isArray(paths) ? paths : [paths] }));
+                watcher.on('change', paths => handler({ updated: isArray(paths) ? paths : [paths] }));
                 watcher.on('unlink', paths => handler({ removed: isArray(paths) ? paths : [paths] }));
                 watcher.on('unlinkDir', paths => handler({ removed: isArray(paths) ? paths : [paths] }));
             },
@@ -244,17 +290,13 @@ export class WatchActivity extends Activity<any> {
             })
             .bufferTime(300)
             .map(chgs => {
-                let chg: FileChanged = {
-                    added: [],
-                    changed: [],
-                    removed: []
-                }
+                let chg = new FileChanged(watchSrc);
                 chgs.forEach(fc => {
                     if (fc.added) {
                         chg.added = chg.added.concat(fc.added);
                     }
-                    if (fc.changed) {
-                        chg.changed = chg.changed.concat(fc.changed);
+                    if (fc.updated) {
+                        chg.updated = chg.updated.concat(fc.updated);
                     }
                     if (fc.removed) {
                         chg.removed = chg.removed.concat(fc.removed);
@@ -263,25 +305,19 @@ export class WatchActivity extends Activity<any> {
                 return chg;
             })
             .subscribe(chg => {
-                let chgStream = this.changedToStream(watchSrc, chg);
-                if (chgStream) {
-                    watched.run(chgStream, this);
-                }
+                watched.run(this.translateChanged(chg), this);
             });
 
         defer.promise;
     }
 
-    protected changedToStream(watchSrc: Src, chg: FileChanged): ITransform {
-        if (chg.removed.length) {
-            return src(watchSrc); // removed will build all.
-        } else {
-            let srcs = chg.added.concat(chg.changed);
-            if (srcs.length) {
-                return src(srcs);
-            } else {
-                return null;
-            }
+    protected async translateChanged(chg: FileChanged): Promise<any> {
+        if (!this.translator) {
+            this.translator = await this.context.getContainer().getRefService(InjectTranslatorActivity, WatchAcitvityToken, this.defaultTranslatorToken)
         }
+        if (this.translator) {
+            return await this.translator.run(chg);
+        }
+        return chg;
     }
 }

@@ -9,13 +9,13 @@ export * from './PipeActivityBuilder';
 export * from './DestActivity';
 export * from './SourceActivity';
 export * from './TestActivity';
-export * from './WatchActivity';
 export * from './UglifyActivity';
 export * from './SourceMapsActivity';
 export * from './Annotation';
 
 export * from './AssetConfigure';
 export * from './AssetBuilder';
+export * from './StreamTranslator';
 export * from './AssetActivity';
 
 export * from './PackageConfigure';

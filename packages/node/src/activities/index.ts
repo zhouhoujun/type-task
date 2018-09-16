@@ -1,1 +1,2 @@
-export  * from './CleanActivity';
+export * from './CleanActivity';
+export * from './WatchActivity';

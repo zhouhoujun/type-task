@@ -5,7 +5,7 @@ import { Task } from '../decorators';
 import { IActivity, ActivityInstance, InjectAcitityToken } from './IActivity';
 import { ActivityConfigure, ActivityType, ExpressionType, isActivityType, Expression } from './ActivityConfigure';
 import { Activity } from './Activity';
-import { AssignActivity } from './ExpressionActivity';
+import { AssignActivity } from './AssignActivity';
 
 
 /**

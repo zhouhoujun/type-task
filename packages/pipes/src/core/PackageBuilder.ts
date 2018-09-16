@@ -109,14 +109,6 @@ export class PackageBuilder extends ActivityBuilder {
                         return { dest: dest, task: DestActivity };
                     });
             }
-
-            // if (config.watch) {
-            //     activity.watch = await this.toActivity<Src, WatchActivity>(config.watch, activity,
-            //         act => act instanceof WatchActivity,
-            //         watch => {
-            //             return { src: watch, task: WatchActivity };
-            //         });
-            // }
         }
 
         return activity;

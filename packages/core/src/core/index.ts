@@ -2,7 +2,9 @@ export * from './IActivity';
 export * from './Activity'
 export * from './IActivityBuilder';
 export * from './ActivityBuilder';
+export * from './AssignActivity';
 export * from './ExpressionActivity';
+export * from './TranslatorActivity';
 export * from './ActivityConfigure';
 
 export * from './IContext';

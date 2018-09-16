@@ -45,7 +45,8 @@
     "through2": "^2.0.1",
     "vinyl-fs": "^3.0.3",
     "execa": "^0.10.0",
-    "rxjs": "^5.5.11"
+    "rxjs": "^6.3.2",
+    "rxjs-compat": "^6.3.2"
   },
   "peerDependencies": {
     "@taskfr/core": "^2.1.11"

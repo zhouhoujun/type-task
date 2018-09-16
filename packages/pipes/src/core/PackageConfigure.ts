@@ -7,7 +7,7 @@ import { IPipeConfigure } from './IPipeConfigure';
 import { TsConfigure } from '../assets';
 import { SourceConfigure } from './SourceActivity';
 import { UglifyConfigure } from './UglifyActivity';
-import { WatchConfigure } from './WatchActivity';
+import { WatchConfigure } from '@taskfr/node';
 import { AnnotationsConfigure } from './Annotation';
 import { ShellActivityConfig, ExecFileActivityConfig, CleanActivity, CleanConfigure } from '@taskfr/node';
 

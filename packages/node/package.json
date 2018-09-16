@@ -26,11 +26,14 @@
   "homepage": "https://github.com/zhouhoujun/type-task#readme",
   "dependencies": {
     "@ts-ioc/annotations": "^3.2.4",
+    "@types/shelljs": "^0.8.0",
     "@types/execa": "^0.9.0",
     "reflect-metadata": "^0.1.12",
     "tslib": "^1.9.2",
     "minimist": "^1.2.0",
     "globby": "^7.1.1",
+    "shelljs": "^0.8.2",
+    "execa": "1.0.0",
     "del": "^2.2.1",
     "chalk": "^2.3.1",
     "chokidar": "^2.0.4",
@@ -39,8 +42,9 @@
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
-    "vinyl-fs": "^3.0.3",
-    "rxjs": "^5.5.11"
+    "rxjs": "^6.3.2",
+    "rxjs-compat": "^6.3.2",
+    "vinyl-fs": "^3.0.3"
   },
   "peerDependencies": {
     "@taskfr/core": "^2.1.11"

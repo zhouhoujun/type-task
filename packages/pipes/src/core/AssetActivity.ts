@@ -2,7 +2,7 @@ import { SourceActivity } from './SourceActivity';
 import { DestActivity } from './DestActivity';
 import { isArray } from '@ts-ioc/core';
 import { ITransform } from './ITransform';
-import { WatchActivity } from './WatchActivity';
+import { WatchActivity } from '@taskfr/node';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
