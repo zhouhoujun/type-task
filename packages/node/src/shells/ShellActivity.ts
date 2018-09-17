@@ -1,7 +1,8 @@
 import { ExecOptions, exec } from 'child_process';
-import { isString, isBoolean, isArray, lang, ObjectMap, Inject } from '@ts-ioc/core';
-import { Src, ActivityConfigure, CtxType, OnActivityInit, Activity, Task } from '@taskfr/core';
+import { isString, isBoolean, isArray, lang, ObjectMap, Inject, isUndefined } from '@ts-ioc/core';
+import { Src, ActivityConfigure, CtxType, OnActivityInit, Activity, Task, IActivity } from '@taskfr/core';
 import { INodeContext, NodeContextToken } from '../core';
+import { isNullOrUndefined } from 'util';
 
 /**
  * shell activity config.
@@ -21,10 +22,10 @@ export interface ShellActivityConfig extends ActivityConfigure {
     /**
      * shell args.
      *
-     * @type {CtxType<string[] | ObjectMap<string | boolean>>}
+     * @type {CtxType<string[] | ObjectMap<any>>}
      * @memberof ShellActivityConfig
      */
-    args?: CtxType<string[] | ObjectMap<string | boolean>>;
+    args?: CtxType<string[] | ObjectMap<any>>;
     /**
      * shell exec options.
      *
@@ -93,13 +94,13 @@ export class ShellActivity extends Activity<any> implements OnActivityInit {
         }
     }
 
-    protected execute(): Promise<any> {
-        return Promise.resolve(this.shell)
+    protected async execute(data?: any, execute?: IActivity): Promise<any> {
+        return await Promise.resolve(this.shell)
             .then(cmds => {
                 let allowError = this.allowError;
                 let options = this.options;
                 if (isString(cmds)) {
-                    return this.execShell(cmds, options, allowError !== false);
+                    return this.execShell(cmds, options);
                 } else if (isArray(cmds)) {
                     let pip = Promise.resolve();
                     cmds.forEach(cmd => {
@@ -119,28 +120,39 @@ export class ShellActivity extends Activity<any> implements OnActivityInit {
         return shell;
     }
 
-    protected formatArgs(env: ObjectMap<string | boolean>): string[] {
-        let args = [];
-        lang.forIn(env, (val, k: string) => {
+    protected formatArgs(args: ObjectMap<any>): string[] {
+        let strArgs = [];
+        lang.forIn(args, (val, k: string) => {
             if (k === 'root' || !/^[a-zA-Z]/.test(k)) {
                 return;
             }
-            if (isBoolean(val)) {
-                if (val) {
-                    args.push(`--${k}`);
+            if (isArray(val)) {
+                strArgs.push(`--${k} ${val.join(',')}`);
+            } else if (!isNullOrUndefined(val)) {
+                let arg = this.formatArg(val, k, args);
+                if (arg) {
+                    strArgs.push(arg);
                 }
-            } else if (val) {
-                args.push(`--${k} ${val}`);
             }
         });
-        return args;
+        return strArgs;
     }
 
-    protected execShell(cmd: string, options?: ExecOptions, allowError = true): Promise<any> {
+    protected formatArg(arg: any, key: string, args?: ObjectMap<any>): string {
+        if (isBoolean(arg) && arg) {
+            return `--${key}`;
+        }
+        if (!isNullOrUndefined(arg)) {
+            return `--${key} ${arg}`
+        }
+        return '';
+    }
+
+    protected execShell(cmd: string, options?: ExecOptions): Promise<any> {
+        cmd = this.formatShell(cmd);
         if (!cmd) {
             return Promise.resolve();
         }
-        cmd = this.formatShell(cmd);
         return new Promise((resolve, reject) => {
             let shell = exec(cmd, options, (err, stdout, stderr) => {
                 if (err) {
@@ -151,23 +163,31 @@ export class ShellActivity extends Activity<any> implements OnActivityInit {
             });
 
             shell.stdout.on('data', data => {
-                console.log(data);
+                this.checkStdout(data, resolve, reject);
             });
 
             shell.stderr.on('data', err => {
-                console.error(err);
-                if (!allowError) {
-                    reject(err);
-                }
+                this.checkStderr(err, resolve, reject);
             });
 
             shell.on('exit', (code) => {
-                let msg = `exit child process with code：${code}`;
+                let msg = `exit child process with code：${code} `;
                 console.log(msg);
                 if (code > 0) {
                     reject(new Error(msg));
                 }
             });
         });
+    }
+
+    protected checkStderr(err: string | Buffer, resolve: Function, reject: Function) {
+        console.error(err);
+        if (this.allowError === false) {
+            reject(err);
+        }
+    }
+
+    protected checkStdout(data: string | Buffer, resolve: Function, reject: Function) {
+        console.log(data);
     }
 }

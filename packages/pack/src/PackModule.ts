@@ -1,18 +1,17 @@
 import { DIModule } from '@ts-ioc/bootstrap';
-
-import * as cores from './core';
-import * as activities from './activities';
 import { ActivitiesModule } from '@taskfr/node';
+import * as build from './build';
+import * as generate from './generate';
 
 @DIModule({
     imports: [
         ActivitiesModule,
-        cores,
-        activities
+        build,
+        generate
     ],
     exports: [
-        cores,
-        activities
+        build,
+        generate
     ]
 })
 export class PackModule {

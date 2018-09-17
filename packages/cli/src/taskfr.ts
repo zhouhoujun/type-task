@@ -56,7 +56,7 @@ export const cli = new Liftoff({
 
 cli.launch({
   cwd: argv.cwd,
-  configPath: argv.taskfile,
+  taskfile: argv.taskfile,
   require: argv.require,
   completion: argv.completion,
   verbose: argv.verbose
@@ -76,14 +76,14 @@ cli.launch({
     console.log('CWD:', env.cwd);
     console.log('LOCAL MODULES PRELOADED:', env.require);
     console.log('SEARCHING FOR:', env.configNameRegex);
-    console.log('FOUND CONFIG AT:', env.configPath);
+    console.log('FOUND Taskfile AT:', env.taskfile);
     console.log('CONFIG BASE DIR:', env.configBase);
     console.log('YOUR LOCAL MODULE IS LOCATED:', env.modulePath);
     console.log('LOCAL PACKAGE.JSON:', env.modulePackage);
     console.log('CLI PACKAGE.JSON', require('../package'));
   }
 
-  if (!env.configPath) {
+  if (!env.taskfile) {
     console.log(chalk.red('No taskfile found'));
     process.exit(1);
   }

@@ -9,6 +9,7 @@ import { TaskContainer } from '@taskfr/platform-server';
             name: 'tscompile',
             src: 'src/**/*.ts',
             dest: 'bin',
+            tsconfig: './tsconfig.es2015.json',
             uglify: false
         }
     }

@@ -8,7 +8,16 @@
         "reinstall": "npm cache clean && npm install",
         "build": "ts-node -r tsconfig-paths/register taskfile.ts"
     },
-    "keywords": ["task", "task manager", "pipe", "ioc", "aop", "shell", "develop", "tool"],
+    "keywords": [
+        "task",
+        "task manager",
+        "pipe",
+        "ioc",
+        "aop",
+        "shell",
+        "develop",
+        "tool"
+    ],
     "author": "houjun",
     "license": "MIT",
     "bugs": {
@@ -38,8 +47,10 @@
         "chai": "^3.5.0",
         "chalk": "^2.3.1",
         "chokidar": "^2.0.4",
+        "commander": "^2.18.0",
         "del": "^2.2.1",
         "execa": "^0.10.0",
+        "findup": "^0.1.5",
         "globby": "^7.1.1",
         "gulp-cached": "^1.1.0",
         "gulp-json-editor": "^2.4.1",

@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "importHelpers": true,
+    "resolveJsonModule": true,
     "target":"es5",
     "baseUrl": ".",
     "rootDir": "../../packages",

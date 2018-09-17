@@ -1,6 +1,6 @@
 import { isString, isArray, Inject, isBoolean } from '@ts-ioc/core';
 import { existsSync } from 'fs';
-import { Src, Activity, Task, CtxType, ActivityConfigure } from '@taskfr/core';
+import { Src, Activity, Task, CtxType, ActivityConfigure, IActivity } from '@taskfr/core';
 import * as execa from 'execa';
 import { NodeContextToken, INodeContext } from '../core';
 
@@ -71,8 +71,8 @@ export class ExecFileActivity extends Activity<any> {
         }
     }
 
-    protected execute(): Promise<any> {
-        return Promise.resolve(this.files)
+    protected async execute(data?: any, execute?: IActivity): Promise<any> {
+        return await Promise.resolve(this.files)
             .then(files => {
                 let allowError = this.allowError;
                 let options = this.options;

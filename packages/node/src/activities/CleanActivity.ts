@@ -1,7 +1,7 @@
 import { Src, Activity, InjectAcitityToken, Task, ActivityConfigure, Expression, ExpressionType } from '@taskfr/core';
 import { Inject } from '@ts-ioc/core';
 import { NodeContextToken, INodeContext } from '../core';
-const del = require('del');
+
 
 
 /**
@@ -63,6 +63,6 @@ export class CleanActivity extends Activity<any> {
      */
     protected async execute(data?: any): Promise<any> {
         let clean = await this.context.exec(this, this.clean, data);
-        return await del(clean);
+        return await this.context.del(clean);
     }
 }
