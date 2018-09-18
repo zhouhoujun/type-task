@@ -13,6 +13,13 @@ import { Activity } from './Activity';
 export const ChainActivityToken = new InjectAcitityToken<ChainActivity>('chain');
 
 
+/**
+ * chain activity.
+ *
+ * @export
+ * @class ChainActivity
+ * @extends {Activity<any>}
+ */
 @Task(ChainActivityToken)
 export class ChainActivity extends Activity<any> {
 

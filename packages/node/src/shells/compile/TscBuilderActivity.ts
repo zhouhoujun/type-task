@@ -2,8 +2,7 @@ import * as path from 'path';
 import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
 import { Task, CtxType, Src } from '@taskfr/core';
 import { CompilerOptions, ModuleResolutionKind, ModuleKind, ScriptTarget } from 'typescript';
-import { ObjectMap, lang, isArray } from '@ts-ioc/core';
-import { isBoolean } from 'util';
+import { ObjectMap, lang, isArray, isBoolean } from '@ts-ioc/core';
 
 
 /**

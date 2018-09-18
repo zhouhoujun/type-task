@@ -1,16 +1,16 @@
 import { DIModule } from '@ts-ioc/bootstrap';
 import { ActivitiesModule } from '@taskfr/node';
-import * as build from './build';
+import * as builders from './builders';
 import * as generate from './generate';
 
 @DIModule({
     imports: [
         ActivitiesModule,
-        build,
+        builders,
         generate
     ],
     exports: [
-        build,
+        builders,
         generate
     ]
 })

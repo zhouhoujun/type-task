@@ -1,7 +1,7 @@
-import { SequenceActivity, Task } from '@taskfr/core';
+import { Task, ChainActivity } from '@taskfr/core';
 
 @Task('gen-lib')
-export class GenerateLibActivity extends SequenceActivity {
+export class GenerateLibActivity extends ChainActivity {
 
 }
 
