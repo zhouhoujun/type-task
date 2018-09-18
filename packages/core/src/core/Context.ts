@@ -11,6 +11,7 @@ import { ActivityRunner } from './ActivityRunner';
 import { AppConfigureToken } from '@ts-ioc/bootstrap';
 import { ActivityBuilderToken } from './IActivityBuilder';
 import { ActivityBuilder } from './ActivityBuilder';
+import { IActivityContext, ActivityContext } from './ActivityContext';
 
 
 /**
@@ -64,19 +65,19 @@ export class Context implements IContext {
      * @template T
      * @param {IActivity} target
      * @param {Expression<T>} result
-     * @param {ActivityConfigure} [data]
+     * @param {IActivityContext<T>} [ctx]
      * @returns {Promise<T>}
      * @memberof IContext
      */
-    exec<T>(target: IActivity, expression: Expression<T>, data?: any): Promise<T> {
+    exec<T>(target: IActivity, expression: Expression<T>, ctx?: ActivityContext): Promise<T> {
         if (isFunction(expression)) {
-            return expression(target, data);
+            return expression(target, ctx);
         } else if (isPromise(expression)) {
             return expression;
         } else if (expression instanceof Activity) {
-            return expression.run(data, target);
+            return expression.run(ctx);
         } else if (expression instanceof ActivityRunner) {
-            return expression.start(data);
+            return expression.start();
         } else {
             return Promise.resolve(expression as T);
         }

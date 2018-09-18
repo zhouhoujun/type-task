@@ -5,6 +5,7 @@ import { isUndefined } from '@ts-ioc/core';
 import { TransformType, TransformConfig } from './pipeTypes';
 import { SourceConfigure, SourceActivity } from './SourceActivity';
 import { InjectPipeActivityToken } from './IPipeActivity';
+import { PipeActivityContext } from './PipeActivityContext';
 
 /**
  * test activity token.
@@ -95,13 +96,11 @@ export class TestActivity extends SourceActivity {
         }
     }
 
-    protected async afterPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        let source = await super.afterPipe(stream, execute);
-        let test = await this.context.exec(this, this.enable, source);
+    protected async afterPipe(ctx: PipeActivityContext): Promise<void> {
+        await super.afterPipe(ctx);
+        let test = await this.context.exec(this, this.enable, ctx);
         if (test !== false) {
-            return await this.executePipe(source, this.framework, true);
-        } else {
-            return source;
+            await this.executePipe(ctx.data, ctx, this.framework, true);
         }
     }
 }

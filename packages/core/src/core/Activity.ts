@@ -4,6 +4,7 @@ import { IActivity, GActivity, ActivityToken } from './IActivity';
 import { ActivityConfigure, ExpressionType, Expression, ActivityType } from './ActivityConfigure';
 import { ContextToken, IContext } from './IContext';
 import { OnActivityInit } from './OnActivityInit';
+import { ActivityContext, InputDataToken } from './ActivityContext';
 
 
 /**
@@ -80,23 +81,27 @@ export class Activity<T> implements GActivity<T>, OnActivityInit {
 
     }
 
-    async onActivityInit(config: ActivityConfigure): Promise<any> {
+    async onActivityInit(config: ActivityConfigure) {
         this.config = config;
     }
 
     /**
      * run task.
      *
-     * @param {*} [data] execut data.
-     * @param {IActivity} [execute] execute activity.
+     * @param {ActivityContext} [ctx] execute context.
      * @returns {Promise<T>}
      * @memberof Activity
      */
-    async run(data?: any, execute?: IActivity): Promise<any> {
-        let result = await this.before(data, execute);
-        result = await this.execute(result, execute);
-        result = await this.after(result, execute);
-        return result;
+    async run(ctx?: ActivityContext): Promise<any> {
+        ctx = ctx || this.createCtx();
+        await this.before(ctx);
+        await this.execute(ctx);
+        await this.after(ctx);
+        return ctx.data;
+    }
+
+    protected createCtx(input?: any): ActivityContext {
+        return this.context.getContainer().resolve(ActivityContext, { provide: InputDataToken, useValue: input });
     }
 
     /**
@@ -107,14 +112,13 @@ export class Activity<T> implements GActivity<T>, OnActivityInit {
      * @returns {Promise<any>}
      * @memberof SequenceActivity
      */
-    protected async before(data?: any, execute?: IActivity): Promise<any> {
+    protected async before(ctx: ActivityContext) {
         if (this.config && this.config.type) {
             let dep = this.context.getContainer().getRefService(InjectBeforeActivity, this.config.type);
             if (dep) {
-                return await dep.run(data, execute);
+                return await dep.run(ctx);
             }
         }
-        return data;
     }
 
     /**
@@ -126,8 +130,8 @@ export class Activity<T> implements GActivity<T>, OnActivityInit {
      * @returns {Promise<any>}
      * @memberof Activity
      */
-    protected async execute(data?: any, execute?: IActivity): Promise<any> {
-        return data;
+    protected async execute(ctx: ActivityContext) {
+        return;
     }
 
     /**
@@ -138,14 +142,13 @@ export class Activity<T> implements GActivity<T>, OnActivityInit {
      * @returns {Promise<any>}
      * @memberof SequenceActivity
      */
-    protected async after(data?: any, execute?: IActivity): Promise<any> {
+    protected async after(ctx: ActivityContext) {
         if (this.config && this.config.type) {
             let dep = this.context.getContainer().getRefService(InjectAfterActivity, this.config.type);
             if (dep) {
-                return await dep.run(data, execute);
+                return await dep.run(ctx);
             }
         }
-        return data;
     }
 
     protected toExpression<T>(exptype: ExpressionType<T>, target?: IActivity): Promise<Expression<T>> {

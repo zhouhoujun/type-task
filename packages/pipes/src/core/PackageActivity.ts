@@ -1,4 +1,4 @@
-import { SequenceActivity, ParallelActivity, IActivity } from '@taskfr/core';
+import { SequenceActivity, ParallelActivity, IActivity, InputDataToken } from '@taskfr/core';
 import { DestActivity } from './DestActivity';
 import { TestActivity } from './TestActivity';
 import { CleanActivity } from '@taskfr/node';
@@ -6,6 +6,7 @@ import { Type, Inject } from '@ts-ioc/core';
 import { PipeContextToken, IPipeContext } from './IPipeContext';
 import { IPackageActivity, PackageToken } from './PackageConfigure';
 import { Package } from '../decorators';
+import { PipeActivityContext } from './PipeActivityContext';
 
 
 /**
@@ -69,29 +70,33 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
     @Inject(PipeContextToken)
     context: IPipeContext;
 
-    protected async execute(data?: any, execute?: IActivity) {
+    protected async execute(ctx: PipeActivityContext) {
         if (this.test) {
-            await this.test.run(data, execute);
+            await this.test.run(ctx);
         }
         if (this.clean) {
-            await this.clean.run(data, execute);
+            await this.clean.run(ctx);
         }
-        let assets = await this.execAssets(data);
-        return await super.execute(assets, execute);
+        await this.execAssets(ctx);
+        await super.execute(ctx);
+    }
+
+    protected createCtx(input?: any) {
+        return this.context.getContainer().resolve(PipeActivityContext, { provide: InputDataToken, useValue: input });
     }
 
     /**
      * execute assets.
      *
      * @protected
-     * @param {*} [data]
+     * @param {PipeActivityContext} ctx
      * @returns
      * @memberof PackageActivity
      */
-    protected execAssets(data?: any) {
+    protected execAssets(ctx: PipeActivityContext) {
         this.executeType = this.executeType || SequenceActivity;
         let execute = this.context.getContainer().resolve(this.executeType);
-        execute.activites = this.assets;
-        return execute.run(data);
+        execute.activities = this.assets;
+        return execute.run(ctx);
     }
 }

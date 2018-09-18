@@ -2,6 +2,7 @@
 import * as uglify from 'gulp-uglify';
 import { Task, Activity, OnActivityInit, ActivityConfigure, CtxType, InjectAcitityToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
+import { PipeActivityContext } from './PipeActivityContext';
 
 /**
  * uglify activity configure.
@@ -29,11 +30,11 @@ export class UglifyActivity extends Activity<ITransform> implements OnActivityIn
         this.uglifyOtions = this.context.to(config.uglifyOtions);
     }
 
-    async run(data: ITransform) {
+    protected async execute(ctx: PipeActivityContext) {
         if (this.uglifyOtions) {
-            return data.pipe(uglify(this.uglifyOtions))
+            ctx.data = ctx.data.pipe(uglify(this.uglifyOtions))
         } else {
-            return data.pipe(uglify())
+            ctx.data = ctx.data.pipe(uglify())
         }
     }
 }

@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, SequenceConfigure, ActivityType } from '../core';
+import { IActivity, InjectAcitityToken, Activity, SequenceConfigure, ActivityType, ActivityContext } from '../core';
 
 /**
  * sequence activity token
@@ -16,10 +16,10 @@ export const SequenceActivityToken = new InjectAcitityToken<SequenceActivity>('s
 @Task(SequenceActivityToken)
 export class SequenceActivity extends Activity<any> {
 
-    activites: IActivity[];
+    activities: IActivity[];
 
     async onActivityInit(config: SequenceConfigure): Promise<any> {
-        this.activites = this.activites || [];
+        this.activities = this.activities || [];
         await super.onActivityInit(config);
         if (config.sequence && config.sequence.length) {
             await this.buildChildren(this, config.sequence);
@@ -28,15 +28,15 @@ export class SequenceActivity extends Activity<any> {
 
     async buildChildren(activity: SequenceActivity, configs: ActivityType<IActivity>[]) {
         let sequence = await Promise.all(configs.map(cfg => this.buildActivity(cfg)));
-        activity.activites = sequence;
+        activity.activities = sequence;
         return activity;
     }
 
-    protected execute(data?: any, execute?: IActivity): Promise<any> {
-        let execPromise = Promise.resolve(data);
-        this.activites.forEach(task => {
-            execPromise = execPromise.then(pdata => task.run(pdata));
+    protected async execute(ctx: ActivityContext): Promise<void> {
+        let execPromise = Promise.resolve();
+        this.activities.forEach(task => {
+            execPromise = execPromise.then(pdata => task.run(ctx));
         });
-        return execPromise;
+        await execPromise;
     }
 }

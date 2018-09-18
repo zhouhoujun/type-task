@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, ParallelConfigure, ActivityType, } from '../core';
+import { IActivity, InjectAcitityToken, Activity, ParallelConfigure, ActivityType, ActivityContext, } from '../core';
 import { Token, isToken } from '@ts-ioc/core';
 
 
@@ -18,7 +18,7 @@ export const ParallelActivityToken = new InjectAcitityToken<ParallelActivity>('p
 @Task(ParallelActivityToken)
 export class ParallelActivity extends Activity<any> {
 
-    activites: IActivity[] = [];
+    activities: IActivity[] = [];
 
     async onActivityInit(config: ParallelConfigure): Promise<any> {
         await super.onActivityInit(config);
@@ -29,7 +29,7 @@ export class ParallelActivity extends Activity<any> {
 
     async buildChildren(activity: ParallelActivity, configs: ActivityType<IActivity>[]) {
         let children = await Promise.all(configs.map(cfg => this.buildActivity(cfg)));
-        activity.activites = children;
+        activity.activities = children;
         return activity;
     }
 
@@ -37,13 +37,12 @@ export class ParallelActivity extends Activity<any> {
      * execute parallel.
      *
      * @protected
-     * @param {*} [data]
-     * @param {IActivity} [execute]
-     * @returns {Promise<any>}
+     * @param {ActivityContext} ctx
+     * @returns {Promise<void>}
      * @memberof ParallelActivity
      */
-    protected execute(data?: any, execute?: IActivity): Promise<any> {
-        return Promise.all(this.activites.map(task => task.run(data)));
+    protected async execute(ctx: ActivityContext): Promise<void> {
+        await Promise.all(this.activities.map(task => task.run(ctx)));
     }
 
 }

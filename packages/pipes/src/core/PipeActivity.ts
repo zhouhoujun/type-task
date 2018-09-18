@@ -1,12 +1,13 @@
 import { IPipeContext, PipeContextToken } from './IPipeContext';
 import { Inject, isArray, isUndefined } from '@ts-ioc/core';
 import { IPipeActivity, PipeActivityToken } from './IPipeActivity';
-import { Activity, IActivity } from '@taskfr/core';
+import { Activity, IActivity, InputDataToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { TransformType, isTransform } from './pipeTypes';
 import { IPipeConfigure } from './IPipeConfigure';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { PipeTask } from '../decorators';
+import { PipeActivityContext } from './PipeActivityContext';
 
 /**
  * Pipe activity.
@@ -53,59 +54,55 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
     /**
      * run task.
      *
-     * @param {*} [data]
+     * @param {PipeActivityContext} ctx
      * @param {IActivity} [execute]
      * @returns {Promise<T>}
      * @memberof Activity
      */
-    protected async execute(data?: any, execute?: IActivity): Promise<ITransform> {
-        let stream = await this.merge(...(isArray(data) ? data : [data]));
-        stream = await this.beforePipe(stream, execute);
-        stream = await this.pipe(stream, execute);
-        stream = await this.afterPipe(stream, execute);
-        return stream;
+    protected async execute(ctx: PipeActivityContext) {
+        await this.beforePipe(ctx);
+        await this.pipe(ctx);
+        await this.afterPipe(ctx);
+    }
+
+    protected createCtx(input?: any) {
+        return this.context.getContainer().resolve(PipeActivityContext, { provide: InputDataToken, useValue: input });
     }
 
     /**
      * execute pipe.
      *
      * @protected
-     * @param {ITransform} stream
-     * @param {IActivity} [execute]
+     * @param {PipeActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof PipeActivity
      */
-    protected pipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        return this.pipeStream(stream, ...this.pipes);
+    protected async pipe(ctx: PipeActivityContext): Promise<void> {
+        ctx.data = await this.pipeStream(ctx.data, ctx, ...this.pipes);
     }
 
     /**
      * begin pipe.
      *
      * @protected
-     * @param {ITransform} stream
-     * @param {IActivity} [execute]
+     * @param {PipeActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof PipeActivity
      */
-    protected async beforePipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        return stream;
+    protected async beforePipe(ctx: PipeActivityContext): Promise<void> {
+
     }
 
     /**
      * end pipe.
      *
      * @protected
-     * @param {ITransform} stream
-     * @param {IActivity} [execute]
+     * @param {PipeActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof PipeActivity
      */
-    protected async afterPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        if (execute instanceof SourceMapsActivity) {
-            stream = await this.executePipe(stream, execute);
-        }
-        return stream;
+    protected async afterPipe(ctx: PipeActivityContext): Promise<void> {
+
     }
 
     /**
@@ -113,17 +110,18 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      *
      * @protected
      * @param {ITransform} stream
+     * @param {PipeActivityContext} ctx
      * @param {...TransformType[]} pipes
      * @returns {Promise<ITransform>}
      * @memberof PipeActivity
      */
-    protected pipeStream(stream: ITransform, ...pipes: TransformType[]): Promise<ITransform> {
+    protected async pipeStream(stream: ITransform, ctx: PipeActivityContext, ...pipes: TransformType[]): Promise<ITransform> {
         if (pipes.length < 1) {
-            return Promise.resolve(stream);
+            return stream;
         }
 
         if (pipes.length === 1) {
-            return this.executePipe(stream, pipes[0]);
+            return await this.executePipe(stream, ctx, pipes[0]);
         }
 
         let pstream = Promise.resolve(stream);
@@ -131,28 +129,11 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
             if (transform) {
                 pstream = pstream
                     .then(stm => {
-                        return this.executePipe(stm, transform);
+                        return this.executePipe(stm, ctx, transform);
                     });
             }
         });
-        return pstream;
-    }
-
-    /**
-     * merge transforms
-     *
-     * @protected
-     * @param {...ITransform[]} data
-     * @returns {Promise<ITransform>}
-     * @memberof PipeComponent
-     */
-    protected merge(...data: ITransform[]): Promise<ITransform> {
-        let trans = data.filter(it => !it);
-        if (trans.length > 1 && this.merger) {
-            return this.context.exec(this, this.merger, data);
-        } else {
-            return Promise.resolve(isArray(data) ? data[0] : data);
-        }
+        return await pstream;
     }
 
     /**
@@ -164,8 +145,8 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      * @returns {Promise<ITransform>}
      * @memberof PipeComponent
      */
-    protected async executePipe(stream: ITransform, transform: TransformType, waitend = false): Promise<ITransform> {
-        let next: ITransform = await this.context.exec(this, transform, stream);
+    protected async executePipe(stream: ITransform, ctx: PipeActivityContext, transform: TransformType, waitend = false): Promise<ITransform> {
+        let next: ITransform = await this.context.exec(this, transform, ctx);
         let piped = false;
         if (isTransform(stream)) {
             if (isTransform(next)) {

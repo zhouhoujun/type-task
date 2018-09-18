@@ -1,5 +1,5 @@
 
-import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure, TranslatorActivity, Active, ActivityType, InjectTranslatorActivity } from '@taskfr/core';
+import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure, TranslatorActivity, Active, ActivityType, InjectTranslatorActivity, ActivityContext } from '@taskfr/core';
 import { Defer, isArray, Token } from '@ts-ioc/core';
 import { Observable } from 'rxjs';
 import 'rxjs-compat'
@@ -27,6 +27,14 @@ export interface WatchConfigure extends ActivityConfigure {
     * @memberof IPipeConfigure
     */
     src: ExpressionType<Src>;
+
+    /**
+     * watch body.
+     *
+     * @type {Active}
+     * @memberof WatchConfigure
+     */
+    body?: Active;
 
     /**
      * watch options.
@@ -232,6 +240,14 @@ export class WatchActivity extends Activity<FileChanged> {
      * @memberof WatchActivity
      */
     src: Expression<Src>;
+
+    /**
+     * watch body.
+     *
+     * @type {IActivity}
+     * @memberof WatchActivity
+     */
+    body?: IActivity;
     /**
      * watch options.
      *
@@ -256,13 +272,16 @@ export class WatchActivity extends Activity<FileChanged> {
      */
     defaultTranslatorToken: Token<any>;
 
-    async run(data: any, watched: IActivity): Promise<any> {
-        return await this.watch(data, watched);
+    protected async execute(ctx: ActivityContext): Promise<void> {
+        return await this.watch(ctx);
     }
 
     async onActivityInit(config: WatchConfigure) {
         await super.onActivityInit(config);
         this.src = await this.toExpression(config.src);
+        if (config.body) {
+            this.body = await this.buildActivity(config.body);
+        }
         if (config.translator) {
             this.translator = await this.buildActivity(config.translator)
         }
@@ -271,10 +290,11 @@ export class WatchActivity extends Activity<FileChanged> {
         }
     }
 
-    protected async watch(data: any, watched: IActivity) {
-        let watchSrc = await this.context.exec(this, this.src, data);
-        let options = await this.context.exec(this, this.options, data);
+    protected async watch(ctx: ActivityContext) {
+        let watchSrc = await this.context.exec(this, this.src, ctx);
+        let options = await this.context.exec(this, this.options, ctx);
         let watcher = chokidar.watch(watchSrc, options);
+        let watchBody = this.body || ctx.target;
 
         let defer = new Defer();
         Observable.fromEventPattern<IFileChanged>(
@@ -286,7 +306,6 @@ export class WatchActivity extends Activity<FileChanged> {
             },
             handler => {
                 watcher.close();
-                defer.resolve(data);
             })
             .bufferTime(300)
             .map(chgs => {
@@ -305,7 +324,9 @@ export class WatchActivity extends Activity<FileChanged> {
                 return chg;
             })
             .subscribe(chg => {
-                watched.run(this.translateChanged(chg), this);
+                ctx.input = chg;
+                ctx.data = this.translateChanged(chg);
+                watchBody.run(ctx);
             });
 
         defer.promise;
@@ -315,9 +336,10 @@ export class WatchActivity extends Activity<FileChanged> {
         if (!this.translator) {
             this.translator = await this.context.getContainer().getRefService(InjectTranslatorActivity, WatchAcitvityToken, this.defaultTranslatorToken)
         }
+        let ctx = this.context.getContainer().resolve(ActivityContext, { input: this.translateChanged(chg) })
         if (this.translator) {
-            return await this.translator.run(chg);
+            await this.translator.run(ctx);
         }
-        return chg;
+        return ctx.data;
     }
 }

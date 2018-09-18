@@ -7,10 +7,10 @@ import { SourceMapsActivity } from './SourceMapsActivity';
 import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { PipeActivity } from './PipeActivity';
-import { IActivity } from '@taskfr/core';
 import { IAssetActivity, AssetToken } from './AssetConfigure';
 import { TestActivity } from './TestActivity';
 import { AssetTask } from '../decorators';
+import { PipeActivityContext } from './PipeActivityContext';
 
 
 /**
@@ -89,71 +89,64 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      * before pipe
      *
      * @protected
-     * @param {ITransform} stream
-     * @param {IActivity} [execute]
-     * @returns {Promise<ITransform>}
+     * @param {PipeActivityContext} ctx
+     * @returns {Promise<void>}
      * @memberof AssetActivity
      */
-    protected async beforePipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
+    protected async beforePipe(ctx: PipeActivityContext): Promise<void> {
         if (this.test) {
-            await this.test.run(stream);
+            await this.test.run(ctx);
         }
-        let source: ITransform;
-        if (execute && execute === this.watch) {
-            source = stream;
-        } else {
-            source = await this.src.run(stream);
+        if (!(this.watch && ctx.watch === this.watch)) {
+            await this.src.run(ctx);
             if (this.watch) {
-                this.watch.run(stream, this);
+                ctx.watch = this.watch;
+                ctx.target = this;
+                this.watch.run(ctx);
             }
         }
         if (this.annotation) {
-            source = await this.annotation.run(source);
+            await this.annotation.run(ctx);
         }
         if (this.sourcemaps) {
-            source = await this.sourcemaps.init(source);
+            ctx.sourceMaps = this.sourcemaps;
+            await this.sourcemaps.init(ctx);
         }
-        return source;
     }
 
     /**
      * after pipe.
      *
      * @protected
-     * @param {ITransform} stream
-     * @param {IActivity} [execute]
+     * @param {PipeActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof AssetActivity
      */
-    protected async afterPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        stream = await this.executeUglify(stream);
+    protected async afterPipe(ctx: PipeActivityContext): Promise<void> {
+        await this.executeUglify(ctx);
         if (isArray(this.dest)) {
-            if (this.dest.length === 1) {
-                await this.executeDest(this.dest[0], stream);
-            } else if (this.dest.length > 0) {
+            if (this.dest.length > 0) {
                 await Promise.all(this.dest.map(ds => {
-                    return this.executeDest(ds, stream);
+                    return this.executeDest(ds, ctx);
                 }));
             }
         } else if (this.dest) {
-            await this.executeDest(this.dest, stream);
+            await this.executeDest(this.dest, ctx);
         }
-        return stream;
     }
 
     /**
      * execute uglify.
      *
      * @protected
-     * @param {ITransform} stream
+     * @param {PipeActivityContext} ctx
      * @returns
      * @memberof AssetActivity
      */
-    protected async executeUglify(stream: ITransform) {
+    protected async executeUglify(ctx: PipeActivityContext) {
         if (this.uglify) {
-            stream = await this.uglify.run(stream);
+            await this.uglify.run(ctx);
         }
-        return stream;
     }
 
     /**
@@ -161,14 +154,14 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      *
      * @protected
      * @param {DestActivity} ds
-     * @param {ITransform} stream
+     * @param {PipeActivityContext} ctx
      * @returns
      * @memberof AssetActivity
      */
-    protected async executeDest(ds: DestActivity, stream: ITransform) {
+    protected async executeDest(ds: DestActivity, ctx: PipeActivityContext) {
         if (!ds) {
-            return null;
+            return;
         }
-        return ds.run(stream, this.sourcemaps);
+        return await ds.run(ctx);
     }
 }

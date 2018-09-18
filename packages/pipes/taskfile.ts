@@ -88,6 +88,7 @@ export class RollupTs extends AssetActivity {
 
 @Package({
     clean: 'lib',
+    test: 'test/**/*.spec.ts',
     assets: {
         ts2015: {
             sequence: [

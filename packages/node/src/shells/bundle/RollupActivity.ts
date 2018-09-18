@@ -2,7 +2,7 @@
 
 import * as path from 'path';
 import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
-import { Task, Src, CtxType, IActivity } from '@taskfr/core';
+import { Task, Src, CtxType, IActivity, ActivityContext } from '@taskfr/core';
 import { lang, ObjectMap } from '@ts-ioc/core';
 import { RollupDirOptions, RollupFileOptions, rollup } from 'rollup';
 
@@ -90,14 +90,14 @@ export class RollupActivity extends ShellActivity {
         this.rollupConfig = this.context.to(config.rollupConfig);
     }
 
-    protected async execute(data?: any, execute?: IActivity): Promise<any> {
+    protected async execute(ctx: ActivityContext): Promise<any> {
         if (this.rollupDirOptions) {
             return await rollup(this.rollupDirOptions);
         }
         if (this.rollupFileOptions) {
             return await rollup(this.rollupFileOptions);
         }
-        await super.execute(data, execute);
+        await super.execute(ctx);
     }
 
 

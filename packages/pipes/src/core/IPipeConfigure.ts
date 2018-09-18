@@ -16,12 +16,4 @@ export interface IPipeConfigure extends ActivityConfigure {
      * @memberof IPipeConfigure
      */
     pipes?: TransformExpress;
-
-    /**
-     * streams merger.
-     *
-     * @type {TransformMergerExpress}
-     * @memberof IPipeConfigure
-     */
-    merger?: TransformConfig;
 }

@@ -4,6 +4,8 @@ import { ModuleConfig } from '@ts-ioc/bootstrap';
 import { IActivityRunner } from './IActivityRunner';
 import { ExpressionActivity } from './ExpressionActivity';
 import { ActivityRunner } from './ActivityRunner';
+import { IActivityContext } from './ActivityContext';
+import { IHandleActivity } from './HandleActivity';
 
 
 /**
@@ -22,7 +24,7 @@ export interface KeyValue<TKey, TVal> {
 /**
  * async result.
  */
-export type AsyncResult<T> = (activity?: IActivity, data?: any) => Promise<T>;
+export type AsyncResult<T> = (activity?: IActivity, ctx?: IActivityContext<T>) => Promise<T>;
 
 /**
  * activity result.
@@ -56,14 +58,14 @@ export type ExpressionType<T> = Expression<T> | ActivityResultType<T>;
 /**
  * core activities configures.
  */
-export type GCoreActivityConfigs<T> = ActivityConfigure | IDependenceConfigure<T> | ConfirmConfigure | DelayConfigure | IDoWhileConfigure<T>
+export type GCoreActivityConfigs<T> = ActivityConfigure | ChainConfigure | IDependenceConfigure<T> | ConfirmConfigure | IDelayConfigure<T> | IDoWhileConfigure<T>
     | IIfConfigure<T> | IIntervalConfigure<T> | IParallelConfigure<T> | ISequenceConfigure<T> | ISwitchConfigure<T>
     | ThrowConfigure | ITryCatchConfigure<T> | IWhileConfigure<T>;
 
 /**
  * core activities configures.
  */
-export type CoreActivityConfigs = ActivityConfigure | DependenceConfigure | ConfirmConfigure | DelayConfigure | DoWhileConfigure
+export type CoreActivityConfigs = ActivityConfigure | ChainConfigure | DependenceConfigure | ConfirmConfigure | DelayConfigure | DoWhileConfigure
     | IfConfigure | IntervalConfigure | ParallelConfigure | SequenceConfigure | SwitchConfigure
     | ThrowConfigure | TryCatchConfigure | WhileConfigure;
 
@@ -199,6 +201,25 @@ export interface ActivityConfigure extends IActivityConfigure<IActivity> {
 export function isConfirmConfigure(target: any): target is ConfirmConfigure {
     return isMetadataObject(target) && !isUndefined(target.confirm);
 }
+
+
+/**
+ * chain configure.
+ *
+ * @export
+ * @interface ChainConfigure
+ * @extends {ActivityConfigure}
+ */
+export interface ChainConfigure extends ActivityConfigure {
+    /**
+     * handle activities.
+     *
+     * @type {ActivityType<IHandleActivity>[]}
+     * @memberof ChainConfigure
+     */
+    activities?: ActivityType<IHandleActivity>[];
+}
+
 /**
  * Confirm activity configure.
  *
@@ -261,10 +282,10 @@ export function isDelayConfigure(target: any): target is DelayConfigure {
  * delay activity configure.
  *
  * @export
- * @interface DelayConfigure
+ * @interface IDelayConfigure
  * @extends {ActivityConfigure}
  */
-export interface DelayConfigure extends ActivityConfigure {
+export interface IDelayConfigure<T> extends ActivityConfigure {
     /**
      * delay ms.
      *
@@ -272,6 +293,25 @@ export interface DelayConfigure extends ActivityConfigure {
      * @memberof DelayConfigure
      */
     delay: ExpressionType<number>;
+
+    /**
+     * delay body.
+     *
+     * @type {T}
+     * @memberof IDelayConfigure
+     */
+    body?: T;
+}
+
+/**
+ * delay activity configure.
+ *
+ * @export
+ * @interface DelayConfigure
+ * @extends {IDelayConfigure<Active>}
+ */
+export interface DelayConfigure extends IDelayConfigure<Active> {
+
 }
 
 
@@ -550,10 +590,10 @@ export interface ThrowConfigure extends ActivityConfigure {
  *
  * @export
  * @interface ITryCatchConfigure
- * @extends {ActivityConfigure}
+ * @extends {ChainConfigure}
  * @template T
  */
-export interface ITryCatchConfigure<T> extends ActivityConfigure {
+export interface ITryCatchConfigure<T> extends ChainConfigure {
     /**
      * try activity.
      *
@@ -568,7 +608,7 @@ export interface ITryCatchConfigure<T> extends ActivityConfigure {
      * @type {T[]}
      * @memberof TryCatchConfigure
      */
-    catchs: T[];
+    catchs: IHandleActivity[];
 
     /**
      * finally activity.

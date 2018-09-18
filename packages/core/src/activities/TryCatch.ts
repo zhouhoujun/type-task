@@ -1,6 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Condition, TryCatchConfigure } from '../core';
-import { Activity } from '../core/Activity';
+import { IActivity, InjectAcitityToken, Condition, TryCatchConfigure, ActivityContext, ChainActivity, IHandleActivity } from '../core';
 
 /**
  * while activity token.
@@ -15,7 +14,7 @@ export const TryCatchActivityToken = new InjectAcitityToken<TryCatchActivity>('t
  * @extends {Activity}
  */
 @Task(TryCatchActivityToken)
-export class TryCatchActivity extends Activity<any> {
+export class TryCatchActivity extends ChainActivity {
     /**
      * while condition.
      *
@@ -33,10 +32,13 @@ export class TryCatchActivity extends Activity<any> {
     /**
      * catch activities.
      *
-     * @type {IActivity[]}
+     * @type {IHandleActivity[]}
      * @memberof TryCatchActivity
      */
-    catchs: IActivity[] = [];
+    get catchs(): IHandleActivity[] {
+        return this.activities;
+    }
+
     /**
      * finally activity.
      *
@@ -44,41 +46,24 @@ export class TryCatchActivity extends Activity<any> {
      */
     finally?: IActivity;
 
-    async onActivityInit(config: TryCatchConfigure): Promise<any> {
+    async onActivityInit(config: TryCatchConfigure): Promise<void> {
+        config.activities = config.catchs
         await super.onActivityInit(config);
         this.try = await this.buildActivity(config.try);
-        if (config.catchs && config.catchs.length) {
-            let catchs = await Promise.all(config.catchs.map(cat => {
-                return this.buildActivity(cat);
-            }));
-            this.catchs = catchs;
-        }
         if (config.finally) {
             this.finally = await this.buildActivity(config.finally);
         }
     }
 
-    protected async execute(data?: any): Promise<any> {
-        let rp;
+    protected async execute(ctx: ActivityContext): Promise<void> {
         try {
-            rp = this.try.run(data);
-            this.catchs.forEach(cth => {
-                rp = rp.catch(r => cth.run(r));
-            });
+            await this.try.run(ctx);
+        } catch (err) {
+            await super.run(this.createCtx(err));
+        } finally {
             if (this.finally) {
-                rp.then(r => {
-                    return this.finally.run(r);
-                });
-            }
-        } catch {
-            rp = Promise.resolve(data);
-            if (this.finally) {
-                rp.then(r => {
-                    return this.finally.run(r);
-                });
+                await this.finally.run(ctx);
             }
         }
-
-        return rp;
     }
 }

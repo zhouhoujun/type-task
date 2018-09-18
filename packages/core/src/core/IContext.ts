@@ -2,6 +2,7 @@ import { ActivityConfigure, Expression } from './ActivityConfigure';
 import { IActivity } from './IActivity';
 import { IContainer, Type, ObjectMap, Registration } from '@ts-ioc/core';
 import { ActivityBuilder } from './ActivityBuilder';
+import { IActivityContext } from './ActivityContext';
 
 
 /**
@@ -89,11 +90,11 @@ export interface IContext {
    * @template T
    * @param {IActivity} target
    * @param {Expression<T>} expression
-   * @param {ActivityConfigure} [data]
+   * @param {ActivityContext} [ctx]
    * @returns {Promise<T>}
    * @memberof IContext
    */
-  exec<T>(target: IActivity, expression: Expression<T>, data?: any): Promise<T>;
+  exec<T>(target: IActivity, expression: Expression<T>, ctx?: IActivityContext<any>): Promise<T>;
 
   /**
    * check is task or not.

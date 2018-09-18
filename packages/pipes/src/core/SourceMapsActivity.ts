@@ -1,6 +1,7 @@
 import { Activity, Task, CtxType, ActivityConfigure, OnActivityInit, InjectAcitityToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import * as sourcemaps from 'gulp-sourcemaps';
+import { PipeActivityContext } from './PipeActivityContext';
 
 
 /**
@@ -29,25 +30,25 @@ export class SourceMapsActivity extends Activity<ITransform> implements OnActivi
     }
 
     private hasInit = false;
-    async run(data: ITransform) {
+
+    protected async execute(ctx: PipeActivityContext) {
         if (!this.hasInit) {
-            return data.pipe(sourcemaps.init());
+            ctx.data = ctx.data.pipe(sourcemaps.init());
         } else {
-            return data.pipe(sourcemaps.write(this.sourcemaps));
+            ctx.data = ctx.data.pipe(sourcemaps.write(this.sourcemaps));
         }
     }
 
-    async init(data: ITransform) {
+    async init(ctx: PipeActivityContext) {
         this.hasInit = false;
-        let stream = await this.run(data);
+        await this.run(ctx);
         this.hasInit = true;
-        return stream;
     }
 
-    async write(data: ITransform): Promise<ITransform> {
+    async write(ctx: PipeActivityContext) {
         if (this.hasInit) {
-            return data;
+            return;
         }
-        return this.run(data);
+        await this.run(ctx);
     }
 }

@@ -1,6 +1,6 @@
 import { Defer } from '@ts-ioc/core';
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, Expression, ConfirmConfigure } from '../core';
+import { InjectAcitityToken, Activity, Expression, ConfirmConfigure, IActivityContext } from '../core';
 
 
 /**
@@ -32,10 +32,10 @@ export class ConfirmActivity<T> extends Activity<T> {
         this.confirm = await this.toExpression(config.confirm, this);
     }
 
-    protected async execute(data?: any, execute?: IActivity): Promise<T> {
-        let confirm = this.context.exec(this, this.confirm, data);
+    protected async execute(ctx?: IActivityContext<T>) {
+        let confirm = this.context.exec(this, this.confirm, ctx);
         if (confirm) {
-            this.defer.resolve(data);
+            this.defer.resolve();
         } else {
             this.defer.reject();
         }

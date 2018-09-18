@@ -2,7 +2,7 @@ import { Registration } from '@ts-ioc/core';
 import { IContext } from './IContext';
 import { ActivityConfigure } from './ActivityConfigure';
 import { OnActivityInit } from './OnActivityInit';
-
+import { ActivityContext, IActivityContext } from './ActivityContext';
 
 /**
  * Inject AcitityToken
@@ -70,12 +70,11 @@ export interface IActivity {
     /**
      * run task.
      *
-     * @param {*} [data]
-     * @param {IActivity} [execute]
+     * @param {IActivityContext<any>} [ctx]
      * @returns {Promise<any>}
      * @memberof IActivityObject
      */
-    run(data?: any, execute?: IActivity): Promise<any>;
+    run(ctx?: IActivityContext<any>): Promise<any>;
 }
 
 /**
@@ -89,11 +88,10 @@ export interface GActivity<T> extends IActivity {
     /**
      * run activity.
      *
-     * @param {*} [data]
-     * @param {IActivity} [target]
+     * @param {IActivityContext} [ctx]
      * @returns {Promise<T>}
      * @memberof IActivity
      */
-    run(data?: any, target?: IActivity): Promise<T>;
+    run(ctx?: IActivityContext<T>): Promise<T>;
 }
 

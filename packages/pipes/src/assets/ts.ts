@@ -1,10 +1,10 @@
 import { AssetTask } from '../decorators';
-import { AssetConfigure, AssetActivity, DestActivity, DestAcitvityToken, isTransform } from '../core';
+import { AssetConfigure, AssetActivity, DestActivity, DestAcitvityToken, isTransform, PipeActivityContext } from '../core';
 import { isBoolean, ObjectMap, isString } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
 import * as ts from 'gulp-typescript';
 import { ITransform } from '../core/ITransform';
-import { CtxType, OnActivityInit, IActivity } from '@taskfr/core';
+import { CtxType, OnActivityInit } from '@taskfr/core';
 import { AnnotationActivity } from '../core/Annotation';
 
 
@@ -67,22 +67,20 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      * @returns {Promise<ITransform>}
      * @memberof TsCompile
      */
-    protected async pipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        stream.js = await this.pipeStream(stream.js, ...this.pipes);
-        return stream;
+    protected async pipe(ctx: PipeActivityContext): Promise<void> {
+        ctx.data.js = await this.pipeStream(ctx.data.js, ctx, ...this.pipes);
     }
     /**
      * begin pipe.
      *
      * @protected
-     * @param {ITransform} stream
-     * @param {IActivity} [execute]
+     * @param {PipeActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof TsCompile
      */
-    protected async beforePipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        stream = await super.beforePipe(stream, execute);
-        return await this.pipeStream(stream, this.getTsCompilePipe());
+    protected async beforePipe(ctx: PipeActivityContext): Promise<void> {
+        await super.beforePipe(ctx);
+        ctx.data = await this.pipeStream(ctx.data, ctx, this.getTsCompilePipe());
     }
     /**
      * get ts configue compile.
@@ -109,34 +107,40 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      * @returns
      * @memberof TsCompile
      */
-    protected async executeUglify(stream: ITransform) {
+    protected async executeUglify(ctx: PipeActivityContext) {
         if (this.uglify) {
-            stream.js = await this.uglify.run(stream.js);
+            let ugCtx = this.createCtx(ctx.data.js);
+            await this.uglify.run(ugCtx);
+            ctx.data.js = ugCtx.data;
         }
-        return stream;
     }
     /**
      * execute dest activity.
      *
      * @protected
      * @param {DestActivity} ds
-     * @param {ITransform} stream
+     * @param {ctx} PipeActivityContext
      * @returns
      * @memberof TsCompile
      */
-    protected async executeDest(ds: DestActivity, stream: ITransform) {
-        if (!ds) {
-            return null;
+    protected async executeDest(ds: DestActivity, ctx: PipeActivityContext) {
+        if (!ds || !ctx.data) {
+            return;
         }
+
+        let stream = ctx.data;
         if (this.tdsDest && isTransform(stream.dts)) {
             let dts = isBoolean(this.tdsDest) ? ds : (this.tdsDest || ds);
-            await dts.run(stream.dts);
+            await dts.run(this.createCtx(stream.dts));
         }
         if (isTransform(stream.js)) {
-            await ds.run(stream.js, this.sourcemaps);
-        } else {
-            await ds.run(stream, this.sourcemaps);
+            let jsCtx = this.createCtx(stream.js);
+            jsCtx.sourceMaps = ctx.sourceMaps;
+            await ds.run(jsCtx);
+        } else if (isTransform(stream)) {
+            let newCtx = this.createCtx(stream);
+            newCtx.sourceMaps = ctx.sourceMaps;
+            await ds.run(newCtx);
         }
-        return stream;
     }
 }

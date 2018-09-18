@@ -5,6 +5,7 @@ import { Src, Expression, ExpressionType } from '@taskfr/core';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
 import { InjectPipeActivityToken } from './IPipeActivity';
+import { PipeActivityContext } from './PipeActivityContext';
 
 
 export const SourceAcitvityToken = new InjectPipeActivityToken<SourceActivity>('source');
@@ -61,15 +62,19 @@ export class SourceActivity extends PipeActivity {
         }
     }
 
-    protected async merge(...data: ITransform[]): Promise<ITransform> {
-        let src = await this.context.exec(this, this.src, data);
-        let srcOptions = await this.context.exec(this, this.srcOptions, data);
-        if (!this.merger) {
-            return this.source(src, srcOptions);
-        } else {
-            data.unshift(this.source(src, srcOptions));
-            return await super.merge(...data);
-        }
+    /**
+     * begin pipe.
+     *
+     * @protected
+     * @param {PipeActivityContext} ctx
+     * @returns {Promise<ITransform>}
+     * @memberof PipeActivity
+     */
+    protected async beforePipe(ctx: PipeActivityContext): Promise<void> {
+        let src = await this.context.exec(this, this.src, ctx);
+        let srcOptions = await this.context.exec(this, this.srcOptions, ctx);
+        ctx.input = src;
+        ctx.data = this.source(src, srcOptions);
     }
 
     source(source: Src, srcOptions: SrcOptions): ITransform {

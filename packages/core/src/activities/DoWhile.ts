@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Condition, Activity, DoWhileConfigure } from '../core';
+import { IActivity, InjectAcitityToken, Condition, Activity, DoWhileConfigure, ActivityContext } from '../core';
 
 /**
  * do while activity token.
@@ -36,13 +36,12 @@ export class DoWhileActivity extends Activity<any> {
         this.condition = await this.toExpression(config.while);
     }
 
-    protected async execute(data?: any): Promise<any> {
-        let result = await this.body.run(data);
-        let condition = await this.context.exec(this, this.condition, result);
+    protected async execute(ctx?: ActivityContext): Promise<any> {
+        await this.body.run(ctx);
+        let condition = await this.context.exec(this, this.condition, ctx);
         while (condition) {
-            result = await this.body.run(result || data);
-            condition = await this.context.exec(this, this.condition, result);
+            await this.body.run(ctx);
+            condition = await this.context.exec(this, this.condition, ctx);
         }
-        return result;
     }
 }

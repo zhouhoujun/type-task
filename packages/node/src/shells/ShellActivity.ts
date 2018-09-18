@@ -1,6 +1,6 @@
 import { ExecOptions, exec } from 'child_process';
 import { isString, isBoolean, isArray, lang, ObjectMap, Inject, isUndefined } from '@ts-ioc/core';
-import { Src, ActivityConfigure, CtxType, OnActivityInit, Activity, Task, IActivity } from '@taskfr/core';
+import { Src, ActivityConfigure, CtxType, OnActivityInit, Activity, Task, IActivity, ActivityContext } from '@taskfr/core';
 import { INodeContext, NodeContextToken } from '../core';
 import { isNullOrUndefined } from 'util';
 
@@ -94,10 +94,9 @@ export class ShellActivity extends Activity<any> implements OnActivityInit {
         }
     }
 
-    protected async execute(data?: any, execute?: IActivity): Promise<any> {
+    protected async execute(ctx: ActivityContext): Promise<void> {
         return await Promise.resolve(this.shell)
             .then(cmds => {
-                let allowError = this.allowError;
                 let options = this.options;
                 if (isString(cmds)) {
                     return this.execShell(cmds, options);

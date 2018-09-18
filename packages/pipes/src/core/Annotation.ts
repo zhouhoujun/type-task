@@ -1,10 +1,9 @@
 import { PipeActivity } from './PipeActivity';
 import { TransformType } from './pipeTypes';
-import { IActivity } from '@taskfr/core';
 import { PipeTask } from '../decorators';
 import { IPipeConfigure } from './IPipeConfigure';
 import { InjectPipeActivityToken } from './IPipeActivity';
-import { ITransform } from './ITransform';
+import { PipeActivityContext } from './PipeActivityContext';
 
 /**
  * annotation activity token
@@ -49,17 +48,15 @@ export class AnnotationActivity extends PipeActivity {
      * begin pipe.
      *
      * @protected
-     * @param {ITransform} stream
-     * @param {IActivity} [execute]
+     * @param {PipeActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof AnnotationActivity
      */
-    protected async beforePipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        stream = await super.beforePipe(stream, execute);
+    protected async beforePipe(ctx: PipeActivityContext): Promise<void> {
+        await super.beforePipe(ctx);
         if (this.annotationFramework) {
-            let annotation = await this.context.exec(this, this.annotationFramework);
-            stream = await this.pipeStream(stream, annotation);
+            let annotation = await this.context.exec(this, this.annotationFramework, ctx);
+            ctx.data = await this.pipeStream(ctx.data, ctx, annotation);
         }
-        return stream;
     }
 }

@@ -1,6 +1,7 @@
 import { Activity } from './Activity';
 import { IActivity } from './IActivity';
 import { Registration, Type } from '@ts-ioc/core';
+import { IActivityContext } from './ActivityContext';
 
 
 /**
@@ -15,6 +16,10 @@ export class InjectTranslatorActivity<T extends IActivity, TF, TT> extends Regis
     constructor(type: Type<T>) {
         super(type, 'TranslatorActivity');
     }
+}
+
+export interface ITranslatorContext<T, TR> extends IActivityContext<TR> {
+    input: T;
 }
 
 /**
@@ -38,9 +43,9 @@ export abstract class TranslatorActivity<T, TR> extends Activity<TR> {
      * @protected
      * @abstract
      * @param {T} [data]
-     * @param {IActivity} [execute]
-     * @returns {Promise<TR>}
+     * @param {ITranslatorContext<T, TR>} [ctx]
+     * @returns {Promise<void>}
      * @memberof TranslatorActivity
      */
-    protected abstract execute(data?: T, execute?: IActivity): Promise<TR>;
+    protected async abstract execute(ctx: ITranslatorContext<T, TR>): Promise<void>;
 }

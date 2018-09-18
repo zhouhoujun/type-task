@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, Expression, SwitchConfigure } from '../core';
+import { IActivity, InjectAcitityToken, Activity, Expression, SwitchConfigure, ActivityContext } from '../core';
 import { MapSet, isUndefined } from '@ts-ioc/core';
 
 /**
@@ -39,7 +39,7 @@ export class SwitchActivity extends Activity<any> {
      */
     defaultBody?: IActivity;
 
-    async onActivityInit(config: SwitchConfigure): Promise<any> {
+    async onActivityInit(config: SwitchConfigure): Promise<void> {
         await super.onActivityInit(config);
         this.expression = await this.toExpression(config.expression);
         if (config.cases && config.cases.length) {
@@ -55,15 +55,12 @@ export class SwitchActivity extends Activity<any> {
         }
     }
 
-    protected async execute(data?: any): Promise<any> {
-        let matchkey = await this.context.exec<any>(this, this.expression, data);
+    protected async execute(ctx: ActivityContext): Promise<void> {
+        let matchkey = await this.context.exec<any>(this, this.expression, ctx);
         if (!isUndefined(matchkey) && this.cases.has(matchkey)) {
-            return this.cases.get(matchkey).run(data);
+            await this.cases.get(matchkey).run(ctx);
         } else if (this.defaultBody) {
-            return this.defaultBody.run(data);
-        } else {
-            return Promise.resolve(data);
+            await this.defaultBody.run(ctx);
         }
-
     }
 }

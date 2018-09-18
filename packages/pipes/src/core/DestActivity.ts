@@ -5,6 +5,8 @@ import { Expression, IActivity, ExpressionType } from '@taskfr/core';
 import { InjectPipeActivityToken } from './IPipeActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
+import { PipeActivityContext } from './PipeActivityContext';
+import { SourceMapsActivity } from './SourceMapsActivity';
 /**
  * dest activity token.
  */
@@ -74,28 +76,29 @@ export class DestActivity extends PipeActivity {
         }
     }
 
-    protected async afterPipe(stream: ITransform, execute?: IActivity): Promise<ITransform> {
-        stream = await super.afterPipe(stream, execute);
-        await this.writeStream(stream);
-        return stream;
+    protected async afterPipe(ctx: PipeActivityContext): Promise<void> {
+        await super.afterPipe(ctx);
+        if (ctx.sourceMaps instanceof SourceMapsActivity) {
+            await ctx.sourceMaps.run(ctx);
+        }
+        await this.writeStream(ctx);
     }
 
     /**
      * write dest stream.
      *
      * @protected
-     * @param {ITransform} stream
+     * @param {PipeActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof DestActivity
      */
-    protected async writeStream(stream: ITransform): Promise<ITransform> {
-        let dist = await this.context.exec(this, this.dest, stream);
+    protected async writeStream(ctx: PipeActivityContext): Promise<void> {
+        let dist = await this.context.exec(this, this.dest, ctx);
         let destOptions = undefined;
         if (this.destOptions) {
-            destOptions = await this.context.exec(this, this.destOptions, stream);
+            destOptions = await this.context.exec(this, this.destOptions, ctx);
         }
         dist = this.context.toRootPath(dist);
-        await this.executePipe(stream, dest(dist, destOptions), true);
-        return stream;
+        await this.executePipe(ctx.data, ctx, dest(dist, destOptions), true);
     }
 }

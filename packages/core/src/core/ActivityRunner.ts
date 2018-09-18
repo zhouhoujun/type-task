@@ -50,8 +50,8 @@ export class ActivityRunner<T> implements IActivityRunner<T> {
 
 
 
-    async start(data?: any): Promise<T> {
-        return await this.instance.run(data)
+    async start(id?: string): Promise<T> {
+        return await this.instance.run()
             .then(data => {
                 this.state = RunState.complete;
                 this.stateChanged.next(this.state);

@@ -30,10 +30,6 @@ export class PipeActivityBuilder extends ActivityBuilder {
             if (config.pipes) {
                 activity.pipes = await this.translate(activity, config.pipes);
             }
-
-            if (config.merger) {
-                activity.merger = await this.translateConfig(activity, config.merger);
-            }
         }
         return activity;
     }

@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { InjectAcitityToken, Activity, Expression, ThrowConfigure } from '../core';
+import { InjectAcitityToken, Activity, Expression, ThrowConfigure, ActivityContext } from '../core';
 /**
  * throw activity token.
  */
@@ -27,8 +27,8 @@ export class ThrowActivity extends Activity<any> {
         this.exception = await this.toExpression(config.exception);
     }
 
-    protected async execute(data?: any): Promise<any> {
-        let error = await this.context.exec(this, this.exception, data);
+    protected async execute(ctx: ActivityContext): Promise<void> {
+        let error = await this.context.exec(this, this.exception, ctx);
         throw error;
     }
 }
