@@ -2,9 +2,6 @@
 .vscode/.*
 node_modules
 package-lock.json
-bower_components
-jspm_packages
-build
 lib
 bin
 
