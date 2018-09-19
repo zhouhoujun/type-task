@@ -39,7 +39,6 @@
     "chokidar": "^2.0.4",
     "rollup": "^0.64.1",
     "rxjs": "^6.3.2",
-    "rxjs-compat": "^6.3.2",
     "vinyl-fs": "^3.0.3"
   },
   "peerDependencies": {

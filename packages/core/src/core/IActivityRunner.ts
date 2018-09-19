@@ -1,7 +1,7 @@
 import { ActivityConfigure } from './ActivityConfigure';
 import { Token } from '@ts-ioc/core';
 import { GActivity, IActivity } from './IActivity';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Joinpoint } from '@ts-ioc/aop';
 import { Activity } from './Activity';
 import { IService, InjectServiceToken } from '@ts-ioc/bootstrap';

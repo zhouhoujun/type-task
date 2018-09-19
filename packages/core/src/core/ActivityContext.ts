@@ -58,7 +58,6 @@ export interface IActivityContext<T> {
      */
     getState(): any;
 
-
 }
 
 
@@ -100,7 +99,7 @@ export class ActivityContext implements IActivityContext<any> {
     /**
      * execute data.
      *
-     * @type {T}
+     * @type {*}
      * @memberof IActivityContext
      */
     data: any;
@@ -143,7 +142,6 @@ export class ActivityContext implements IActivityContext<any> {
                 chg = this.translate(input);
             }
         }
-
         this.setState(chg);
     }
 

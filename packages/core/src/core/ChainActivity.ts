@@ -3,7 +3,6 @@ import { ActivityContext } from './ActivityContext';
 import { IHandleActivity, HandleActivity } from './HandleActivity';
 import { ChainConfigure } from './ActivityConfigure';
 import { InjectAcitityToken, IActivity } from './IActivity';
-import { Activity } from './Activity';
 import { ContextActivity } from './ContextActivity';
 
 
@@ -61,7 +60,6 @@ export class ChainActivity extends ContextActivity {
             } catch (err) {
                 return Promise.reject(err);
             }
-
         }
     }
 

@@ -2,10 +2,9 @@ import { Inject, IContainer, ContainerToken, Token, Injectable } from '@ts-ioc/c
 import { ActivityConfigure } from './ActivityConfigure';
 import { IActivity } from './IActivity';
 import { IActivityRunner, ActivityRunnerToken, RunState } from './IActivityRunner';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { Joinpoint } from '@ts-ioc/aop';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/filter';
 import { ActivityContext, InputDataToken } from './ActivityContext';
 
 /**
@@ -27,7 +26,7 @@ export class ActivityRunner<T> implements IActivityRunner<T> {
 
     private _result = new BehaviorSubject<any>(null);
     get result(): Observable<any> {
-        return this._result.filter(a => !a);
+        return this._result.pipe(filter(a => !a));
     }
 
     private _resultValue: any;

@@ -64,7 +64,6 @@
         "rollup-plugin-node-resolve": "^3.3.0",
         "rollup-plugin-sourcemaps": "^0.4.2",
         "rxjs": "^6.3.2",
-        "rxjs-compat": "^6.3.2",
         "shelljs": "^0.8.2",
         "through2": "^2.0.1",
         "time-stamp": "^2.0.0",

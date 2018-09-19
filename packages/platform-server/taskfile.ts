@@ -34,7 +34,6 @@ const builtins = require('rollup-plugin-node-builtins');
             external: [
                 'reflect-metadata',
                 'tslib',
-                'object-assign',
                 'log4js',
                 'globby', 'path', 'fs', 'time-stamp', 'chalk', 'pretty-hrtime',
                 '@ts-ioc/core',

@@ -70,7 +70,7 @@ if (process.argv.indexOf('new') > -1) {
     cp(path.join(cliRoot, 'src', 'scaffold', 'root', 'ngr.config.js'), path.join(processRoot, program.new));
 }
 
-fs.writeFile(__dirname + '/cli.config.json', JSON.stringify({
+fs.writeFile(__dirname + '/build.config.js', JSON.stringify({
     env: program.build,
     program: program,
     projectRoot: program.new ? path.join(processRoot, program.new) : processRoot

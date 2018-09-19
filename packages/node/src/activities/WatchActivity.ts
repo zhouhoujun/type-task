@@ -1,8 +1,8 @@
 
 import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure, Active, ActivityType, ActivityContext } from '@taskfr/core';
 import { Defer, isArray, Token, Inject } from '@ts-ioc/core';
-import { Observable } from 'rxjs';
-import 'rxjs-compat'
+import { fromEventPattern } from 'rxjs';
+import { bufferTime, map } from 'rxjs/operators';
 import { NodeContextToken, INodeContext } from '../core';
 const chokidar = require('chokidar');
 
@@ -288,7 +288,7 @@ export class WatchActivity extends Activity<FileChanged> {
         let watchBody = this.body || ctx.target;
 
         let defer = new Defer();
-        Observable.fromEventPattern<IFileChanged>(
+        fromEventPattern<IFileChanged>(
             handler => {
                 watcher.on('add', paths => handler({ added: isArray(paths) ? paths : [paths] }));
                 watcher.on('change', paths => handler({ updated: isArray(paths) ? paths : [paths] }));
@@ -298,22 +298,24 @@ export class WatchActivity extends Activity<FileChanged> {
             handler => {
                 watcher.close();
             })
-            .bufferTime(300)
-            .map(chgs => {
-                let chg = new FileChanged(watchSrc);
-                chgs.forEach(fc => {
-                    if (fc.added) {
-                        chg.added = chg.added.concat(fc.added);
-                    }
-                    if (fc.updated) {
-                        chg.updated = chg.updated.concat(fc.updated);
-                    }
-                    if (fc.removed) {
-                        chg.removed = chg.removed.concat(fc.removed);
-                    }
-                });
-                return chg;
-            })
+            .pipe(
+                bufferTime(300),
+                map(chgs => {
+                    let chg = new FileChanged(watchSrc);
+                    chgs.forEach(fc => {
+                        if (fc.added) {
+                            chg.added = chg.added.concat(fc.added);
+                        }
+                        if (fc.updated) {
+                            chg.updated = chg.updated.concat(fc.updated);
+                        }
+                        if (fc.removed) {
+                            chg.removed = chg.removed.concat(fc.removed);
+                        }
+                    });
+                    return chg;
+                })
+            )
             .subscribe(chg => {
                 ctx.input = chg;
                 watchBody.run(ctx);
@@ -321,5 +323,4 @@ export class WatchActivity extends Activity<FileChanged> {
 
         defer.promise;
     }
-
 }
