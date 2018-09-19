@@ -11,7 +11,7 @@ import { ActivityRunner } from './ActivityRunner';
 import { AppConfigureToken } from '@ts-ioc/bootstrap';
 import { ActivityBuilderToken } from './IActivityBuilder';
 import { ActivityBuilder } from './ActivityBuilder';
-import { IActivityContext, ActivityContext } from './ActivityContext';
+import { ActivityContext } from './ActivityContext';
 
 
 /**
@@ -77,7 +77,7 @@ export class Context implements IContext {
         } else if (expression instanceof Activity) {
             return expression.run(ctx);
         } else if (expression instanceof ActivityRunner) {
-            return expression.start();
+            return expression.start(ctx);
         } else {
             return Promise.resolve(expression as T);
         }

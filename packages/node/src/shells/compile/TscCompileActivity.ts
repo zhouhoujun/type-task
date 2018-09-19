@@ -9,15 +9,15 @@ import { ObjectMap, lang, isArray, isBoolean } from '@ts-ioc/core';
  * tsc builder activity config
  *
  * @export
- * @interface TscBuilderActivityConfig
+ * @interface TscCompileActivityConfig
  * @extends {ShellActivityConfig}
  */
-export interface TscBuilderActivityConfig extends ShellActivityConfig {
+export interface TscCompileActivityConfig extends ShellActivityConfig {
     /**
      * tsconfig.
      *
      * @type {CtxType<string>}
-     * @memberof TscBuilderActivityConfig
+     * @memberof TscCompileActivityConfig
      */
     tsconfig?: CtxType<string>;
 
@@ -25,7 +25,7 @@ export interface TscBuilderActivityConfig extends ShellActivityConfig {
      * ts file source.
      *
      * @type {CtxType<Src>}
-     * @memberof TscBuilderActivityConfig
+     * @memberof TscCompileActivityConfig
      */
     src?: CtxType<Src>;
 
@@ -33,32 +33,32 @@ export interface TscBuilderActivityConfig extends ShellActivityConfig {
      * ts compile out dir.
      *
      * @type {CtxType<string>}
-     * @memberof TscBuilderActivityConfig
+     * @memberof TscCompileActivityConfig
      */
     dist?: CtxType<string>;
     /**
      * compiler options.
      *
      * @type {CtxType<CompilerOptions>}
-     * @memberof TscBuilderActivityConfig
+     * @memberof TscCompileActivityConfig
      */
     compilerOptions?: CtxType<CompilerOptions>;
 }
 
 @Task('tsc')
-export class TscBuilderActivity extends ShellActivity {
+export class TscCompileActivity extends ShellActivity {
     /**
      * tsconfig.
      *
      * @type {string}
-     * @memberof TscBuilderActivity
+     * @memberof TscCompileActivity
      */
     tsconfig: string;
     src: Src;
     dist: string;
     compilerOptions?: CompilerOptions;
 
-    async onActivityInit(config: TscBuilderActivityConfig) {
+    async onActivityInit(config: TscCompileActivityConfig) {
         await super.onActivityInit(config);
         this.src = await this.context.getFiles(this.context.to(config.src));
         this.dist = this.context.to(config.dist);

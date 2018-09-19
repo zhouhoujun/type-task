@@ -38,6 +38,7 @@ const builtins = require('rollup-plugin-node-builtins');
                 'log4js',
                 'globby', 'path', 'fs', 'events', 'stream', 'child_process',
                 'shelljs',
+                'rollup',
                 '@ts-ioc/core',
                 '@ts-ioc/aop',
                 '@ts-ioc/logs',

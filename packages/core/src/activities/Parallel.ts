@@ -1,6 +1,6 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, ParallelConfigure, ActivityType, ActivityContext, } from '../core';
-import { Token, isToken } from '@ts-ioc/core';
+import { IActivity, InjectAcitityToken, ParallelConfigure, ActivityType, ActivityContext, ContextActivity, } from '../core';
+
 
 
 /**
@@ -16,7 +16,7 @@ export const ParallelActivityToken = new InjectAcitityToken<ParallelActivity>('p
  * @extends {Activity}
  */
 @Task(ParallelActivityToken)
-export class ParallelActivity extends Activity<any> {
+export class ParallelActivity extends ContextActivity {
 
     activities: IActivity[] = [];
 

@@ -10,7 +10,6 @@ import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { PipeActivityBuilder } from './PipeActivityBuilder';
 import { TestActivity, TestConfigure } from './TestActivity';
-import { DefaultTranslatorToken } from './StreamTranslator';
 
 
 /**
@@ -92,8 +91,6 @@ export class AssetBuilder extends PipeActivityBuilder {
                         }
                         return <WatchConfigure>{ src: watch, task: WatchActivity };
                     });
-
-                activity.watch.defaultTranslatorToken = DefaultTranslatorToken;
             }
 
             if (config.sourcemaps) {

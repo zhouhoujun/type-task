@@ -11,21 +11,21 @@ export interface AngularConfig {
  * ngc builder activity config.
  *
  * @export
- * @interface NgcBuilderActivityConfig
+ * @interface NgcCompileActivityConfig
  * @extends {ShellActivityConfig}
  */
-export interface NgcBuilderActivityConfig extends ShellActivityConfig {
+export interface NgcCompileActivityConfig extends ShellActivityConfig {
     /**
      * tsconfig.
      *
      * @type {CtxType<string>}
-     * @memberof NgcBuilderActivityConfig
+     * @memberof NgcCompileActivityConfig
      */
     tsconfig?: CtxType<string>;
 }
 
 @Task('ngc')
-export class NgcBuilderActivity extends ShellActivity {
+export class NgcCompileActivity extends ShellActivity {
 
     /**
      * tsconfig.
@@ -37,7 +37,7 @@ export class NgcBuilderActivity extends ShellActivity {
 
     projectRoot: string;
 
-    async onActivityInit(config: NgcBuilderActivityConfig) {
+    async onActivityInit(config: NgcCompileActivityConfig) {
         await super.onActivityInit(config);
         this.options = lang.assign({silent: true}, this.options || {});
         this.tsconfig = this.context.to(config.tsconfig);

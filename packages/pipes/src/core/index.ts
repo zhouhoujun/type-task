@@ -16,7 +16,7 @@ export * from './Annotation';
 
 export * from './AssetConfigure';
 export * from './AssetBuilder';
-export * from './StreamTranslator';
+export * from './Files2Stream';
 export * from './AssetActivity';
 
 export * from './PackageConfigure';

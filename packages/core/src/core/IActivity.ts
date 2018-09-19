@@ -2,7 +2,7 @@ import { Registration } from '@ts-ioc/core';
 import { IContext } from './IContext';
 import { ActivityConfigure } from './ActivityConfigure';
 import { OnActivityInit } from './OnActivityInit';
-import { ActivityContext, IActivityContext } from './ActivityContext';
+import { IActivityContext } from './ActivityContext';
 
 /**
  * Inject AcitityToken

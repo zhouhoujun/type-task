@@ -1,8 +1,9 @@
 
-import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure, TranslatorActivity, Active, ActivityType, InjectTranslatorActivity, ActivityContext } from '@taskfr/core';
-import { Defer, isArray, Token } from '@ts-ioc/core';
+import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure, Active, ActivityType, ActivityContext } from '@taskfr/core';
+import { Defer, isArray, Token, Inject } from '@ts-ioc/core';
 import { Observable } from 'rxjs';
 import 'rxjs-compat'
+import { NodeContextToken, INodeContext } from '../core';
 const chokidar = require('chokidar');
 
 
@@ -43,14 +44,6 @@ export interface WatchConfigure extends ActivityConfigure {
      * @memberof WatchConfigure
      */
     options?: ExpressionType<WatchOptions>;
-
-    /**
-     * translator.
-     *
-     * @type {ActivityType<TranslatorActivity<FileChanged, any>>}
-     * @memberof WatchConfigure
-     */
-    translator?: ActivityType<TranslatorActivity<FileChanged, any>>;
 }
 
 /**
@@ -257,20 +250,21 @@ export class WatchActivity extends Activity<FileChanged> {
     options: Expression<WatchOptions>;
 
     /**
-     * translator activity.
-     *
-     * @type {TranslatorActivity<FileChanged, any>}
-     * @memberof WatchActivity
-     */
-    translator: TranslatorActivity<FileChanged, any>;
-
-    /**
      * default translator token.
      *
      * @type {Token<any>}
      * @memberof WatchActivity
      */
     defaultTranslatorToken: Token<any>;
+
+    /**
+     * override to node context
+     *
+     * @type {IPipeContext}
+     * @memberof NodeActivity
+     */
+    @Inject(NodeContextToken)
+    context: INodeContext;
 
     protected async execute(ctx: ActivityContext): Promise<void> {
         return await this.watch(ctx);
@@ -281,9 +275,6 @@ export class WatchActivity extends Activity<FileChanged> {
         this.src = await this.toExpression(config.src);
         if (config.body) {
             this.body = await this.buildActivity(config.body);
-        }
-        if (config.translator) {
-            this.translator = await this.buildActivity(config.translator)
         }
         if (config.options) {
             this.options = await this.toExpression(config.options)
@@ -325,21 +316,10 @@ export class WatchActivity extends Activity<FileChanged> {
             })
             .subscribe(chg => {
                 ctx.input = chg;
-                ctx.data = this.translateChanged(chg);
                 watchBody.run(ctx);
             });
 
         defer.promise;
     }
 
-    protected async translateChanged(chg: FileChanged): Promise<any> {
-        if (!this.translator) {
-            this.translator = await this.context.getContainer().getRefService(InjectTranslatorActivity, WatchAcitvityToken, this.defaultTranslatorToken)
-        }
-        let ctx = this.context.getContainer().resolve(ActivityContext, { input: this.translateChanged(chg) })
-        if (this.translator) {
-            await this.translator.run(ctx);
-        }
-        return ctx.data;
-    }
 }

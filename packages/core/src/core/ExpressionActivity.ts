@@ -1,7 +1,5 @@
 import { Activity } from './Activity';
-import { Task } from '../decorators';
 
-@Task
-export class ExpressionActivity<T> extends Activity<T> {
+export abstract class ExpressionActivity<T> extends Activity<T> {
 
 }

@@ -1,54 +1,73 @@
-import { ChainActivity, Task, ChainConfigure, CtxType, Src, ActivityContext, ExpressionToken, ConfigureType } from '@taskfr/core';
-import { WatchActivity, WatchConfigure, INodeContext, NodeContextToken, FileChanged } from '@taskfr/node';
+import { ChainActivity, Task, ChainConfigure, CtxType, Src, ActivityContext, ExpressionToken, ConfigureType, InputDataToken } from '@taskfr/core';
 import { Inject, isArray, isBoolean } from '@ts-ioc/core';
+import { WatchActivity, WatchConfigure, FileChanged } from '../activities';
+import { INodeContext, NodeContextToken } from '../core';
+import { BuidActivityContext } from './BuidActivityContext';
 
 /**
  * builder configure.
  *
  * @export
- * @interface BuilderConfigure
+ * @interface BuildConfigure
  * @extends {ChainConfigure}
  */
-export interface BuilderConfigure extends ChainConfigure {
+export interface BuildConfigure extends ChainConfigure {
     /**
      * src root.
      *
      * @type {CtxType<Src>}
-     * @memberof BuilderConfigure
+     * @memberof BuildConfigure
      */
     src: CtxType<Src>;
+
+    /**
+     * build dist.
+     *
+     * @type {CtxType<string>}
+     * @memberof BuildConfigure
+     */
+    dist: CtxType<string>;
 
     /**
      * watch
      *
      * @type {(ExpressionToken<Src | boolean> | ConfigureType<WatchActivity, WatchConfigure>)}
-     * @memberof BuilderConfigure
+     * @memberof BuildConfigure
      */
     watch?: ExpressionToken<Src | boolean> | ConfigureType<WatchActivity, WatchConfigure>;
 }
 
-@Task('builder')
-export class BuilderActivity extends ChainActivity {
+@Task('build')
+export class BuildActivity extends ChainActivity {
 
     /**
      * build src root.
      *
      * @type {Src}
-     * @memberof BuilderActivity
+     * @memberof BuildActivity
      */
     src: Src;
+
+    /**
+     * build dist.
+     *
+     * @type {string}
+     * @memberof BuildActivity
+     */
+    dist: string;
     /**
      * watch activity. watch the build.
      *
      * @type {WatchActivity}
-     * @memberof BuilderActivity
+     * @memberof BuildActivity
      */
     watch: WatchActivity;
 
     @Inject(NodeContextToken)
     context: INodeContext;
 
-    async onActivityInit(config: BuilderConfigure) {
+
+    async onActivityInit(config: BuildConfigure) {
         await super.onActivityInit(config);
         this.src = this.context.to(config.src);
         if (config.watch) {
@@ -67,7 +86,7 @@ export class BuilderActivity extends ChainActivity {
         }
     }
 
-    protected async execute(ctx: ActivityContext): Promise<any> {
+    protected async execute(ctx: BuidActivityContext): Promise<void> {
         if (!(this.watch && ctx.target === this.watch)) {
             if (this.watch) {
                 this.watch.body = this;
@@ -75,23 +94,13 @@ export class BuilderActivity extends ChainActivity {
                 watchCtx.target = this.watch;
                 this.watch.run(watchCtx);
             }
-            ctx.input = this.src;
-            ctx.data = await this.context.getFiles(this.src);
+            ctx.input = await this.context.getFiles(this.src);
         }
-
-        let files = this.getFiles(ctx);
-        await Promise.all(files.map(fl => {
-            return super.execute(this.createCtx(fl));
-        }));
+        let ctf = this.createCtx(ctx.getState());
+        await super.execute(ctf);
     }
 
-    getFiles(ctx: ActivityContext): string[] {
-        let files: string[] = [];
-        if (ctx.data instanceof FileChanged) {
-            files = ctx.data.changed();
-        } else if (isArray(ctx.data)) {
-            files = ctx.data;
-        }
-        return files;
+    protected createCtx(input?: any) {
+        return this.context.getContainer().resolve(BuidActivityContext, { provide: InputDataToken, useValue: input });
     }
 }

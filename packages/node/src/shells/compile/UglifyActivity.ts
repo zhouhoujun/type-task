@@ -3,7 +3,7 @@ import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
 import { Task, Src, CtxType } from '@taskfr/core';
 import { lang, ObjectMap } from '@ts-ioc/core';
 
-export interface UglifyBuilderActivityConfig extends ShellActivityConfig {
+export interface UglifyActivityConfig extends ShellActivityConfig {
     /**
      * ts file source.
      *
@@ -24,7 +24,7 @@ export interface UglifyBuilderActivityConfig extends ShellActivityConfig {
      * bundle name.
      *
      * @type {CtxType<string>}
-     * @memberof UglifyBuilderActivityConfig
+     * @memberof UglifyActivityConfig
      */
     bundle?: CtxType<string>;
 
@@ -32,40 +32,40 @@ export interface UglifyBuilderActivityConfig extends ShellActivityConfig {
      * uglify options.
      *
      * @type {CtxType<ObjectMap<any>>}
-     * @memberof UglifyBuilderActivityConfig
+     * @memberof UglifyActivityConfig
      */
     uglifyOptions?: CtxType<ObjectMap<any>>;
 }
 
 
 @Task('uglify')
-export class UglifyBuilderActivity extends ShellActivity {
+export class UglifyActivity extends ShellActivity {
 
     /**
      * src
      *
      * @type {Src}
-     * @memberof UglifyBuilderActivity
+     * @memberof UglifyActivity
      */
     src: Src;
     /**
      * output dist.
      *
      * @type {string}
-     * @memberof UglifyBuilderActivity
+     * @memberof UglifyActivity
      */
     dist: string;
     /**
      * bundle file name.
      *
      * @type {string}
-     * @memberof UglifyBuilderActivity
+     * @memberof UglifyActivity
      */
     bundle: string;
 
     uglifyOptions: ObjectMap<any>;
 
-    async onActivityInit(config: UglifyBuilderActivityConfig) {
+    async onActivityInit(config: UglifyActivityConfig) {
         await super.onActivityInit(config);
         this.options = lang.assign({ silent: true }, this.options || {});
         this.src = await this.context.getFiles(this.context.to(config.src));

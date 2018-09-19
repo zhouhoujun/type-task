@@ -1,6 +1,6 @@
 import { isString, isArray, Inject, isBoolean } from '@ts-ioc/core';
 import { existsSync } from 'fs';
-import { Src, Activity, Task, CtxType, ActivityConfigure, IActivity, ActivityContext } from '@taskfr/core';
+import { Src, Activity, Task, CtxType, ActivityConfigure, ActivityContext } from '@taskfr/core';
 import * as execa from 'execa';
 import { NodeContextToken, INodeContext } from '../core';
 

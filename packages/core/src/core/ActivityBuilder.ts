@@ -4,7 +4,7 @@ import { AnnotationBuilder } from '@ts-ioc/bootstrap';
 import { Task } from '../decorators';
 import { IActivity, ActivityInstance, InjectAcitityToken } from './IActivity';
 import { ActivityConfigure, ActivityType, ExpressionType, isActivityType, Expression } from './ActivityConfigure';
-import { Activity } from './Activity';
+import { NullActivity } from './Activity';
 import { AssignActivity } from './AssignActivity';
 
 
@@ -55,7 +55,7 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
     }
 
     getDefaultAcitvity(): Type<IActivity> {
-        return Activity;
+        return NullActivity;
     }
 
     getType(config: ActivityConfigure): Token<IActivity> {

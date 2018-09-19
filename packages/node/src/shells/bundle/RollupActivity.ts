@@ -2,7 +2,7 @@
 
 import * as path from 'path';
 import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
-import { Task, Src, CtxType, IActivity, ActivityContext } from '@taskfr/core';
+import { Task, Src, CtxType, ActivityContext } from '@taskfr/core';
 import { lang, ObjectMap } from '@ts-ioc/core';
 import { RollupDirOptions, RollupFileOptions, rollup } from 'rollup';
 

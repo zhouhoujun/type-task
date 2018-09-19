@@ -49,8 +49,6 @@ export class ActivityRunner<T> implements IActivityRunner<T> {
         this.stateChanged = new BehaviorSubject(RunState.init);
     }
 
-
-
     async start(data?: any): Promise<T> {
         let ctx = data instanceof ActivityContext ? data : this.createCtx(data);
         return await this.instance.run(ctx)

@@ -13,6 +13,9 @@
       "@taskfr/node": [
         "../node/src"
       ],
+      "@taskfr/package": [
+        "../node/src"
+      ],
       "@taskfr/pipes": [
         "../pipes/src"
       ],

@@ -1,11 +1,10 @@
 import { IPipeContext, PipeContextToken } from './IPipeContext';
-import { Inject, isArray, isUndefined } from '@ts-ioc/core';
+import { Inject, isUndefined } from '@ts-ioc/core';
 import { IPipeActivity, PipeActivityToken } from './IPipeActivity';
-import { Activity, IActivity, InputDataToken } from '@taskfr/core';
+import { Activity, InputDataToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { TransformType, isTransform } from './pipeTypes';
 import { IPipeConfigure } from './IPipeConfigure';
-import { SourceMapsActivity } from './SourceMapsActivity';
 import { PipeTask } from '../decorators';
 import { PipeActivityContext } from './PipeActivityContext';
 

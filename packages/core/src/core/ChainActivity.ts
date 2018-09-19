@@ -4,6 +4,7 @@ import { IHandleActivity, HandleActivity } from './HandleActivity';
 import { ChainConfigure } from './ActivityConfigure';
 import { InjectAcitityToken, IActivity } from './IActivity';
 import { Activity } from './Activity';
+import { ContextActivity } from './ContextActivity';
 
 
 
@@ -21,7 +22,7 @@ export const ChainActivityToken = new InjectAcitityToken<ChainActivity>('chain')
  * @extends {Activity<any>}
  */
 @Task(ChainActivityToken)
-export class ChainActivity extends Activity<any> {
+export class ChainActivity extends ContextActivity {
 
     protected activities: IHandleActivity[];
 

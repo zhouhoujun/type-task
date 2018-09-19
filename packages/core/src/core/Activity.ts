@@ -1,4 +1,4 @@
-import { Inject, Express, Registration, Type } from '@ts-ioc/core';
+import { Inject, Express } from '@ts-ioc/core';
 import { Task } from '../decorators';
 import { IActivity, GActivity, ActivityToken } from './IActivity';
 import { ActivityConfigure, ExpressionType, Expression, ActivityType } from './ActivityConfigure';
@@ -7,33 +7,6 @@ import { OnActivityInit } from './OnActivityInit';
 import { ActivityContext, InputDataToken } from './ActivityContext';
 
 
-/**
- * before dependence activity inject token.
- *
- * @export
- * @class InjectBeforeActivity
- * @extends {Registration<T>}
- * @template T
- */
-export class InjectBeforeActivity<T extends IActivity> extends Registration<T> {
-    constructor(type: Type<T>) {
-        super(type, 'BeforeDepActivity');
-    }
-}
-
-/**
- * after dependence activity inject token.
- *
- * @export
- * @class InjectBeforeActivity
- * @extends {Registration<T>}
- * @template T
- */
-export class InjectAfterActivity<T extends IActivity> extends Registration<T> {
-    constructor(type: Type<T>) {
-        super(type, 'AfterDepActivity');
-    }
-}
 
 /**
  * base activity.
@@ -43,8 +16,8 @@ export class InjectAfterActivity<T extends IActivity> extends Registration<T> {
  * @implements {GActivity<T>}
  * @template T
  */
-@Task(ActivityToken)
-export class Activity<T> implements GActivity<T>, OnActivityInit {
+@Task
+export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
 
     /**
      * workflow instance uuid.
@@ -94,61 +67,23 @@ export class Activity<T> implements GActivity<T>, OnActivityInit {
      */
     async run(ctx?: ActivityContext): Promise<any> {
         ctx = ctx || this.createCtx();
-        await this.before(ctx);
         await this.execute(ctx);
-        await this.after(ctx);
-        return ctx.data;
+        return ctx.getState();
     }
+
+    /**
+     * execute activity.
+     *
+     * @protected
+     * @abstract
+     * @param {ActivityContext} ctx
+     * @returns {Promise<void>}
+     * @memberof Activity
+     */
+    protected abstract execute(ctx: ActivityContext): Promise<void>;
 
     protected createCtx(input?: any): ActivityContext {
         return this.context.getContainer().resolve(ActivityContext, { provide: InputDataToken, useValue: input });
-    }
-
-    /**
-     * before run sequence.
-     *
-     * @protected
-     * @param {*} [data]
-     * @returns {Promise<any>}
-     * @memberof SequenceActivity
-     */
-    protected async before(ctx: ActivityContext) {
-        if (this.config && this.config.type) {
-            let dep = this.context.getContainer().getRefService(InjectBeforeActivity, this.config.type);
-            if (dep) {
-                return await dep.run(ctx);
-            }
-        }
-    }
-
-    /**
-     * execute the activity body.
-     *
-     * @protected
-     * @param {*} [data]
-     * @param {IActivity} [execute]
-     * @returns {Promise<any>}
-     * @memberof Activity
-     */
-    protected async execute(ctx: ActivityContext) {
-        return;
-    }
-
-    /**
-     * after run sequence.
-     *
-     * @protected
-     * @param {*} [data]
-     * @returns {Promise<any>}
-     * @memberof SequenceActivity
-     */
-    protected async after(ctx: ActivityContext) {
-        if (this.config && this.config.type) {
-            let dep = this.context.getContainer().getRefService(InjectAfterActivity, this.config.type);
-            if (dep) {
-                return await dep.run(ctx);
-            }
-        }
     }
 
     protected toExpression<T>(exptype: ExpressionType<T>, target?: IActivity): Promise<Expression<T>> {
@@ -168,4 +103,19 @@ export class Activity<T> implements GActivity<T>, OnActivityInit {
         return this.context.builder.buildByConfig(config, this.id) as Promise<T>;
     }
 
+}
+
+/**
+ * null activity. do nothing.
+ *
+ * @export
+ * @class NullActivity
+ * @extends {Activity<any>}
+ */
+@Task(ActivityToken)
+export class NullActivity extends Activity<any> {
+
+    protected async execute(ctx: ActivityContext): Promise<void> {
+
+    }
 }

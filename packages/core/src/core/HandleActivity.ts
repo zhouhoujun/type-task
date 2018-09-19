@@ -1,6 +1,7 @@
 import { Activity } from './Activity';
 import { IActivity } from './IActivity';
 import { ActivityContext } from './ActivityContext';
+import { Task } from '../decorators';
 
 /**
  * handle activity interface.
@@ -30,6 +31,7 @@ export interface IHandleActivity extends IActivity {
  * @extends {Activity<any>}
  * @implements {IHandleActivity}
  */
+@Task
 export abstract class HandleActivity extends Activity<any> implements IHandleActivity {
 
     /**
@@ -42,30 +44,19 @@ export abstract class HandleActivity extends Activity<any> implements IHandleAct
      */
     async run(ctx?: ActivityContext, next?: () => Promise<any>): Promise<any> {
         ctx = ctx || this.createCtx();
-        let canHanle = await this.canHanle(ctx);
-        if (!canHanle) {
-            return await next();
-        }
-        return await super.run(ctx);
+        await this.execute(ctx, next);
+        return ctx.data;
     }
 
-    /**
-     * can handle deal with ctx input.
-     *
-     * @protected
-     * @abstract
-     * @param {ActivityContext} ctx
-     * @returns {Promise<boolean>}
-     * @memberof HandleActivity
-     */
-    protected abstract async canHanle(ctx: ActivityContext): Promise<boolean>;
     /**
      * execute via ctx.
      *
      * @protected
      * @abstract
      * @param {ActivityContext} ctx
+     * @param {() => Promise<any>} [next]
+     * @returns {Promise<void>}
      * @memberof HandleActivity
      */
-    protected abstract async execute(ctx: ActivityContext);
+    protected abstract async execute(ctx: ActivityContext, next?: () => Promise<any>): Promise<void>;
 }

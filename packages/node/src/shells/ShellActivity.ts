@@ -1,8 +1,8 @@
 import { ExecOptions, exec } from 'child_process';
-import { isString, isBoolean, isArray, lang, ObjectMap, Inject, isUndefined } from '@ts-ioc/core';
-import { Src, ActivityConfigure, CtxType, OnActivityInit, Activity, Task, IActivity, ActivityContext } from '@taskfr/core';
-import { INodeContext, NodeContextToken } from '../core';
+import { isString, isBoolean, isArray, lang, ObjectMap } from '@ts-ioc/core';
+import { Src, ActivityConfigure, CtxType, OnActivityInit, Task, ActivityContext } from '@taskfr/core';
 import { isNullOrUndefined } from 'util';
+import { NodeActivity } from '../core';
 
 /**
  * shell activity config.
@@ -50,7 +50,7 @@ export interface ShellActivityConfig extends ActivityConfigure {
  * @implements {ITask}
  */
 @Task('shell')
-export class ShellActivity extends Activity<any> implements OnActivityInit {
+export class ShellActivity extends NodeActivity implements OnActivityInit {
     /**
      * shell cmd.
      *
@@ -78,9 +78,6 @@ export class ShellActivity extends Activity<any> implements OnActivityInit {
      * @memberof ShellActivity
      */
     allowError: boolean;
-
-    @Inject(NodeContextToken)
-    context: INodeContext;
 
     async onActivityInit(config: ShellActivityConfig) {
         await super.onActivityInit(config);

@@ -1,4 +1,4 @@
-import { Activity, IActivity, InjectAcitityToken, DependenceConfigure, ActivityContext } from '../core';
+import { IActivity, InjectAcitityToken, DependenceConfigure, ActivityContext, Activity } from '../core';
 import { Registration, Type } from '@ts-ioc/core';
 import { Task } from '../decorators';
 
@@ -61,7 +61,7 @@ export class DependenceActivity extends Activity<any> {
         if (this.dependence) {
             await this.dependence.run(ctx);
         }
-        return await this.body.run(ctx);
+        await this.body.run(ctx);
     }
 
 }
