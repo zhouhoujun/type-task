@@ -1,4 +1,4 @@
-import { Task, Activity, SequenceActivity } from '../src';
+import { Task, Activity, SequenceActivity, ActivityContext } from '../src';
 
 @Task('test')
 export class SimpleTask extends Activity<any> {
@@ -16,9 +16,9 @@ export class SimpleTask extends Activity<any> {
 @Task('comptest')
 export class SimpleCTask extends SequenceActivity {
 
-    protected after(data?: any): Promise<any> {
+    protected async after(ctx: ActivityContext): Promise<void> {
         // console.log('before component task:', this.name);
-        return Promise.resolve('component task')
+        ctx.data = await Promise.resolve('component task')
             .then(val => {
                 console.log('return component task:', val);
                 return val;

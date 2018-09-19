@@ -97,13 +97,12 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
         if (this.test) {
             await this.test.run(ctx);
         }
-        if (!(this.watch && ctx.watch === this.watch)) {
+        if (!(this.watch && ctx.target === this.watch)) {
             await this.src.run(ctx);
             if (this.watch) {
                 this.watch.body = this;
                 let watchCtx = this.createCtx();
-                watchCtx.watch = this.watch;
-                watchCtx.target = this;
+                watchCtx.target = this.watch;
                 this.watch.run(watchCtx);
             }
         }
