@@ -1,4 +1,4 @@
-import { IContainer, CoreActions, Inject, ContainerToken, IocExt, InjectToken } from '@ts-ioc/core';
+import { IContainer, CoreActions, Inject, ContainerToken, IocExt } from '@ts-ioc/core';
 import { Task, Workflow } from './decorators';
 import { RunAspect } from './aop';
 import * as injectors from './injectors';

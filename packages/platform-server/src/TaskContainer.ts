@@ -1,9 +1,11 @@
-import { ITaskContainer, DefaultTaskContainer } from '@taskfr/core';
+import { ITaskContainer, DefaultTaskContainer, Active, IActivityRunner } from '@taskfr/core';
 import { LoadType } from '@ts-ioc/core';
 import { TaskLogAspect, RunnerLogAspect } from './aop';
 import { ApplicationBuilder } from '@ts-ioc/platform-server/bootstrap';
 import { IApplicationBuilder } from '@ts-ioc/bootstrap';
 import * as path from 'path';
+import chalk from 'chalk';
+const timestamp = require('time-stamp');
 
 const processRoot = path.join(path.dirname(process.cwd()), path.basename(process.cwd()));
 /**
@@ -40,6 +42,11 @@ export class TaskContainer extends DefaultTaskContainer implements ITaskContaine
             taskContainer.use(...modules);
         }
         return taskContainer;
+    }
+
+    async createActivity(activity: Active, workflowId?: string): Promise<IActivityRunner<any>> {
+        console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Loading  workflow ', workflowId || '', '...');
+        return super.createActivity(activity, workflowId);
     }
 
 }

@@ -8,7 +8,7 @@
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "bin": {
-    "pk": "./bin/cli.js"
+    "pk": "./lib/cli.js"
   },
   "scripts": {
     "postinstall": "npm prune",

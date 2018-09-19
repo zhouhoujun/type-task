@@ -1,28 +1,7 @@
 #!/usr/bin/env node
-
 import { isUndefined } from 'util';
 import chalk from 'chalk';
-
-// const timestamp = require('time-stamp');
-// const prettyTime = require('pretty-hrtime');
 const Liftoff = require('liftoff');
-// import program from 'commander';
-// program
-//   .version(cliPackage.version, '-v, --version')
-//   .command('run [file]')
-//   .description('run with config taskfile')
-//   .alias('r')
-//   .option('-r, --release', 'release project mode')
-//   .option('-p, --publish', 'publish project mode')
-//   .option('-t, --task', 'run specil task')
-//   .action((file, options) => {
-//     file = file || './taskfile';
-//     require(file);
-//   })
-//   .command('init [name]', 'init taskfile')
-//   .alias('i')
-//   .parse(process.argv)
-
 
 process.env.INIT_CWD = process.cwd();
 

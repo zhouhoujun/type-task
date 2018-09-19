@@ -1,4 +1,4 @@
-import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, InputDataToken, ActivityType, IHandleActivity } from '@taskfr/core';
+import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, InputDataToken, ActivityType, IHandleActivity, Active, IActivity } from '@taskfr/core';
 import { Inject, isBoolean, Token } from '@ts-ioc/core';
 import { WatchActivity, WatchConfigure } from '../activities';
 import { INodeContext, NodeContextToken } from '../core';
@@ -44,6 +44,14 @@ export interface BuildConfigure extends ChainConfigure {
      * @memberof BuildConfigure
      */
     watch?: ExpressionToken<Src | boolean> | ConfigureType<WatchActivity, WatchConfigure>;
+
+    /**
+     * do sth, after build completed.
+     *
+     * @type {Active}
+     * @memberof BuildConfigure
+     */
+    completed?: Active;
 }
 
 @Task('build')
@@ -75,6 +83,13 @@ export class BuildActivity extends ChainActivity {
     @Inject(NodeContextToken)
     context: INodeContext;
 
+    /**
+     * do sth, after build completed.
+     *
+     * @type {IActivity}
+     * @memberof BuildActivity
+     */
+    completed: IActivity;
 
     async onActivityInit(config: BuildConfigure) {
         await super.onActivityInit(config);
@@ -93,6 +108,9 @@ export class BuildActivity extends ChainActivity {
                     return <WatchConfigure>{ src: watch, task: WatchActivity };
                 });
         }
+        if (config.completed) {
+            this.completed = await this.buildActivity(config.completed);
+        }
     }
 
     protected async execute(ctx: BuidActivityContext): Promise<void> {
@@ -105,11 +123,16 @@ export class BuildActivity extends ChainActivity {
             }
             ctx.input = await this.context.getFiles(this.src);
         }
-        let ctf = this.createCtx(ctx.getState());
-        await super.execute(ctf);
+        let bctx = this.createCtx(ctx.getState());
+        await super.execute(bctx);
+        if (this.completed) {
+            await this.completed.run(bctx);
+        }
     }
 
     protected createCtx(input?: any) {
-        return this.context.getContainer().resolve(BuidActivityContext, { provide: InputDataToken, useValue: input });
+        let ctx = this.context.getContainer().resolve(BuidActivityContext, { provide: InputDataToken, useValue: input });
+        ctx.builder = this;
+        return ctx;
     }
 }
