@@ -203,6 +203,10 @@ export function isConfirmConfigure(target: any): target is ConfirmConfigure {
 }
 
 
+export interface HandleConfigure extends ActivityConfigure {
+
+}
+
 /**
  * chain configure.
  *
@@ -217,7 +221,7 @@ export interface ChainConfigure extends ActivityConfigure {
      * @type {ActivityType<IHandleActivity>[]}
      * @memberof ChainConfigure
      */
-    activities?: ActivityType<IHandleActivity>[];
+    handles?: (Token<IHandleActivity> | HandleConfigure)[];
 }
 
 /**

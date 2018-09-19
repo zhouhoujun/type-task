@@ -2,7 +2,7 @@ import * as cores from './core';
 import * as assets from './assets';
 import { DIModule } from '@ts-ioc/bootstrap';
 import { PipeSetup } from './PipeSetup';
-import { ActivitiesModule } from '@taskfr/node';
+import { NodejsModule } from '@taskfr/node';
 
 
 /**
@@ -14,12 +14,12 @@ import { ActivitiesModule } from '@taskfr/node';
 @DIModule({
     imports: [
         PipeSetup,
-        ActivitiesModule,
+        NodejsModule,
         cores,
         assets
     ],
     exports: [
-        ActivitiesModule,
+        NodejsModule,
         cores,
         assets
     ]

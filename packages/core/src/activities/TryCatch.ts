@@ -36,7 +36,7 @@ export class TryCatchActivity extends ChainActivity {
      * @memberof TryCatchActivity
      */
     get catchs(): IHandleActivity[] {
-        return this.activities;
+        return this.handles;
     }
 
     /**
@@ -47,7 +47,7 @@ export class TryCatchActivity extends ChainActivity {
     finally?: IActivity;
 
     async onActivityInit(config: TryCatchConfigure): Promise<void> {
-        config.activities = config.catchs
+        config.handles = config.catchs
         await super.onActivityInit(config);
         this.try = await this.buildActivity(config.try);
         if (config.finally) {

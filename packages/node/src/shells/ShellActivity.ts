@@ -1,7 +1,6 @@
 import { ExecOptions, exec } from 'child_process';
-import { isString, isBoolean, isArray, lang, ObjectMap } from '@ts-ioc/core';
+import { isString, isBoolean, isArray, lang, ObjectMap, isNullOrUndefined } from '@ts-ioc/core';
 import { Src, ActivityConfigure, CtxType, OnActivityInit, Task, ActivityContext } from '@taskfr/core';
-import { isNullOrUndefined } from 'util';
 import { NodeActivity } from '../core';
 
 /**

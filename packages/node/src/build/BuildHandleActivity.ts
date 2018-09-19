@@ -1,4 +1,4 @@
-import { HandleActivity, InputDataToken, ActivityConfigure, Active, Task, ExpressionType, IActivity, Expression } from '@taskfr/core';
+import { HandleActivity, InputDataToken, ActivityConfigure, Active, Task, ExpressionType, IActivity, Expression, HandleConfigure } from '@taskfr/core';
 import { Inject } from '@ts-ioc/core';
 import { NodeContextToken, INodeContext } from '../core';
 import { BuidActivityContext } from './BuidActivityContext';
@@ -11,7 +11,7 @@ import { BuidActivityContext } from './BuidActivityContext';
  * @interface BuildHandleConfigure
  * @extends {ActivityConfigure}
  */
-export interface BuildHandleConfigure extends ActivityConfigure {
+export interface BuildHandleConfigure extends HandleConfigure {
     /**
      * file filter
      *

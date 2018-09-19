@@ -1,8 +1,9 @@
-import { ChainActivity, Task, ChainConfigure, CtxType, Src, ActivityContext, ExpressionToken, ConfigureType, InputDataToken } from '@taskfr/core';
-import { Inject, isArray, isBoolean } from '@ts-ioc/core';
-import { WatchActivity, WatchConfigure, FileChanged } from '../activities';
+import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, InputDataToken, ActivityType, IHandleActivity } from '@taskfr/core';
+import { Inject, isBoolean, Token } from '@ts-ioc/core';
+import { WatchActivity, WatchConfigure } from '../activities';
 import { INodeContext, NodeContextToken } from '../core';
 import { BuidActivityContext } from './BuidActivityContext';
+import { BuildHandleConfigure, BuildHandleActivity } from './BuildHandleActivity';
 
 /**
  * builder configure.
@@ -27,6 +28,14 @@ export interface BuildConfigure extends ChainConfigure {
      * @memberof BuildConfigure
      */
     dist: CtxType<string>;
+
+    /**
+     * handle activities.
+     *
+     * @type {(BuildHandleConfigure | Token<BuildHandleActivity>)[];}
+     * @memberof ChainConfigure
+     */
+    handles?: (BuildHandleConfigure | Token<BuildHandleActivity>)[];
 
     /**
      * watch

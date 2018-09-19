@@ -18,5 +18,5 @@ import * as activities from './activities';
         build
     ]
 })
-export class ActivitiesModule {
+export class NodejsModule {
 }

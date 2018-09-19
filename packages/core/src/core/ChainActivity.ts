@@ -24,14 +24,14 @@ export const ChainActivityToken = new InjectAcitityToken<ChainActivity>('chain')
 @Task(ChainActivityToken)
 export class ChainActivity extends ContextActivity {
 
-    protected activities: IHandleActivity[];
+    protected handles: IHandleActivity[];
 
     async onActivityInit(config: ChainConfigure): Promise<any> {
         await super.onActivityInit(config);
-        if (config.activities && config.activities.length) {
-            this.activities = await Promise.all(config.activities.map(cfg => this.buildActivity(cfg)))
+        if (config.handles && config.handles.length) {
+            this.handles = await Promise.all(config.handles.map(cfg => this.buildActivity(cfg)))
         }
-        this.activities = (this.activities || []).filter(act => act instanceof HandleActivity);
+        this.handles = (this.handles || []).filter(act => act instanceof HandleActivity);
     }
 
     protected async execute(ctx: ActivityContext): Promise<any> {
@@ -40,7 +40,7 @@ export class ChainActivity extends ContextActivity {
 
     protected handleRequest(ctx: ActivityContext, next?: () => Promise<any>) {
         let index = -1;
-        let handles = this.activities.map(act => {
+        let handles = this.handles.map(act => {
             return (ctx: ActivityContext, next?: () => Promise<any>) => act.run(ctx, next);
         });
         return dispatch(0)
@@ -66,8 +66,8 @@ export class ChainActivity extends ContextActivity {
     }
 
     use(activity: IActivity) {
-        if (activity instanceof Activity) {
-            this.activities.push(activity);
+        if (activity instanceof HandleActivity) {
+            this.handles.push(activity);
         }
     }
 }
