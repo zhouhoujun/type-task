@@ -36,6 +36,7 @@ const builtins = require('rollup-plugin-node-builtins');
                 'tslib',
                 'log4js',
                 'globby', 'path', 'fs', 'events', 'stream', 'child_process',
+                'typescript',
                 'shelljs',
                 'rollup',
                 '@ts-ioc/core',
