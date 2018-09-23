@@ -60,7 +60,9 @@ export interface IActivityContext<T> {
 
 }
 
-
+/**
+ * inpit data token.
+ */
 export const InputDataToken = new InjectToken<any>('Context_Inputdata');
 
 /**

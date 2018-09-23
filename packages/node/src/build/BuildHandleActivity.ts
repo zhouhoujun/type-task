@@ -1,4 +1,4 @@
-import { HandleActivity, InputDataToken, ActivityConfigure, Active, Task, ExpressionType, IActivity, Expression, HandleConfigure } from '@taskfr/core';
+import { HandleActivity, InputDataToken, Active, Task, ExpressionType, IActivity, Expression, HandleConfigure } from '@taskfr/core';
 import { Inject } from '@ts-ioc/core';
 import { NodeContextToken, INodeContext } from '../core';
 import { BuidActivityContext } from './BuidActivityContext';

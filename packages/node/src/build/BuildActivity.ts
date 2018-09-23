@@ -1,4 +1,4 @@
-import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, InputDataToken, ActivityType, IHandleActivity, Active, IActivity } from '@taskfr/core';
+import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, InputDataToken, Active, IActivity } from '@taskfr/core';
 import { Inject, isBoolean, Token } from '@ts-ioc/core';
 import { WatchActivity, WatchConfigure } from '../activities';
 import { INodeContext, NodeContextToken } from '../core';
