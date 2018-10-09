@@ -2,15 +2,19 @@ import { Task } from '@taskfr/core';
 import { BuildActivity, BuildConfigure } from '@taskfr/node';
 
 @Task(<BuildConfigure>{
-    name: 'dev-build',
+    name: 'ng-jit',
     src: 'src',
     handles: [
         {
+            test: '*.scss',
+            compiler: 'scss'
+        },
+        {
             test: '*.ts',
-            compiler: 'tsc'
+            compiler: 'ngc'
         }
     ]
 })
-export class DevBuildActivity extends BuildActivity {
+export class NgJitBuildActivity extends BuildActivity {
 
 }

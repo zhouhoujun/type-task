@@ -54,7 +54,19 @@ export class TscCompileActivity extends ShellActivity {
      * @memberof TscCompileActivity
      */
     tsconfig: string;
+    /**
+     * ts file src
+     *
+     * @type {Src}
+     * @memberof TscCompileActivity
+     */
     src: Src;
+    /**
+     * out put dist.
+     *
+     * @type {string}
+     * @memberof TscCompileActivity
+     */
     dist: string;
     compilerOptions?: CompilerOptions;
 

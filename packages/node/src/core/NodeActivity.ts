@@ -1,10 +1,10 @@
-import { Activity, InputDataToken, Task } from '@taskfr/core';
+import { InputDataToken, Task, ContextActivity } from '@taskfr/core';
 import { NodeActivityContext } from './NodeActivityContext';
 import { Inject } from '@ts-ioc/core';
 import { INodeContext, NodeContextToken } from './INodeContext';
 
 @Task
-export abstract class NodeActivity extends Activity<any> {
+export abstract class NodeActivity extends ContextActivity {
     /**
      * override to node context
      *

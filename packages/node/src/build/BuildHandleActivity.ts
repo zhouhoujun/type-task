@@ -1,7 +1,9 @@
-import { HandleActivity, InputDataToken, Active, Task, ExpressionType, IActivity, Expression, HandleConfigure } from '@taskfr/core';
-import { Inject } from '@ts-ioc/core';
+import { HandleActivity, InputDataToken, Active, Task, ExpressionType, IActivity, Expression, HandleConfigure, Src } from '@taskfr/core';
+import { Inject, isString, isRegExp } from '@ts-ioc/core';
 import { NodeContextToken, INodeContext } from '../core';
 import { BuidActivityContext } from './BuidActivityContext';
+import minimatch = require('minimatch');
+import { isArray } from 'util';
 
 
 /**
@@ -18,7 +20,7 @@ export interface BuildHandleConfigure extends HandleConfigure {
      * @type {ExpressionType<boolean>}
      * @memberof BuildHandleConfigure
      */
-    filter: ExpressionType<string[]>;
+    test: ExpressionType<string | RegExp>;
 
     /**
      * compiler
@@ -59,15 +61,15 @@ export class BuildHandleActivity extends HandleActivity {
     /**
      * file filter.
      *
-     * @type {Expression<string[]>}
+     * @type {Expression<string | RegExp>}
      * @memberof BuildHandleActivity
      */
-    filter: Expression<string[]>;
+    test: Expression<string | RegExp>;
 
     async onActivityInit(config: BuildHandleConfigure) {
         await super.onActivityInit(config);
         this.compiler = await this.buildActivity(config.compiler);
-        this.filter = await this.toExpression(config.filter);
+        this.test = await this.toExpression(config.test);
     }
 
     protected createCtx(input?: any) {
@@ -87,7 +89,16 @@ export class BuildHandleActivity extends HandleActivity {
         if (ctx.isCompleted()) {
             return;
         }
-        let files = await this.context.exec(this, this.filter, ctx);
+        let test = await this.context.exec(this, this.test, ctx);
+        let files: string[];
+
+        if (isRegExp(test)) {
+            let exp = test;
+            files = ctx.getState().filter(f => exp.test(f));
+        } else if (test) {
+            let match = test;
+            files = ctx.getState().filter(f => minimatch(f, match));
+        }
         if (!files || files.length < 1) {
             let compCtx = this.createCtx(files);
             await this.compiler.run(compCtx);

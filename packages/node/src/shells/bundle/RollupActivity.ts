@@ -1,5 +1,3 @@
-
-
 import * as path from 'path';
 import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
 import { Task, Src, CtxType, ActivityContext } from '@taskfr/core';
@@ -103,10 +101,10 @@ export class RollupActivity extends ShellActivity {
 
     protected formatShell(shell: string) {
         if (this.rollupConfig) {
-            return path.normalize(this.context.getRootPath() + '/node_modules/.bin/rollup') +
+            return path.normalize(path.join(this.context.getRootPath(), 'node_modules', '.bin', 'rollup')) +
                 ' -c ' + this.rollupConfig;
         }
-        shell = path.normalize(this.context.getRootPath() + '/node_modules/.bin/rollup') + ' ' + this.src.join(' ');
+        shell = path.normalize(path.join(this.context.getRootPath(), 'node_modules', '.bin', 'rollup')) + ' ' + this.src.join(' ');
         return super.formatShell(shell);
     }
 

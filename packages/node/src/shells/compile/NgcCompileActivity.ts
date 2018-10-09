@@ -35,6 +35,12 @@ export class NgcCompileActivity extends ShellActivity {
      */
     tsconfig: string;
 
+    /**
+     * project root.
+     *
+     * @type {string}
+     * @memberof NgcCompileActivity
+     */
     projectRoot: string;
 
     async onActivityInit(config: NgcCompileActivityConfig) {

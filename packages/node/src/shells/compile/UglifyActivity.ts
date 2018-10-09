@@ -63,6 +63,12 @@ export class UglifyActivity extends ShellActivity {
      */
     bundle: string;
 
+    /**
+     * uglify options.
+     *
+     * @type {ObjectMap<any>}
+     * @memberof UglifyActivity
+     */
     uglifyOptions: ObjectMap<any>;
 
     async onActivityInit(config: UglifyActivityConfig) {
@@ -77,7 +83,7 @@ export class UglifyActivity extends ShellActivity {
 
     protected formatShell(shell: string) {
         let outfile = path.join(this.dist, this.bundle)
-        shell = path.normalize(this.context.getRootPath() + '/node_modules/.bin/uglifyjs') +
+        shell = path.normalize(path.join(this.context.getRootPath(), 'node_modules', '.bin', 'uglifyjs')) +
             ' ' + outfile + ' -o ' + outfile
         return super.formatShell(shell);
     }

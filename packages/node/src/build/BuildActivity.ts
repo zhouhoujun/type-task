@@ -46,12 +46,20 @@ export interface BuildConfigure extends ChainConfigure {
     watch?: ExpressionToken<Src | boolean> | ConfigureType<WatchActivity, WatchConfigure>;
 
     /**
+     * before build activity.
+     *
+     * @type {Active}
+     * @memberof BuildConfigure
+     */
+    beforeBuildBody?: Active;
+
+    /**
      * do sth, after build completed.
      *
      * @type {Active}
      * @memberof BuildConfigure
      */
-    completed?: Active;
+    completedBody?: Active;
 }
 
 @Task('build')
@@ -84,12 +92,20 @@ export class BuildActivity extends ChainActivity {
     context: INodeContext;
 
     /**
+     * before build body.
+     *
+     * @type {IActivity}
+     * @memberof BuildActivity
+     */
+    beforeBuildBody: IActivity;
+
+    /**
      * do sth, after build completed.
      *
      * @type {IActivity}
      * @memberof BuildActivity
      */
-    completed: IActivity;
+    completedBody: IActivity;
 
     async onActivityInit(config: BuildConfigure) {
         await super.onActivityInit(config);
@@ -108,8 +124,12 @@ export class BuildActivity extends ChainActivity {
                     return <WatchConfigure>{ src: watch, task: WatchActivity };
                 });
         }
-        if (config.completed) {
-            this.completed = await this.buildActivity(config.completed);
+
+        if (config.beforeBuildBody) {
+            this.beforeBuildBody = await this.buildActivity(config.beforeBuildBody);
+        }
+        if (config.completedBody) {
+            this.completedBody = await this.buildActivity(config.completedBody);
         }
     }
 
@@ -124,9 +144,12 @@ export class BuildActivity extends ChainActivity {
             ctx.input = await this.context.getFiles(this.src);
         }
         let bctx = this.createCtx(ctx.getState());
+        if (this.beforeBuildBody) {
+            await this.beforeBuildBody.run(bctx);
+        }
         await super.execute(bctx);
-        if (this.completed) {
-            await this.completed.run(bctx);
+        if (this.completedBody) {
+            await this.completedBody.run(bctx);
         }
     }
 

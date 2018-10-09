@@ -156,5 +156,16 @@ export class DefaultTaskContainer implements ITaskContainer {
         return runner;
     }
 
+    /**
+     * run task.
+     *
+     * @param {...Active[]} activites
+     * @returns {Promise<IActivityRunner<any>>}
+     * @memberof DefaultTaskContainer
+     */
+    run(...activites: Active[]): Promise<IActivityRunner<any>> {
+        return this.bootstrap(...activites);
+    }
+
 }
 

@@ -1,20 +1,60 @@
-import { Task } from '@taskfr/core';
-import { BuildConfigure, BuildActivity } from '@taskfr/node';
+import { Task, Src, CtxType, ActivityConfigure } from '@taskfr/core';
+import { NodeActivityContext, NodeActivity } from '@taskfr/node';
 
-@Task(<BuildConfigure>{
-    name: 'dev-build',
-    src: 'src',
-    handles: [
-        {
-            filter: '*.scss',
-            compiler: 'scss'
-        },
-        {
-            filter: '*.ts',
-            compiler: 'ngc'
-        }
-    ]
-})
-export class ServeActivity extends BuildActivity {
+
+/**
+ * ServeConfigure
+ *
+ * @export
+ * @interface ServeConfigure
+ */
+export interface ServeConfigure extends ActivityConfigure {
+    /**
+     * dirs.
+     *
+     * @type {CtxType<Src>}
+     * @memberof ServeConfigure
+     */
+    dirs: CtxType<Src>;
+}
+
+/**
+ * Serve activity.
+ *
+ * @export
+ * @class ServeActivity
+ * @extends {BuildActivity}
+ */
+@Task('serve')
+export class ServeActivity extends NodeActivity {
+
+    /**
+     * dirs.
+     *
+     * @type {Src}
+     * @memberof ServeActivity
+     */
+    dirs: Src;
+
+    constructor() {
+        super();
+    }
+
+    async onActivityInit(config: ServeConfigure): Promise<any> {
+        await super.onActivityInit(config);
+        this.dirs = await this.context.to(config.dirs);
+    }
+
+    /**
+     * before run sequence.
+     *
+     * @protected
+     * @param {*} [data]
+     * @returns {Promise<void>}
+     * @memberof NodeActivityContext
+     */
+    protected async execute(ctx: NodeActivityContext): Promise<void> {
+
+    }
 
 }

@@ -1,7 +1,6 @@
 import { Express2, ObjectMap } from '@ts-ioc/core';
 import { IContext, InjectContextToken, Src } from '@taskfr/core';
 
-
 export interface CmdOptions {
     force?: boolean;
     silent?: boolean;
@@ -19,7 +18,6 @@ export const NodeContextToken = new InjectContextToken<INodeContext>('nodejs');
  * @interface INodeContext
  */
 export interface INodeContext extends IContext {
-
     /**
      * package file.
      *

@@ -42,6 +42,15 @@ export interface ITaskContainer extends IApplicationExtends {
     createActivity(activity: Active, workflowId?: string): Promise<IActivityRunner<any>>;
 
     /**
+     * create workflow, run it.
+     *
+     * @param {...Active[]} activities run activities.
+     * @returns {Promise<IActivityRunner>}
+     * @memberof IApplicationBuilder
+     */
+    run(...activities: Active[]): Promise<IActivityRunner<any>>;
+
+    /**
      * create workflow and bootstrap.
      *
      * @param {...Active[]} activities bootstrap activities.

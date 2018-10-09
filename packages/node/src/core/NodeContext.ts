@@ -1,13 +1,18 @@
 import { toAbsolutePath } from '@ts-ioc/platform-server';
 import { existsSync, readdirSync, lstatSync } from 'fs';
 import { join, dirname, normalize } from 'path';
-import { mkdir, cp, rm } from 'shelljs';
+import {
+    mkdir, cp, rm
+    /* ls, test, cd, ShellString, pwd, ShellArray, find, mv, TestOptions, cat, sed */
+} from 'shelljs';
 import * as globby from 'globby';
 import { ObjectMap, Express2, Singleton } from '@ts-ioc/core';
 import { Context, Src } from '@taskfr/core';
 import { INodeContext, NodeContextToken, CmdOptions } from './INodeContext';
 const minimist = require('minimist');
 const del = require('del');
+
+
 
 /**
  * nodejs project context.
@@ -73,6 +78,7 @@ export class NodeContext extends Context implements INodeContext {
      * @memberof NodeContext
      */
     getFolders(pathstr: string, express?: Express2<string, string, boolean>): string[] {
+        pathstr = normalize(pathstr);
         let dir = readdirSync(pathstr);
         let folders = [];
         dir.forEach(d => {
@@ -214,4 +220,136 @@ export class NodeContext extends Context implements INodeContext {
 
         return version || '';
     }
+
+    // // ---------------shelljs command----------------
+
+    // /**
+    //  * Changes to directory dir for the duration of the script. Changes to home directory if no argument is supplied.
+    //  * @param {string} [dir] Directory to change in.
+    //  */
+    // cd(dir?: string): void {
+    //     cd(dir);
+    // }
+
+    // /**
+    //  * Returns the current directory.
+    //  * @return The current directory.
+    //  */
+    // pwd(): ShellString {
+    //     return pwd();
+    // }
+
+    // /**
+    //  * Returns array of files in the given path, or in current directory if no path provided.
+    //  * @param  {...Src[]} paths Paths to search.
+    //  * @return          An array of files in the given path(s).
+    //  */
+    // ls(...paths: Src[]): ShellArray {
+    //     return ls(...paths);
+    // }
+
+    // /**
+    //  * Returns array of files in the given path, or in current directory if no path provided.
+    //  * @param {string} options  Available options:  -R: recursive -A: all files (include files beginning with ., except for . and ..) -L: follow symlinks -d: list directories themselves, not their contents -l: list objects representing each file, each with fields containing ls -l output fields. See fs.Stats for more info
+    //  * @param {...Src[]} paths Paths to search.
+    //  * @return          An array of files in the given path(s).
+    //  */
+    // lsOpt(options?: string, ...paths: Array<string | string[]>): ShellArray {
+    //     return ls(options, ...paths);
+    // }
+
+    // /**
+    //  * Returns array of all files (however deep) in the given paths.
+    //  * @param {...Src[]} paths   The path(s) to search.
+    //  * @return          An array of all files (however deep) in the given path(s).
+    //  */
+    // find(...path: Src[]): ShellArray {
+    //     return find(...path);
+    // }
+
+    // /**
+    //  * Copies files. The wildcard * is accepted.
+    //  * @param {Src}  source  The source.
+    //  * @param {string} dest    The destination.
+    //  * @param {string} [options] Available options: -f: force (default behavior) -n: no-clobber -u: only copy if source is newer than dest -r, -R: recursive -L: follow symlinks -P: don't follow symlinks
+    //  */
+    // cp(source: Src, dest: string, options?: string): void {
+    //     options ? cp(options, source, dest) : cp(source, dest);
+    // }
+
+    // /**
+    //  * Removes files. The wildcard * is accepted.
+    //  * @param ...files Files to remove.
+    //  */
+    // rm(...files: Src[]): void {
+    //     rm(...files);
+    // }
+
+    // /**
+    //  * Removes files. The wildcard * is accepted.
+    //  * @param  {string} options  Available options: -f (force), -r, -R (recursive)
+    //  * @param ...files Files to remove.
+    //  */
+    // rmOpt(options: string, ...files: Src[]): void {
+    //     rm(options, ...files);
+    // }
+
+    // /**
+    //  * Moves files. The wildcard * is accepted.
+    //  * @param source The source.
+    //  * @param dest   The destination.
+    //  * @param {string} [options] Available options: -f: force (default behavior) -n: no-clobber
+    //  */
+    // mv(source: string | string[], dest: string, options?: string): void {
+    //     options ? mv(options, source, dest) : mv(source, dest);
+    // }
+
+    // /**
+    //  * Creates directories.
+    //  * @param ...dir Directories to create.
+    //  */
+    // mkdir(...dir: Src[]): void {
+    //     mkdir(...dir);
+    // }
+
+    // /**
+    //  * Creates directories.
+    //  * @param   options Available options: p (full paths, will create intermediate dirs if necessary)
+    //  * @param ...dir  The directories to create.
+    //  */
+    // mkdirOpt(options: string, ...dir: Src[]): void {
+    //     mkdir(...dir);
+    // }
+
+    // /**
+    //  * Evaluates expression using the available primaries and returns corresponding value.
+    //  * @param   option '-b': true if path is a block device; '-c': true if path is a character device; '-d': true if path is a directory; '-e': true if path exists; '-f': true if path is a regular file; '-L': true if path is a symboilc link; '-p': true if path is a pipe (FIFO); '-S': true if path is a socket
+    //  * @param   path   The path.
+    //  * @return        See option parameter.
+    //  */
+    // test(option: TestOptions, path: string): boolean {
+    //     return test(option, path);
+    // }
+
+    // /**
+    //  * Returns a string containing the given file, or a concatenated string containing the files if more than one file is given (a new line character is introduced between each file). Wildcard * accepted.
+    //  * @param  ...files Files to use.
+    //  * @return            A string containing the given file, or a concatenated string containing the files if more than one file is given (a new line character is introduced between each file).
+    //  */
+    // cat(...files: Src[]): ShellString {
+    //     return cat(...files);
+    // }
+
+    // /**
+    //  * Reads an input string from file and performs a JavaScript replace() on the input using the given search regex and replacement string or function. Returns the new string after replacement.
+    //  * @param  searchRegex The regular expression to use for search.
+    //  * @param  replacement The replacement.
+    //  * @param  file        The file to process.
+    //  * @param {string} [options]     Available options: -i (Replace contents of 'file' in-place. Note that no backups will be created!)
+    //  * @return             The new string after replacement.
+    //  */
+    // sed(searchRegex: string | RegExp, replacement: string, file: string, options?: string): ShellString {
+    //     return options ? sed(options, searchRegex, replacement, file) : sed(searchRegex, replacement, file);
+    // }
+
 }
