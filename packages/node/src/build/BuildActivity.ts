@@ -133,15 +133,35 @@ export class BuildActivity extends ChainActivity {
         }
     }
 
+    /**
+     * execute once build action.
+     *
+     * @protected
+     * @param {BuidActivityContext} ctx
+     * @returns {Promise<void>}
+     * @memberof BuildActivity
+     */
+    protected async execOnce(ctx: BuidActivityContext): Promise<void> {
+        if (this.watch) {
+            this.watch.body = this;
+            let watchCtx = this.createCtx();
+            watchCtx.target = this.watch;
+            this.watch.run(watchCtx);
+        }
+        ctx.input = await this.context.getFiles(this.src);
+    }
+
+    /**
+     * execute build action.
+     *
+     * @protected
+     * @param {BuidActivityContext} ctx
+     * @returns {Promise<void>}
+     * @memberof BuildActivity
+     */
     protected async execute(ctx: BuidActivityContext): Promise<void> {
         if (!(this.watch && ctx.target === this.watch)) {
-            if (this.watch) {
-                this.watch.body = this;
-                let watchCtx = this.createCtx();
-                watchCtx.target = this.watch;
-                this.watch.run(watchCtx);
-            }
-            ctx.input = await this.context.getFiles(this.src);
+            await this.execOnce(ctx);
         }
         let bctx = this.createCtx(ctx.getState());
         if (this.beforeBuildBody) {

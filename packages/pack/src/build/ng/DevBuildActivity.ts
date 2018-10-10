@@ -1,5 +1,6 @@
 import { Task } from '@taskfr/core';
 import { BuildActivity, BuildConfigure } from '@taskfr/node';
+import { PackActivity } from '../../core';
 
 /**
  * dev build activity.
@@ -10,6 +11,7 @@ import { BuildActivity, BuildConfigure } from '@taskfr/node';
  */
 @Task(<BuildConfigure>{
     name: 'ng-dev',
+    clean: 'dist',
     src: 'src',
     dist: 'dist',
     handles: [
@@ -27,6 +29,6 @@ import { BuildActivity, BuildConfigure } from '@taskfr/node';
         }
     ]
 })
-export class NgDevBuildActivity extends BuildActivity {
+export class NgDevBuildActivity extends PackActivity {
 
 }

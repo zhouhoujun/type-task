@@ -3,7 +3,7 @@ import { ITransform } from './ITransform';
 import { Injectable, Inject } from '@ts-ioc/core';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { IPipeContext, PipeContextToken } from './IPipeContext';
-import { FileChanged } from '@taskfr/node';
+import { FileChanged, NodeActivityContext } from '@taskfr/node';
 import { Files2StreamToken } from './Files2Stream';
 
 /**
@@ -15,7 +15,7 @@ import { Files2StreamToken } from './Files2Stream';
  * @implements {IActivityContext<ITransform>}
  */
 @Injectable
-export class PipeActivityContext extends ActivityContext implements IActivityContext<ITransform> {
+export class PipeActivityContext extends NodeActivityContext implements IActivityContext<ITransform> {
     data: ITransform;
     // watch: WatchActivity;
     sourceMaps: SourceMapsActivity;
