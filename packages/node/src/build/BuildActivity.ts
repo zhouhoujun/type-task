@@ -1,4 +1,4 @@
-import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, InputDataToken, Active, IActivity } from '@taskfr/core';
+import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, Active, IActivity } from '@taskfr/core';
 import { Inject, isBoolean, Token } from '@ts-ioc/core';
 import { WatchActivity, WatchConfigure } from '../activities';
 import { INodeContext, NodeContextToken } from '../core';
@@ -144,7 +144,7 @@ export class BuildActivity extends ChainActivity {
     protected async execOnce(ctx: BuidActivityContext): Promise<void> {
         if (this.watch) {
             this.watch.body = this;
-            let watchCtx = this.createCtx();
+            let watchCtx = this.createActiveCtx();
             watchCtx.target = this.watch;
             this.watch.run(watchCtx);
         }
@@ -163,7 +163,7 @@ export class BuildActivity extends ChainActivity {
         if (!(this.watch && ctx.target === this.watch)) {
             await this.execOnce(ctx);
         }
-        let bctx = this.createCtx(ctx.getState());
+        let bctx = this.createActiveCtx(ctx.getState());
         if (this.beforeBuildBody) {
             await this.beforeBuildBody.run(bctx);
         }
@@ -173,8 +173,8 @@ export class BuildActivity extends ChainActivity {
         }
     }
 
-    protected createCtx(input?: any) {
-        let ctx = this.context.getContainer().resolve(BuidActivityContext, { provide: InputDataToken, useValue: input });
+    protected createActiveCtx(input?: any) {
+        let ctx = super.createActiveCtx(input) as BuidActivityContext;
         ctx.builder = this;
         return ctx;
     }

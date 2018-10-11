@@ -1,7 +1,8 @@
-import { Injectable, isNullOrUndefined, InjectToken, Inject } from '@ts-ioc/core';
+import { Injectable, isNullOrUndefined, InjectToken, Inject, Registration, Token } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
 import { IContext, ContextToken } from './IContext';
 import { ITranslator } from './Translator';
+import { Activity } from './Activity';
 
 /**
  * activity run context.
@@ -66,13 +67,31 @@ export interface IActivityContext<T> {
 export const InputDataToken = new InjectToken<any>('Context_Inputdata');
 
 /**
+ * inject actitiy context token.
+ *
+ * @export
+ * @class InjectActivityContextToken
+ * @extends {Registration<IActivityContext<any>>}
+ */
+export class InjectActivityContextToken extends Registration<ActivityContext> {
+    constructor(type: Token<IActivity>) {
+        super(type, 'AContext');
+    }
+}
+
+/**
+ * Activity Context Token.
+ */
+export const ActivityContextToken = new InjectActivityContextToken(Activity);
+
+/**
  * base activity context.
  *
  * @export
  * @class ActivityContext
  * @implements {IActivityContext<any>}
  */
-@Injectable
+@Injectable(ActivityContextToken)
 export class ActivityContext implements IActivityContext<any> {
 
     protected _input: any;

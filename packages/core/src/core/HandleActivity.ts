@@ -43,7 +43,7 @@ export abstract class HandleActivity extends Activity<any> implements IHandleAct
      * @memberof HandleActivity
      */
     async run(ctx?: ActivityContext, next?: () => Promise<any>): Promise<any> {
-        ctx = ctx || this.createCtx();
+        ctx = ctx || this.createActiveCtx();
         await this.execute(ctx, next);
         return ctx.data;
     }

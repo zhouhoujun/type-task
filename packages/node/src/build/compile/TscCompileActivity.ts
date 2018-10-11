@@ -1,8 +1,10 @@
 import * as path from 'path';
-import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
+import { ShellActivityConfig } from '../../shells';
 import { Task, CtxType, Src } from '@taskfr/core';
 import { CompilerOptions, ModuleResolutionKind, ModuleKind, ScriptTarget } from 'typescript';
 import { ObjectMap, lang, isArray, isBoolean } from '@ts-ioc/core';
+import { BuidActivityContext } from '../../build';
+import { ShellCompilerActivity } from '../CompilerActivity';
 
 
 /**
@@ -45,8 +47,15 @@ export interface TscCompileActivityConfig extends ShellActivityConfig {
     compilerOptions?: CtxType<CompilerOptions>;
 }
 
+/**
+ * typescript compiler activity.
+ *
+ * @export
+ * @class TscCompileActivity
+ * @extends {ShellCompilerActivity}
+ */
 @Task('tsc')
-export class TscCompileActivity extends ShellActivity {
+export class TscCompileActivity extends ShellCompilerActivity {
     /**
      * tsconfig.
      *
@@ -76,14 +85,14 @@ export class TscCompileActivity extends ShellActivity {
         this.dist = this.context.to(config.dist);
         this.tsconfig = this.context.to(config.tsconfig);
         this.compilerOptions = this.context.to(config.compilerOptions);
+        this.shell = this.shell || path.normalize(path.resolve('node_modules', '.bin', 'tsc'));
     }
 
     protected formatShell(shell: string): string {
         if (this.tsconfig) {
-            return path.normalize(path.resolve('node_modules', '.bin', 'tsc') +
-                ' -p ' + this.tsconfig);
+            return shell + ' -p ' + this.tsconfig;
         }
-        shell = `${path.join(this.context.getRootPath(), 'node_modules', '.bin', 'tsc')} ${isArray(this.src) ? this.src.join(' ') : this.src}`;
+        shell = `${shell} ${isArray(this.src) ? this.src.join(' ') : this.src}`;
         return super.formatShell(shell);
     }
 

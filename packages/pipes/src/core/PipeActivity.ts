@@ -64,7 +64,7 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
         await this.afterPipe(ctx);
     }
 
-    protected createCtx(input?: any) {
+    protected createActiveCtx(input?: any) {
         return this.context.getContainer().resolve(PipeActivityContext, { provide: InputDataToken, useValue: input });
     }
 

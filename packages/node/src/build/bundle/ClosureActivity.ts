@@ -1,6 +1,7 @@
-import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
+import { ShellActivityConfig } from '../../shells';
 import { Task, CtxType } from '@taskfr/core';
 import { ObjectMap } from '@ts-ioc/core';
+import { ShellCompilerActivity } from '../CompilerActivity';
 
 
 export interface ClosureCmdArgs {
@@ -17,17 +18,18 @@ export interface ClosureActivityConfig extends ShellActivityConfig {
 }
 
 @Task('closure')
-export class ClosureActivity extends ShellActivity {
+export class ClosureActivity extends ShellCompilerActivity {
 
     jarPath: string;
 
     async onActivityInit(config: ClosureActivityConfig) {
         await super.onActivityInit(config);
         this.jarPath = this.context.to(config.jarPath);
+        this.shell = this.shell || 'java -jar';
     }
 
     protected formatShell(shell: string): string {
-        return super.formatShell(`java -jar ${this.jarPath}`);
+        return super.formatShell(`${shell} ${this.jarPath}`);
     }
 
     protected formatArg(arg: any, key: string, args?: ObjectMap<any>): string {

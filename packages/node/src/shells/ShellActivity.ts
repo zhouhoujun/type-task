@@ -1,7 +1,7 @@
 import { ExecOptions, exec } from 'child_process';
 import { isString, isBoolean, isArray, lang, ObjectMap, isNullOrUndefined } from '@ts-ioc/core';
-import { Src, ActivityConfigure, CtxType, OnActivityInit, Task, ActivityContext } from '@taskfr/core';
-import { NodeActivity } from '../core';
+import { Src, ActivityConfigure, CtxType, OnActivityInit, Task } from '@taskfr/core';
+import { NodeActivity, NodeActivityContext } from '../core';
 /**
  * shell activity config.
  *
@@ -48,7 +48,7 @@ export interface ShellActivityConfig extends ActivityConfigure {
  * @implements {ITask}
  */
 @Task('shell')
-export class ShellActivity extends NodeActivity implements OnActivityInit {
+export class ShellActivity<T extends NodeActivityContext> extends NodeActivity<T> implements OnActivityInit {
     /**
      * shell cmd.
      *
@@ -89,16 +89,16 @@ export class ShellActivity extends NodeActivity implements OnActivityInit {
         }
     }
 
-    protected async execute(ctx: ActivityContext): Promise<void> {
+    protected async execute(ctx: T): Promise<void> {
         return await Promise.resolve(this.shell)
             .then(cmds => {
                 let options = this.options;
                 if (isString(cmds)) {
-                    return this.execShell(cmds, options);
+                    return this.execShell(cmds, ctx, options);
                 } else if (isArray(cmds)) {
                     let pip = Promise.resolve();
                     cmds.forEach(cmd => {
-                        pip = pip.then(() => this.execShell(cmd, options));
+                        pip = pip.then(() => this.execShell(cmd, ctx, options));
                     });
                     return pip;
                 } else {
@@ -107,7 +107,7 @@ export class ShellActivity extends NodeActivity implements OnActivityInit {
             });
     }
 
-    protected formatShell(shell: string): string {
+    protected formatShell(shell: string, ctx?: T): string {
         if (this.args && this.args.length) {
             return shell + ' ' + this.args.join(' ');
         }
@@ -142,8 +142,8 @@ export class ShellActivity extends NodeActivity implements OnActivityInit {
         return '';
     }
 
-    protected execShell(cmd: string, options?: ExecOptions): Promise<any> {
-        cmd = this.formatShell(cmd);
+    protected execShell(cmd: string, ctx: T, options?: ExecOptions): Promise<any> {
+        cmd = this.formatShell(cmd, ctx);
         if (!cmd) {
             return Promise.resolve();
         }

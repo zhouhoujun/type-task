@@ -3,6 +3,7 @@ import { IContext } from './IContext';
 import { ActivityConfigure } from './ActivityConfigure';
 import { OnActivityInit } from './OnActivityInit';
 import { IActivityContext } from './ActivityContext';
+import { ContextFactory } from './ContextFactory';
 
 /**
  * Inject AcitityToken
@@ -58,6 +59,14 @@ export interface IActivity {
      * @memberof IActivity
      */
     context: IContext;
+
+    /**
+     * context factory.
+     *
+     * @type {ContextFactory}
+     * @memberof Activity
+     */
+    ctxFactory: ContextFactory;
 
     /**
      * config.

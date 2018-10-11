@@ -1,9 +1,9 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
+import { ShellActivityConfig } from '../../shells';
 import { Task, Src, CtxType } from '@taskfr/core';
 import { NodeActivityContext } from '../../core';
-import { ExecOptions } from 'child_process';
+import { ShellCompilerActivity } from '../CompilerActivity';
 
 /**
  * bable build activity config
@@ -34,13 +34,13 @@ export interface BabelCompileActivityConfig extends ShellActivityConfig {
 }
 
 @Task('babel')
-export class BabelCompileActivity extends ShellActivity {
+export class BabelCompileActivity extends ShellCompilerActivity {
     /**
-         * ts file src
-         *
-         * @type {Src}
-         * @memberof TscCompileActivity
-         */
+     * ts file src
+     *
+     * @type {Src}
+     * @memberof TscCompileActivity
+     */
     src: Src;
     /**
      * out put file.
@@ -63,12 +63,13 @@ export class BabelCompileActivity extends ShellActivity {
         this.src = await this.context.getFiles(this.context.to(config.src));
         this.outFile = this.context.to(config.outFile);
         this.format = this.context.to(config.format);
+        this.shell = this.shell || path.normalize(path.join(this.context.getRootPath(), 'node_modules', '.bin', 'babel'));
     }
 
     protected formatShell(shell: string): string {
         let outFile = path.normalize(this.outFile);
         if (this.format === 'umd') {
-            return path.normalize(path.resolve(this.context.getRootPath(), './node_modules/.bin/babel')) +
+            return shell +
                 ' --source-maps' +
                 ' --presets=es2015-rollup ' +
                 ' --plugins=transform-es2015-modules-commonjs ' +
@@ -76,7 +77,7 @@ export class BabelCompileActivity extends ShellActivity {
                 outFile +
                 ' --out-file ' + outFile;
         }
-        shell = path.normalize(path.join(this.context.getRootPath(), 'node_modules', '.bin', 'babel')) +
+        shell = shell +
             ' --source-maps' +
             ' --presets=es2015-rollup ' + outFile +
             ' --out-file ' + outFile;
@@ -94,7 +95,7 @@ export class BabelCompileActivity extends ShellActivity {
     protected async after(ctx: NodeActivityContext): Promise<void> {
         await super.after(ctx);
         let output = await this.execShell(path.normalize(path.join(this.context.getRootPath(), './node_modules/.bin/babel-external-helpers')) +
-            ' --output-type global ', { silent: true } as ExecOptions);
+            ' --output-type global ', { silent: true } as any);
         let outFile = path.normalize(this.outFile);
         await new Promise((res, rej) => {
             fs.readFile(path.normalize(outFile), 'utf8', (err, contents) => {

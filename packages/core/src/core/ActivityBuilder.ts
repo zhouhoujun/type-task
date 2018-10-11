@@ -1,11 +1,12 @@
 import { ActivityBuilderToken, IActivityBuilder } from './IActivityBuilder';
-import { Type, isFunction, isString, Token, Express, isToken, IContainer, Injectable } from '@ts-ioc/core';
+import { Type, isFunction, isString, Token, Express, isToken, Injectable } from '@ts-ioc/core';
 import { AnnotationBuilder } from '@ts-ioc/bootstrap';
 import { Task } from '../decorators';
 import { IActivity, ActivityInstance, InjectAcitityToken } from './IActivity';
 import { ActivityConfigure, ActivityType, ExpressionType, isActivityType, Expression } from './ActivityConfigure';
 import { NullActivity } from './Activity';
 import { AssignActivity } from './AssignActivity';
+import { ContextFactory } from './ContextFactory';
 
 
 /**
@@ -40,13 +41,16 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
         if (isString(uuid)) {
             instance.id = uuid;
         }
+
+        instance.ctxFactory = this.container.resolve(ContextFactory, { type: token });
+
         if (isFunction(instance.onActivityInit)) {
             await Promise.resolve(instance.onActivityInit(config));
         }
         return instance;
     }
 
-    async buildStrategy(activity: IActivity, config: ActivityConfigure, container?: IContainer): Promise<IActivity> {
+    async buildStrategy(activity: IActivity, config: ActivityConfigure, data?: any): Promise<IActivity> {
         if (config.name) {
             activity.name = config.name;
         }

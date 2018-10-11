@@ -1,9 +1,11 @@
-import { Task } from '@taskfr/core';
-import { BuildActivity, BuildConfigure } from '@taskfr/node';
+import { BuildActivity } from '@taskfr/node';
+import { Pack } from '../../core';
 
-@Task(<BuildConfigure>{
+@Pack({
     name: 'ng-jit',
+    clean: 'dist',
     src: 'src',
+    dist: 'dist',
     handles: [
         {
             test: '*.scss',

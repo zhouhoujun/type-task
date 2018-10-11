@@ -109,7 +109,7 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      */
     protected async executeUglify(ctx: PipeActivityContext) {
         if (this.uglify) {
-            let ugCtx = this.createCtx(ctx.data.js);
+            let ugCtx = this.createActiveCtx(ctx.data.js);
             await this.uglify.run(ugCtx);
             ctx.data.js = ugCtx.data;
         }
@@ -131,14 +131,14 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
         let stream = ctx.data;
         if (this.tdsDest && isTransform(stream.dts)) {
             let dts = isBoolean(this.tdsDest) ? ds : (this.tdsDest || ds);
-            await dts.run(this.createCtx(stream.dts));
+            await dts.run(this.createActiveCtx(stream.dts));
         }
         if (isTransform(stream.js)) {
-            let jsCtx = this.createCtx(stream.js);
+            let jsCtx = this.createActiveCtx(stream.js);
             jsCtx.sourceMaps = ctx.sourceMaps;
             await ds.run(jsCtx);
         } else if (isTransform(stream)) {
-            let newCtx = this.createCtx(stream);
+            let newCtx = this.createActiveCtx(stream);
             newCtx.sourceMaps = ctx.sourceMaps;
             await ds.run(newCtx);
         }

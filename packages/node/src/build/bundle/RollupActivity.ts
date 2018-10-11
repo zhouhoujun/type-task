@@ -1,8 +1,10 @@
 import * as path from 'path';
-import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
-import { Task, Src, CtxType, ActivityContext } from '@taskfr/core';
+import { ShellActivityConfig } from '../../shells';
+import { Task, Src, CtxType } from '@taskfr/core';
 import { lang, ObjectMap } from '@ts-ioc/core';
 import { RollupDirOptions, RollupFileOptions, rollup } from 'rollup';
+import { ShellCompilerActivity } from '../CompilerActivity';
+import { CompilerActivityContext } from '../CompilerActivityContext';
 
 export interface RollupCmdOptions {
     format: string,
@@ -61,7 +63,7 @@ export interface RollupActivityConfig extends ShellActivityConfig {
 
 
 @Task('rollup')
-export class RollupActivity extends ShellActivity {
+export class RollupActivity extends ShellCompilerActivity {
     /**
      * rollup src for cmd
      *
@@ -86,9 +88,10 @@ export class RollupActivity extends ShellActivity {
         this.rollupFileOptions = this.context.to(config.rollupFileOptions);
         this.rollupDirOptions = this.context.to(config.rollupDirOptions);
         this.rollupConfig = this.context.to(config.rollupConfig);
+        this.shell = this.shell || path.normalize(path.join(this.context.getRootPath(), 'node_modules', '.bin', 'rollup'));
     }
 
-    protected async execute(ctx: ActivityContext): Promise<any> {
+    protected async execute(ctx: CompilerActivityContext): Promise<any> {
         if (this.rollupDirOptions) {
             return await rollup(this.rollupDirOptions);
         }
@@ -101,10 +104,9 @@ export class RollupActivity extends ShellActivity {
 
     protected formatShell(shell: string) {
         if (this.rollupConfig) {
-            return path.normalize(path.join(this.context.getRootPath(), 'node_modules', '.bin', 'rollup')) +
-                ' -c ' + this.rollupConfig;
+            return shell + ' -c ' + this.rollupConfig;
         }
-        shell = path.normalize(path.join(this.context.getRootPath(), 'node_modules', '.bin', 'rollup')) + ' ' + this.src.join(' ');
+        shell = shell + ' ' + this.src.join(' ');
         return super.formatShell(shell);
     }
 

@@ -1,5 +1,5 @@
 import { Task, Src, CtxType, ActivityConfigure } from '@taskfr/core';
-import { NodeActivityContext, NodeActivity } from '@taskfr/node';
+import { NodeActivityContext, NodeActivity, BuidActivityContext } from '@taskfr/node';
 
 
 /**
@@ -26,7 +26,7 @@ export interface ServeConfigure extends ActivityConfigure {
  * @extends {BuildActivity}
  */
 @Task('serve')
-export class ServeActivity extends NodeActivity {
+export class ServeActivity extends NodeActivity<BuidActivityContext> {
 
     /**
      * dirs.
@@ -53,7 +53,7 @@ export class ServeActivity extends NodeActivity {
      * @returns {Promise<void>}
      * @memberof NodeActivityContext
      */
-    protected async execute(ctx: NodeActivityContext): Promise<void> {
+    protected async execute(ctx: BuidActivityContext): Promise<void> {
 
     }
 

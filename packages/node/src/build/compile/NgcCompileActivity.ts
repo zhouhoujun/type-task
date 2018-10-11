@@ -1,7 +1,8 @@
 import * as path from 'path';
-import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
+import { ShellActivityConfig } from '../../shells';
 import { Task, CtxType } from '@taskfr/core';
 import { lang } from '@ts-ioc/core';
+import { ShellCompilerActivity } from '../CompilerActivity';
 
 export interface AngularConfig {
     defaultProject?: string;
@@ -24,8 +25,15 @@ export interface NgcCompileActivityConfig extends ShellActivityConfig {
     tsconfig?: CtxType<string>;
 }
 
+/**
+ * ngc compile activity.
+ *
+ * @export
+ * @class NgcCompileActivity
+ * @extends {ShellCompilerActivity}
+ */
 @Task('ngc')
-export class NgcCompileActivity extends ShellActivity {
+export class NgcCompileActivity extends ShellCompilerActivity {
 
     /**
      * tsconfig.
@@ -47,10 +55,11 @@ export class NgcCompileActivity extends ShellActivity {
         await super.onActivityInit(config);
         this.options = lang.assign({silent: true}, this.options || {});
         this.tsconfig = this.context.to(config.tsconfig);
+        this.shell = this.shell || path.join(this.context.getRootPath(), 'node_modules', '.bin', 'ngc');
     }
 
     protected formatShell(shell: string): string {
-        shell = shell || path.join(this.context.getRootPath(), 'node_modules', '.bin', 'ngc') + ' -p ' + this.tsconfig;
+        shell = shell + ' -p ' + this.tsconfig;
         return super.formatShell(shell);
     }
 

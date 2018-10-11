@@ -1,7 +1,8 @@
 import * as path from 'path';
-import { ShellActivity, ShellActivityConfig } from '../ShellActivity';
+import { ShellActivityConfig } from '../../shells';
 import { Task, Src, CtxType } from '@taskfr/core';
 import { lang, ObjectMap } from '@ts-ioc/core';
+import { ShellCompilerActivity } from '../CompilerActivity';
 
 export interface UglifyActivityConfig extends ShellActivityConfig {
     /**
@@ -39,7 +40,7 @@ export interface UglifyActivityConfig extends ShellActivityConfig {
 
 
 @Task('uglify')
-export class UglifyActivity extends ShellActivity {
+export class UglifyActivity extends ShellCompilerActivity {
 
     /**
      * src
@@ -78,13 +79,13 @@ export class UglifyActivity extends ShellActivity {
         this.dist = this.context.to(config.dist);
         this.uglifyOptions = this.context.to(config.uglifyOptions);
         this.bundle = this.context.to(config.bundle) || 'bundle.js';
+        this.shell = this.shell || path.normalize(path.join(this.context.getRootPath(), 'node_modules', '.bin', 'uglifyjs'));
     }
 
 
     protected formatShell(shell: string) {
         let outfile = path.join(this.dist, this.bundle)
-        shell = path.normalize(path.join(this.context.getRootPath(), 'node_modules', '.bin', 'uglifyjs')) +
-            ' ' + outfile + ' -o ' + outfile
+        shell = shell + ' ' + outfile + ' -o ' + outfile;
         return super.formatShell(shell);
     }
 

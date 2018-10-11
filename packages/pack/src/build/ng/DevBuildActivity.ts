@@ -1,6 +1,6 @@
 import { Task } from '@taskfr/core';
-import { BuildActivity, BuildConfigure } from '@taskfr/node';
-import { PackActivity } from '../../core';
+import { BuildConfigure } from '@taskfr/node';
+import { PackActivity, Pack } from '../../core';
 
 /**
  * dev build activity.
@@ -9,7 +9,7 @@ import { PackActivity } from '../../core';
  * @class DevBuildActivity
  * @extends {BuildActivity}
  */
-@Task(<BuildConfigure>{
+@Pack({
     name: 'ng-dev',
     clean: 'dist',
     src: 'src',

@@ -1,8 +1,9 @@
 import { NodeActivityContext, NodeContextToken, INodeContext } from '../core';
-import { Inject } from '@ts-ioc/core';
-import { InputDataToken } from '@taskfr/core';
+import { Inject, Injectable } from '@ts-ioc/core';
+import { InputDataToken, InjectActivityContextToken } from '@taskfr/core';
 import { BuildActivity } from './BuildActivity';
 
+export const BuidActivityContextToken = new InjectActivityContextToken(BuildActivity);
 
 /**
  * build activity context.
@@ -11,6 +12,7 @@ import { BuildActivity } from './BuildActivity';
  * @class BuidActivityContext
  * @extends {NodeActivityContext}
  */
+@Injectable(BuidActivityContextToken)
 export class BuidActivityContext extends NodeActivityContext {
 
     /**

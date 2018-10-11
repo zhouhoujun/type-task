@@ -1,9 +1,10 @@
-import { HandleActivity, InputDataToken, Active, Task, ExpressionType, IActivity, Expression, HandleConfigure, Src } from '@taskfr/core';
-import { Inject, isString, isRegExp } from '@ts-ioc/core';
+import { HandleActivity, Active, Task, ExpressionType, IActivity, Expression, HandleConfigure, CtxType } from '@taskfr/core';
+import { Inject, isRegExp, Token, isToken } from '@ts-ioc/core';
 import { NodeContextToken, INodeContext } from '../core';
 import { BuidActivityContext } from './BuidActivityContext';
 import minimatch = require('minimatch');
-import { isArray } from 'util';
+import { CompilerActivity } from './CompilerActivity';
+import { CompilerActivityContext } from './CompilerActivityContext';
 
 
 /**
@@ -29,6 +30,14 @@ export interface BuildHandleConfigure extends HandleConfigure {
      * @memberof BuildHandleConfigure
      */
     compiler: Active;
+
+    /**
+     * sub dist
+     *
+     * @type {CtxType<string>}
+     * @memberof BuildHandleConfigure
+     */
+    subDist?: CtxType<string>;
 }
 
 /**
@@ -59,6 +68,16 @@ export class BuildHandleActivity extends HandleActivity {
     compiler: IActivity;
 
     /**
+     * compiler token.
+     *
+     * @type {Token<IActivity>}
+     * @memberof BuildHandleActivity
+     */
+    compilerToken: Token<IActivity>;
+
+    subDist: string;
+
+    /**
      * file filter.
      *
      * @type {Expression<string | RegExp>}
@@ -68,12 +87,14 @@ export class BuildHandleActivity extends HandleActivity {
 
     async onActivityInit(config: BuildHandleConfigure) {
         await super.onActivityInit(config);
+        if (isToken(config.compiler)) {
+            this.compilerToken = config.compiler;
+        } else {
+            this.compilerToken = this.context.builder.getType(config.compiler);
+        }
         this.compiler = await this.buildActivity(config.compiler);
         this.test = await this.toExpression(config.test);
-    }
-
-    protected createCtx(input?: any) {
-        return this.context.getContainer().resolve(BuidActivityContext, { provide: InputDataToken, useValue: input });
+        this.subDist = this.context.to(config.subDist) || '';
     }
 
     /**
@@ -100,7 +121,9 @@ export class BuildHandleActivity extends HandleActivity {
             files = ctx.getState().filter(f => minimatch(f, match));
         }
         if (!files || files.length < 1) {
-            let compCtx = this.createCtx(files);
+            let compCtx = this.ctxFactory.create(files, this.compilerToken, CompilerActivity) as CompilerActivityContext;
+            compCtx.builder = ctx.builder;
+            compCtx.handle = this;
             await this.compiler.run(compCtx);
             ctx.complete(files);
         }

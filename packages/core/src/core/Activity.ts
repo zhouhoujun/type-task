@@ -4,7 +4,8 @@ import { IActivity, GActivity, ActivityToken } from './IActivity';
 import { ActivityConfigure, ExpressionType, Expression, ActivityType } from './ActivityConfigure';
 import { ContextToken, IContext } from './IContext';
 import { OnActivityInit } from './OnActivityInit';
-import { ActivityContext, InputDataToken } from './ActivityContext';
+import { ActivityContext } from './ActivityContext';
+import { ContextFactory } from './ContextFactory';
 
 
 
@@ -50,6 +51,14 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
     @Inject(ContextToken)
     context: IContext;
 
+    /**
+     * context factory.
+     *
+     * @type {ContextFactory}
+     * @memberof Activity
+     */
+    ctxFactory: ContextFactory;
+
     constructor() {
 
     }
@@ -66,7 +75,7 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      * @memberof Activity
      */
     async run(ctx?: ActivityContext): Promise<any> {
-        ctx = ctx || this.createCtx();
+        ctx = ctx || this.createActiveCtx();
         await this.execute(ctx);
         return ctx.getState();
     }
@@ -82,8 +91,8 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      */
     protected abstract execute(ctx: ActivityContext): Promise<void>;
 
-    protected createCtx(input?: any): ActivityContext {
-        return this.context.getContainer().resolve(ActivityContext, { provide: InputDataToken, useValue: input });
+    protected createActiveCtx(input?: any): ActivityContext {
+        return this.ctxFactory.create(input);
     }
 
     protected toExpression<T>(exptype: ExpressionType<T>, target?: IActivity): Promise<Expression<T>> {
