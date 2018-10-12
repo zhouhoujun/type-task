@@ -2,6 +2,8 @@ import { ExecOptions, exec } from 'child_process';
 import { isString, isBoolean, isArray, lang, ObjectMap, isNullOrUndefined } from '@ts-ioc/core';
 import { Src, ActivityConfigure, CtxType, OnActivityInit, Task } from '@taskfr/core';
 import { NodeActivity, NodeActivityContext } from '../core';
+
+
 /**
  * shell activity config.
  *
@@ -48,7 +50,7 @@ export interface ShellActivityConfig extends ActivityConfigure {
  * @implements {ITask}
  */
 @Task('shell')
-export class ShellActivity<T extends NodeActivityContext> extends NodeActivity<T> implements OnActivityInit {
+export class ShellActivity extends NodeActivity implements OnActivityInit {
     /**
      * shell cmd.
      *
@@ -89,7 +91,7 @@ export class ShellActivity<T extends NodeActivityContext> extends NodeActivity<T
         }
     }
 
-    protected async execute(ctx: T): Promise<void> {
+    protected async execute(ctx: NodeActivityContext): Promise<void> {
         return await Promise.resolve(this.shell)
             .then(cmds => {
                 let options = this.options;
@@ -107,7 +109,7 @@ export class ShellActivity<T extends NodeActivityContext> extends NodeActivity<T
             });
     }
 
-    protected formatShell(shell: string, ctx?: T): string {
+    protected formatShell(shell: string, ctx?: NodeActivityContext): string {
         if (this.args && this.args.length) {
             return shell + ' ' + this.args.join(' ');
         }
@@ -142,7 +144,7 @@ export class ShellActivity<T extends NodeActivityContext> extends NodeActivity<T
         return '';
     }
 
-    protected execShell(cmd: string, ctx: T, options?: ExecOptions): Promise<any> {
+    protected execShell(cmd: string, ctx: NodeActivityContext, options?: ExecOptions): Promise<any> {
         cmd = this.formatShell(cmd, ctx);
         if (!cmd) {
             return Promise.resolve();

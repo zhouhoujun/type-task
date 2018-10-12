@@ -45,6 +45,7 @@ export class InjectAfterActivity<T extends IActivity> extends Registration<T> {
  */
 @Task
 export abstract class ContextActivity extends Activity<any> {
+
     /**
     * run task.
     *

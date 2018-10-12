@@ -3,8 +3,7 @@ import { isArray, isString, lang, Injectable } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken, PipesConfigure } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
-import { TestActivity, TestConfigure } from './TestActivity';
-import { CleanActivity, CleanConfigure } from '@taskfr/node';
+import { CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/node';
 import { AssetActivity } from './AssetActivity';
 import { InjectAssetActivityToken, AssetConfigure, AssetToken } from './AssetConfigure';
 

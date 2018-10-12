@@ -18,8 +18,19 @@ export interface SourceMapsConfigure extends ActivityConfigure {
     sourcemaps?: CtxType<string>;
 }
 
+/**
+ * source maps token.
+ */
 export const SourceMapsToken = new InjectAcitityToken<SourceMapsActivity>('sourcemaps');
 
+/**
+ * source maps token.
+ *
+ * @export
+ * @class SourceMapsActivity
+ * @extends {Activity<ITransform>}
+ * @implements {OnActivityInit}
+ */
 @Task(SourceMapsToken)
 export class SourceMapsActivity extends Activity<ITransform> implements OnActivityInit {
     sourcemaps: string;

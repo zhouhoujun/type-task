@@ -1,13 +1,12 @@
 import { SourceActivity } from './SourceActivity';
 import { DestActivity } from './DestActivity';
 import { isArray } from '@ts-ioc/core';
-import { WatchActivity } from '@taskfr/node';
+import { WatchActivity, TestActivity } from '@taskfr/node';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { PipeActivity } from './PipeActivity';
 import { IAssetActivity, AssetToken } from './AssetConfigure';
-import { TestActivity } from './TestActivity';
 import { AssetTask } from '../decorators';
 import { PipeActivityContext } from './PipeActivityContext';
 

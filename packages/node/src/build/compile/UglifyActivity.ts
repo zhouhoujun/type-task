@@ -4,6 +4,13 @@ import { Task, Src, CtxType } from '@taskfr/core';
 import { lang, ObjectMap } from '@ts-ioc/core';
 import { ShellCompilerActivity } from '../CompilerActivity';
 
+/**
+ * uglify activity config.
+ *
+ * @export
+ * @interface UglifyActivityConfig
+ * @extends {ShellActivityConfig}
+ */
 export interface UglifyActivityConfig extends ShellActivityConfig {
     /**
      * ts file source.
@@ -39,6 +46,13 @@ export interface UglifyActivityConfig extends ShellActivityConfig {
 }
 
 
+/**
+ * uglify activity.
+ *
+ * @export
+ * @class UglifyActivity
+ * @extends {ShellCompilerActivity}
+ */
 @Task('uglify')
 export class UglifyActivity extends ShellCompilerActivity {
 

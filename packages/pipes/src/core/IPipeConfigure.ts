@@ -1,5 +1,5 @@
 import { ActivityConfigure } from '@taskfr/core';
-import { TransformExpress, TransformConfig } from './pipeTypes';
+import { TransformExpress } from './pipeTypes';
 
 /**
  * pipe configure.

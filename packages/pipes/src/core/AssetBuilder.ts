@@ -1,5 +1,5 @@
 import { IActivity, Src } from '@taskfr/core';
-import { WatchActivity, WatchConfigure } from '@taskfr/node';
+import { WatchActivity, WatchConfigure, TestActivity, TestConfigure } from '@taskfr/node';
 import { isBoolean, isString, Injectable } from '@ts-ioc/core';
 import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
@@ -9,7 +9,6 @@ import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { PipeActivityBuilder } from './PipeActivityBuilder';
-import { TestActivity, TestConfigure } from './TestActivity';
 
 
 /**
@@ -46,7 +45,14 @@ export class AssetBuilder extends PipeActivityBuilder {
                         if (!src) {
                             return null;
                         }
-                        return <TestConfigure>{ src: src, task: TestActivity };
+                        return <TestConfigure>{
+                            src: src,
+                            task: TestActivity,
+                            framework: (options) => {
+                                let mocha = require('gulp-mocha');
+                                return options ? mocha(options) : mocha();
+                            }
+                        };
                     }
                 );
             }
@@ -117,7 +123,7 @@ export class AssetBuilder extends PipeActivityBuilder {
                             }
                             return null;
                         }
-                        return <UglifyConfigure>{ uglifyOtions: uglify, task: UglifyActivity };
+                        return <UglifyConfigure>{ uglifyOptions: uglify, task: UglifyActivity };
                     });
             }
         }

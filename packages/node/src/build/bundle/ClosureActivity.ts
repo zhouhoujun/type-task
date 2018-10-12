@@ -3,7 +3,12 @@ import { Task, CtxType } from '@taskfr/core';
 import { ObjectMap } from '@ts-ioc/core';
 import { ShellCompilerActivity } from '../CompilerActivity';
 
-
+/**
+ * closure command args.
+ *
+ * @export
+ * @interface ClosureCmdArgs
+ */
 export interface ClosureCmdArgs {
     warningLevel?: string;
     flagfile: string;
@@ -13,8 +18,7 @@ export interface ClosureCmdArgs {
 
 export interface ClosureActivityConfig extends ShellActivityConfig {
     jarPath: CtxType<string>;
-    args: CtxType<ClosureCmdArgs>
-
+    args: CtxType<ClosureCmdArgs>;
 }
 
 @Task('closure')

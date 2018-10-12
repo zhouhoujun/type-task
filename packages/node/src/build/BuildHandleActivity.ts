@@ -75,6 +75,12 @@ export class BuildHandleActivity extends HandleActivity {
      */
     compilerToken: Token<IActivity>;
 
+    /**
+     * sub dist.
+     *
+     * @type {string}
+     * @memberof BuildHandleActivity
+     */
     subDist: string;
 
     /**

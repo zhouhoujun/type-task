@@ -1,9 +1,7 @@
 import { SequenceActivity, ParallelActivity, IActivity, InputDataToken } from '@taskfr/core';
 import { DestActivity } from './DestActivity';
-import { TestActivity } from './TestActivity';
-import { CleanActivity } from '@taskfr/node';
+import { CleanActivity, TestActivity } from '@taskfr/node';
 import { Type, Inject } from '@ts-ioc/core';
-import { PipeContextToken, IPipeContext } from './IPipeContext';
 import { IPackageActivity, PackageToken } from './PackageConfigure';
 import { Package } from '../decorators';
 import { PipeActivityContext } from './PipeActivityContext';
@@ -61,14 +59,6 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
      * @memberof PackageActivity
      */
     executeType: Type<SequenceActivity | ParallelActivity>;
-    /**
-     * context.
-     *
-     * @type {IPipeContext}
-     * @memberof PackageActivity
-     */
-    @Inject(PipeContextToken)
-    context: IPipeContext;
 
     protected async execute(ctx: PipeActivityContext) {
         if (this.test) {

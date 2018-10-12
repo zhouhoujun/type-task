@@ -7,7 +7,9 @@ import { PipeActivity } from './PipeActivity';
 import { InjectPipeActivityToken } from './IPipeActivity';
 import { PipeActivityContext } from './PipeActivityContext';
 
-
+/**
+ * source activity token.
+ */
 export const SourceAcitvityToken = new InjectPipeActivityToken<SourceActivity>('source');
 
 /**
@@ -35,6 +37,13 @@ export interface SourceConfigure extends IPipeConfigure {
     srcOptions?: ExpressionType<SrcOptions>;
 }
 
+/**
+ * Source activity.
+ *
+ * @export
+ * @class SourceActivity
+ * @extends {PipeActivity}
+ */
 @PipeTask(SourceAcitvityToken)
 export class SourceActivity extends PipeActivity {
     /**

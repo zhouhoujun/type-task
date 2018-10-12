@@ -1,7 +1,6 @@
 import { dest, DestOptions } from 'vinyl-fs';
 import { PipeTask } from '../decorators';
-import { ITransform } from './ITransform';
-import { Expression, IActivity, ExpressionType } from '@taskfr/core';
+import { Expression, ExpressionType } from '@taskfr/core';
 import { InjectPipeActivityToken } from './IPipeActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';

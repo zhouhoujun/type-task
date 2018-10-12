@@ -5,6 +5,9 @@ import { FileChanged } from '../activities';
 import { NodeActivity } from './NodeActivity';
 
 
+/**
+ * node activity context token.
+ */
 export const NodeActivityContextToken = new InjectActivityContextToken(NodeActivity);
 
 /**
@@ -29,7 +32,6 @@ export class NodeActivityContext extends ActivityContext {
     constructor(@Inject(InputDataToken) input: any, @Inject(NodeContextToken) context: INodeContext) {
         super(input, context);
     }
-
 
     protected translate(input: any): any {
         if (input instanceof FileChanged) {

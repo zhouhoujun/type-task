@@ -12,7 +12,13 @@ import { PipeActivityContext } from './PipeActivityContext';
  * @extends {ActivityConfigure}
  */
 export interface UglifyConfigure extends ActivityConfigure {
-    uglifyOtions?: CtxType<any>;
+    /**
+     * uglify options.
+     *
+     * @type {CtxType<any>}
+     * @memberof UglifyConfigure
+     */
+    uglifyOptions?: CtxType<any>;
 }
 
 /**
@@ -20,19 +26,34 @@ export interface UglifyConfigure extends ActivityConfigure {
  */
 export const UglifyToken = new InjectAcitityToken<UglifyActivity>('uglify');
 
+
+/**
+ * uglify activity.
+ *
+ * @export
+ * @class UglifyActivity
+ * @extends {Activity<ITransform>}
+ * @implements {OnActivityInit}
+ */
 @Task(UglifyToken)
 export class UglifyActivity extends Activity<ITransform> implements OnActivityInit {
 
-    uglifyOtions: any;
+    /**
+     * uglify options
+     *
+     * @type {*}
+     * @memberof UglifyActivity
+     */
+    uglifyOptions: any;
 
     async onActivityInit(config: UglifyConfigure) {
         await super.onActivityInit(config);
-        this.uglifyOtions = this.context.to(config.uglifyOtions);
+        this.uglifyOptions = this.context.to(config.uglifyOptions);
     }
 
     protected async execute(ctx: PipeActivityContext) {
-        if (this.uglifyOtions) {
-            ctx.data = ctx.data.pipe(uglify(this.uglifyOtions))
+        if (this.uglifyOptions) {
+            ctx.data = ctx.data.pipe(uglify(this.uglifyOptions))
         } else {
             ctx.data = ctx.data.pipe(uglify())
         }

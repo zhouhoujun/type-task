@@ -1,4 +1,4 @@
-import { ContextActivity } from '@taskfr/core';
+import { ContextActivity, Task } from '@taskfr/core';
 import { NodeActivityContext } from './NodeActivityContext';
 import { Inject } from '@ts-ioc/core';
 import { INodeContext, NodeContextToken } from './INodeContext';
@@ -12,7 +12,9 @@ import { INodeContext, NodeContextToken } from './INodeContext';
  * @extends {ContextActivity}
  * @template T
  */
-export abstract class NodeActivity<T extends NodeActivityContext> extends ContextActivity {
+@Task
+export abstract class NodeActivity extends ContextActivity {
+
     /**
      * override to node context
      *
@@ -22,14 +24,18 @@ export abstract class NodeActivity<T extends NodeActivityContext> extends Contex
     @Inject(NodeContextToken)
     context: INodeContext;
 
+    protected createActiveCtx(input?: any): NodeActivityContext {
+        return super.createActiveCtx(input) as NodeActivityContext;
+    }
+
     /**
      * execute build activity.
      *
      * @protected
      * @abstract
-     * @param {T} ctx
+     * @param {NodeActivityContext} ctx
      * @returns {Promise<void>}
      * @memberof NodeActivity
      */
-    protected abstract async execute(ctx: T): Promise<void>;
+    protected abstract async execute(ctx: NodeActivityContext): Promise<void>;
 }

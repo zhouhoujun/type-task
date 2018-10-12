@@ -1,5 +1,5 @@
 import { Src, ExpressionToken, ConfigureType, InjectAcitityBuilderToken } from '@taskfr/core';
-import { WatchActivity, WatchConfigure } from '@taskfr/node';
+import { WatchActivity, WatchConfigure, TestActivity, TestConfigure } from '@taskfr/node';
 import { ObjectMap, Registration } from '@ts-ioc/core';
 import { DestConfigure, DestActivity } from './DestActivity';
 import { IPipeConfigure } from './IPipeConfigure';
@@ -8,7 +8,6 @@ import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { IPipeActivity } from './IPipeActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
-import { TestActivity, TestConfigure } from './TestActivity';
 
 /**
  * dest type.

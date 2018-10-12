@@ -1,10 +1,13 @@
-import { ActivityContext, IActivityContext, InputDataToken, ITranslator } from '@taskfr/core';
+import { IActivityContext, InputDataToken, ITranslator, InjectActivityContextToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { Injectable, Inject } from '@ts-ioc/core';
 import { SourceMapsActivity } from './SourceMapsActivity';
-import { IPipeContext, PipeContextToken } from './IPipeContext';
-import { FileChanged, NodeActivityContext } from '@taskfr/node';
+import { FileChanged, NodeActivityContext, INodeContext, NodeContextToken } from '@taskfr/node';
 import { Files2StreamToken } from './Files2Stream';
+import { PipeActivity } from './PipeActivity';
+
+
+export const PipeActivityContextToken = new InjectActivityContextToken(PipeActivity);
 
 /**
  * pipe activity context.
@@ -14,19 +17,12 @@ import { Files2StreamToken } from './Files2Stream';
  * @extends {ActivityContext}
  * @implements {IActivityContext<ITransform>}
  */
-@Injectable
+@Injectable(PipeActivityContextToken)
 export class PipeActivityContext extends NodeActivityContext implements IActivityContext<ITransform> {
     data: ITransform;
-    // watch: WatchActivity;
     sourceMaps: SourceMapsActivity;
-    /**
-     * ovverid to pipe context
-     *
-     * @type {IPipeContext}
-     * @memberof PipeActivityContext
-     */
-    context: IPipeContext;
-    constructor(@Inject(InputDataToken) input: any, @Inject(PipeContextToken) context: IPipeContext) {
+
+    constructor(@Inject(InputDataToken) input: any, @Inject(NodeContextToken) context: INodeContext) {
         super(input, context);
     }
 

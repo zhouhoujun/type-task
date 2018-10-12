@@ -1,11 +1,6 @@
-import { CtxType, ExpressionType, Expression, Task, InjectAcitityToken, ActivityConfigure, Activity } from '@taskfr/core';
+import { CtxType, ExpressionType, Expression, Task, InjectAcitityToken, ActivityConfigure } from '@taskfr/core';
 import { isUndefined } from '@ts-ioc/core';
 import { NodeActivity, NodeActivityContext } from '../core';
-
-/**
- * test activity token.
- */
-export const TestToken = new InjectAcitityToken<TestActivity>('test');
 
 /**
  * test activity configure.
@@ -39,6 +34,11 @@ export interface TestConfigure extends ActivityConfigure {
      */
     options?: CtxType<any>;
 }
+
+/**
+ * test activity token.
+ */
+export const TestToken = new InjectAcitityToken<TestActivity>('test');
 
 /**
  * test activity.
@@ -82,17 +82,12 @@ export class TestActivity extends NodeActivity {
         }
         if (config.framework) {
             this.framework = await this.toExpression(config.framework);
-        } else {
-            this.framework = () => {
-                let mocha = require('gulp-mocha');
-                return this.options ? mocha(this.options) : mocha();
-            };
         }
     }
 
     protected async execute(ctx: NodeActivityContext): Promise<void> {
         let test = await this.context.exec(this, this.enable, ctx);
-        if (test !== false) {
+        if (test !== false && this.framework) {
             await this.context.exec(this, this.framework, ctx);
         }
     }

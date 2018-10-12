@@ -62,6 +62,13 @@ export interface BuildConfigure extends ChainConfigure {
     completedBody?: Active;
 }
 
+/**
+ * build activity.
+ *
+ * @export
+ * @class BuildActivity
+ * @extends {ChainActivity}
+ */
 @Task('build')
 export class BuildActivity extends ChainActivity {
 
@@ -173,7 +180,7 @@ export class BuildActivity extends ChainActivity {
         }
     }
 
-    protected createActiveCtx(input?: any) {
+    protected createActiveCtx(input?: any): BuidActivityContext {
         let ctx = super.createActiveCtx(input) as BuidActivityContext;
         ctx.builder = this;
         return ctx;

@@ -39,7 +39,7 @@ export class NgcCompileActivity extends ShellCompilerActivity {
      * tsconfig.
      *
      * @type {string}
-     * @memberof TscBuilderActivity
+     * @memberof NgcCompileActivity
      */
     tsconfig: string;
 

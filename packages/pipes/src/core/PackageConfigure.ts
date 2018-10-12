@@ -1,6 +1,5 @@
 import { CtxType, Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, ActivityConfigure, CoreActivityConfigs, SequenceActivity, SequenceConfigure, ISequenceConfigure, Activity, GCoreActivityConfigs } from '@taskfr/core';
 import { ObjectMap, Registration, Token } from '@ts-ioc/core';
-import { TestActivity, TestConfigure } from './TestActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
 import { AssetConfigure } from './AssetConfigure';
 import { IPipeConfigure } from './IPipeConfigure';
@@ -9,7 +8,7 @@ import { SourceConfigure } from './SourceActivity';
 import { UglifyConfigure } from './UglifyActivity';
 import { WatchConfigure } from '@taskfr/node';
 import { AnnotationsConfigure } from './Annotation';
-import { ShellActivityConfig, ExecFileActivityConfig, CleanActivity, CleanConfigure } from '@taskfr/node';
+import { ShellActivityConfig, ExecFileActivityConfig, CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/node';
 
 type configures = CoreActivityConfigs | AssetConfigure | IPipeConfigure
     | TsConfigure | DestConfigure | SourceConfigure | TestConfigure | UglifyConfigure
@@ -35,15 +34,6 @@ export interface PackageConfigure extends ActivityConfigure {
      * @memberof PackageConfigure
      */
     src?: CtxType<string>;
-
-
-    // /**
-    //  * watch activity.
-    //  *
-    //  * @type {(ExpressionToken<Src> | ActivityType<WatchActivity>)}
-    //  * @memberof PackageConfigure
-    //  */
-    // watch?: ExpressionToken<Src> | ActivityType<WatchActivity>;
 
 
     /**

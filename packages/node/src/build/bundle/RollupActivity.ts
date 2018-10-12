@@ -52,6 +52,7 @@ export interface RollupActivityConfig extends ShellActivityConfig {
      * @memberof RollupActivityConfig
      */
     rollupDirOptions?: CtxType<RollupDirOptions>;
+
     /**
      * rollup file options.
      *
@@ -62,6 +63,13 @@ export interface RollupActivityConfig extends ShellActivityConfig {
 }
 
 
+/**
+ * rollup activity.
+ *
+ * @export
+ * @class RollupActivity
+ * @extends {ShellCompilerActivity}
+ */
 @Task('rollup')
 export class RollupActivity extends ShellCompilerActivity {
     /**

@@ -1,12 +1,11 @@
-import { IPipeContext, PipeContextToken } from './IPipeContext';
-import { Inject, isUndefined } from '@ts-ioc/core';
+import { isUndefined } from '@ts-ioc/core';
 import { IPipeActivity, PipeActivityToken } from './IPipeActivity';
-import { Activity, InputDataToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { TransformType, isTransform } from './pipeTypes';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeTask } from '../decorators';
 import { PipeActivityContext } from './PipeActivityContext';
+import { NodeActivity } from '@taskfr/node';
 
 /**
  * Pipe activity.
@@ -16,15 +15,7 @@ import { PipeActivityContext } from './PipeActivityContext';
  * @implements {ITask}
  */
 @PipeTask(PipeActivityToken)
-export class PipeActivity extends Activity<ITransform> implements IPipeActivity {
-    /**
-     * context.
-     *
-     * @type {IPipeContext}
-     * @memberof BaseTask
-     */
-    @Inject(PipeContextToken)
-    context: IPipeContext;
+export class PipeActivity extends NodeActivity implements IPipeActivity {
 
     /**
      * pipes.
@@ -49,7 +40,6 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
      */
     config: IPipeConfigure;
 
-
     /**
      * run task.
      *
@@ -62,10 +52,6 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
         await this.beforePipe(ctx);
         await this.pipe(ctx);
         await this.afterPipe(ctx);
-    }
-
-    protected createActiveCtx(input?: any) {
-        return this.context.getContainer().resolve(PipeActivityContext, { provide: InputDataToken, useValue: input });
     }
 
     /**
@@ -81,6 +67,18 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
     }
 
     /**
+     * create activity context.
+     *
+     * @protected
+     * @param {*} [input]
+     * @returns {PipeActivityContext}
+     * @memberof PipeActivity
+     */
+    protected createActiveCtx(input?: any): PipeActivityContext {
+        return super.createActiveCtx(input) as PipeActivityContext;
+    }
+
+    /**
      * begin pipe.
      *
      * @protected
@@ -91,6 +89,7 @@ export class PipeActivity extends Activity<ITransform> implements IPipeActivity 
     protected async beforePipe(ctx: PipeActivityContext): Promise<void> {
 
     }
+
 
     /**
      * end pipe.

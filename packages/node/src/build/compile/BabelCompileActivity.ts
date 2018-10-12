@@ -33,6 +33,13 @@ export interface BabelCompileActivityConfig extends ShellActivityConfig {
     format?: CtxType<string>;
 }
 
+/**
+ * babel compile activity.
+ *
+ * @export
+ * @class BabelCompileActivity
+ * @extends {ShellCompilerActivity}
+ */
 @Task('babel')
 export class BabelCompileActivity extends ShellCompilerActivity {
     /**
