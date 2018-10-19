@@ -5,7 +5,7 @@ import { IActivityRunner, ActivityRunnerToken, RunState } from './IActivityRunne
 import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Joinpoint } from '@ts-ioc/aop';
-import { ActivityContext, InputDataToken } from './ActivityContext';
+import { ActivityContext } from './ActivityContext';
 
 /**
  * task runner.
@@ -49,7 +49,7 @@ export class ActivityRunner<T> implements IActivityRunner<T> {
     }
 
     async start(data?: any): Promise<T> {
-        let ctx = data instanceof ActivityContext ? data : this.createCtx(data);
+        let ctx = data instanceof ActivityContext ? data : this.instance.ctxFactory.create(data);
         return await this.instance.run(ctx)
             .then(data => {
                 this.state = RunState.complete;
@@ -58,10 +58,6 @@ export class ActivityRunner<T> implements IActivityRunner<T> {
                 this._result.next(data);
                 return data;
             });
-    }
-
-    protected createCtx(input?: any): ActivityContext {
-        return this.container.resolve(ActivityContext, { provide: InputDataToken, useValue: input });
     }
 
     _currState: Joinpoint;

@@ -33,7 +33,7 @@ export class DefaultTaskContainer implements ITaskContainer {
     getBuilder(): IApplicationBuilder<any> {
         if (!this.builder) {
             this.builder = this.createAppBuilder();
-            this.builder.events.on(ApplicationEvents.onRootContainerCreated, (container: IContainer) => {
+            this.builder.on(ApplicationEvents.onRootContainerCreated, (container: IContainer) => {
                 container.register(WorkflowModuleValidate)
                     .register(WorkflowModuleInjector);
                 let chain = container.getBuilder().getInjectorChain(container);

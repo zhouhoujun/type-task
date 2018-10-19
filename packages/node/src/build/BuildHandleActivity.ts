@@ -121,10 +121,10 @@ export class BuildHandleActivity extends HandleActivity {
 
         if (isRegExp(test)) {
             let exp = test;
-            files = ctx.getState().filter(f => exp.test(f));
+            files = ctx.execResult.filter(f => exp.test(f));
         } else if (test) {
             let match = test;
-            files = ctx.getState().filter(f => minimatch(f, match));
+            files = ctx.execResult.filter(f => minimatch(f, match));
         }
         if (!files || files.length < 1) {
             let compCtx = this.ctxFactory.create(files, this.compilerToken, CompilerActivity) as CompilerActivityContext;

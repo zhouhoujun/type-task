@@ -74,8 +74,12 @@ export class PipeActivity extends NodeActivity implements IPipeActivity {
      * @returns {PipeActivityContext}
      * @memberof PipeActivity
      */
-    protected createActiveCtx(input?: any): PipeActivityContext {
-        return super.createActiveCtx(input) as PipeActivityContext;
+    protected verifyCtx(input?: any): PipeActivityContext {
+        let ctx: PipeActivityContext = super.verifyCtx(input) as PipeActivityContext;
+        if (!(ctx instanceof PipeActivityContext)) {
+            ctx = this.ctxFactory.create(ctx) as PipeActivityContext;
+        }
+        return ctx;
     }
 
     /**

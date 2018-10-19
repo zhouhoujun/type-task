@@ -34,11 +34,9 @@ export class NodeActivityContext extends ActivityContext {
     }
 
     protected translate(input: any): any {
+        input = super.translate(input);
         if (input instanceof FileChanged) {
             return input.changed();
-        }
-        if (isArray(input)) {
-            return input.slice(0);
         }
         return input;
     }

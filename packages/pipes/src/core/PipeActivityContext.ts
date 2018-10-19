@@ -1,10 +1,12 @@
 import { IActivityContext, InputDataToken, ITranslator, InjectActivityContextToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
-import { Injectable, Inject } from '@ts-ioc/core';
+import { Injectable, Inject, isArray, isString } from '@ts-ioc/core';
 import { SourceMapsActivity } from './SourceMapsActivity';
 import { FileChanged, NodeActivityContext, INodeContext, NodeContextToken } from '@taskfr/node';
 import { Files2StreamToken } from './Files2Stream';
 import { PipeActivity } from './PipeActivity';
+import { src } from 'vinyl-fs';
+import { Stream } from 'stream';
 
 
 export const PipeActivityContextToken = new InjectActivityContextToken(PipeActivity);
@@ -30,6 +32,18 @@ export class PipeActivityContext extends NodeActivityContext implements IActivit
         if (input instanceof FileChanged) {
             return this.context.getContainer().get(Files2StreamToken);
         }
+        return null;
+    }
+
+    protected translate(input: any): any {
+        if (isArray(input)) {
+            return src(input.filter(i => isString(i) || isArray(i)));
+        } else if (isString(input)) {
+            return src(input);
+        } else if (input instanceof Stream) {
+            return input;
+        }
+
         return null;
     }
 }

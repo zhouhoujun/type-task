@@ -3,6 +3,7 @@ import { IActivity } from './IActivity';
 import { IContext, ContextToken } from './IContext';
 import { ITranslator } from './Translator';
 import { Activity } from './Activity';
+import { Events } from '@ts-ioc/bootstrap';
 
 /**
  * activity run context.
@@ -17,15 +18,7 @@ export interface IActivityContext<T> {
      * @type {*}
      * @memberof IRunContext
      */
-    input?: any;
-
-    /**
-     * outpu data.
-     *
-     * @type {T}
-     * @memberof IActivityContext
-     */
-    data?: T;
+    input: any;
 
     /**
      * execute activity.
@@ -52,13 +45,12 @@ export interface IActivityContext<T> {
     context: IContext;
 
     /**
-     * get state.
+     * ge activity execute result.
      *
      * @returns {*}
      * @memberof IActivityContext
      */
-    getState(): any;
-
+    readonly execResult: any;
 }
 
 /**
@@ -92,38 +84,16 @@ export const ActivityContextToken = new InjectActivityContextToken(Activity);
  * @implements {IActivityContext<any>}
  */
 @Injectable(ActivityContextToken)
-export class ActivityContext implements IActivityContext<any> {
+export class ActivityContext extends Events implements IActivityContext<any> {
 
     protected _input: any;
-    /**
-     * input data
-     *
-     * @type {*}
-     * @memberof IRunContext
-     */
-    get input(): any {
-        return this._input;
-    }
-
-    /**
-     * set input.
-     *
-     * @memberof ActivityContext
-     */
-    set input(val: any) {
-        if (val !== this._input) {
-            this.onInuputChanged(val);
-        }
-        this._input = val;
-    }
-
     /**
      * execute data.
      *
      * @type {*}
      * @memberof IActivityContext
      */
-    data: any;
+    protected data: any;
 
     /**
      * execute activity.
@@ -141,37 +111,37 @@ export class ActivityContext implements IActivityContext<any> {
      */
     target: IActivity;
 
-
-    constructor(@Inject(InputDataToken) input: any, @Inject(ContextToken) public context: IContext) {
-        if (!isNullOrUndefined(input)) {
-            this.input = input;
-        }
+    constructor(@Inject(InputDataToken) public input: any, @Inject(ContextToken) public context: IContext) {
+        super();
+        this.setExecResult(input);
     }
 
-    getState() {
+    /**
+     * execute Resulte.
+     *
+     * @readonly
+     * @memberof ActivityContext
+     */
+    get execResult() {
         return this.data;
     }
 
-
-    protected onInuputChanged(input: any) {
-        let chg;
-        if (!isNullOrUndefined(input)) {
-            let translator = this.getTranslator(input);
-            if (translator) {
-                chg = translator.translate(input);
-            } else {
-                chg = this.translate(input);
-            }
+    setExecResult(data: any) {
+        if (!isNullOrUndefined(data)) {
+            data = this.translate(data);
         }
-        this.setState(chg);
+        if (data !== this.data) {
+            this.emit('resultChanged', data);
+        }
+        this.data = data;
     }
 
-    protected setState(chg: any) {
-        this.data = chg;
-    }
-
-    protected translate(input: any): any {
-        return input;
+    protected translate(data: any): any {
+        let translator = this.getTranslator(data);
+        if (translator) {
+            return translator.translate(data);
+        }
+        return data;
     }
 
     protected getTranslator(input: any): ITranslator {

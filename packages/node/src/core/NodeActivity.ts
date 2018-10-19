@@ -24,8 +24,8 @@ export abstract class NodeActivity extends ContextActivity {
     @Inject(NodeContextToken)
     context: INodeContext;
 
-    protected createActiveCtx(input?: any): NodeActivityContext {
-        return super.createActiveCtx(input) as NodeActivityContext;
+    protected verifyCtx(input?: any): NodeActivityContext {
+        return super.verifyCtx(input) as NodeActivityContext;
     }
 
     /**

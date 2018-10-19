@@ -75,9 +75,9 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      * @memberof Activity
      */
     async run(ctx?: ActivityContext): Promise<any> {
-        ctx = ctx || this.createActiveCtx();
+        ctx = this.verifyCtx(ctx);
         await this.execute(ctx);
-        return ctx.getState();
+        return ctx.execResult;
     }
 
     /**
@@ -91,8 +91,19 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      */
     protected abstract execute(ctx: ActivityContext): Promise<void>;
 
-    protected createActiveCtx(input?: any): ActivityContext {
-        return this.ctxFactory.create(input);
+    /**
+     * verify context.
+     *
+     * @protected
+     * @param {*} [ctx]
+     * @returns {ActivityContext}
+     * @memberof Activity
+     */
+    protected verifyCtx(ctx?: any): ActivityContext {
+        if (!ctx || !(ctx instanceof ActivityContext)) {
+            ctx = this.ctxFactory.create(ctx);
+        }
+        return ctx;
     }
 
     protected toExpression<T>(exptype: ExpressionType<T>, target?: IActivity): Promise<Expression<T>> {

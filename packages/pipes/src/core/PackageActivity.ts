@@ -71,7 +71,7 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
         await super.execute(ctx);
     }
 
-    protected createActiveCtx(input?: any) {
+    protected verifyCtx(input?: any) {
         return this.context.getContainer().resolve(PipeActivityContext, { provide: InputDataToken, useValue: input });
     }
 

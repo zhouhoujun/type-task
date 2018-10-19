@@ -317,7 +317,7 @@ export class WatchActivity extends Activity<FileChanged> {
                 })
             )
             .subscribe(chg => {
-                ctx.input = chg;
+                ctx.setExecResult(chg);
                 watchBody.run(ctx);
             });
 

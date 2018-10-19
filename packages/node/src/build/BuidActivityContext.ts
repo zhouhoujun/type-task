@@ -16,18 +16,6 @@ export const BuidActivityContextToken = new InjectActivityContextToken(BuildActi
 export class BuidActivityContext extends NodeActivityContext {
 
     /**
-     * the builder
-     *
-     * @type {BuildActivity}
-     * @memberof BuidActivityContext
-     */
-    builder: BuildActivity;
-
-    constructor(@Inject(InputDataToken) input: any, @Inject(NodeContextToken) context: INodeContext) {
-        super(input, context);
-    }
-
-    /**
      * all files input to handle.
      *
      * @type {string[]}
@@ -40,7 +28,22 @@ export class BuidActivityContext extends NodeActivityContext {
      * @type {string[]}
      * @memberof BuidActivityContext
      */
-    protected unhandleds: string[];
+    protected data: string[];
+    /**
+     * the builder
+     *
+     * @type {BuildActivity}
+     * @memberof BuidActivityContext
+     */
+    builder: BuildActivity;
+
+    constructor(@Inject(InputDataToken) input: any, @Inject(NodeContextToken) context: INodeContext) {
+        super(input, context);
+    }
+
+    get execResult(): string[] {
+        return this.data;
+    }
 
     /**
      * is completed or not.
@@ -49,7 +52,7 @@ export class BuidActivityContext extends NodeActivityContext {
      * @memberof BuidActivityContext
      */
     isCompleted(): boolean {
-        return !this.unhandleds || this.unhandleds.length < 1;
+        return !this.execResult || this.execResult.length < 1;
     }
 
     /**
@@ -59,15 +62,7 @@ export class BuidActivityContext extends NodeActivityContext {
      * @memberof BuidActivityContext
      */
     complete(files: string[]) {
-        this.unhandleds = this.unhandleds.filter(f => files.indexOf(f) < 0);
-    }
-
-    protected setState(chg: any) {
-        this.unhandleds = chg;
-    }
-
-    getState() {
-        return this.unhandleds;
+        this.data = this.execResult.filter(f => files.indexOf(f) < 0);
     }
 
 }

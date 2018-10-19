@@ -151,7 +151,7 @@ export class BuildActivity extends ChainActivity {
     protected async execOnce(ctx: BuidActivityContext): Promise<void> {
         if (this.watch) {
             this.watch.body = this;
-            let watchCtx = this.createActiveCtx();
+            let watchCtx = this.verifyCtx();
             watchCtx.target = this.watch;
             this.watch.run(watchCtx);
         }
@@ -170,7 +170,7 @@ export class BuildActivity extends ChainActivity {
         if (!(this.watch && ctx.target === this.watch)) {
             await this.execOnce(ctx);
         }
-        let bctx = this.createActiveCtx(ctx.getState());
+        let bctx = this.verifyCtx(ctx.execResult);
         if (this.beforeBuildBody) {
             await this.beforeBuildBody.run(bctx);
         }
@@ -180,8 +180,8 @@ export class BuildActivity extends ChainActivity {
         }
     }
 
-    protected createActiveCtx(input?: any): BuidActivityContext {
-        let ctx = super.createActiveCtx(input) as BuidActivityContext;
+    protected verifyCtx(input?: any): BuidActivityContext {
+        let ctx = super.verifyCtx(input) as BuidActivityContext;
         ctx.builder = this;
         return ctx;
     }

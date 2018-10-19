@@ -42,7 +42,7 @@ export class ChainActivity extends Activity<any> {
         let handles = this.handles.map(act => {
             return (ctx: ActivityContext, next?: () => Promise<any>) => act.run(ctx, next);
         });
-        return dispatch(0)
+        return dispatch(0);
         function dispatch(idx: number): Promise<any> {
             if (idx <= index) {
                 return Promise.reject('next called mutiple times');

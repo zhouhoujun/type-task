@@ -99,7 +99,7 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
             await this.src.run(ctx);
             if (this.watch) {
                 this.watch.body = this;
-                let watchCtx = this.createActiveCtx();
+                let watchCtx = this.verifyCtx();
                 watchCtx.target = this.watch;
                 this.watch.run(watchCtx);
             }
