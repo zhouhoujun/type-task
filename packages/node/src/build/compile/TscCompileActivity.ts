@@ -3,7 +3,6 @@ import { ShellActivityConfig } from '../../shells';
 import { Task, CtxType, Src } from '@taskfr/core';
 import { CompilerOptions, ModuleResolutionKind, ModuleKind, ScriptTarget } from 'typescript';
 import { ObjectMap, lang, isArray, isBoolean } from '@ts-ioc/core';
-import { BuidActivityContext } from '../../build';
 import { ShellCompilerActivity } from '../CompilerActivity';
 
 

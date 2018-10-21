@@ -1,6 +1,6 @@
-import { NodeActivity } from 'src/core';
+import { NodeActivity } from '../core';
 import { CompilerActivityContext } from './CompilerActivityContext';
-import { ShellActivity } from 'src/shells';
+import { ShellActivity } from '../shells';
 import { ExecOptions } from 'child_process';
 import { Task } from '@taskfr/core';
 

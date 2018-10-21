@@ -8,7 +8,7 @@ import { AssetConfigure, AssetBuilderToken, AssetToken } from '../core/AssetConf
  * @interface AssetTaskMetadata
  * @extends {AssetConfigure}
  */
-export interface AssetTaskMetadata extends AssetConfigure {
+export interface AssetsMetadata extends AssetConfigure {
 
 }
 
@@ -17,4 +17,11 @@ export interface AssetTaskMetadata extends AssetConfigure {
  *
  * @AssetTask
  */
-export const AssetTask: ITaskDecorator<AssetTaskMetadata> = createTaskDecorator<AssetTaskMetadata>('AssetTask', AssetBuilderToken, AssetToken);
+export const Assets: ITaskDecorator<AssetsMetadata> = createTaskDecorator<AssetsMetadata>('Assets', AssetBuilderToken, AssetToken);
+
+/**
+ * Asset task decorator, use to define class is a asset task element.
+ *
+ * @AssetTask
+ */
+export const AssetTask = Assets;

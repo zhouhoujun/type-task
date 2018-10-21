@@ -1,4 +1,4 @@
 
 export * from './PipeTask';
-export * from './AssetTask';
+export * from './Assets';
 export * from './Package';

@@ -1,4 +1,4 @@
-import { AssetTask } from '../decorators';
+import { Assets } from '../decorators';
 import { AssetConfigure, AssetActivity, DestActivity, DestAcitvityToken, isTransform, PipeActivityContext } from '../core';
 import { isBoolean, ObjectMap, isString } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
@@ -33,7 +33,7 @@ export interface TsConfigure extends AssetConfigure {
     tsconfig?: CtxType<string | ObjectMap<any>>;
 }
 
-@AssetTask('ts')
+@Assets('ts')
 export class TsCompile extends AssetActivity implements OnActivityInit {
 
     tdsDest: DestActivity | boolean;

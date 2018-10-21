@@ -1,4 +1,4 @@
-import { ContextActivity, Task } from '@taskfr/core';
+import { ContextActivity } from '@taskfr/core';
 import { NodeActivityContext } from './NodeActivityContext';
 import { Inject } from '@ts-ioc/core';
 import { INodeContext, NodeContextToken } from './INodeContext';
@@ -12,7 +12,6 @@ import { INodeContext, NodeContextToken } from './INodeContext';
  * @extends {ContextActivity}
  * @template T
  */
-@Task
 export abstract class NodeActivity extends ContextActivity {
 
     /**

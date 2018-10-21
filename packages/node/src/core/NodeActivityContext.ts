@@ -1,5 +1,5 @@
 import { ActivityContext, InputDataToken, InjectActivityContextToken } from '@taskfr/core';
-import { Injectable, Inject, isArray } from '@ts-ioc/core';
+import { Injectable, Inject } from '@ts-ioc/core';
 import { INodeContext, NodeContextToken } from './INodeContext';
 import { FileChanged } from '../activities';
 import { NodeActivity } from './NodeActivity';

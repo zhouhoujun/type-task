@@ -1,4 +1,4 @@
-import { PipeModule, Package, PackageActivity, AssetActivity, AssetTask, TsCompile } from '@taskfr/pipes';
+import { PipeModule, Package, PackageActivity, AssetActivity, Assets, TsCompile } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 import { CleanActivity } from '@taskfr/node';
 const rename = require('gulp-rename');
@@ -9,7 +9,7 @@ const commonjs = require('rollup-plugin-commonjs');
 // const builtins = require('rollup-plugin-node-builtins');
 
 
-@AssetTask({
+@Assets({
     src: 'lib/**/*.js',
     sourcemaps: true,
     data: {

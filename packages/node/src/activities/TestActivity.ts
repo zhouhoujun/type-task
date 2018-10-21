@@ -1,6 +1,6 @@
-import { CtxType, ExpressionType, Expression, Task, InjectAcitityToken, ActivityConfigure } from '@taskfr/core';
-import { isUndefined } from '@ts-ioc/core';
-import { NodeActivity, NodeActivityContext } from '../core';
+import { CtxType, ExpressionType, Expression, Task, InjectAcitityToken, ActivityConfigure, IActivity, Activity } from '@taskfr/core';
+import { isUndefined, Inject } from '@ts-ioc/core';
+import { NodeActivityContext, NodeContextToken, INodeContext } from '../core';
 
 /**
  * test activity configure.
@@ -38,7 +38,7 @@ export interface TestConfigure extends ActivityConfigure {
 /**
  * test activity token.
  */
-export const TestToken = new InjectAcitityToken<TestActivity>('test');
+export const TestToken = new InjectAcitityToken<IActivity>('test');
 
 /**
  * test activity.
@@ -48,7 +48,7 @@ export const TestToken = new InjectAcitityToken<TestActivity>('test');
  * @extends {SourceActivity}
  */
 @Task(TestToken)
-export class TestActivity extends NodeActivity {
+export class TestActivity extends Activity<any> {
 
     /**
      * test options.
@@ -73,6 +73,15 @@ export class TestActivity extends NodeActivity {
      * @memberof TestActivity
      */
     framework: Expression<boolean>;
+
+    /**
+     * override to node context
+     *
+     * @type {IPipeContext}
+     * @memberof NodeActivity
+     */
+    @Inject(NodeContextToken)
+    context: INodeContext;
 
     async onActivityInit(config: TestConfigure) {
         await super.onActivityInit(config);

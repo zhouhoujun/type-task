@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path'
 import { Task } from '@taskfr/core';
-import { CompilerActivity, CompilerActivityContext } from '@taskfr/node';
 import { mkdir } from 'shelljs';
+import { CompilerActivity } from '../CompilerActivity';
+import { CompilerActivityContext } from '../CompilerActivityContext';
 
 
 
