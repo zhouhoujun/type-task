@@ -4,7 +4,7 @@
     "importHelpers": true,
     "resolveJsonModule": true,
     "target":"es5",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "rootDir": "../../packages",
     "paths": {
       "@taskfr/core": [
