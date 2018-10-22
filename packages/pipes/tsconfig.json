@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "importHelpers": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "rootDir": "../../packages",
     "paths": {
       "@taskfr/core": [

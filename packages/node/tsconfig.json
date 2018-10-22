@@ -3,7 +3,7 @@
   "compilerOptions": {
     "importHelpers": true,
     "target":"es5",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "rootDir": "../../packages",
     "paths": {
       "@taskfr/core": [
