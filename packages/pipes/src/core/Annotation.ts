@@ -1,9 +1,9 @@
 import { PipeActivity } from './PipeActivity';
 import { TransformType } from './pipeTypes';
-import { PipeTask } from '../decorators';
 import { IPipeConfigure } from './IPipeConfigure';
 import { InjectPipeActivityToken } from './IPipeActivity';
 import { PipeActivityContext } from './PipeActivityContext';
+import { Task } from '@taskfr/core';
 
 /**
  * annotation activity token
@@ -28,7 +28,7 @@ export interface AnnotationsConfigure extends IPipeConfigure {
  * @class AnnotationActivity
  * @extends {PipeActivity}
  */
-@PipeTask(AnnotationAcitvityToken)
+@Task(AnnotationAcitvityToken)
 export class AnnotationActivity extends PipeActivity {
 
     /**

@@ -6,8 +6,8 @@ import { SourceMapsActivity } from './SourceMapsActivity';
 import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { PipeActivity } from './PipeActivity';
-import { IAssetActivity, AssetToken } from './AssetConfigure';
-import { Assets } from '../decorators';
+import { IAssetActivity, AssetToken } from './IAssetActivity';
+import { Asset } from '../decorators';
 import { PipeActivityContext } from './PipeActivityContext';
 
 
@@ -19,7 +19,7 @@ import { PipeActivityContext } from './PipeActivityContext';
  * @extends {TaskElement}
  * @implements {IPipeComponent<ITransform>}
  */
-@Assets(AssetToken)
+@Asset(AssetToken)
 export class AssetActivity extends PipeActivity implements IAssetActivity {
     /**
      * src activity.

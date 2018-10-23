@@ -1,11 +1,11 @@
-import { isUndefined } from '@ts-ioc/core';
+import { isUndefined, isPromise, isMetadataObject } from '@ts-ioc/core';
 import { IPipeActivity, PipeActivityToken } from './IPipeActivity';
 import { ITransform } from './ITransform';
-import { TransformType, isTransform } from './pipeTypes';
+import { TransformType, isTransform, TransformExpress, TransformConfig } from './pipeTypes';
 import { IPipeConfigure } from './IPipeConfigure';
-import { PipeTask } from '../decorators';
 import { PipeActivityContext } from './PipeActivityContext';
 import { NodeActivity } from '@taskfr/node';
+import { Task, isActivityRunner, isActivityType } from '@taskfr/core';
 
 /**
  * Pipe activity.
@@ -14,7 +14,7 @@ import { NodeActivity } from '@taskfr/node';
  * @class BaseTask
  * @implements {ITask}
  */
-@PipeTask(PipeActivityToken)
+@Task(PipeActivityToken)
 export class PipeActivity extends NodeActivity implements IPipeActivity {
 
     /**
@@ -39,6 +39,13 @@ export class PipeActivity extends NodeActivity implements IPipeActivity {
      * @memberof PipeActivity
      */
     config: IPipeConfigure;
+
+    async onActivityInit(config: IPipeConfigure) {
+        await super.onActivityInit(config);
+        if (config.pipes) {
+            this.pipes = await this.translate(config.pipes);
+        }
+    }
 
     /**
      * run task.
@@ -185,5 +192,46 @@ export class PipeActivity extends NodeActivity implements IPipeActivity {
         } else {
             return next;
         }
+    }
+
+    /**
+     * translate pipes express.
+     *
+     * @protected
+     * @param {TransformExpress} pipes
+     * @returns {Promise<TransformType[]>}
+     * @memberof PipeActivityBuilder
+     */
+    protected translate(pipes: TransformExpress): Promise<TransformType[]> {
+        let trsfs: TransformConfig[] = this.context.to(pipes);
+        if (!trsfs || trsfs.length < 1) {
+            return Promise.resolve([]);
+        }
+        return Promise.all(trsfs.map(p => this.translateConfig(p)));
+    }
+    /**
+     * translate transform config.
+     *
+     * @protected
+     * @param {TransformConfig} tsCfg
+     * @returns {Promise<TransformType>}
+     * @memberof PipeActivityBuilder
+     */
+    protected async translateConfig(tsCfg: TransformConfig): Promise<TransformType> {
+        if (isActivityRunner(tsCfg)) {
+            return tsCfg;
+        } else if (isActivityType(tsCfg)) {
+            return await this.buildActivity(tsCfg);
+        }
+
+        if (isPromise(tsCfg)) {
+            return await tsCfg;
+        }
+
+        if (isMetadataObject(tsCfg)) {
+            throw new Error('transform configure error');
+        }
+
+        return tsCfg as TransformType;
     }
 }

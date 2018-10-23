@@ -1,12 +1,11 @@
-import { Src, ExpressionToken, ConfigureType, InjectAcitityBuilderToken } from '@taskfr/core';
+import { Src, ExpressionToken, ConfigureType } from '@taskfr/core';
 import { WatchActivity, WatchConfigure, TestActivity, TestConfigure } from '@taskfr/node';
-import { ObjectMap, Registration } from '@ts-ioc/core';
+import { ObjectMap } from '@ts-ioc/core';
 import { DestConfigure, DestActivity } from './DestActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { SourceActivity, SourceConfigure } from './SourceActivity';
 import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
-import { IPipeActivity } from './IPipeActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 
 /**
@@ -80,95 +79,3 @@ export interface AssetConfigure extends IPipeConfigure {
     sourcemaps?: ExpressionToken<boolean | string> | ConfigureType<SourceMapsActivity, SourceMapsConfigure>;
 
 }
-
-
-/**
- * asset activity.
- *
- * @export
- * @interface IAssetActivity
- * @extends {IPipeActivity}
- */
-export interface IAssetActivity extends IPipeActivity {
-
-    /**
-     * src activity.
-     *
-     * @type {SourceActivity}
-     * @memberof AssetActivity
-     */
-    src: SourceActivity;
-
-    /**
-     * dest activity.
-     *
-     * @type {(DestActivity | DestActivity[])}
-     * @memberof AssetActivity
-     */
-    dest: DestActivity | DestActivity[];
-
-    /**
-     * watch activity.
-     *
-     * @type {WatchActivity}
-     * @memberof AssetActivity
-     */
-    watch: WatchActivity;
-
-    /**
-     * source maps activity of asset.
-     *
-     * @type {SourceMapsActivity}
-     * @memberof AssetActivity
-     */
-    sourcemaps: SourceMapsActivity;
-
-    /**
-     * uglify for asset actvity.
-     *
-     * @type {UglifyActivity}
-     * @memberof AssetActivity
-     */
-    uglify: UglifyActivity;
-
-    /**
-     * asset annotation.
-     *
-     * @type {AnnotationActivity}
-     * @memberof AssetActivity
-     */
-    annotation: AnnotationActivity;
-
-    /**
-     * default annottion.
-     *
-     * @type {AnnotationsConfigure}
-     * @memberof AssetActivity
-     */
-    defaultAnnotation?: AnnotationsConfigure;
-}
-
-/**
- * inject asset activity token.
- *
- * @export
- * @class InjectAssetActivityToken
- * @extends {Registration<T>}
- * @template T
- */
-export class InjectAssetActivityToken<T extends IAssetActivity> extends Registration<T> {
-    constructor(desc: string) {
-        super('AssetActivity', desc);
-    }
-}
-
-/**
- * asset token.
- */
-export const AssetToken = new InjectAssetActivityToken<IAssetActivity>('');
-
-
-/**
- * asset builder token.
- */
-export const AssetBuilderToken = new InjectAcitityBuilderToken<IAssetActivity>(AssetToken);

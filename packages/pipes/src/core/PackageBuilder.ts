@@ -5,7 +5,8 @@ import { PackageActivity } from './PackageActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
 import { CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/node';
 import { AssetActivity } from './AssetActivity';
-import { InjectAssetActivityToken, AssetConfigure, AssetToken } from './AssetConfigure';
+import { AssetConfigure } from './AssetConfigure';
+import { InjectAssetActivityToken, AssetToken } from './IAssetActivity';
 
 
 /**

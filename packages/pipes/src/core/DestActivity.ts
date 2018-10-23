@@ -1,11 +1,11 @@
 import { dest, DestOptions } from 'vinyl-fs';
-import { PipeTask } from '../decorators';
-import { Expression, ExpressionType } from '@taskfr/core';
+import { Expression, ExpressionType, Task } from '@taskfr/core';
 import { InjectPipeActivityToken } from './IPipeActivity';
 import { IPipeConfigure } from './IPipeConfigure';
 import { PipeActivity } from './PipeActivity';
 import { PipeActivityContext } from './PipeActivityContext';
 import { SourceMapsActivity } from './SourceMapsActivity';
+
 /**
  * dest activity token.
  */
@@ -47,7 +47,7 @@ export interface DestConfigure extends IPipeConfigure {
  * @implements {IPipeDest}
  * @implements {OnTaskInit}
  */
-@PipeTask(DestAcitvityToken)
+@Task(DestAcitvityToken)
 export class DestActivity extends PipeActivity {
 
     /**

@@ -1,14 +1,14 @@
-import { IActivity, Src } from '@taskfr/core';
+import { IActivity, Src, ActivityBuilder } from '@taskfr/core';
 import { WatchActivity, WatchConfigure, TestActivity, TestConfigure } from '@taskfr/node';
 import { isBoolean, isString, Injectable } from '@ts-ioc/core';
-import { AssetConfigure, AssetBuilderToken } from './AssetConfigure';
+import { AssetConfigure } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
 import { SourceActivity, SourceConfigure } from './SourceActivity';
 import { DestActivity, DestConfigure } from './DestActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
-import { PipeActivityBuilder } from './PipeActivityBuilder';
+import { AssetBuilderToken } from './IAssetActivity';
 
 
 /**
@@ -19,7 +19,7 @@ import { PipeActivityBuilder } from './PipeActivityBuilder';
  * @extends {DestTaskBuilder}
  */
 @Injectable(AssetBuilderToken)
-export class AssetBuilder extends PipeActivityBuilder {
+export class AssetBuilder extends ActivityBuilder {
 
     /**
      * asset build strategy.
