@@ -1,10 +1,9 @@
 import { isArray } from '@ts-ioc/core';
-import { WatchActivity, TestActivity, TransformActivity, TransformActivityContext, SourceActivity, DestActivity } from '@taskfr/node';
+import { WatchActivity, TestActivity, TransformActivity, TransformActivityContext, SourceActivity, DestActivity, SourceMapsActivity } from '@taskfr/node';
 import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { IAssetActivity, AssetToken } from './IAssetActivity';
 import { Asset } from '../decorators';
-import { SourceMapsActivity } from './SourceMapsActivity';
 
 
 

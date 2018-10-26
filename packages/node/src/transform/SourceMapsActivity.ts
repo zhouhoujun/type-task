@@ -1,7 +1,6 @@
 import { CtxType, ActivityConfigure, InjectAcitityToken, GActivity, Task, Activity } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { TransformActivityContext } from './TransformActivityContext';
-import * as sourcemaps from 'gulp-sourcemaps';
 
 /**
  * source map configure
@@ -55,6 +54,11 @@ export class SourceMapsActivity extends Activity<ITransform> implements ISourceM
     private hasInit = false;
 
     protected async execute(ctx: TransformActivityContext) {
+        const sourcemaps = require('gulp-sourcemaps');
+        if (!sourcemaps) {
+            console.error('not found gulp-sourcemaps');
+            return;
+        }
         if (!this.hasInit) {
             ctx.data = ctx.data.pipe(sourcemaps.init());
         } else {

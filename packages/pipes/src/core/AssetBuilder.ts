@@ -1,12 +1,9 @@
 import { IActivity, Src, ActivityBuilder } from '@taskfr/core';
-import { WatchActivity, WatchConfigure, TestActivity, TestConfigure } from '@taskfr/node';
+import { WatchActivity, WatchConfigure, TestActivity, TestConfigure, SourceActivity, SourceConfigure, DestActivity, DestConfigure, SourceMapsActivity, SourceMapsConfigure } from '@taskfr/node';
 import { isBoolean, isString, Injectable } from '@ts-ioc/core';
 import { AssetConfigure } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
-import { SourceActivity, SourceConfigure } from './SourceActivity';
-import { DestActivity, DestConfigure } from './DestActivity';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
-import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { AssetBuilderToken } from './IAssetActivity';
 
