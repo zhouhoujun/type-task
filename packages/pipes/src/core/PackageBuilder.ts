@@ -1,9 +1,8 @@
 import { IActivity, Src, ActivityBuilder, SequenceActivity, SequenceConfigure, SequenceActivityToken, Activity, ParallelConfigure, ParallelActivityToken } from '@taskfr/core';
 import { isArray, isString, lang, Injectable } from '@ts-ioc/core';
-import { PackageConfigure, PackageBuilderToken, PipesConfigure } from './PackageConfigure';
+import { PackageConfigure, PackageBuilderToken, TransformsConfigure } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
-import { DestActivity, DestConfigure } from './DestActivity';
-import { CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/node';
+import { CleanActivity, CleanConfigure, TestActivity, TestConfigure, DestActivity, DestConfigure } from '@taskfr/node';
 import { AssetActivity } from './AssetActivity';
 import { AssetConfigure } from './AssetConfigure';
 import { InjectAssetActivityToken, AssetToken } from './IAssetActivity';
@@ -32,7 +31,7 @@ export class PackageBuilder extends ActivityBuilder {
         if (activity instanceof PackageActivity) {
             let srcRoot = activity.src = activity.context.to(config.src);
             let assets = await Promise.all(lang.keys(config.assets).map(name => {
-                return this.toActivity<Src, AssetActivity | SequenceActivity, PipesConfigure>(config.assets[name], activity,
+                return this.toActivity<Src, AssetActivity | SequenceActivity, TransformsConfigure>(config.assets[name], activity,
                     act => act instanceof Activity,
                     src => {
                         if (isString(src) || isArray(src)) {

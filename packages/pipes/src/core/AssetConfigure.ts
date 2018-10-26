@@ -1,10 +1,7 @@
 import { Src, ExpressionToken, ConfigureType } from '@taskfr/core';
-import { WatchActivity, WatchConfigure, TestActivity, TestConfigure } from '@taskfr/node';
+import { WatchActivity, WatchConfigure, TestActivity, TestConfigure, ITransformConfigure, SourceMapsConfigure, DestConfigure, SourceActivity, SourceConfigure, DestActivity } from '@taskfr/node';
 import { ObjectMap } from '@ts-ioc/core';
-import { DestConfigure, DestActivity } from './DestActivity';
-import { IPipeConfigure } from './IPipeConfigure';
-import { SourceActivity, SourceConfigure } from './SourceActivity';
-import { SourceMapsActivity, SourceMapsConfigure } from './SourceMapsActivity';
+import { SourceMapsActivity } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 
@@ -21,7 +18,7 @@ export type DestType = string | DestConfigure;
  * @extends {SourceConfigure}
  * @extends {IDestConfigure}
  */
-export interface AssetConfigure extends IPipeConfigure {
+export interface AssetConfigure extends ITransformConfigure {
 
     /**
      * src config.

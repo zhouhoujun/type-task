@@ -1,11 +1,8 @@
 import { InjectAcitityBuilderToken } from '@taskfr/core';
 import { Registration } from '@ts-ioc/core';
 import { AnnotationsConfigure, AnnotationActivity } from './Annotation';
-import { WatchActivity } from '@taskfr/node';
+import { WatchActivity, ITransformActivity, SourceActivity, DestActivity } from '@taskfr/node';
 import { SourceMapsActivity } from './SourceMapsActivity';
-import { DestActivity } from './DestActivity';
-import { SourceActivity } from './SourceActivity';
-import { IPipeActivity } from './IPipeActivity';
 import { UglifyActivity } from './UglifyActivity';
 
 
@@ -14,9 +11,9 @@ import { UglifyActivity } from './UglifyActivity';
  *
  * @export
  * @interface IAssetActivity
- * @extends {IPipeActivity}
+ * @extends {ITransformActivity}
  */
-export interface IAssetActivity extends IPipeActivity {
+export interface IAssetActivity extends ITransformActivity {
 
     /**
      * src activity.

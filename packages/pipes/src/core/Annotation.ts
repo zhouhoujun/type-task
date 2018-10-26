@@ -1,17 +1,13 @@
-import { PipeActivity } from './PipeActivity';
-import { TransformType } from './pipeTypes';
-import { IPipeConfigure } from './IPipeConfigure';
-import { InjectPipeActivityToken } from './IPipeActivity';
-import { PipeActivityContext } from './PipeActivityContext';
 import { Task } from '@taskfr/core';
+import { InjectTransformActivityToken, TransformActivity, ITransformConfigure, TransformType, TransformActivityContext } from '@taskfr/node';
 
 /**
  * annotation activity token
  */
-export const AnnotationAcitvityToken = new InjectPipeActivityToken<AnnotationActivity>('Annotation');
+export const AnnotationAcitvityToken = new InjectTransformActivityToken<AnnotationActivity>('Annotation');
 
 
-export interface AnnotationsConfigure extends IPipeConfigure {
+export interface AnnotationsConfigure extends ITransformConfigure {
     /**
      * annotation framework.
      *
@@ -29,7 +25,7 @@ export interface AnnotationsConfigure extends IPipeConfigure {
  * @extends {PipeActivity}
  */
 @Task(AnnotationAcitvityToken)
-export class AnnotationActivity extends PipeActivity {
+export class AnnotationActivity extends TransformActivity {
 
     /**
      * annotation framework.
@@ -48,11 +44,11 @@ export class AnnotationActivity extends PipeActivity {
      * begin pipe.
      *
      * @protected
-     * @param {PipeActivityContext} ctx
+     * @param {TransformActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof AnnotationActivity
      */
-    protected async beforePipe(ctx: PipeActivityContext): Promise<void> {
+    protected async beforePipe(ctx: TransformActivityContext): Promise<void> {
         await super.beforePipe(ctx);
         if (this.annotationFramework) {
             let annotation = await this.context.exec(this, this.annotationFramework, ctx);

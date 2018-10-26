@@ -1,4 +1,4 @@
 export * from './INodeContext';
+export * from './FileChanged';
 export * from './NodeContext';
-export * from './NodeActivityContext';
 export * from './NodeActivity';

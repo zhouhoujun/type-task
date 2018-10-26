@@ -1,8 +1,7 @@
 
 import * as uglify from 'gulp-uglify';
 import { Task, Activity, OnActivityInit, ActivityConfigure, CtxType, InjectAcitityToken } from '@taskfr/core';
-import { ITransform } from './ITransform';
-import { PipeActivityContext } from './PipeActivityContext';
+import { ITransform, TransformActivityContext } from '@taskfr/node';
 
 /**
  * uglify activity configure.
@@ -51,7 +50,7 @@ export class UglifyActivity extends Activity<ITransform> implements OnActivityIn
         this.uglifyOptions = this.context.to(config.uglifyOptions);
     }
 
-    protected async execute(ctx: PipeActivityContext) {
+    protected async execute(ctx: TransformActivityContext) {
         if (this.uglifyOptions) {
             ctx.data = ctx.data.pipe(uglify(this.uglifyOptions))
         } else {

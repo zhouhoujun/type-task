@@ -1,23 +1,20 @@
 import { CtxType, Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, ActivityConfigure, CoreActivityConfigs, SequenceActivity, SequenceConfigure, ISequenceConfigure, Activity, GCoreActivityConfigs } from '@taskfr/core';
 import { ObjectMap, Registration, Token } from '@ts-ioc/core';
-import { DestActivity, DestConfigure } from './DestActivity';
 import { AssetConfigure } from './AssetConfigure';
-import { IPipeConfigure } from './IPipeConfigure';
 import { TsConfigure } from '../assets';
-import { SourceConfigure } from './SourceActivity';
 import { UglifyConfigure } from './UglifyActivity';
-import { WatchConfigure } from '@taskfr/node';
+import { WatchConfigure, DestConfigure, SourceConfigure, ITransformConfigure, DestActivity } from '@taskfr/node';
 import { AnnotationsConfigure } from './Annotation';
 import { ShellActivityConfig, ExecFileActivityConfig, CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/node';
 
-type configures = CoreActivityConfigs | AssetConfigure | IPipeConfigure
+type configures = CoreActivityConfigs | AssetConfigure | ITransformConfigure
     | TsConfigure | DestConfigure | SourceConfigure | TestConfigure | UglifyConfigure
     | WatchConfigure | AnnotationsConfigure | CleanConfigure | ShellActivityConfig | ExecFileActivityConfig | PackageConfigure;
 
 
-export type PipesConfigure = configures | GCoreActivityConfigs<configures>;
+export type TransformsConfigure = configures | GCoreActivityConfigs<configures>;
 
-export type PipesActivityType<T extends IActivity> = Token<T> | PipesConfigure;
+export type TransformsActivityType<T extends IActivity> = Token<T> | TransformsConfigure;
 
 /**
  * package configure.
@@ -46,10 +43,10 @@ export interface PackageConfigure extends ActivityConfigure {
     /**
      * assets.
      *
-     * @type {ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, PipesConfigure>>}
+     * @type {ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, TransformsConfigure>>}
      * @memberof PackageConfigure
      */
-    assets?: ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, PipesConfigure>>;
+    assets?: ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, TransformsConfigure>>;
 
     /**
      * test config.
@@ -70,10 +67,10 @@ export interface PackageConfigure extends ActivityConfigure {
     /**
      * package sequence activity.
      *
-     * @type {PipesActivityType<IActivity>[]}
+     * @type {TransformsActivityType<IActivity>[]}
      * @memberof PackageConfigure
      */
-    sequence?: PipesActivityType<IActivity>[];
+    sequence?: TransformsActivityType<IActivity>[];
 
 }
 

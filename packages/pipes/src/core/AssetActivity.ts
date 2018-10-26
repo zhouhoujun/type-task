@@ -1,26 +1,23 @@
-import { SourceActivity } from './SourceActivity';
-import { DestActivity } from './DestActivity';
 import { isArray } from '@ts-ioc/core';
-import { WatchActivity, TestActivity } from '@taskfr/node';
-import { SourceMapsActivity } from './SourceMapsActivity';
+import { WatchActivity, TestActivity, TransformActivity, TransformActivityContext, SourceActivity, DestActivity } from '@taskfr/node';
 import { UglifyActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
-import { PipeActivity } from './PipeActivity';
 import { IAssetActivity, AssetToken } from './IAssetActivity';
 import { Asset } from '../decorators';
-import { PipeActivityContext } from './PipeActivityContext';
+import { SourceMapsActivity } from './SourceMapsActivity';
+
 
 
 /**
  * Asset Activity
  *
  * @export
- * @class PipeComponent
+ * @class AssetActivity
  * @extends {TaskElement}
- * @implements {IPipeComponent<ITransform>}
+ * @implements {IAssetActivity}
  */
 @Asset(AssetToken)
-export class AssetActivity extends PipeActivity implements IAssetActivity {
+export class AssetActivity extends TransformActivity implements IAssetActivity {
     /**
      * src activity.
      *
@@ -87,11 +84,11 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      * before pipe
      *
      * @protected
-     * @param {PipeActivityContext} ctx
+     * @param {TransformActivityContext} ctx
      * @returns {Promise<void>}
      * @memberof AssetActivity
      */
-    protected async beforePipe(ctx: PipeActivityContext): Promise<void> {
+    protected async beforePipe(ctx: TransformActivityContext): Promise<void> {
         if (this.test) {
             await this.test.run(ctx);
         }
@@ -117,11 +114,11 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      * after pipe.
      *
      * @protected
-     * @param {PipeActivityContext} ctx
+     * @param {TransformActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof AssetActivity
      */
-    protected async afterPipe(ctx: PipeActivityContext): Promise<void> {
+    protected async afterPipe(ctx: TransformActivityContext): Promise<void> {
         await this.executeUglify(ctx);
         if (isArray(this.dest)) {
             if (this.dest.length > 0) {
@@ -138,11 +135,11 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      * execute uglify.
      *
      * @protected
-     * @param {PipeActivityContext} ctx
+     * @param {TransformActivityContext} ctx
      * @returns
      * @memberof AssetActivity
      */
-    protected async executeUglify(ctx: PipeActivityContext) {
+    protected async executeUglify(ctx: TransformActivityContext) {
         if (this.uglify) {
             await this.uglify.run(ctx);
         }
@@ -153,11 +150,11 @@ export class AssetActivity extends PipeActivity implements IAssetActivity {
      *
      * @protected
      * @param {DestActivity} ds
-     * @param {PipeActivityContext} ctx
+     * @param {TransformActivityContext} ctx
      * @returns
      * @memberof AssetActivity
      */
-    protected async executeDest(ds: DestActivity, ctx: PipeActivityContext) {
+    protected async executeDest(ds: DestActivity, ctx: TransformActivityContext) {
         if (!ds) {
             return;
         }

@@ -1,30 +1,31 @@
 import { dest, DestOptions } from 'vinyl-fs';
 import { Expression, ExpressionType, Task } from '@taskfr/core';
-import { InjectPipeActivityToken } from './IPipeActivity';
-import { IPipeConfigure } from './IPipeConfigure';
-import { PipeActivity } from './PipeActivity';
-import { PipeActivityContext } from './PipeActivityContext';
 import { SourceMapsActivity } from './SourceMapsActivity';
+import { TransformActivityContext } from './TransformActivityContext';
+import { TransformActivity } from './TransformActivity';
+import { InjectTransformActivityToken } from './ITransformActivity';
+import { ITransformConfigure } from './ITransformConfigure';
+
 
 /**
  * dest activity token.
  */
-export const DestAcitvityToken = new InjectPipeActivityToken<DestActivity>('dest');
+export const DestAcitvityToken = new InjectTransformActivityToken<DestActivity>('dest');
 
 /**
  * dest pipe configure.
  *
  * @export
- * @interface IPipeDestConfigure
- * @extends {IPipeConfigure}
+ * @interface ITransformDestConfigure
+ * @extends {ITransformConfigure}
  */
-export interface DestConfigure extends IPipeConfigure {
+export interface DestConfigure extends ITransformConfigure {
 
     /**
      * pipe dest.
      *
      * @type {ExpressionType<string>}
-     * @memberof IPipeConfigure
+     * @memberof ITransformConfigure
      */
     dest?: ExpressionType<string>;
 
@@ -32,7 +33,7 @@ export interface DestConfigure extends IPipeConfigure {
      * dest options.
      *
      * @type {ExpressionType<DestOptions>}
-     * @memberof IPipeConfigure
+     * @memberof ITransformConfigure
      */
     destOptions?: ExpressionType<DestOptions>;
 
@@ -42,19 +43,19 @@ export interface DestConfigure extends IPipeConfigure {
  * pipe dest activity.
  *
  * @export
- * @class PipeDestActivity
- * @extends {PipeComponent<IPipeDest>}
- * @implements {IPipeDest}
+ * @class TransformDestActivity
+ * @extends {TransformComponent<ITransformDest>}
+ * @implements {ITransformDest}
  * @implements {OnTaskInit}
  */
 @Task(DestAcitvityToken)
-export class DestActivity extends PipeActivity {
+export class DestActivity extends TransformActivity {
 
     /**
      * source
      *
      * @type {Expression<string>}
-     * @memberof IPipeDest
+     * @memberof ITransformDest
      */
     dest: Expression<string>;
 
@@ -62,7 +63,7 @@ export class DestActivity extends PipeActivity {
      * source options.
      *
      * @type {Expression<DestOptions>}
-     * @memberof PipeDest
+     * @memberof TransformDest
      */
     destOptions: Expression<DestOptions>;
 
@@ -75,7 +76,7 @@ export class DestActivity extends PipeActivity {
         }
     }
 
-    protected async afterPipe(ctx: PipeActivityContext): Promise<void> {
+    protected async afterPipe(ctx: TransformActivityContext): Promise<void> {
         await super.afterPipe(ctx);
         if (ctx.sourceMaps instanceof SourceMapsActivity) {
             await ctx.sourceMaps.run(ctx);
@@ -87,11 +88,11 @@ export class DestActivity extends PipeActivity {
      * write dest stream.
      *
      * @protected
-     * @param {PipeActivityContext} ctx
+     * @param {TransformActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof DestActivity
      */
-    protected async writeStream(ctx: PipeActivityContext): Promise<void> {
+    protected async writeStream(ctx: TransformActivityContext): Promise<void> {
         let dist = await this.context.exec(this, this.dest, ctx);
         let destOptions = undefined;
         if (this.destOptions) {

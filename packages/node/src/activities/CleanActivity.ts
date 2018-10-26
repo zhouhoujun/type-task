@@ -1,6 +1,6 @@
-import { Src, Activity, InjectAcitityToken, Task, ActivityConfigure, Expression, ExpressionType, ActivityContext } from '@taskfr/core';
-import { Inject } from '@ts-ioc/core';
-import { NodeContextToken, INodeContext } from '../core';
+import { Src, InjectAcitityToken, Task, ActivityConfigure, Expression, ExpressionType, ActivityContext } from '@taskfr/core';
+
+import { NodeActivity } from '../core';
 
 
 
@@ -31,16 +31,8 @@ export interface CleanConfigure extends ActivityConfigure {
  * clean task.
  */
 @Task(CleanToken)
-export class CleanActivity extends Activity<any> {
+export class CleanActivity extends NodeActivity {
 
-    /**
-     * context.
-     *
-     * @type {INodeContext}
-     * @memberof BaseTask
-     */
-    @Inject(NodeContextToken)
-    context: INodeContext;
     /**
      * clean source.
      *

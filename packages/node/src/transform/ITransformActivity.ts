@@ -10,7 +10,7 @@ import { Registration } from '@ts-ioc/core';
  * @extends {GActivity}
  * @template T
  */
-export interface IPipeActivity extends GActivity<ITransform> {
+export interface ITransformActivity extends GActivity<ITransform> {
     /**
      * pipe task
      *
@@ -30,7 +30,7 @@ export interface IPipeActivity extends GActivity<ITransform> {
  * @extends {Registration<T>}
  * @template T
  */
-export class InjectPipeActivityToken<T extends IPipeActivity> extends Registration<T> {
+export class InjectTransformActivityToken<T extends ITransformActivity> extends Registration<T> {
     constructor(desc: string) {
         super('PipeActivity', desc);
     }
@@ -38,13 +38,13 @@ export class InjectPipeActivityToken<T extends IPipeActivity> extends Registrati
 
 
 /**
- * pipe activity token.
+ * Transform activity token.
  */
-export const PipeActivityToken = new InjectPipeActivityToken<IPipeActivity>('');
+export const TransformActivityToken = new InjectTransformActivityToken<ITransformActivity>('');
 
 
 
 /**
- * pipe activity builder token.
+ * Transform activity builder token.
  */
-export const PipeActivityBuilderToken = new InjectAcitityBuilderToken<IPipeActivity>(PipeActivityToken);
+export const TransformActivityBuilderToken = new InjectAcitityBuilderToken<ITransformActivity>(TransformActivityToken);

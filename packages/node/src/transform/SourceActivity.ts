@@ -1,29 +1,29 @@
 import { src, SrcOptions } from 'vinyl-fs';
-import { ITransform } from './ITransform';
 import { Src, Expression, ExpressionType, Task } from '@taskfr/core';
-import { IPipeConfigure } from './IPipeConfigure';
-import { PipeActivity } from './PipeActivity';
-import { InjectPipeActivityToken } from './IPipeActivity';
-import { PipeActivityContext } from './PipeActivityContext';
+import { InjectTransformActivityToken } from './ITransformActivity';
+import { ITransformConfigure } from './ITransformConfigure';
+import { TransformActivity } from './TransformActivity';
+import { TransformActivityContext } from './TransformActivityContext';
+import { ITransform } from './ITransform';
 
 /**
  * source activity token.
  */
-export const SourceAcitvityToken = new InjectPipeActivityToken<SourceActivity>('source');
+export const SourceAcitvityToken = new InjectTransformActivityToken<SourceActivity>('source');
 
 /**
  * source pipe configure.
  *
  * @export
- * @interface IPipeSourceConfigure
- * @extends {IPipeConfigure}
+ * @interface ITransformSourceConfigure
+ * @extends {ITransformConfigure}
  */
-export interface SourceConfigure extends IPipeConfigure {
+export interface SourceConfigure extends ITransformConfigure {
     /**
      * transform source.
      *
      * @type {TransformSource}
-     * @memberof IPipeConfigure
+     * @memberof ITransformConfigure
      */
     src: ExpressionType<Src>;
 
@@ -31,7 +31,7 @@ export interface SourceConfigure extends IPipeConfigure {
      * src options.
      *
      * @type {CtxType<SrcOptions>}
-     * @memberof IPipeConfigure
+     * @memberof ITransformConfigure
      */
     srcOptions?: ExpressionType<SrcOptions>;
 }
@@ -41,15 +41,15 @@ export interface SourceConfigure extends IPipeConfigure {
  *
  * @export
  * @class SourceActivity
- * @extends {PipeActivity}
+ * @extends {TransformActivity}
  */
 @Task(SourceAcitvityToken)
-export class SourceActivity extends PipeActivity {
+export class SourceActivity extends TransformActivity {
     /**
      * source
      *
      * @type {TransformSource}
-     * @memberof IPipeSource
+     * @memberof ITransformSource
      */
     src: Expression<Src>;
 
@@ -57,7 +57,7 @@ export class SourceActivity extends PipeActivity {
      * source options.
      *
      * @type {SrcOptions}
-     * @memberof PipeSource
+     * @memberof TransformSource
      */
     srcOptions: Expression<SrcOptions>;
 
@@ -74,11 +74,11 @@ export class SourceActivity extends PipeActivity {
      * begin pipe.
      *
      * @protected
-     * @param {PipeActivityContext} ctx
+     * @param {TransformActivityContext} ctx
      * @returns {Promise<ITransform>}
-     * @memberof PipeActivity
+     * @memberof TransformActivity
      */
-    protected async beforePipe(ctx: PipeActivityContext): Promise<void> {
+    protected async beforeTransform(ctx: TransformActivityContext): Promise<void> {
         let src = await this.context.exec(this, this.src, ctx);
         let srcOptions = await this.context.exec(this, this.srcOptions, ctx);
         ctx.input = src;

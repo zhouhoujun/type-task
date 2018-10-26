@@ -1,9 +1,9 @@
 
-import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure, Active, ActivityType, ActivityContext } from '@taskfr/core';
+import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure, Active, ActivityType, ActivityContext, GActivity } from '@taskfr/core';
 import { Defer, isArray, Token, Inject } from '@ts-ioc/core';
 import { fromEventPattern } from 'rxjs';
 import { bufferTime, map } from 'rxjs/operators';
-import { NodeContextToken, INodeContext } from '../core';
+import { NodeContextToken, INodeContext, FileChanged, NodeActivity, IFileChanged } from '../core';
 const chokidar = require('chokidar');
 
 
@@ -188,43 +188,9 @@ export interface WatchOptions {
 
 }
 
-export interface IFileChanged {
-    added: string[];
-    updated: string[];
-    removed: string[];
-    changed?(): string[]
-}
-
-/**
- * files changed.
- *
- * @export
- * @interface FileChanged
- */
-export class FileChanged implements IFileChanged {
-    added: string[];
-    updated: string[];
-    removed: string[];
-    constructor(public watch: Src) {
-        this.added = [];
-        this.updated = [];
-        this.removed = [];
-    }
-
-    /**
-     * all changed.
-     *
-     * @returns {string []}
-     * @memberof FileChanged
-     */
-    changed(): string[] {
-        return this.added.concat(this.updated, this.removed);
-    }
-}
-
 
 @Task(WatchAcitvityToken)
-export class WatchActivity extends Activity<FileChanged> {
+export class WatchActivity extends NodeActivity implements GActivity<FileChanged> {
 
     /**
      * watch src.
@@ -256,15 +222,6 @@ export class WatchActivity extends Activity<FileChanged> {
      * @memberof WatchActivity
      */
     defaultTranslatorToken: Token<any>;
-
-    /**
-     * override to node context
-     *
-     * @type {IPipeContext}
-     * @memberof NodeActivity
-     */
-    @Inject(NodeContextToken)
-    context: INodeContext;
 
     protected async execute(ctx: ActivityContext): Promise<void> {
         return await this.watch(ctx);

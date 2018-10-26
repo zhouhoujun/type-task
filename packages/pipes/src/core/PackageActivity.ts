@@ -1,10 +1,8 @@
 import { SequenceActivity, ParallelActivity, IActivity, InputDataToken } from '@taskfr/core';
-import { DestActivity } from './DestActivity';
-import { CleanActivity, TestActivity } from '@taskfr/node';
+import { CleanActivity, TestActivity, TransformActivityContext, DestActivity } from '@taskfr/node';
 import { Type } from '@ts-ioc/core';
 import { IPackageActivity, PackageToken } from './PackageConfigure';
 import { Package } from '../decorators';
-import { PipeActivityContext } from './PipeActivityContext';
 
 
 /**
@@ -64,10 +62,10 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
      * eecute activity.
      *
      * @protected
-     * @param {PipeActivityContext} ctx
+     * @param {TransformActivityContext} ctx
      * @memberof PackageActivity
      */
-    protected async execute(ctx: PipeActivityContext) {
+    protected async execute(ctx: TransformActivityContext) {
         if (this.test) {
             await this.test.run(ctx);
         }
@@ -79,18 +77,18 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
     }
 
     protected verifyCtx(input?: any) {
-        return this.context.getContainer().resolve(PipeActivityContext, { provide: InputDataToken, useValue: input });
+        return this.context.getContainer().resolve(TransformActivityContext, { provide: InputDataToken, useValue: input });
     }
 
     /**
      * execute assets.
      *
      * @protected
-     * @param {PipeActivityContext} ctx
+     * @param {TransformActivityContext} ctx
      * @returns
      * @memberof PackageActivity
      */
-    protected execAssets(ctx: PipeActivityContext) {
+    protected execAssets(ctx: TransformActivityContext) {
         this.executeType = this.executeType || SequenceActivity;
         let execute = this.context.getContainer().resolve(this.executeType);
         execute.activities = this.assets;

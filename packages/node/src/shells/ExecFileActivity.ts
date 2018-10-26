@@ -2,7 +2,7 @@ import { isString, isArray, Inject, isBoolean } from '@ts-ioc/core';
 import { existsSync } from 'fs';
 import { Src, Activity, Task, CtxType, ActivityConfigure, ActivityContext } from '@taskfr/core';
 import * as execa from 'execa';
-import { NodeContextToken, INodeContext } from '../core';
+import { NodeContextToken, INodeContext, NodeActivity } from '../core';
 
 
 /**
@@ -51,14 +51,11 @@ export interface ExecFileActivityConfig extends ActivityConfigure {
  * @implements {ITask}
  */
 @Task('execfile')
-export class ExecFileActivity extends Activity<any> {
+export class ExecFileActivity extends NodeActivity {
     files: Src;
     args?: string[];
     options?: execa.Options;
     allowError = true;
-
-    @Inject(NodeContextToken)
-    context: INodeContext;
 
     async onActivityInit(config: ExecFileActivityConfig) {
         await super.onActivityInit(config);

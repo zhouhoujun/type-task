@@ -1,28 +1,28 @@
 import { IActivityContext, InputDataToken, ITranslator, InjectActivityContextToken } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { Injectable, Inject, isArray, isString } from '@ts-ioc/core';
-import { SourceMapsActivity } from './SourceMapsActivity';
-import { FileChanged, NodeActivityContext, INodeContext, NodeContextToken } from '@taskfr/node';
+import { ISourceMapsActivity } from './SourceMapsActivity';
 import { Files2StreamToken } from './Files2Stream';
-import { PipeActivity } from './PipeActivity';
 import { src } from 'vinyl-fs';
 import { Stream } from 'stream';
+import { TransformActivity } from './TransformActivity';
+import { NodeActivityContext, NodeContextToken, INodeContext, FileChanged } from '../core';
 
 
-export const PipeActivityContextToken = new InjectActivityContextToken(PipeActivity);
+export const TransformActivityContextToken = new InjectActivityContextToken(TransformActivity);
 
 /**
- * pipe activity context.
+ * Transform activity context.
  *
  * @export
- * @class PipeActivityContext
+ * @class TransformActivityContext
  * @extends {ActivityContext}
  * @implements {IActivityContext<ITransform>}
  */
-@Injectable(PipeActivityContextToken)
-export class PipeActivityContext extends NodeActivityContext implements IActivityContext<ITransform> {
+@Injectable(TransformActivityContextToken)
+export class TransformActivityContext extends NodeActivityContext implements IActivityContext<ITransform> {
     data: ITransform;
-    sourceMaps: SourceMapsActivity;
+    sourceMaps: ISourceMapsActivity;
 
     constructor(@Inject(InputDataToken) input: any, @Inject(NodeContextToken) context: INodeContext) {
         super(input, context);
