@@ -26,7 +26,7 @@ export interface ServeConfigure extends ActivityConfigure {
  * @extends {BuildActivity}
  */
 @Task('serve')
-export class ServeActivity extends NodeActivity<BuidActivityContext> {
+export class ServeActivity extends NodeActivity {
 
     /**
      * dirs.
