@@ -1,8 +1,7 @@
 import { InjectAcitityBuilderToken } from '@taskfr/core';
 import { Registration } from '@ts-ioc/core';
 import { AnnotationsConfigure, AnnotationActivity } from './Annotation';
-import { WatchActivity, ITransformActivity, SourceActivity, DestActivity } from '@taskfr/node';
-import { SourceMapsActivity } from './SourceMapsActivity';
+import { WatchActivity, ITransformActivity, SourceActivity, DestActivity, SourceMapsActivity } from '@taskfr/node';
 import { UglifyActivity } from './UglifyActivity';
 
 

@@ -1,7 +1,6 @@
 import { Src, ExpressionToken, ConfigureType } from '@taskfr/core';
-import { WatchActivity, WatchConfigure, TestActivity, TestConfigure, ITransformConfigure, SourceMapsConfigure, DestConfigure, SourceActivity, SourceConfigure, DestActivity } from '@taskfr/node';
+import { WatchActivity, WatchConfigure, TestActivity, TestConfigure, ITransformConfigure, SourceMapsConfigure, DestConfigure, SourceActivity, SourceConfigure, DestActivity, SourceMapsActivity } from '@taskfr/node';
 import { ObjectMap } from '@ts-ioc/core';
-import { SourceMapsActivity } from './SourceMapsActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
 

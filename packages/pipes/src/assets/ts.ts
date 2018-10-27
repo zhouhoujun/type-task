@@ -1,11 +1,11 @@
-import { Assets } from '../decorators';
-import { AssetConfigure, AssetActivity, DestActivity, DestAcitvityToken, isTransform, PipeActivityContext } from '../core';
+import { Asset } from '../decorators';
+import { AssetConfigure, AssetActivity } from '../core';
 import { isBoolean, ObjectMap, isString } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
 import * as ts from 'gulp-typescript';
-import { ITransform } from '../core/ITransform';
 import { CtxType, OnActivityInit } from '@taskfr/core';
 import { AnnotationActivity } from '../core/Annotation';
+import { DestActivity, DestAcitvityToken, TransformActivityContext, ITransform, isTransform } from '@taskfr/node'
 
 
 /**
@@ -33,7 +33,7 @@ export interface TsConfigure extends AssetConfigure {
     tsconfig?: CtxType<string | ObjectMap<any>>;
 }
 
-@Assets('ts')
+@Asset('ts')
 export class TsCompile extends AssetActivity implements OnActivityInit {
 
     tdsDest: DestActivity | boolean;
@@ -59,26 +59,27 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
             cfg.sourcemaps = true;
         }
     }
+
     /**
      * execute ts pipe.
      *
      * @protected
-     * @param {ITransform} stream
-     * @returns {Promise<ITransform>}
+     * @param {TransformActivityContext} ctx
+     * @returns {Promise<void>}
      * @memberof TsCompile
      */
-    protected async pipe(ctx: PipeActivityContext): Promise<void> {
+    protected async pipe(ctx: TransformActivityContext): Promise<void> {
         ctx.data.js = await this.pipeStream(ctx.data.js, ctx, ...this.pipes);
     }
     /**
      * begin pipe.
      *
      * @protected
-     * @param {PipeActivityContext} ctx
+     * @param {TransformActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof TsCompile
      */
-    protected async beforePipe(ctx: PipeActivityContext): Promise<void> {
+    protected async beforePipe(ctx: TransformActivityContext): Promise<void> {
         await super.beforePipe(ctx);
         ctx.data = await this.pipeStream(ctx.data, ctx, this.getTsCompilePipe());
     }
@@ -107,7 +108,7 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      * @returns
      * @memberof TsCompile
      */
-    protected async executeUglify(ctx: PipeActivityContext) {
+    protected async executeUglify(ctx: TransformActivityContext) {
         if (this.uglify) {
             let ugCtx = this.verifyCtx(ctx.data.js);
             await this.uglify.run(ugCtx);
@@ -119,11 +120,11 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      *
      * @protected
      * @param {DestActivity} ds
-     * @param {ctx} PipeActivityContext
+     * @param {ctx} TransformActivityContext
      * @returns
      * @memberof TsCompile
      */
-    protected async executeDest(ds: DestActivity, ctx: PipeActivityContext) {
+    protected async executeDest(ds: DestActivity, ctx: TransformActivityContext) {
         if (!ds || !ctx.data) {
             return;
         }
