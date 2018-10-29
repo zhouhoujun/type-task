@@ -1,8 +1,7 @@
-import { SequenceActivity, ParallelActivity, IActivity, InputDataToken } from '@taskfr/core';
-import { CleanActivity, TestActivity, TransformActivityContext, DestActivity } from '@taskfr/node';
-import { Type } from '@ts-ioc/core';
+import { CleanActivity, TestActivity, DestActivity, BuildActivity, BuidActivityContext } from '@taskfr/node';
 import { IPackageActivity, PackageToken } from './PackageConfigure';
 import { Package } from '../decorators';
+import { SequenceActivity } from '@taskfr/core';
 
 
 /**
@@ -10,10 +9,10 @@ import { Package } from '../decorators';
  *
  * @export
  * @class PackageActivity
- * @extends {SequenceActivity}
+ * @extends {ChainActivity}
  */
 @Package(PackageToken)
-export class PackageActivity extends SequenceActivity implements IPackageActivity {
+export class PackageActivity extends BuildActivity implements IPackageActivity {
 
     /**
      * dest activity.
@@ -43,55 +42,31 @@ export class PackageActivity extends SequenceActivity implements IPackageActivit
      * @memberof PackageActivity
      */
     src: string;
-    /**
-     * assets activities.
-     *
-     * @type {IActivity[]}
-     * @memberof PackageActivity
-     */
-    assets: IActivity[] = [];
-    /**
-     * assets execute control type.
-     *
-     * @type {(Type<SequenceActivity | ParallelActivity>)}
-     * @memberof PackageActivity
-     */
-    executeType: Type<SequenceActivity | ParallelActivity>;
 
-    /**
-     * eecute activity.
-     *
-     * @protected
-     * @param {TransformActivityContext} ctx
-     * @memberof PackageActivity
-     */
-    protected async execute(ctx: TransformActivityContext) {
-        if (this.test) {
-            await this.test.run(ctx);
-        }
+
+    protected async execBeforeBody(ctx: BuidActivityContext) {
+        let execute = this.context.getContainer().resolve(SequenceActivity);
         if (this.clean) {
-            await this.clean.run(ctx);
+            execute.activities.push(this.clean);
         }
-        await this.execAssets(ctx);
-        await super.execute(ctx);
+        if (this.dest) {
+            execute.activities.push(this.dest);
+        }
+        if (this.beforeBuildBody) {
+            execute.activities.push(this.beforeBuildBody);
+        }
+        await execute.run(ctx);
     }
 
-    protected verifyCtx(input?: any) {
-        return this.context.getContainer().resolve(TransformActivityContext, { provide: InputDataToken, useValue: input });
+    protected async execAfterBody(ctx: BuidActivityContext) {
+        let execute = this.context.getContainer().resolve(SequenceActivity);
+        if (this.afterBuildBody) {
+            execute.activities.push(this.afterBuildBody);
+        }
+        if (this.dest) {
+            execute.activities.push(this.dest);
+        }
+        await execute.run(ctx);
     }
 
-    /**
-     * execute assets.
-     *
-     * @protected
-     * @param {TransformActivityContext} ctx
-     * @returns
-     * @memberof PackageActivity
-     */
-    protected execAssets(ctx: TransformActivityContext) {
-        this.executeType = this.executeType || SequenceActivity;
-        let execute = this.context.getContainer().resolve(this.executeType);
-        execute.activities = this.assets;
-        return execute.run(ctx);
-    }
 }

@@ -3,11 +3,11 @@ import { ObjectMap, Registration, Token } from '@ts-ioc/core';
 import { AssetConfigure } from './AssetConfigure';
 import { TsConfigure } from '../assets';
 import { UglifyConfigure } from './UglifyActivity';
-import { WatchConfigure, DestConfigure, SourceConfigure, ITransformConfigure, DestActivity } from '@taskfr/node';
+import { WatchConfigure, DestConfigure, SourceConfigure, ITransformConfigure, DestActivity, BuildHandleConfigure, BuildConfigure } from '@taskfr/node';
 import { AnnotationsConfigure } from './Annotation';
 import { ShellActivityConfig, ExecFileActivityConfig, CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/node';
 
-type configures = CoreActivityConfigs | AssetConfigure | ITransformConfigure
+type configures = CoreActivityConfigs | AssetConfigure | ITransformConfigure | BuildHandleConfigure | BuildConfigure
     | TsConfigure | DestConfigure | SourceConfigure | TestConfigure | UglifyConfigure
     | WatchConfigure | AnnotationsConfigure | CleanConfigure | ShellActivityConfig | ExecFileActivityConfig | PackageConfigure;
 

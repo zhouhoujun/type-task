@@ -121,20 +121,24 @@ export class BuildHandleActivity extends HandleActivity {
 
         if (isRegExp(test)) {
             let exp = test;
-            files = ctx.execResult.filter(f => exp.test(f));
+            files = ctx.result.filter(f => exp.test(f));
         } else if (test) {
             let match = test;
-            files = ctx.execResult.filter(f => minimatch(f, match));
+            files = ctx.result.filter(f => minimatch(f, match));
         }
         if (!files || files.length < 1) {
             let compCtx = this.ctxFactory.create(files, this.compilerToken, CompilerActivity) as CompilerActivityContext;
             compCtx.builder = ctx.builder;
             compCtx.handle = this;
-            await this.compiler.run(compCtx);
+            await this.compile(compCtx);
             ctx.complete(files);
         }
         if (!ctx.isCompleted()) {
             await next();
         }
+    }
+
+    protected async compile(ctx: CompilerActivityContext) {
+        await this.compiler.run(ctx);
     }
 }

@@ -1,15 +1,13 @@
 import { src, SrcOptions } from 'vinyl-fs';
-import { Src, Expression, ExpressionType, Task } from '@taskfr/core';
-import { InjectTransformActivityToken } from './ITransformActivity';
-import { ITransformConfigure } from './ITransformConfigure';
-import { TransformActivity } from './TransformActivity';
+import { Src, Expression, ExpressionType, Task, InjectAcitityToken, ActivityConfigure } from '@taskfr/core';
 import { TransformActivityContext } from './TransformActivityContext';
 import { ITransform } from './ITransform';
+import { NodeActivity } from '../core';
 
 /**
  * source activity token.
  */
-export const SourceAcitvityToken = new InjectTransformActivityToken<SourceActivity>('source');
+export const SourceAcitvityToken = new InjectAcitityToken<SourceActivity>('source');
 
 /**
  * source pipe configure.
@@ -18,7 +16,7 @@ export const SourceAcitvityToken = new InjectTransformActivityToken<SourceActivi
  * @interface ITransformSourceConfigure
  * @extends {ITransformConfigure}
  */
-export interface SourceConfigure extends ITransformConfigure {
+export interface SourceConfigure extends ActivityConfigure {
     /**
      * transform source.
      *
@@ -44,7 +42,7 @@ export interface SourceConfigure extends ITransformConfigure {
  * @extends {TransformActivity}
  */
 @Task(SourceAcitvityToken)
-export class SourceActivity extends TransformActivity {
+export class SourceActivity extends NodeActivity {
     /**
      * source
      *
@@ -70,22 +68,23 @@ export class SourceActivity extends TransformActivity {
         }
     }
 
-    /**
-     * begin pipe.
-     *
-     * @protected
-     * @param {TransformActivityContext} ctx
-     * @returns {Promise<ITransform>}
-     * @memberof TransformActivity
-     */
-    protected async beforeTransform(ctx: TransformActivityContext): Promise<void> {
-        let src = await this.context.exec(this, this.src, ctx);
-        let srcOptions = await this.context.exec(this, this.srcOptions, ctx);
-        ctx.input = src;
-        ctx.data = this.source(src, srcOptions);
+    protected async execute(ctx: TransformActivityContext) {
+        return ctx.result;
     }
 
-    source(source: Src, srcOptions: SrcOptions): ITransform {
-        return src(source, srcOptions);
+    /**
+     * create activity context.
+     *
+     * @protected
+     * @param {*} [input]
+     * @returns {TransformActivityContext}
+     * @memberof PipeActivity
+     */
+    protected verifyCtx(input?: any): TransformActivityContext {
+        let ctx: TransformActivityContext = super.verifyCtx(input) as TransformActivityContext;
+        if (!(ctx instanceof TransformActivityContext)) {
+            ctx = this.ctxFactory.create(ctx, TransformActivityContext);
+        }
+        return ctx;
     }
 }

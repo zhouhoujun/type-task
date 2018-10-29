@@ -50,7 +50,7 @@ export interface IActivityContext<T> {
      * @returns {*}
      * @memberof IActivityContext
      */
-    readonly execResult: any;
+    readonly result: any;
 }
 
 /**
@@ -72,12 +72,12 @@ export class InjectActivityContextToken extends Registration<ActivityContext> {
 }
 
 /**
- * Activity Context Token.
+ * Activity execute Context Token.
  */
 export const ActivityContextToken = new InjectActivityContextToken(Activity);
 
 /**
- * base activity context.
+ * base activity execute context.
  *
  * @export
  * @class ActivityContext
@@ -122,7 +122,7 @@ export class ActivityContext extends Events implements IActivityContext<any> {
      * @readonly
      * @memberof ActivityContext
      */
-    get execResult() {
+    get result() {
         return this.data;
     }
 

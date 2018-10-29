@@ -2,7 +2,7 @@ import { Registration } from '@ts-ioc/core';
 import { IContext } from './IContext';
 import { ActivityConfigure } from './ActivityConfigure';
 import { OnActivityInit } from './OnActivityInit';
-import { IActivityContext } from './ActivityContext';
+import { IActivityContext, ActivityContext } from './ActivityContext';
 import { ContextFactory } from './ContextFactory';
 
 /**
@@ -61,6 +61,14 @@ export interface IActivity {
     context: IContext;
 
     /**
+     * task execute context.
+     *
+     * @type {IContext}
+     * @memberof IActivity
+     */
+    ctx: IActivityContext<any>;
+
+    /**
      * context factory.
      *
      * @type {ContextFactory}
@@ -94,6 +102,14 @@ export interface IActivity {
  * @template T
  */
 export interface GActivity<T> extends IActivity {
+
+    /**
+     * task execute context.
+     *
+     * @type {IContext}
+     * @memberof IActivity
+     */
+    ctx: IActivityContext<T>;
     /**
      * run activity.
      *

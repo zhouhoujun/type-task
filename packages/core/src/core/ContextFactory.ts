@@ -21,8 +21,8 @@ export class ContextFactory {
      * @returns
      * @memberof ContextFactory
      */
-    create(data?: any, type?: Token<IActivity>, defCtx?: Token<ActivityContext>) {
+    create<T extends ActivityContext>(data?: any, type?: Token<IActivity>, defCtx?: Token<T>): T {
         type = type || this.type;
-        return this.container.getRefService(InjectActivityContextToken, type, defCtx || ActivityContextToken, { provide: InputDataToken, useValue: data });
+        return this.container.getRefService(InjectActivityContextToken, type, defCtx || ActivityContextToken, { provide: InputDataToken, useValue: data }) as T;
     }
 }

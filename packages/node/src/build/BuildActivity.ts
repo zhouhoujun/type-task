@@ -59,7 +59,7 @@ export interface BuildConfigure extends ChainConfigure {
      * @type {Active}
      * @memberof BuildConfigure
      */
-    completedBody?: Active;
+    afterBuildBody?: Active;
 }
 
 /**
@@ -112,7 +112,7 @@ export class BuildActivity extends ChainActivity {
      * @type {IActivity}
      * @memberof BuildActivity
      */
-    completedBody: IActivity;
+    afterBuildBody: IActivity;
 
     async onActivityInit(config: BuildConfigure) {
         await super.onActivityInit(config);
@@ -135,8 +135,8 @@ export class BuildActivity extends ChainActivity {
         if (config.beforeBuildBody) {
             this.beforeBuildBody = await this.buildActivity(config.beforeBuildBody);
         }
-        if (config.completedBody) {
-            this.completedBody = await this.buildActivity(config.completedBody);
+        if (config.afterBuildBody) {
+            this.afterBuildBody = await this.buildActivity(config.afterBuildBody);
         }
     }
 
@@ -170,13 +170,22 @@ export class BuildActivity extends ChainActivity {
         if (!(this.watch && ctx.target === this.watch)) {
             await this.execOnce(ctx);
         }
-        let bctx = this.verifyCtx(ctx.execResult);
-        if (this.beforeBuildBody) {
-            await this.beforeBuildBody.run(bctx);
-        }
+        let bctx = this.verifyCtx(ctx.result);
+        await this.execBeforeBody(bctx);
         await super.execute(bctx);
-        if (this.completedBody) {
-            await this.completedBody.run(bctx);
+        await this.execAfterBody(bctx);
+
+    }
+
+    protected async execBeforeBody(ctx: BuidActivityContext) {
+        if (this.beforeBuildBody) {
+            await this.beforeBuildBody.run(ctx);
+        }
+    }
+
+    protected async execAfterBody(ctx: BuidActivityContext) {
+        if (this.afterBuildBody) {
+            await this.afterBuildBody.run(ctx);
         }
     }
 

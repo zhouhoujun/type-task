@@ -52,6 +52,14 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
     context: IContext;
 
     /**
+     *  activity execute context.
+     *
+     * @type {ActivityContext}
+     * @memberof Activity
+     */
+    ctx: ActivityContext;
+
+    /**
      * context factory.
      *
      * @type {ContextFactory}
@@ -75,9 +83,9 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      * @memberof Activity
      */
     async run(ctx?: ActivityContext): Promise<any> {
-        ctx = this.verifyCtx(ctx);
-        await this.execute(ctx);
-        return ctx.execResult;
+        this.ctx = this.verifyCtx(ctx);
+        await this.execute(this.ctx);
+        return this.ctx.result;
     }
 
     /**

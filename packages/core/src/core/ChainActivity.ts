@@ -63,9 +63,11 @@ export class ChainActivity extends Activity<any> {
         }
     }
 
-    use(activity: IActivity) {
-        if (activity instanceof HandleActivity) {
-            this.handles.push(activity);
-        }
+    use(...activities: IActivity[]) {
+        activities.forEach(activity => {
+            if (activity instanceof HandleActivity) {
+                this.handles.push(activity);
+            }
+        });
     }
 }

@@ -41,7 +41,7 @@ export class BuidActivityContext extends NodeActivityContext {
         super(input, context);
     }
 
-    get execResult(): string[] {
+    get result(): string[] {
         return this.data;
     }
 
@@ -52,7 +52,7 @@ export class BuidActivityContext extends NodeActivityContext {
      * @memberof BuidActivityContext
      */
     isCompleted(): boolean {
-        return !this.execResult || this.execResult.length < 1;
+        return !this.result || this.result.length < 1;
     }
 
     /**
@@ -62,7 +62,7 @@ export class BuidActivityContext extends NodeActivityContext {
      * @memberof BuidActivityContext
      */
     complete(files: string[]) {
-        this.data = this.execResult.filter(f => files.indexOf(f) < 0);
+        this.data = this.result.filter(f => files.indexOf(f) < 0);
     }
 
 }
