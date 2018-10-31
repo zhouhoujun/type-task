@@ -68,6 +68,7 @@ export class RollupTs extends AssetActivity {
 
 
 @Package({
+    // src: 'src',
     clean: 'lib',
     assets: {
         ts2015: {

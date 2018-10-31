@@ -16,7 +16,7 @@ export const SequenceActivityToken = new InjectAcitityToken<SequenceActivity>('s
 @Task(SequenceActivityToken)
 export class SequenceActivity extends ContextActivity {
 
-    activities: IActivity[];
+    activities: IActivity[] = [];
 
     async onActivityInit(config: SequenceConfigure): Promise<any> {
         this.activities = this.activities || [];

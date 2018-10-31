@@ -81,6 +81,9 @@ export class SourceActivity extends NodeActivity {
      * @memberof PipeActivity
      */
     protected verifyCtx(input?: any): TransformActivityContext {
+        if (!input) {
+            input = this.src;
+        }
         let ctx: TransformActivityContext = super.verifyCtx(input) as TransformActivityContext;
         if (!(ctx instanceof TransformActivityContext)) {
             ctx = this.ctxFactory.create(ctx, TransformActivityContext);
