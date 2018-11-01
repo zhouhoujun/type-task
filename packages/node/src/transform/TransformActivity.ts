@@ -1,4 +1,4 @@
-import { isUndefined, isPromise, isMetadataObject } from '@ts-ioc/core';
+import { isUndefined, isPromise, isMetadataObject, assertExp } from '@ts-ioc/core';
 import { ITransformActivity, TransformActivityToken } from './ITransformActivity';
 import { ITransform } from './ITransform';
 import { TransformType, isTransform, TransformExpress, TransformConfig } from './transformTypes';
@@ -227,11 +227,7 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
         if (isPromise(tsCfg)) {
             return await tsCfg;
         }
-
-        if (isMetadataObject(tsCfg)) {
-            throw new Error('transform configure error');
-        }
-
+        assertExp(isMetadataObject(tsCfg), 'transform configure error');
         return tsCfg as TransformType;
     }
 }

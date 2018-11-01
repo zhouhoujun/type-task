@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "importHelpers": true,
+    "baseUrl": ".",
+    "rootDir": "../../packages",
+    "paths": {
+      "@taskfr/core": [
+        "../core/src"
+      ],
+      "@taskfr/node": [
+        "../node/src"
+      ],
+      "@taskfr/pipes": [
+        "../pipes/src"
+      ],
+      "@taskfr/platform-server": [
+        "../platform-server/src"
+      ]
+    }
+  },
+  "exclude": [
+    "lib",
+    "node_modules"    
+  ]
+}

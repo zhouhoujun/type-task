@@ -6,9 +6,11 @@ import {
     /* ls, test, cd, ShellString, pwd, ShellArray, find, mv, TestOptions, cat, sed */
 } from 'shelljs';
 import * as globby from 'globby';
-import { ObjectMap, Express2, Singleton } from '@ts-ioc/core';
+import { ObjectMap, Express2, Singleton, isArray, assert, assertExp } from '@ts-ioc/core';
 import { Context, Src } from '@taskfr/core';
 import { INodeContext, NodeContextToken, CmdOptions } from './INodeContext';
+import { isString } from 'util';
+
 const minimist = require('minimist');
 const del = require('del');
 
@@ -108,6 +110,7 @@ export class NodeContext extends Context implements INodeContext {
      * @memberof NodeContext
      */
     async getFiles(express: Src, filter?: (fileName: string) => boolean, mapping?: (filename: string) => string): Promise<string[]> {
+        assertExp(isString(express) || isArray(express), 'input express param type error!');
         let filePaths: string[] = await globby(express);
         if (filter) {
             filePaths = filePaths.filter(filter);
