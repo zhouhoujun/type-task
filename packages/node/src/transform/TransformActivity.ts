@@ -1,4 +1,4 @@
-import { isUndefined, isPromise, isMetadataObject, assertExp } from '@ts-ioc/core';
+import { isUndefined, isPromise, isMetadataObject, assertExp, isFunction } from '@ts-ioc/core';
 import { ITransformActivity, TransformActivityToken } from './ITransformActivity';
 import { ITransform } from './ITransform';
 import { TransformType, isTransform, TransformExpress, TransformConfig } from './transformTypes';
@@ -70,7 +70,7 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      * @memberof PipeActivity
      */
     protected async pipe(ctx: TransformActivityContext): Promise<void> {
-        ctx.data = await this.pipeStream(ctx.data, ctx, ...this.pipes);
+        await this.pipeStream(ctx.result, ctx, ...this.pipes);
     }
 
     /**
@@ -82,11 +82,11 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      * @memberof PipeActivity
      */
     protected verifyCtx(input?: any): TransformActivityContext {
-        let ctx: TransformActivityContext = super.verifyCtx(input) as TransformActivityContext;
-        if (!(ctx instanceof TransformActivityContext)) {
-            ctx = this.ctxFactory.create(ctx) as TransformActivityContext;
+        if (input instanceof TransformActivityContext) {
+            return input;
+        } else {
+            return super.verifyCtx(input) as TransformActivityContext;
         }
-        return ctx;
     }
 
     /**
@@ -213,21 +213,24 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      * translate transform config.
      *
      * @protected
-     * @param {TransformConfig} tsCfg
+     * @param {TransformConfig} cfg
      * @returns {Promise<TransformType>}
      * @memberof PipeActivityBuilder
      */
-    protected async translateConfig(tsCfg: TransformConfig): Promise<TransformType> {
-        if (isActivityRunner(tsCfg)) {
-            return tsCfg;
-        } else if (isActivityType(tsCfg)) {
-            return await this.buildActivity(tsCfg);
+    protected async translateConfig(cfg: TransformConfig): Promise<TransformType> {
+        if (isActivityRunner(cfg)) {
+            return cfg;
+        } else if (isActivityType(cfg)) {
+            return await this.buildActivity(cfg);
+        } else if (isFunction(cfg)) {
+            return await Promise.resolve(cfg(this, this.ctx));
         }
 
-        if (isPromise(tsCfg)) {
-            return await tsCfg;
+        if (isPromise(cfg)) {
+            return await cfg;
         }
-        assertExp(isMetadataObject(tsCfg), 'transform configure error');
-        return tsCfg as TransformType;
+
+        assertExp(isMetadataObject(cfg), 'transform configure error');
+        return cfg as TransformType;
     }
 }

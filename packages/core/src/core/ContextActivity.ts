@@ -55,9 +55,9 @@ export abstract class ContextActivity extends Activity<any> {
     */
     async run(ctx?: ActivityContext): Promise<any> {
         this.ctx = this.verifyCtx(ctx);
-        await this.before(ctx);
-        await this.execute(ctx);
-        await this.after(ctx);
+        await this.before(this.ctx);
+        await this.execute(this.ctx);
+        await this.after(this.ctx);
         return this.ctx.result;
     }
 

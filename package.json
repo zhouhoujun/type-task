@@ -80,7 +80,7 @@
         "tsconfig-paths": "^3.5.0",
         "tslib": "^1.9.2",
         "tslint": "^5.4.3",
-        "typescript": "^3.0.1",
+        "typescript": "^3.1.6",
         "vinyl-fs": "^3.0.3",
         "zone.js": "^0.8.12"
     },

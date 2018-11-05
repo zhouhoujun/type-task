@@ -52,7 +52,7 @@ export class AnnotationActivity extends TransformActivity {
         await super.beforePipe(ctx);
         if (this.annotationFramework) {
             let annotation = await this.context.exec(this, this.annotationFramework, ctx);
-            ctx.data = await this.pipeStream(ctx.data, ctx, annotation);
+            await this.pipeStream(ctx.result, ctx, annotation);
         }
     }
 }

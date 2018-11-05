@@ -1,7 +1,7 @@
 import { dest, DestOptions } from 'vinyl-fs';
 import { Expression, ExpressionType, Task } from '@taskfr/core';
 import { SourceMapsActivity } from './SourceMapsActivity';
-import { TransformActivityContext } from './TransformActivityContext';
+import { TransformActivityContext, TransformActivityContextToken } from './TransformActivityContext';
 import { TransformActivity } from './TransformActivity';
 import { InjectTransformActivityToken } from './ITransformActivity';
 import { ITransformConfigure } from './ITransformConfigure';
@@ -48,7 +48,7 @@ export interface DestConfigure extends ITransformConfigure {
  * @implements {ITransformDest}
  * @implements {OnTaskInit}
  */
-@Task(DestAcitvityToken)
+@Task(DestAcitvityToken, TransformActivityContextToken)
 export class DestActivity extends TransformActivity {
 
     /**
@@ -99,6 +99,6 @@ export class DestActivity extends TransformActivity {
             destOptions = await this.context.exec(this, this.destOptions, ctx);
         }
         dist = this.context.toRootPath(dist);
-        await this.executePipe(ctx.data, ctx, dest(dist, destOptions), true);
+        await this.executePipe(ctx.result, ctx, dest(dist, destOptions), true);
     }
 }

@@ -4,8 +4,9 @@ import { ModuleConfig } from '@ts-ioc/bootstrap';
 import { IActivityRunner } from './IActivityRunner';
 import { ExpressionActivity } from './ExpressionActivity';
 import { ActivityRunner } from './ActivityRunner';
-import { IActivityContext } from './ActivityContext';
+import { IActivityContext } from './IActivityContext';
 import { IHandleActivity } from './HandleActivity';
+import { isFunction } from 'util';
 
 
 /**
@@ -184,6 +185,14 @@ export interface IActivityConfigure<T> extends ModuleConfig<T> {
      * @memberof ITaskConfigure
      */
     activity?: Token<T>;
+
+    /**
+     * set activity context type.
+     *
+     * @type {Token<IActivityContext<any>>}
+     * @memberof IActivityConfigure
+     */
+    contextType?: Token<IActivityContext<any>>;
 
 }
 

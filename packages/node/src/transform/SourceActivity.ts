@@ -1,6 +1,6 @@
 import { src, SrcOptions } from 'vinyl-fs';
 import { Src, Expression, ExpressionType, Task, InjectAcitityToken, ActivityConfigure } from '@taskfr/core';
-import { TransformActivityContext } from './TransformActivityContext';
+import { TransformActivityContext, TransformActivityContextToken } from './TransformActivityContext';
 import { ITransform } from './ITransform';
 import { NodeActivity } from '../core';
 
@@ -41,7 +41,7 @@ export interface SourceConfigure extends ActivityConfigure {
  * @class SourceActivity
  * @extends {TransformActivity}
  */
-@Task(SourceAcitvityToken)
+@Task(SourceAcitvityToken, TransformActivityContextToken)
 export class SourceActivity extends NodeActivity {
     /**
      * source
@@ -81,13 +81,9 @@ export class SourceActivity extends NodeActivity {
      * @memberof PipeActivity
      */
     protected verifyCtx(input?: any): TransformActivityContext {
-        if (!input) {
-            input = this.src;
+        if (this.src) {
+            return super.verifyCtx(this.src) as TransformActivityContext;
         }
-        let ctx: TransformActivityContext = super.verifyCtx(input) as TransformActivityContext;
-        if (!(ctx instanceof TransformActivityContext)) {
-            ctx = this.ctxFactory.create(ctx, TransformActivityContext);
-        }
-        return ctx;
+        return input instanceof TransformActivityContext ? input : super.verifyCtx(input) as TransformActivityContext;
     }
 }

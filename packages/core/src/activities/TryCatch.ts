@@ -59,7 +59,7 @@ export class TryCatchActivity extends ChainActivity {
         try {
             await this.try.run(ctx);
         } catch (err) {
-            await super.run(this.verifyCtx(err));
+            await super.run(this.ctxFactory.create(err));
         } finally {
             if (this.finally) {
                 await this.finally.run(ctx);

@@ -21,7 +21,7 @@ export const TransformActivityContextToken = new InjectActivityContextToken(Tran
  */
 @Injectable(TransformActivityContextToken)
 export class TransformActivityContext extends NodeActivityContext implements IActivityContext<ITransform> {
-    data: ITransform;
+
     sourceMaps: ISourceMapsActivity;
 
     constructor(@Inject(InputDataToken) input: any, @Inject(NodeContextToken) context: INodeContext) {
@@ -36,14 +36,13 @@ export class TransformActivityContext extends NodeActivityContext implements IAc
     }
 
     protected translate(input: any): any {
-        if (isArray(input)) {
+        if (input instanceof Stream) {
+            return input;
+        } else if (isArray(input)) {
             return src(input.filter(i => isString(i) || isArray(i)));
         } else if (isString(input)) {
             return src(input);
-        } else if (input instanceof Stream) {
-            return input;
         }
-
-        return null;
+        return super.translate(input);
     }
 }

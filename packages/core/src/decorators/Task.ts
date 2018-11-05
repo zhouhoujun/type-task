@@ -4,6 +4,7 @@ import {
 } from '@ts-ioc/core';
 import { ActivityMetadata } from '../metadatas/ActivityMetadata';
 import { IActivityBuilder } from '../core/IActivityBuilder';
+import { IActivityContext } from '../core';
 
 /**
  * task decorator, use to define class is a task element.
@@ -15,32 +16,42 @@ import { IActivityBuilder } from '../core/IActivityBuilder';
  */
 export interface ITaskDecorator<T extends ActivityMetadata> extends ITypeDecorator<T> {
     /**
-     * task decorator, use to define class as task element.
+     * Activity decorator, use to define class as Activity element.
      *
      * @Task
      *
-     * @param {T} [metadata] task metadate configure.
+     * @param {T} [metadata] Activity metadate configure.
      */
     (metadata?: T): ClassDecorator;
 
     /**
-     * task decorator, use to define class as task element.
+     * Activity decorator, use to define class as Activity element.
      *
      * @Task
-     * @param {string} provide task name or provide.
-     * @param {string} [alias] task alias name.
+     * @param {string} provide Activity name or provide.
+     * @param {string} [alias] Activity alias name.
      */
     (provide: Registration<any> | symbol | string, alias?: string): ClassDecorator;
 
     /**
-     * task decorator, use to define class as task element.
+     * Activity decorator, use to define class as Activity element.
      *
      * @Task
-     * @param {string} provide task name or provide.
-     * @param {string} builder task builder token.
-     * @param {string} [alias]  task alias name
+     * @param {string} provide Activity name or provide.
+     * @param {string} ctxType Activity context token.
+     * @param {string} [alias]  Activity alias name
      */
-    (provide: Registration<any> | symbol | string, builder?: Token<IActivityBuilder>, alias?: string): ClassDecorator;
+    (provide: Registration<any> | symbol | string, ctxType: Token<IActivityContext<any>>, alias?: string): ClassDecorator;
+    /**
+     * Activity decorator, use to define class as Activity element.
+     *
+     * @Task
+     * @param {string} provide Activity name or provide.
+     * @param {string} ctxType Activity context token.
+     * @param {string} builder Activity builder token.
+     * @param {string} [alias]  Activity alias name
+     */
+    (provide: Registration<any> | symbol | string, ctxType: Token<IActivityContext<any>>, builder: Token<IActivityBuilder>, alias?: string): ClassDecorator;
 
     /**
      * task decorator, use to define class as task element.
@@ -81,6 +92,17 @@ export function createTaskDecorator<T extends ActivityMetadata>(
                         metadata.name = arg;
                     }
                     metadata.provide = arg;
+                }
+            });
+
+            args.next<ActivityMetadata>({
+                match: (arg) => isToken(arg) || isToken(arg),
+                setMetadata: (metadata, arg) => {
+                    if (isString(arg)) {
+                        metadata.name = arg;
+                    } else {
+                        metadata.contextType = arg;
+                    }
                 }
             });
 

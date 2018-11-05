@@ -1,6 +1,7 @@
-import { CtxType, ActivityConfigure, InjectAcitityToken, GActivity, Task, Activity } from '@taskfr/core';
+import { CtxType, ActivityConfigure, InjectAcitityToken, GActivity, Task } from '@taskfr/core';
 import { ITransform } from './ITransform';
-import { TransformActivityContext } from './TransformActivityContext';
+import { TransformActivityContext, TransformActivityContextToken } from './TransformActivityContext';
+import { NodeActivity } from '../core';
 
 /**
  * source map configure
@@ -42,8 +43,8 @@ export const SourceMapsToken = new InjectAcitityToken<ISourceMapsActivity>('sour
  * @extends {Activity<ITransform>}
  * @implements {OnActivityInit}
  */
-@Task(SourceMapsToken)
-export class SourceMapsActivity extends Activity<ITransform> implements ISourceMapsActivity {
+@Task(SourceMapsToken, TransformActivityContextToken)
+export class SourceMapsActivity extends NodeActivity implements ISourceMapsActivity {
     sourcemaps: string;
 
     async onActivityInit(config: SourceMapsConfigure) {
@@ -60,9 +61,9 @@ export class SourceMapsActivity extends Activity<ITransform> implements ISourceM
             return;
         }
         if (!this.hasInit) {
-            ctx.data = ctx.data.pipe(sourcemaps.init());
+            ctx.result = ctx.result.pipe(sourcemaps.init());
         } else {
-            ctx.data = ctx.data.pipe(sourcemaps.write(this.sourcemaps));
+            ctx.result = ctx.result.pipe(sourcemaps.write(this.sourcemaps));
         }
     }
 

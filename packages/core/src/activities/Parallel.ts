@@ -20,6 +20,10 @@ export class ParallelActivity extends ContextActivity {
 
     activities: IActivity[] = [];
 
+    add(activity: IActivity) {
+        this.activities.push(activity);
+    }
+
     async onActivityInit(config: ParallelConfigure): Promise<any> {
         await super.onActivityInit(config);
         if (config.parallel && config.parallel.length) {

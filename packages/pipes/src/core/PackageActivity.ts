@@ -43,28 +43,32 @@ export class PackageActivity extends BuildActivity implements IPackageActivity {
      */
     src: string;
 
-
     protected async execBeforeBody(ctx: BuidActivityContext) {
         let execute = this.context.getContainer().resolve(SequenceActivity);
+        execute.name = 'Before build';
         if (this.clean) {
-            execute.activities.push(this.clean);
+            execute.add(this.clean);
+        }
+        if (this.test) {
+            execute.add(this.test);
         }
         if (this.dest) {
-            execute.activities.push(this.dest);
+            execute.add(this.dest);
         }
         if (this.beforeBuildBody) {
-            execute.activities.push(this.beforeBuildBody);
+            execute.add(this.beforeBuildBody);
         }
         await execute.run(ctx);
     }
 
     protected async execAfterBody(ctx: BuidActivityContext) {
         let execute = this.context.getContainer().resolve(SequenceActivity);
+        execute.name = 'After build';
         if (this.afterBuildBody) {
-            execute.activities.push(this.afterBuildBody);
+            execute.add(this.afterBuildBody);
         }
         if (this.dest) {
-            execute.activities.push(this.dest);
+            execute.add(this.dest);
         }
         await execute.run(ctx);
     }

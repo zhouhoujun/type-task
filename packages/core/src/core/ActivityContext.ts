@@ -1,75 +1,12 @@
-import { Injectable, isNullOrUndefined, InjectToken, Inject, Registration, Token } from '@ts-ioc/core';
+import { Injectable, isNullOrUndefined, Inject } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
 import { IContext, ContextToken } from './IContext';
 import { ITranslator } from './Translator';
 import { Activity } from './Activity';
 import { Events } from '@ts-ioc/bootstrap';
+import { InjectActivityContextToken, IActivityContext, InputDataToken } from './IActivityContext';
 
-/**
- * activity run context.
- *
- * @export
- * @interface IActivityContext
- */
-export interface IActivityContext<T> {
-    /**
-     * input data
-     *
-     * @type {*}
-     * @memberof IRunContext
-     */
-    input: any;
 
-    /**
-     * execute activity.
-     *
-     * @type {IActivity}
-     * @memberof IRunContext
-     */
-    execute?: IActivity;
-
-    /**
-     * target activiy.
-     *
-     * @type {IActivity}
-     * @memberof ActivityContext
-     */
-    target?: IActivity;
-
-    /**
-     * evn context.
-     *
-     * @type {IContext}
-     * @memberof IActivityContext
-     */
-    context: IContext;
-
-    /**
-     * ge activity execute result.
-     *
-     * @returns {*}
-     * @memberof IActivityContext
-     */
-    readonly result: any;
-}
-
-/**
- * inpit data token.
- */
-export const InputDataToken = new InjectToken<any>('Context_Inputdata');
-
-/**
- * inject actitiy context token.
- *
- * @export
- * @class InjectActivityContextToken
- * @extends {Registration<IActivityContext<any>>}
- */
-export class InjectActivityContextToken extends Registration<ActivityContext> {
-    constructor(type: Token<IActivity>) {
-        super(type, 'AContext');
-    }
-}
 
 /**
  * Activity execute Context Token.
@@ -86,7 +23,6 @@ export const ActivityContextToken = new InjectActivityContextToken(Activity);
 @Injectable(ActivityContextToken)
 export class ActivityContext extends Events implements IActivityContext<any> {
 
-    protected _input: any;
     /**
      * execute data.
      *
@@ -113,7 +49,7 @@ export class ActivityContext extends Events implements IActivityContext<any> {
 
     constructor(@Inject(InputDataToken) public input: any, @Inject(ContextToken) public context: IContext) {
         super();
-        this.setExecResult(input);
+        this.setAsResult(input);
     }
 
     /**
@@ -126,14 +62,18 @@ export class ActivityContext extends Events implements IActivityContext<any> {
         return this.data;
     }
 
-    setExecResult(data: any) {
-        if (!isNullOrUndefined(data)) {
-            data = this.translate(data);
-        }
+    set result(data: any) {
         if (data !== this.data) {
             this.emit('resultChanged', data);
         }
         this.data = data;
+    }
+
+    setAsResult(data: any) {
+        if (!isNullOrUndefined(data)) {
+            data = this.translate(data);
+        }
+        this.result = data;
     }
 
     protected translate(data: any): any {

@@ -1,11 +1,11 @@
-import { IActivity, Src, ActivityBuilder, SequenceActivity, SequenceConfigure, SequenceActivityToken, Activity, ParallelConfigure, ParallelActivityToken } from '@taskfr/core';
+import { IActivity, Src, ActivityBuilder, SequenceConfigure, ParallelConfigure, SequenceActivityToken, ParallelActivityToken } from '@taskfr/core';
 import { isArray, isString, lang, Injectable } from '@ts-ioc/core';
-import { PackageConfigure, PackageBuilderToken, TransformsConfigure } from './PackageConfigure';
+import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
-import { CleanActivity, CleanConfigure, TestActivity, TestConfigure, DestActivity, DestConfigure, BuildHandleActivity, BuildHandleConfigure } from '@taskfr/node';
+import { CleanActivity, CleanConfigure, TestActivity, TestConfigure, DestActivity, DestConfigure, BuildHandleActivity } from '@taskfr/node';
+import { InjectAssetActivityToken, AssetToken } from './IAssetActivity';
 import { AssetActivity } from './AssetActivity';
 import { AssetConfigure } from './AssetConfigure';
-import { InjectAssetActivityToken, AssetToken } from './IAssetActivity';
 
 
 /**
@@ -30,12 +30,13 @@ export class PackageBuilder extends ActivityBuilder {
         await super.buildStrategy(activity, config);
         if (activity instanceof PackageActivity) {
             let srcRoot = activity.src = activity.context.to(config.src);
+
             let assets = await Promise.all(lang.keys(config.assets).map(name => {
-                return this.toActivity<Src, BuildHandleActivity, TransformsConfigure>(config.assets[name], activity,
-                    act => act instanceof Activity,
+                return this.toActivity<Src, AssetActivity, AssetConfigure>(config.assets[name], activity,
+                    act => act instanceof AssetActivity,
                     src => {
                         if (isString(src) || isArray(src)) {
-                            return <BuildHandleConfigure>{ test: src };
+                            return <AssetConfigure>{ src: src };
                         } else {
                             return null;
                         }
@@ -49,10 +50,7 @@ export class PackageBuilder extends ActivityBuilder {
                             if (!seqcfg.activity && !seqcfg.task) {
                                 seqcfg.task = SequenceActivityToken;
                             }
-                            return {
-                                test: srcRoot ? `${srcRoot}/**/*.${name}` : () => true,
-                                compiler: seqcfg
-                            };
+                            return seqcfg;
                         }
 
                         let parcfg = cfg as ParallelConfigure;
@@ -60,33 +58,37 @@ export class PackageBuilder extends ActivityBuilder {
                             if (!parcfg.activity && !parcfg.task) {
                                 parcfg.task = ParallelActivityToken;
                             }
-                            return {
-                                test: srcRoot ? `${srcRoot}/**/*.${name}` : () => true,
-                                compiler: parcfg
-                            }
+                            return parcfg;
                         }
 
-                        let hBuildCfg = cfg as BuildHandleConfigure;
-                        if (!hBuildCfg.activity && !hBuildCfg.task) {
-                            hBuildCfg.task = 'build-handle'
-                        }
-                        if (!hBuildCfg.compiler) {
-                            hBuildCfg.compiler = new InjectAssetActivityToken(name);
-                            if (isString(hBuildCfg.compiler)) {
-                                hBuildCfg.compiler = new InjectAssetActivityToken(hBuildCfg.compiler);
-                            }
-                            if (!this.container.has(hBuildCfg.compiler)) {
-                                hBuildCfg.compiler = AssetToken;
-                            }
+                        let assCfg = cfg as AssetConfigure;
+                        if (!assCfg.activity && !assCfg.task) {
+                            assCfg.task = new InjectAssetActivityToken(name);
                         }
 
-                        if (srcRoot && !hBuildCfg.test) {
-                            hBuildCfg.test = `${srcRoot}/**/*.${name}`;
+                        if (isString(assCfg.task)) {
+                            assCfg.task = new InjectAssetActivityToken(assCfg.task);
                         }
-                        return hBuildCfg;
+                        if (!this.container.has(assCfg.task)) {
+                            assCfg.task = AssetToken;
+                        }
+
+                        if (srcRoot && !assCfg.src) {
+                            assCfg.src = `${srcRoot}/**/*.${name}`;
+                        }
+                        return assCfg;
+                    })
+                    .then(a => {
+                        if (!a) {
+                            return null;
+                        }
+                        let handle = this.container.resolve(BuildHandleActivity);
+                        handle.compiler = a;
+                        handle.name = name;
+                        handle.test = a.src || `${srcRoot}/**`;
+                        return handle;
                     })
             }));
-
             activity.use(...assets.filter(a => a));
 
             if (config.clean) {

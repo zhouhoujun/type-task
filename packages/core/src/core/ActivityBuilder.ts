@@ -42,7 +42,12 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
             instance.id = uuid;
         }
 
-        instance.ctxFactory = this.container.resolve(ContextFactory, { type: token });
+        let ctxFactory = this.container.resolve(ContextFactory);
+        ctxFactory.setDefaultActivityType(token);
+        if (config.contextType) {
+            ctxFactory.setDefaultContextType(config.contextType);
+        }
+        instance.ctxFactory = ctxFactory;
 
         if (isFunction(instance.onActivityInit)) {
             await Promise.resolve(instance.onActivityInit(config));

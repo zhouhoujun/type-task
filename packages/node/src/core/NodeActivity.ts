@@ -25,7 +25,7 @@ export abstract class NodeActivity extends ContextActivity {
     context: INodeContext;
 
     protected verifyCtx(input?: any): NodeActivityContext {
-        return super.verifyCtx(input) as NodeActivityContext;
+        return input instanceof NodeActivityContext ? input : super.verifyCtx(input) as NodeActivityContext;
     }
 
     /**

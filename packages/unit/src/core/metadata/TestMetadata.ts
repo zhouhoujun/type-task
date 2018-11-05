@@ -1,6 +1,12 @@
 import { PropertyMetadata } from '@ts-ioc/core';
 
-
+/**
+ * Test metadata.
+ *
+ * @export
+ * @interface TestMetadata
+ * @extends {PropertyMetadata}
+ */
 export interface TestMetadata extends PropertyMetadata {
     /**
      * Filed entends Decorator type.

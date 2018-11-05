@@ -13,6 +13,7 @@ export * from './IContext';
 export * from './Context';
 export * from './IActivityRunner';
 export * from './ActivityRunner';
+export * from './IActivityContext';
 export * from './ActivityContext';
 export * from './HandleActivity';
 export * from './ChainActivity';

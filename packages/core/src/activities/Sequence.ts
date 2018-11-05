@@ -26,6 +26,10 @@ export class SequenceActivity extends ContextActivity {
         }
     }
 
+    add(activity: IActivity) {
+        this.activities.push(activity);
+    }
+
     async buildChildren(activity: SequenceActivity, configs: ActivityType<IActivity>[]) {
         let sequence = await Promise.all(configs.map(cfg => this.buildActivity(cfg)));
         activity.activities = sequence;

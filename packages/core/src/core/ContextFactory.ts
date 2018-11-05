@@ -1,15 +1,25 @@
 import { IActivity } from './IActivity';
-import { Token, Type, IContainer, Inject, ContainerToken, Injectable } from '@ts-ioc/core';
-import { InjectActivityContextToken, ActivityContextToken, InputDataToken, ActivityContext } from './ActivityContext';
+import { Token, IContainer, Inject, ContainerToken, Injectable } from '@ts-ioc/core';
+import { ActivityContextToken, ActivityContext } from './ActivityContext';
+import { InjectActivityContextToken, InputDataToken, IActivityContext } from './IActivityContext';
 
 @Injectable
 export class ContextFactory {
 
     @Inject(ContainerToken)
     container: IContainer;
+    private type: Token<IActivity>;
+    private ctxType: Token<IActivityContext<any>>;
+    constructor() {
 
-    constructor(private type: Type<IActivity>) {
+    }
 
+    setDefaultActivityType(type: Token<IActivity>) {
+        this.type = type;
+    }
+
+    setDefaultContextType(type: Token<IActivityContext<any>>) {
+        this.ctxType = type;
     }
 
     /**
@@ -22,6 +32,9 @@ export class ContextFactory {
      * @memberof ContextFactory
      */
     create<T extends ActivityContext>(data?: any, type?: Token<IActivity>, defCtx?: Token<T>): T {
+        if (!type && this.ctxType) {
+            return this.container.resolve(this.ctxType, { provide: InputDataToken, useValue: data }) as T;
+        }
         type = type || this.type;
         return this.container.getRefService(InjectActivityContextToken, type, defCtx || ActivityContextToken, { provide: InputDataToken, useValue: data }) as T;
     }
