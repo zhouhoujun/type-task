@@ -91,7 +91,7 @@ export class ShellActivity extends NodeActivity implements OnActivityInit {
         }
     }
 
-    protected async execute(ctx: NodeActivityContext): Promise<void> {
+    protected async execute(ctx: NodeActivityContext<any>): Promise<void> {
         return await Promise.resolve(this.shell)
             .then(cmds => {
                 let options = this.options;
@@ -109,7 +109,7 @@ export class ShellActivity extends NodeActivity implements OnActivityInit {
             });
     }
 
-    protected formatShell(shell: string, ctx?: NodeActivityContext): string {
+    protected formatShell(shell: string, ctx?: NodeActivityContext<any>): string {
         if (this.args && this.args.length) {
             return shell + ' ' + this.args.join(' ');
         }
@@ -144,7 +144,7 @@ export class ShellActivity extends NodeActivity implements OnActivityInit {
         return '';
     }
 
-    protected execShell(cmd: string, ctx: NodeActivityContext, options?: ExecOptions): Promise<any> {
+    protected execShell(cmd: string, ctx: NodeActivityContext<any>, options?: ExecOptions): Promise<any> {
         cmd = this.formatShell(cmd, ctx);
         if (!cmd) {
             return Promise.resolve();

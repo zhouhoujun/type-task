@@ -41,7 +41,7 @@ export interface ITaskDecorator<T extends ActivityMetadata> extends ITypeDecorat
      * @param {string} ctxType Activity context token.
      * @param {string} [alias]  Activity alias name
      */
-    (provide: Registration<any> | symbol | string, ctxType: Token<IActivityContext<any>>, alias?: string): ClassDecorator;
+    (provide: Registration<any> | symbol | string, ctxType: Token<IActivityContext>, alias?: string): ClassDecorator;
     /**
      * Activity decorator, use to define class as Activity element.
      *
@@ -51,7 +51,7 @@ export interface ITaskDecorator<T extends ActivityMetadata> extends ITypeDecorat
      * @param {string} builder Activity builder token.
      * @param {string} [alias]  Activity alias name
      */
-    (provide: Registration<any> | symbol | string, ctxType: Token<IActivityContext<any>>, builder: Token<IActivityBuilder>, alias?: string): ClassDecorator;
+    (provide: Registration<any> | symbol | string, ctxType: Token<IActivityContext>, builder: Token<IActivityBuilder>, alias?: string): ClassDecorator;
 
     /**
      * task decorator, use to define class as task element.

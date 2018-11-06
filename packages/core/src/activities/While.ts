@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, Activity, InjectAcitityToken, Condition, WhileConfigure, ActivityContext } from '../core';
+import { IActivity, Activity, InjectAcitityToken, Condition, WhileConfigure, IActivityContext } from '../core';
 
 
 /**
@@ -37,7 +37,7 @@ export class WhileActivity extends Activity<any> {
         this.condition = await this.toExpression(config.while);
     }
 
-    protected async execute(ctx: ActivityContext): Promise<any> {
+    protected async execute(ctx: IActivityContext): Promise<any> {
         let condition = await this.context.exec(this, this.condition, ctx);
         while (condition) {
             await this.body.run(ctx);

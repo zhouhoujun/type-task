@@ -57,7 +57,7 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      * @type {ActivityContext}
      * @memberof Activity
      */
-    ctx: ActivityContext;
+    ctx: ActivityContext<T>;
 
     /**
      * context factory.
@@ -82,7 +82,7 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      * @returns {Promise<T>}
      * @memberof Activity
      */
-    async run(ctx?: ActivityContext): Promise<any> {
+    async run(ctx?: ActivityContext<T>): Promise<any> {
         this.ctx = this.verifyCtx(ctx);
         await this.execute(this.ctx);
         return this.ctx.result;
@@ -97,7 +97,7 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      * @returns {Promise<void>}
      * @memberof Activity
      */
-    protected abstract execute(ctx: ActivityContext): Promise<void>;
+    protected abstract execute(ctx: ActivityContext<T>): Promise<void>;
 
     /**
      * verify context.
@@ -107,7 +107,7 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      * @returns {ActivityContext}
      * @memberof Activity
      */
-    protected verifyCtx(ctx?: any): ActivityContext {
+    protected verifyCtx(ctx?: any): ActivityContext<T> {
         if (!ctx || !(ctx instanceof ActivityContext)) {
             ctx = this.ctxFactory.create(ctx);
         }
@@ -143,7 +143,7 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
 @Task(ActivityToken)
 export class NullActivity extends Activity<any> {
 
-    protected async execute(ctx: ActivityContext): Promise<void> {
+    protected async execute(ctx: ActivityContext<any>): Promise<void> {
 
     }
 }

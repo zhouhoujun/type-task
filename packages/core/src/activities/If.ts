@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, Condition, IfConfigure, ActivityContext } from '../core';
+import { IActivity, InjectAcitityToken, Activity, Condition, IfConfigure, IActivityContext } from '../core';
 
 
 /**
@@ -29,7 +29,7 @@ export class IfActivity extends Activity<any> {
         }
     }
 
-    protected async execute(ctx?: ActivityContext): Promise<void> {
+    protected async execute(ctx?: IActivityContext): Promise<void> {
         let condition = await this.context.exec(this, this.condition, ctx);
         if (condition) {
             await this.execIf(ctx);
@@ -38,11 +38,11 @@ export class IfActivity extends Activity<any> {
         }
     }
 
-    protected async execIf(ctx?: ActivityContext): Promise<void> {
+    protected async execIf(ctx?: IActivityContext): Promise<void> {
         await this.ifBody.run(ctx);
     }
 
-    protected async execElse(ctx?: ActivityContext): Promise<void> {
+    protected async execElse(ctx?: IActivityContext): Promise<void> {
         await this.elseBody.run(ctx);
     }
 

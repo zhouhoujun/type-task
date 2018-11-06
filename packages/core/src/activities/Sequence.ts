@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, SequenceConfigure, ActivityType, ActivityContext, ContextActivity } from '../core';
+import { IActivity, InjectAcitityToken, SequenceConfigure, ActivityType, IActivityContext, ContextActivity } from '../core';
 
 /**
  * sequence activity token
@@ -36,10 +36,10 @@ export class SequenceActivity extends ContextActivity {
         return activity;
     }
 
-    protected async execute(ctx: ActivityContext): Promise<void> {
-        let execPromise = Promise.resolve();
+    protected async execute(ctx: IActivityContext): Promise<void> {
+        let execPromise = Promise.resolve(ctx);
         this.activities.forEach(task => {
-            execPromise = execPromise.then(pdata => task.run(ctx));
+            execPromise = execPromise.then(pdata => task.run(pdata));
         });
         await execPromise;
     }

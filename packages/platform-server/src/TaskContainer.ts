@@ -46,7 +46,7 @@ export class TaskContainer extends DefaultTaskContainer implements ITaskContaine
 
     async createActivity(activity: Active, workflowId?: string): Promise<IActivityRunner<any>> {
         console.log('[' + chalk.grey(timestamp('HH:mm:ss', new Date())) + ']', 'Loading  workflow ', workflowId || '', '...');
-        return super.createActivity(activity, workflowId);
+        return await super.createActivity(activity, workflowId);
     }
 
 }

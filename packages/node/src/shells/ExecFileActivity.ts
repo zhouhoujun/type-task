@@ -2,7 +2,7 @@ import { isString, isArray, Inject, isBoolean } from '@ts-ioc/core';
 import { existsSync } from 'fs';
 import { Src, Activity, Task, CtxType, ActivityConfigure, ActivityContext } from '@taskfr/core';
 import * as execa from 'execa';
-import { NodeContextToken, INodeContext, NodeActivity } from '../core';
+import { NodeContextToken, INodeContext, NodeActivity, NodeActivityContext } from '../core';
 
 
 /**
@@ -68,7 +68,7 @@ export class ExecFileActivity extends NodeActivity {
         }
     }
 
-    protected async execute(ctx?: ActivityContext): Promise<void> {
+    protected async execute(ctx?: NodeActivityContext<any>): Promise<void> {
         return await Promise.resolve(this.files)
             .then(files => {
                 let allowError = this.allowError;

@@ -2,12 +2,11 @@ import { NodeActivityContext, NodeContextToken, INodeContext } from '../core';
 import { BuildActivity } from './BuildActivity';
 import { Inject, Injectable } from '@ts-ioc/core';
 import { InputDataToken, InjectActivityContextToken } from '@taskfr/core';
-import { CompilerActivity, ShellCompilerActivity } from './CompilerActivity';
+import { CompilerActivity } from './CompilerActivity';
 import { BuildHandleActivity } from './BuildHandleActivity';
 
 
 export const CompilerContextToken = new InjectActivityContextToken(CompilerActivity);
-export const ShellCompilerContextToken = new InjectActivityContextToken(ShellCompilerActivity);
 
 /**
  * build handle activity context.
@@ -17,8 +16,7 @@ export const ShellCompilerContextToken = new InjectActivityContextToken(ShellCom
  * @extends {NodeActivityContext}
  */
 @Injectable(CompilerContextToken)
-@Injectable(ShellCompilerContextToken)
-export class CompilerActivityContext extends NodeActivityContext {
+export class CompilerActivityContext extends NodeActivityContext<any> {
 
     /**
      * the builder

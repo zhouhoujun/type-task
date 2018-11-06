@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Condition, TryCatchConfigure, ActivityContext, ChainActivity, IHandleActivity } from '../core';
+import { IActivity, InjectAcitityToken, Condition, TryCatchConfigure, IActivityContext, ChainActivity, IHandleActivity } from '../core';
 
 /**
  * while activity token.
@@ -55,7 +55,7 @@ export class TryCatchActivity extends ChainActivity {
         }
     }
 
-    protected async execute(ctx: ActivityContext): Promise<void> {
+    protected async execute(ctx: IActivityContext): Promise<void> {
         try {
             await this.try.run(ctx);
         } catch (err) {

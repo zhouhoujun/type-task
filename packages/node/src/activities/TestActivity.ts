@@ -1,6 +1,6 @@
-import { CtxType, ExpressionType, Expression, Task, InjectAcitityToken, ActivityConfigure, IActivity, Activity } from '@taskfr/core';
-import { isUndefined, Inject } from '@ts-ioc/core';
-import { NodeActivityContext, NodeContextToken, INodeContext, NodeActivity } from '../core';
+import { CtxType, ExpressionType, Expression, Task, InjectAcitityToken, ActivityConfigure, IActivity, IActivityContext } from '@taskfr/core';
+import { isUndefined } from '@ts-ioc/core';
+import { NodeActivity } from '../core';
 
 /**
  * test activity configure.
@@ -85,7 +85,7 @@ export class TestActivity extends NodeActivity {
         }
     }
 
-    protected async execute(ctx: NodeActivityContext): Promise<void> {
+    protected async execute(ctx: IActivityContext): Promise<void> {
         let test = await this.context.exec(this, this.enable, ctx);
         if (test !== false && this.framework) {
             await this.context.exec(this, this.framework, ctx);

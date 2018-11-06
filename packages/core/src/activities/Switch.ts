@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, Expression, SwitchConfigure, ActivityContext } from '../core';
+import { IActivity, InjectAcitityToken, Activity, Expression, SwitchConfigure, IActivityContext } from '../core';
 import { MapSet, isUndefined } from '@ts-ioc/core';
 
 /**
@@ -55,7 +55,7 @@ export class SwitchActivity extends Activity<any> {
         }
     }
 
-    protected async execute(ctx: ActivityContext): Promise<void> {
+    protected async execute(ctx: IActivityContext): Promise<void> {
         let matchkey = await this.context.exec<any>(this, this.expression, ctx);
         if (!isUndefined(matchkey) && this.cases.has(matchkey)) {
             await this.cases.get(matchkey).run(ctx);

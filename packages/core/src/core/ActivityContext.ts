@@ -4,7 +4,7 @@ import { IContext, ContextToken } from './IContext';
 import { ITranslator } from './Translator';
 import { Activity } from './Activity';
 import { Events } from '@ts-ioc/bootstrap';
-import { InjectActivityContextToken, IActivityContext, InputDataToken } from './IActivityContext';
+import { InjectActivityContextToken, InputDataToken, GActivityContext } from './IActivityContext';
 
 
 
@@ -21,15 +21,15 @@ export const ActivityContextToken = new InjectActivityContextToken(Activity);
  * @implements {IActivityContext<any>}
  */
 @Injectable(ActivityContextToken)
-export class ActivityContext extends Events implements IActivityContext<any> {
+export class ActivityContext<T> extends Events implements GActivityContext<T> {
 
     /**
      * execute data.
      *
-     * @type {*}
+     * @type {T}
      * @memberof IActivityContext
      */
-    protected data: any;
+    protected data: T;
 
     /**
      * execute activity.
@@ -58,11 +58,11 @@ export class ActivityContext extends Events implements IActivityContext<any> {
      * @readonly
      * @memberof ActivityContext
      */
-    get result() {
+    get result(): T {
         return this.data;
     }
 
-    set result(data: any) {
+    set result(data: T) {
         if (data !== this.data) {
             this.emit('resultChanged', data);
         }

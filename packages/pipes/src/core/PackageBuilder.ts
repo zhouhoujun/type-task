@@ -1,8 +1,8 @@
-import { IActivity, Src, ActivityBuilder, SequenceConfigure, ParallelConfigure, SequenceActivityToken, ParallelActivityToken } from '@taskfr/core';
+import { IActivity, Src, ActivityBuilder, SequenceConfigure, ParallelConfigure, SequenceActivityToken, ParallelActivityToken, Activity } from '@taskfr/core';
 import { isArray, isString, lang, Injectable } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
-import { CleanActivity, CleanConfigure, TestActivity, TestConfigure, DestActivity, DestConfigure, BuildHandleActivity } from '@taskfr/node';
+import { CleanActivity, CleanConfigure, TestActivity, TestConfigure, DestActivity, DestConfigure, BuildHandleActivity, BuildHandleToken } from '@taskfr/node';
 import { InjectAssetActivityToken, AssetToken } from './IAssetActivity';
 import { AssetActivity } from './AssetActivity';
 import { AssetConfigure } from './AssetConfigure';
@@ -33,7 +33,7 @@ export class PackageBuilder extends ActivityBuilder {
 
             let assets = await Promise.all(lang.keys(config.assets).map(name => {
                 return this.toActivity<Src, AssetActivity, AssetConfigure>(config.assets[name], activity,
-                    act => act instanceof AssetActivity,
+                    act => act instanceof Activity,
                     src => {
                         if (isString(src) || isArray(src)) {
                             return <AssetConfigure>{ src: src };
@@ -82,13 +82,16 @@ export class PackageBuilder extends ActivityBuilder {
                         if (!a) {
                             return null;
                         }
-                        let handle = this.container.resolve(BuildHandleActivity);
-                        handle.compiler = a;
-                        handle.name = name;
-                        handle.test = a.src || `${srcRoot}/**`;
-                        return handle;
+                        return this.buildByConfig({ token: BuildHandleToken }, activity.id)
+                            .then(handle => {
+                                handle.compiler = a;
+                                handle.name = name;
+                                handle.test = (f) => true;
+                                return handle;
+                            });
                     })
             }));
+
             activity.use(...assets.filter(a => a));
 
             if (config.clean) {

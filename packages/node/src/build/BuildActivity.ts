@@ -1,4 +1,4 @@
-import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, Active, IActivity } from '@taskfr/core';
+import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, Active, IActivity, ActivityContext, InjectAcitityToken } from '@taskfr/core';
 import { Inject, isBoolean, Token } from '@ts-ioc/core';
 import { WatchActivity, WatchConfigure } from '../activities';
 import { INodeContext, NodeContextToken } from '../core';
@@ -62,6 +62,8 @@ export interface BuildConfigure extends ChainConfigure {
     afterBuildBody?: Active;
 }
 
+export const BuildToken = new InjectAcitityToken<BuildActivity>('build');
+
 /**
  * build activity.
  *
@@ -69,7 +71,7 @@ export interface BuildConfigure extends ChainConfigure {
  * @class BuildActivity
  * @extends {ChainActivity}
  */
-@Task('build')
+@Task(BuildToken)
 export class BuildActivity extends ChainActivity {
 
     /**

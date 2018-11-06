@@ -4,7 +4,7 @@ import { ModuleConfig } from '@ts-ioc/bootstrap';
 import { IActivityRunner } from './IActivityRunner';
 import { ExpressionActivity } from './ExpressionActivity';
 import { ActivityRunner } from './ActivityRunner';
-import { IActivityContext } from './IActivityContext';
+import { IActivityContext, GActivityContext } from './IActivityContext';
 import { IHandleActivity } from './HandleActivity';
 import { isFunction } from 'util';
 
@@ -25,7 +25,7 @@ export interface KeyValue<TKey, TVal> {
 /**
  * async result.
  */
-export type AsyncResult<T> = (activity?: IActivity, ctx?: IActivityContext<T>) => Promise<T>;
+export type AsyncResult<T> = (activity?: IActivity, ctx?: GActivityContext<T>) => Promise<T>;
 
 /**
  * activity result.
@@ -189,10 +189,10 @@ export interface IActivityConfigure<T> extends ModuleConfig<T> {
     /**
      * set activity context type.
      *
-     * @type {Token<IActivityContext<any>>}
+     * @type {Token<IActivityContext>}
      * @memberof IActivityConfigure
      */
-    contextType?: Token<IActivityContext<any>>;
+    contextType?: Token<IActivityContext>;
 
 }
 

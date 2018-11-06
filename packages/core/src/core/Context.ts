@@ -69,7 +69,7 @@ export class Context implements IContext {
      * @returns {Promise<T>}
      * @memberof IContext
      */
-    exec<T>(target: IActivity, expression: Expression<T>, ctx?: ActivityContext): Promise<T> {
+    exec<T>(target: IActivity, expression: Expression<T>, ctx?: ActivityContext<any>): Promise<T> {
         if (isFunction(expression)) {
             return Promise.resolve(expression(target, ctx));
         } else if (isPromise(expression)) {

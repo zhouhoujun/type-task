@@ -8,7 +8,7 @@ import { IContext } from './IContext';
  * @export
  * @interface IActivityContext
  */
-export interface IActivityContext<T> {
+export interface IActivityContext {
     /**
      * input data
      *
@@ -44,10 +44,10 @@ export interface IActivityContext<T> {
     /**
      * ge activity execute result.
      *
-     * @returns {T}
+     * @returns {*}
      * @memberof IActivityContext
      */
-    result: T;
+    result: any;
 
     /**
      * set the data as result.
@@ -63,6 +63,16 @@ export interface IActivityContext<T> {
  */
 export const InputDataToken = new InjectToken<any>('Context_Inputdata');
 
+export interface GActivityContext<T> extends IActivityContext {
+    /**
+     * ge activity execute result.
+     *
+     * @returns {T}
+     * @memberof IActivityContext
+     */
+    result: T;
+}
+
 /**
  * inject actitiy context token.
  *
@@ -70,7 +80,7 @@ export const InputDataToken = new InjectToken<any>('Context_Inputdata');
  * @class InjectActivityContextToken
  * @extends {Registration<IActivityContext<any>>}
  */
-export class InjectActivityContextToken extends Registration<IActivityContext<any>> {
+export class InjectActivityContextToken extends Registration<IActivityContext> {
     constructor(type: Token<IActivity>) {
         super(type, 'AtContext');
     }

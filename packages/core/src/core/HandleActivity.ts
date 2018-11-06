@@ -1,7 +1,7 @@
 import { Activity } from './Activity';
 import { IActivity } from './IActivity';
-import { ActivityContext } from './ActivityContext';
 import { Task } from '../decorators';
+import { IActivityContext } from './IActivityContext';
 
 /**
  * handle activity interface.
@@ -14,12 +14,12 @@ export interface IHandleActivity extends IActivity {
     /**
      * run task.
      *
-     * @param {ActivityContext} [ctx]
+     * @param {IActivityContext} [ctx]
      * @param {() => Promise<any>} [next]
      * @returns {Promise<any>}
      * @memberof IHandleActivity
      */
-    run(ctx?: ActivityContext, next?: () => Promise<any>): Promise<any>;
+    run(ctx?: IActivityContext, next?: () => Promise<any>): Promise<any>;
 }
 
 /**
@@ -37,12 +37,12 @@ export abstract class HandleActivity extends Activity<any> implements IHandleAct
     /**
      * run context.
      *
-     * @param {ActivityContext} [ctx]
+     * @param {IActivityContext} [ctx]
      * @param {() => Promise<any>} [next]
      * @returns {Promise<any>}
      * @memberof HandleActivity
      */
-    async run(ctx?: ActivityContext, next?: () => Promise<any>): Promise<any> {
+    async run(ctx?: IActivityContext, next?: () => Promise<any>): Promise<any> {
         ctx = this.verifyCtx(ctx);
         await this.execute(ctx, next);
         return ctx.result;
@@ -53,10 +53,10 @@ export abstract class HandleActivity extends Activity<any> implements IHandleAct
      *
      * @protected
      * @abstract
-     * @param {ActivityContext} ctx
+     * @param {IActivityContext} ctx
      * @param {() => Promise<any>} [next]
      * @returns {Promise<void>}
      * @memberof HandleActivity
      */
-    protected abstract async execute(ctx: ActivityContext, next?: () => Promise<any>): Promise<void>;
+    protected abstract async execute(ctx: IActivityContext, next?: () => Promise<any>): Promise<void>;
 }

@@ -1,4 +1,4 @@
-import { Src, InjectAcitityToken, Task, ActivityConfigure, Expression, ExpressionType, ActivityContext } from '@taskfr/core';
+import { Src, InjectAcitityToken, Task, ActivityConfigure, Expression, ExpressionType, IActivityContext } from '@taskfr/core';
 
 import { NodeActivity } from '../core';
 
@@ -53,7 +53,7 @@ export class CleanActivity extends NodeActivity {
      * @returns {Promise<any>}
      * @memberof CleanActivity
      */
-    protected async execute(ctx?: ActivityContext): Promise<void> {
+    protected async execute(ctx: IActivityContext): Promise<void> {
         let clean = await this.context.exec(this, this.clean, ctx);
         await this.context.del(clean);
     }

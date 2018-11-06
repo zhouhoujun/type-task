@@ -1,7 +1,6 @@
-import { src, SrcOptions } from 'vinyl-fs';
+import { SrcOptions } from 'vinyl-fs';
 import { Src, Expression, ExpressionType, Task, InjectAcitityToken, ActivityConfigure } from '@taskfr/core';
 import { TransformActivityContext, TransformActivityContextToken } from './TransformActivityContext';
-import { ITransform } from './ITransform';
 import { NodeActivity } from '../core';
 
 /**
@@ -69,7 +68,7 @@ export class SourceActivity extends NodeActivity {
     }
 
     protected async execute(ctx: TransformActivityContext) {
-        return ctx.result;
+
     }
 
     /**

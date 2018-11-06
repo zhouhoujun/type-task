@@ -13,7 +13,7 @@ export const BuidActivityContextToken = new InjectActivityContextToken(BuildActi
  * @extends {NodeActivityContext}
  */
 @Injectable(BuidActivityContextToken)
-export class BuidActivityContext extends NodeActivityContext {
+export class BuidActivityContext extends NodeActivityContext<string[]> {
 
     /**
      * all files input to handle.
@@ -21,14 +21,8 @@ export class BuidActivityContext extends NodeActivityContext {
      * @type {string[]}
      * @memberof BuidActivityContext
      */
-    input: string[];
-    /**
-     * unhandled files.
-     *
-     * @type {string[]}
-     * @memberof BuidActivityContext
-     */
-    protected data: string[];
+    input: any;
+
     /**
      * the builder
      *
@@ -40,11 +34,6 @@ export class BuidActivityContext extends NodeActivityContext {
     constructor(@Inject(InputDataToken) input: any, @Inject(NodeContextToken) context: INodeContext) {
         super(input, context);
     }
-
-    get result(): string[] {
-        return this.data;
-    }
-
     /**
      * is completed or not.
      *

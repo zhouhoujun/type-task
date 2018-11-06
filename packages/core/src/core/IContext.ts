@@ -94,7 +94,7 @@ export interface IContext {
    * @returns {Promise<T>}
    * @memberof IContext
    */
-  exec<T>(target: IActivity, expression: Expression<T>, ctx?: IActivityContext<any>): Promise<T>;
+  exec<T>(target: IActivity, expression: Expression<T>, ctx?: IActivityContext): Promise<T>;
 
   /**
    * check is task or not.

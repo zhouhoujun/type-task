@@ -70,7 +70,7 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      * @memberof PipeActivity
      */
     protected async pipe(ctx: TransformActivityContext): Promise<void> {
-        await this.pipeStream(ctx.result, ctx, ...this.pipes);
+        ctx.result = await this.pipeStream(ctx.result, ctx, ...this.pipes);
     }
 
     /**

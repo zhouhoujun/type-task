@@ -1,5 +1,5 @@
 import { Activity } from './Activity';
-import { ActivityContext } from './ActivityContext';
+import { IActivityContext } from './IActivityContext';
 import { IActivity } from './IActivity';
 import { Registration, Type } from '@ts-ioc/core';
 import { Task } from '../decorators';
@@ -49,11 +49,11 @@ export abstract class ContextActivity extends Activity<any> {
     /**
     * run task.
     *
-    * @param {ActivityContext} [ctx] execute context.
+    * @param {IActivityContext} [ctx] execute context.
     * @returns {Promise<T>}
     * @memberof Activity
     */
-    async run(ctx?: ActivityContext): Promise<any> {
+    async run(ctx?: IActivityContext): Promise<any> {
         this.ctx = this.verifyCtx(ctx);
         await this.before(this.ctx);
         await this.execute(this.ctx);
@@ -70,7 +70,7 @@ export abstract class ContextActivity extends Activity<any> {
      * @returns {Promise<void>}
      * @memberof ContextActivity
      */
-    protected async before(ctx: ActivityContext): Promise<void> {
+    protected async before(ctx: IActivityContext): Promise<void> {
         if (this.config && this.config.type) {
             let dep = this.context.getContainer().getRefService(InjectBeforeActivity, this.config.type);
             if (dep) {
@@ -88,7 +88,7 @@ export abstract class ContextActivity extends Activity<any> {
      * @returns {Promise<void>}
      * @memberof Activity
      */
-    protected abstract async execute(ctx: ActivityContext): Promise<void>;
+    protected abstract async execute(ctx: IActivityContext): Promise<void>;
 
     /**
      * after run sequence.
@@ -98,7 +98,7 @@ export abstract class ContextActivity extends Activity<any> {
      * @returns {Promise<void>}
      * @memberof ContextActivity
      */
-    protected async after(ctx: ActivityContext): Promise<void> {
+    protected async after(ctx: IActivityContext): Promise<void> {
         if (this.config && this.config.type) {
             let dep = this.context.getContainer().getRefService(InjectAfterActivity, this.config.type);
             if (dep) {

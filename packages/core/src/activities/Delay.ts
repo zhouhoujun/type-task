@@ -1,6 +1,6 @@
 import { Defer } from '@ts-ioc/core';
 import { Task } from '../decorators';
-import { InjectAcitityToken, Activity, Expression, DelayConfigure, OnActivityInit, ActivityContext, IActivity } from '../core';
+import { InjectAcitityToken, Activity, Expression, DelayConfigure, OnActivityInit, IActivity, IActivityContext } from '../core';
 
 /**
  * deloy activity token.
@@ -35,7 +35,7 @@ export class DelayActivity extends Activity<any> implements OnActivityInit {
         }
     }
 
-    protected async execute(ctx: ActivityContext): Promise<any> {
+    protected async execute(ctx: IActivityContext): Promise<any> {
         let delay = await this.context.exec(this, this.delay, ctx);
         let defer = new Defer<any>();
         let timmer = setTimeout(() => {

@@ -99,7 +99,7 @@ export class BabelCompileActivity extends ShellCompilerActivity {
      * @returns {Promise<void>}
      * @memberof ContextActivity
      */
-    protected async after(ctx: NodeActivityContext): Promise<void> {
+    protected async after(ctx: NodeActivityContext<any>): Promise<void> {
         await super.after(ctx);
         let output = await this.execShell(path.normalize(path.join(this.context.getRootPath(), './node_modules/.bin/babel-external-helpers')) +
             ' --output-type global ', { silent: true } as any);

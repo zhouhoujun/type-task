@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, ParallelConfigure, ActivityType, ActivityContext, ContextActivity, } from '../core';
+import { IActivity, InjectAcitityToken, ParallelConfigure, ActivityType, IActivityContext, ContextActivity, } from '../core';
 
 
 
@@ -41,11 +41,11 @@ export class ParallelActivity extends ContextActivity {
      * execute parallel.
      *
      * @protected
-     * @param {ActivityContext} ctx
+     * @param {IActivityContext} ctx
      * @returns {Promise<void>}
      * @memberof ParallelActivity
      */
-    protected async execute(ctx: ActivityContext): Promise<void> {
+    protected async execute(ctx: IActivityContext): Promise<void> {
         await Promise.all(this.activities.map(task => task.run(ctx)));
     }
 

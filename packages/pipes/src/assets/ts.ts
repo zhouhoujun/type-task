@@ -81,7 +81,7 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      */
     protected async beforePipe(ctx: TransformActivityContext): Promise<void> {
         await super.beforePipe(ctx);
-        await this.pipeStream(ctx.result, ctx, this.getTsCompilePipe());
+        ctx.result = await this.pipeStream(ctx.result, ctx, this.getTsCompilePipe());
     }
     /**
      * get ts configue compile.
@@ -110,7 +110,7 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      */
     protected async executeUglify(ctx: TransformActivityContext) {
         if (this.uglify) {
-            let ugCtx = this.ctxFactory.create(ctx.result.js);
+            let ugCtx = this.ctxFactory.create<TransformActivityContext>(ctx.result.js);
             await this.uglify.run(ugCtx);
             ctx.result.js = ugCtx.result;
         }

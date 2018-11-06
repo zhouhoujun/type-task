@@ -52,9 +52,9 @@ export class UglifyActivity extends Activity<ITransform> implements OnActivityIn
 
     protected async execute(ctx: TransformActivityContext) {
         if (this.uglifyOptions) {
-            ctx.data = ctx.data.pipe(uglify(this.uglifyOptions))
+            ctx.result = ctx.result.pipe(uglify(this.uglifyOptions))
         } else {
-            ctx.data = ctx.data.pipe(uglify())
+            ctx.result = ctx.result.pipe(uglify())
         }
     }
 }

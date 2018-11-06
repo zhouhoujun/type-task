@@ -20,7 +20,7 @@ export const TransformActivityContextToken = new InjectActivityContextToken(Tran
  * @implements {IActivityContext<ITransform>}
  */
 @Injectable(TransformActivityContextToken)
-export class TransformActivityContext extends NodeActivityContext implements IActivityContext<ITransform> {
+export class TransformActivityContext extends NodeActivityContext<ITransform> {
 
     sourceMaps: ISourceMapsActivity;
 

@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, Expression, IntervalConfigure, ActivityContext } from '../core';
+import { IActivity, InjectAcitityToken, Activity, Expression, IntervalConfigure, IActivityContext } from '../core';
 
 
 /**
@@ -33,7 +33,7 @@ export class IntervalActivity extends Activity<any> {
         this.body = await this.buildActivity(config.body);
     }
 
-    protected async execute(ctx?: ActivityContext): Promise<void> {
+    protected async execute(ctx?: IActivityContext): Promise<void> {
         let interval = await this.context.exec(this, this.interval, ctx);
         setInterval(() => {
             this.body.run(ctx);

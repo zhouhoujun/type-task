@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { ActivityContext } from './ActivityContext';
+import { IActivityContext } from './IActivityContext';
 import { IHandleActivity, HandleActivity } from './HandleActivity';
 import { ChainConfigure } from './ActivityConfigure';
 import { InjectAcitityToken, IActivity } from './IActivity';
@@ -33,14 +33,14 @@ export class ChainActivity extends Activity<any> {
         this.handles = (this.handles || []).filter(act => act instanceof HandleActivity);
     }
 
-    protected async execute(ctx: ActivityContext): Promise<any> {
-        return await this.handleRequest(ctx);
+    protected async execute(ctx: IActivityContext): Promise<void> {
+        await this.handleRequest(ctx);
     }
 
-    protected handleRequest(ctx: ActivityContext, next?: () => Promise<any>) {
+    protected handleRequest(ctx: IActivityContext, next?: () => Promise<any>): Promise<void> {
         let index = -1;
         let handles = this.handles.map(act => {
-            return (ctx: ActivityContext, next?: () => Promise<any>) => act.run(ctx, next);
+            return (ctx: IActivityContext, next?: () => Promise<any>) => act.run(ctx, next);
         });
         return dispatch(0);
         function dispatch(idx: number): Promise<any> {

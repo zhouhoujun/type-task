@@ -24,8 +24,8 @@ export abstract class NodeActivity extends ContextActivity {
     @Inject(NodeContextToken)
     context: INodeContext;
 
-    protected verifyCtx(input?: any): NodeActivityContext {
-        return input instanceof NodeActivityContext ? input : super.verifyCtx(input) as NodeActivityContext;
+    protected verifyCtx(input?: any): NodeActivityContext<any> {
+        return input instanceof NodeActivityContext ? input : super.verifyCtx(input) as NodeActivityContext<any>;
     }
 
     /**
@@ -37,7 +37,7 @@ export abstract class NodeActivity extends ContextActivity {
      * @returns {Promise<void>}
      * @memberof NodeActivity
      */
-    protected abstract async execute(ctx: NodeActivityContext): Promise<void>;
+    protected abstract async execute(ctx: NodeActivityContext<any>): Promise<void>;
 }
 
 
@@ -56,7 +56,7 @@ export const NodeActivityContextToken = new InjectActivityContextToken(NodeActiv
  * @implements {IActivityContext<ITransform>}
  */
 @Injectable(NodeActivityContextToken)
-export class NodeActivityContext extends ActivityContext {
+export class NodeActivityContext<T> extends ActivityContext<T> {
 
     /**
      * ovverid to node context
@@ -75,6 +75,6 @@ export class NodeActivityContext extends ActivityContext {
         if (input instanceof FileChanged) {
             return input.changed();
         }
-        return input;
+        return super.translate(input);
     }
 }

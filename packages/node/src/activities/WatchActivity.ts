@@ -1,9 +1,9 @@
 
-import { IActivity, ExpressionType, Src, Expression, Activity, InjectAcitityToken, Task, ActivityConfigure, Active, ActivityType, ActivityContext, GActivity } from '@taskfr/core';
-import { Defer, isArray, Token, Inject } from '@ts-ioc/core';
+import { IActivity, ExpressionType, Src, Expression, InjectAcitityToken, Task, ActivityConfigure, Active, ActivityType, IActivityContext, GActivity } from '@taskfr/core';
+import { Defer, isArray, Token } from '@ts-ioc/core';
 import { fromEventPattern } from 'rxjs';
 import { bufferTime, map } from 'rxjs/operators';
-import { NodeContextToken, INodeContext, FileChanged, NodeActivity, IFileChanged } from '../core';
+import { FileChanged, NodeActivity, IFileChanged } from '../core';
 const chokidar = require('chokidar');
 
 
@@ -223,7 +223,7 @@ export class WatchActivity extends NodeActivity implements GActivity<FileChanged
      */
     defaultTranslatorToken: Token<any>;
 
-    protected async execute(ctx: ActivityContext): Promise<void> {
+    protected async execute(ctx: IActivityContext): Promise<void> {
         return await this.watch(ctx);
     }
 
@@ -238,7 +238,7 @@ export class WatchActivity extends NodeActivity implements GActivity<FileChanged
         }
     }
 
-    protected async watch(ctx: ActivityContext) {
+    protected async watch(ctx: IActivityContext) {
         let watchSrc = await this.context.exec(this, this.src, ctx);
         let options = await this.context.exec(this, this.options, ctx);
         let watcher = chokidar.watch(watchSrc, options);
@@ -274,7 +274,7 @@ export class WatchActivity extends NodeActivity implements GActivity<FileChanged
                 })
             )
             .subscribe(chg => {
-                ctx.setExecResult(chg);
+                ctx.setAsResult(chg);
                 watchBody.run(ctx);
             });
 

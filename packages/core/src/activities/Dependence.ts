@@ -52,12 +52,10 @@ export class DependenceActivity extends Activity<any> {
      * execute body.
      *
      * @protected
-     * @param {*} [data]
-     * @param {IActivity} [execute]
-     * @returns
+     * @param {ActivityContext<any>} ctx
      * @memberof DependenceActivity
      */
-    protected async execute(ctx: ActivityContext) {
+    protected async execute(ctx: ActivityContext<any>) {
         if (this.dependence) {
             await this.dependence.run(ctx);
         }
