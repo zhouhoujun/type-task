@@ -99,6 +99,6 @@ export class DestActivity extends TransformActivity {
             destOptions = await this.context.exec(this, this.destOptions, ctx);
         }
         dist = this.context.toRootPath(dist);
-        await this.executePipe(ctx.result, ctx, dest(dist, destOptions), true);
+        ctx.result = await this.executePipe(ctx.result, ctx, dest(dist, destOptions), true);
     }
 }

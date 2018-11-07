@@ -85,7 +85,7 @@ export class PackageBuilder extends ActivityBuilder {
                         return this.buildByConfig({ token: BuildHandleToken }, activity.id)
                             .then(handle => {
                                 handle.compiler = a;
-                                handle.name = name;
+                                handle.name = 'handle-' + name;
                                 handle.test = (f) => true;
                                 return handle;
                             });

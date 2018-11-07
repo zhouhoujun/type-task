@@ -56,7 +56,7 @@ export class ChainActivity extends Activity<any> {
                 return Promise.resolve();
             }
             try {
-                return Promise.resolve(handle(ctx, dispatch.bind(null, idx + 1)));
+                return handle(ctx, dispatch.bind(null, idx + 1));
             } catch (err) {
                 return Promise.reject(err);
             }

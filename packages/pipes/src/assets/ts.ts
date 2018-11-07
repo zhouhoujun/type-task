@@ -111,8 +111,7 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
     protected async executeUglify(ctx: TransformActivityContext) {
         if (this.uglify) {
             let ugCtx = this.ctxFactory.create<TransformActivityContext>(ctx.result.js);
-            await this.uglify.run(ugCtx);
-            ctx.result.js = ugCtx.result;
+            ctx.result.js = await this.uglify.run(ugCtx);
         }
     }
     /**
