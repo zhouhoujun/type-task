@@ -74,7 +74,7 @@ export class SourceMapsActivity extends NodeActivity implements ISourceMapsActiv
     }
 
     async write(ctx: TransformActivityContext) {
-        if (this.hasInit) {
+        if (!this.hasInit) {
             return;
         }
         await this.run(ctx);
