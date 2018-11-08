@@ -83,11 +83,11 @@ export class AssetActivity extends TransformActivity implements IAssetActivity {
      * before pipe
      *
      * @protected
-     * @param {TransformActivityContext} ctx
      * @returns {Promise<void>}
      * @memberof AssetActivity
      */
-    protected async beforePipe(ctx: TransformActivityContext): Promise<void> {
+    protected async beforePipe(): Promise<void> {
+        let ctx = this.getContext();
         if (this.test) {
             await this.test.run(ctx);
         }
@@ -95,7 +95,7 @@ export class AssetActivity extends TransformActivity implements IAssetActivity {
             await this.src.run(ctx);
             if (this.watch) {
                 this.watch.body = this;
-                let watchCtx = this.ctxFactory.create();
+                let watchCtx = this.getCtxFactory().create();
                 watchCtx.target = this.watch;
                 this.watch.run(watchCtx);
             }
@@ -113,20 +113,19 @@ export class AssetActivity extends TransformActivity implements IAssetActivity {
      * after pipe.
      *
      * @protected
-     * @param {TransformActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof AssetActivity
      */
-    protected async afterPipe(ctx: TransformActivityContext): Promise<void> {
-        await this.executeUglify(ctx);
+    protected async afterPipe(): Promise<void> {
+        await this.executeUglify();
         if (isArray(this.dest)) {
             if (this.dest.length > 0) {
                 await Promise.all(this.dest.map(ds => {
-                    return this.executeDest(ds, ctx);
+                    return this.executeDest(ds);
                 }));
             }
         } else if (this.dest) {
-            await this.executeDest(this.dest, ctx);
+            await this.executeDest(this.dest);
         }
     }
 
@@ -138,9 +137,9 @@ export class AssetActivity extends TransformActivity implements IAssetActivity {
      * @returns
      * @memberof AssetActivity
      */
-    protected async executeUglify(ctx: TransformActivityContext) {
+    protected async executeUglify() {
         if (this.uglify) {
-            await this.uglify.run(ctx);
+            await this.uglify.run(this.getContext());
         }
     }
 
@@ -153,10 +152,10 @@ export class AssetActivity extends TransformActivity implements IAssetActivity {
      * @returns
      * @memberof AssetActivity
      */
-    protected async executeDest(ds: DestActivity, ctx: TransformActivityContext) {
+    protected async executeDest(ds: DestActivity) {
         if (!ds) {
             return;
         }
-        return await ds.run(ctx);
+        await ds.run(this.getContext());
     }
 }

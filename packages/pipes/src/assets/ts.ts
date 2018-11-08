@@ -46,10 +46,10 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
     async onActivityInit(cfg: TsConfigure) {
         await super.onActivityInit(cfg);
         this.defaultAnnotation = { annotationFramework: () => classAnnotations(), task: AnnotationActivity };
-        let tds = this.context.to(cfg.tds);
+        let tds = this.getContext().to(cfg.tds);
         if (tds !== false) {
             if (isString(tds)) {
-                this.tdsDest = this.context.getContainer().resolve(DestAcitvityToken);
+                this.tdsDest = this.getContainer().resolve(DestAcitvityToken);
                 this.tdsDest.dest = tds;
             } else {
                 this.tdsDest = true;
@@ -64,24 +64,24 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      * execute ts pipe.
      *
      * @protected
-     * @param {TransformActivityContext} ctx
      * @returns {Promise<void>}
      * @memberof TsCompile
      */
-    protected async pipe(ctx: TransformActivityContext): Promise<void> {
-        ctx.result.js = await this.pipeStream(ctx.result.js, ctx, ...this.pipes);
+    protected async pipe(): Promise<void> {
+        let ctx = this.getContext();
+        ctx.result.js = await this.pipeStream(ctx.result.js, ...this.pipes);
     }
     /**
      * begin pipe.
      *
      * @protected
-     * @param {TransformActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof TsCompile
      */
-    protected async beforePipe(ctx: TransformActivityContext): Promise<void> {
-        await super.beforePipe(ctx);
-        ctx.result = await this.pipeStream(ctx.result, ctx, this.getTsCompilePipe());
+    protected async beforePipe(): Promise<void> {
+        await super.beforePipe();
+        let ctx = this.getContext();
+        ctx.result = await this.pipeStream(ctx.result, this.getTsCompilePipe());
     }
     /**
      * get ts configue compile.
@@ -92,9 +92,9 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      */
     private getTsCompilePipe(): ITransform {
         let cfg = this.config as TsConfigure;
-        let tsconfig = this.context.to(cfg.tsconfig || './tsconfig.json');
+        let tsconfig = this.getContext().to(cfg.tsconfig || './tsconfig.json');
         if (isString(tsconfig)) {
-            let tsProject = ts.createProject(this.context.toRootPath(tsconfig));
+            let tsProject = ts.createProject(this.getContext().toRootPath(tsconfig));
             return tsProject();
         } else {
             return ts(tsconfig);
@@ -104,14 +104,15 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      * execyte uglify.
      *
      * @protected
-     * @param {ITransform} stream
      * @returns
      * @memberof TsCompile
      */
-    protected async executeUglify(ctx: TransformActivityContext) {
+    protected async executeUglify() {
         if (this.uglify) {
-            let ugCtx = this.ctxFactory.create<TransformActivityContext>(ctx.result.js);
-            ctx.result.js = await this.uglify.run(ugCtx);
+            let ctx = this.getContext();
+            let ugCtx = this.getCtxFactory().create<TransformActivityContext>(ctx.result.js);
+            await this.uglify.run(ugCtx);
+            ctx.result.js = ugCtx.result;
         }
     }
     /**
@@ -123,7 +124,8 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
      * @returns
      * @memberof TsCompile
      */
-    protected async executeDest(ds: DestActivity, ctx: TransformActivityContext) {
+    protected async executeDest(ds: DestActivity) {
+        let ctx = this.getContext();
         if (!ds || !ctx.result) {
             return;
         }
@@ -131,14 +133,14 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
         let stream = ctx.result;
         if (this.tdsDest && isTransform(stream.dts)) {
             let dts = isBoolean(this.tdsDest) ? ds : (this.tdsDest || ds);
-            await dts.run(this.ctxFactory.create<TransformActivityContext>(stream.dts));
+            await dts.run(this.getCtxFactory().create<TransformActivityContext>(stream.dts));
         }
         if (isTransform(stream.js)) {
-            let jsCtx = this.ctxFactory.create<TransformActivityContext>(stream.js);
+            let jsCtx = this.getCtxFactory().create<TransformActivityContext>(stream.js);
             jsCtx.sourceMaps = ctx.sourceMaps;
             await ds.run(jsCtx);
         } else if (isTransform(stream)) {
-            let newCtx = this.ctxFactory.create<TransformActivityContext>(stream);
+            let newCtx = this.getCtxFactory().create<TransformActivityContext>(stream);
             newCtx.sourceMaps = ctx.sourceMaps;
             await ds.run(newCtx);
         }

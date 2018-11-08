@@ -43,8 +43,8 @@ export class PackageActivity extends BuildActivity implements IPackageActivity {
      */
     src: string;
 
-    protected async execBeforeBody(ctx: BuidActivityContext) {
-        let execute = this.context.getContainer().resolve(SequenceActivity);
+    protected async execBeforeBody() {
+        let execute = this.getContainer().resolve(SequenceActivity);
         execute.name = 'Before build';
         if (this.clean) {
             execute.add(this.clean);
@@ -58,11 +58,11 @@ export class PackageActivity extends BuildActivity implements IPackageActivity {
         if (this.beforeBuildBody) {
             execute.add(this.beforeBuildBody);
         }
-        await execute.run(ctx);
+        await execute.run(this.getContext());
     }
 
-    protected async execAfterBody(ctx: BuidActivityContext) {
-        let execute = this.context.getContainer().resolve(SequenceActivity);
+    protected async execAfterBody() {
+        let execute = this.getContainer().resolve(SequenceActivity);
         execute.name = 'After build';
         if (this.afterBuildBody) {
             execute.add(this.afterBuildBody);
@@ -70,7 +70,7 @@ export class PackageActivity extends BuildActivity implements IPackageActivity {
         if (this.dest) {
             execute.add(this.dest);
         }
-        await execute.run(ctx);
+        await execute.run(this.getContext());
     }
 
 }

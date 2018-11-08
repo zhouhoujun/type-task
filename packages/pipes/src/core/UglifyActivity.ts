@@ -47,10 +47,11 @@ export class UglifyActivity extends Activity<ITransform> implements OnActivityIn
 
     async onActivityInit(config: UglifyConfigure) {
         await super.onActivityInit(config);
-        this.uglifyOptions = this.context.to(config.uglifyOptions);
+        this.uglifyOptions = this.getContext().to(config.uglifyOptions);
     }
 
-    protected async execute(ctx: TransformActivityContext) {
+    protected async execute() {
+        let ctx = this.getContext();
         if (this.uglifyOptions) {
             ctx.result = ctx.result.pipe(uglify(this.uglifyOptions))
         } else {

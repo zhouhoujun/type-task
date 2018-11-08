@@ -29,7 +29,7 @@ export class PackageBuilder extends ActivityBuilder {
     async buildStrategy(activity: IActivity, config: PackageConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof PackageActivity) {
-            let srcRoot = activity.src = activity.context.to(config.src);
+            let srcRoot = activity.src = activity.getContext().to(config.src);
 
             let assets = await Promise.all(lang.keys(config.assets).map(name => {
                 return this.toActivity<Src, AssetActivity, AssetConfigure>(config.assets[name], activity,

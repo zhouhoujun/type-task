@@ -44,15 +44,15 @@ export class AnnotationActivity extends TransformActivity {
      * begin pipe.
      *
      * @protected
-     * @param {TransformActivityContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof AnnotationActivity
      */
-    protected async beforePipe(ctx: TransformActivityContext): Promise<void> {
-        await super.beforePipe(ctx);
+    protected async beforePipe(): Promise<void> {
+        await super.beforePipe();
         if (this.annotationFramework) {
-            let annotation = await this.context.exec(this, this.annotationFramework, ctx);
-            ctx.result = await this.pipeStream(ctx.result, ctx, annotation);
+            let ctx = this.getContext();
+            let annotation = await ctx.exec(this, this.annotationFramework);
+            ctx.result = await this.pipeStream(ctx.result, annotation);
         }
     }
 }
