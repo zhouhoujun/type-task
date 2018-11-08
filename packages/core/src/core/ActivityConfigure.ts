@@ -6,7 +6,6 @@ import { ExpressionActivity } from './ExpressionActivity';
 import { ActivityRunner } from './ActivityRunner';
 import { IActivityContext, GActivityContext } from './IActivityContext';
 import { IHandleActivity } from './HandleActivity';
-import { isFunction } from 'util';
 
 
 /**
@@ -25,7 +24,7 @@ export interface KeyValue<TKey, TVal> {
 /**
  * async result.
  */
-export type AsyncResult<T> = (activity?: IActivity, ctx?: GActivityContext<T>) => Promise<T>;
+export type AsyncResult<T> = (activity?: IActivity, ctx?: IActivityContext) => Promise<T>;
 
 /**
  * activity result.

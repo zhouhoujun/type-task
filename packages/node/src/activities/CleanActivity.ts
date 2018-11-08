@@ -53,8 +53,8 @@ export class CleanActivity extends NodeActivity {
      * @returns {Promise<any>}
      * @memberof CleanActivity
      */
-    protected async execute(ctx: IActivityContext): Promise<void> {
-        let clean = await this.context.exec(this, this.clean, ctx);
-        await this.context.del(clean);
+    protected async execute(): Promise<void> {
+        let clean = await this.getContext().exec(this, this.clean);
+        await this.getContext().del(clean);
     }
 }

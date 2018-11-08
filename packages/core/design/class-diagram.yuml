@@ -1,0 +1,16 @@
+// {type:class}
+
+[Activity]1-<>1[ActivityContext]
+[Activity]1-<>1[ActivityBuilder]
+[ContextFactory]1-<>[ActivityContext]
+[Activity]^-[ChainActivty]
+[Activity]^-[HandleActivity]
+[Activity]^-[ContextActivity]
+[Activity]^-[ExpressionActivity]
+[Activity]^-[IfActivity]
+[Activity]^-[WhileActivity]
+[Activity]^-[DoWhileActivity]
+[Activity]^-[ThrowActivity]
+[Activity]^-[TryCatchActivity]
+[Activity]^-[DelayActivity]
+[Activity]^-[ConfirmActivity]

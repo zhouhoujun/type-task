@@ -1,8 +1,8 @@
-import { isString, isArray, Inject, isBoolean } from '@ts-ioc/core';
+import { isString, isArray, isBoolean } from '@ts-ioc/core';
 import { existsSync } from 'fs';
-import { Src, Activity, Task, CtxType, ActivityConfigure, ActivityContext } from '@taskfr/core';
+import { Src, Task, CtxType, ActivityConfigure } from '@taskfr/core';
 import * as execa from 'execa';
-import { NodeContextToken, INodeContext, NodeActivity, NodeActivityContext } from '../core';
+import { NodeActivity, NodeActivityContext } from '../core';
 
 
 /**
@@ -59,10 +59,10 @@ export class ExecFileActivity extends NodeActivity {
 
     async onActivityInit(config: ExecFileActivityConfig) {
         await super.onActivityInit(config);
-        this.files = this.context.to(config.files);
-        this.args = this.context.to(config.args);
-        this.options = this.context.to(config.options);
-        this.allowError = this.context.to(config.allowError);
+        this.files = this.getContext().to(config.files);
+        this.args = this.getContext().to(config.args);
+        this.options = this.getContext().to(config.options);
+        this.allowError = this.getContext().to(config.allowError);
         if (!isBoolean(this.allowError)) {
             this.allowError = true;
         }

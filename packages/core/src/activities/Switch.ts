@@ -55,12 +55,12 @@ export class SwitchActivity extends Activity<any> {
         }
     }
 
-    protected async execute(ctx: IActivityContext): Promise<void> {
-        let matchkey = await this.context.exec<any>(this, this.expression, ctx);
+    protected async execute(): Promise<void> {
+        let matchkey = await this.getContext().exec<any>(this, this.expression);
         if (!isUndefined(matchkey) && this.cases.has(matchkey)) {
-            await this.cases.get(matchkey).run(ctx);
+            await this.cases.get(matchkey).run(this.getContext());
         } else if (this.defaultBody) {
-            await this.defaultBody.run(ctx);
+            await this.defaultBody.run(this.getContext());
         }
     }
 }

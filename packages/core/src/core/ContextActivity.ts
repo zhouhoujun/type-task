@@ -1,4 +1,4 @@
-import { Activity } from './Activity';
+import { ActivityBase } from './Activity';
 import { IActivityContext } from './IActivityContext';
 import { IActivity } from './IActivity';
 import { Registration, Type } from '@ts-ioc/core';
@@ -41,10 +41,10 @@ export class InjectAfterActivity<T extends IActivity> extends Registration<T> {
  * @export
  * @abstract
  * @class ContextActivity
- * @extends {Activity<any>}
+ * @extends {ActivityBase}
  */
 @Task
-export abstract class ContextActivity extends Activity<any> {
+export abstract class ContextActivity extends ActivityBase {
 
     /**
     * run task.
@@ -53,12 +53,12 @@ export abstract class ContextActivity extends Activity<any> {
     * @returns {Promise<T>}
     * @memberof Activity
     */
-    async run(ctx?: IActivityContext): Promise<any> {
-        this.ctx = this.verifyCtx(ctx);
-        await this.before(this.ctx);
-        await this.execute(this.ctx);
-        await this.after(this.ctx);
-        return this.ctx.result;
+    async run(ctx?: IActivityContext): Promise<IActivityContext> {
+        this.verifyCtx(ctx);
+        await this.before();
+        await this.execute();
+        await this.after();
+        return this.getContext();
     }
 
 
@@ -70,11 +70,11 @@ export abstract class ContextActivity extends Activity<any> {
      * @returns {Promise<void>}
      * @memberof ContextActivity
      */
-    protected async before(ctx: IActivityContext): Promise<void> {
+    protected async before(): Promise<void> {
         if (this.config && this.config.type) {
-            let dep = this.context.getContainer().getRefService(InjectBeforeActivity, this.config.type);
+            let dep = this.getContext().getContainer().getRefService(InjectBeforeActivity, this.config.type);
             if (dep) {
-                await dep.run(ctx);
+                await dep.run(this.getContext());
             }
         }
     }
@@ -83,26 +83,23 @@ export abstract class ContextActivity extends Activity<any> {
      * execute the activity body.
      *
      * @protected
-     * @param {*} [data]
-     * @param {IActivity} [execute]
      * @returns {Promise<void>}
      * @memberof Activity
      */
-    protected abstract async execute(ctx: IActivityContext): Promise<void>;
+    protected abstract async execute(): Promise<void>;
 
     /**
      * after run sequence.
      *
      * @protected
-     * @param {*} [data]
      * @returns {Promise<void>}
      * @memberof ContextActivity
      */
-    protected async after(ctx: IActivityContext): Promise<void> {
+    protected async after(): Promise<void> {
         if (this.config && this.config.type) {
-            let dep = this.context.getContainer().getRefService(InjectAfterActivity, this.config.type);
+            let dep = this.getContext().getContainer().getRefService(InjectAfterActivity, this.config.type);
             if (dep) {
-                await dep.run(ctx);
+                await dep.run(this.getContext());
             }
         }
     }

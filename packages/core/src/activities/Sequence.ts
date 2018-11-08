@@ -36,8 +36,8 @@ export class SequenceActivity extends ContextActivity {
         return activity;
     }
 
-    protected async execute(ctx: IActivityContext): Promise<void> {
-        let execPromise = Promise.resolve(ctx);
+    protected async execute(): Promise<void> {
+        let execPromise = Promise.resolve(this.getContext());
         this.activities.forEach(task => {
             execPromise = execPromise.then(pdata => task.run(pdata));
         });

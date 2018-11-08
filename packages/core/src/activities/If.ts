@@ -29,21 +29,21 @@ export class IfActivity extends Activity<any> {
         }
     }
 
-    protected async execute(ctx?: IActivityContext): Promise<void> {
-        let condition = await this.context.exec(this, this.condition, ctx);
+    protected async execute(): Promise<void> {
+        let condition = await this.getContext().exec(this, this.condition);
         if (condition) {
-            await this.execIf(ctx);
+            await this.execIf();
         } else if (this.elseBody) {
-            await this.execElse(ctx);
+            await this.execElse();
         }
     }
 
-    protected async execIf(ctx?: IActivityContext): Promise<void> {
-        await this.ifBody.run(ctx);
+    protected async execIf(): Promise<void> {
+        await this.ifBody.run(this.getContext());
     }
 
-    protected async execElse(ctx?: IActivityContext): Promise<void> {
-        await this.elseBody.run(ctx);
+    protected async execElse(): Promise<void> {
+        await this.elseBody.run(this.getContext());
     }
 
 }

@@ -8,7 +8,7 @@ import { IContext } from './IContext';
  * @export
  * @interface IActivityContext
  */
-export interface IActivityContext {
+export interface IActivityContext extends IContext {
     /**
      * input data
      *
@@ -32,14 +32,6 @@ export interface IActivityContext {
      * @memberof ActivityContext
      */
     target?: IActivity;
-
-    /**
-     * evn context.
-     *
-     * @type {IContext}
-     * @memberof IActivityContext
-     */
-    context: IContext;
 
     /**
      * ge activity execute result.

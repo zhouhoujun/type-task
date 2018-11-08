@@ -1,4 +1,4 @@
-import { Activity } from './Activity';
+import { Activity, ActivityBase } from './Activity';
 import { IActivity } from './IActivity';
 import { Task } from '../decorators';
 import { IActivityContext } from './IActivityContext';
@@ -28,11 +28,11 @@ export interface IHandleActivity extends IActivity {
  * @export
  * @abstract
  * @class HandleActivity
- * @extends {Activity<any>}
+ * @extends {ActivityBase}
  * @implements {IHandleActivity}
  */
 @Task
-export abstract class HandleActivity extends Activity<any> implements IHandleActivity {
+export abstract class HandleActivity extends ActivityBase implements IHandleActivity {
 
     /**
      * run context.
@@ -42,10 +42,10 @@ export abstract class HandleActivity extends Activity<any> implements IHandleAct
      * @returns {Promise<any>}
      * @memberof HandleActivity
      */
-    async run(ctx?: IActivityContext, next?: () => Promise<any>): Promise<any> {
-        ctx = this.verifyCtx(ctx);
-        await this.execute(ctx, next);
-        return ctx.result;
+    async run(ctx?: IActivityContext, next?: () => Promise<any>): Promise<IActivityContext> {
+        this.verifyCtx(ctx);
+        await this.execute(next);
+        return this.getContext()
     }
 
     /**
@@ -53,10 +53,9 @@ export abstract class HandleActivity extends Activity<any> implements IHandleAct
      *
      * @protected
      * @abstract
-     * @param {IActivityContext} ctx
      * @param {() => Promise<any>} [next]
      * @returns {Promise<void>}
      * @memberof HandleActivity
      */
-    protected abstract async execute(ctx: IActivityContext, next?: () => Promise<any>): Promise<void>;
+    protected abstract async execute(next?: () => Promise<any>): Promise<void>;
 }

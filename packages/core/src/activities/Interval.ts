@@ -33,10 +33,10 @@ export class IntervalActivity extends Activity<any> {
         this.body = await this.buildActivity(config.body);
     }
 
-    protected async execute(ctx?: IActivityContext): Promise<void> {
-        let interval = await this.context.exec(this, this.interval, ctx);
+    protected async execute(): Promise<void> {
+        let interval = await this.getContext().exec(this, this.interval);
         setInterval(() => {
-            this.body.run(ctx);
+            this.body.run(this.getContext());
         }, interval);
     }
 }

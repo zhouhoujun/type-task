@@ -49,17 +49,22 @@ export class SourceMapsActivity extends NodeActivity implements ISourceMapsActiv
 
     async onActivityInit(config: SourceMapsConfigure) {
         await super.onActivityInit(config);
-        this.sourcemaps = this.context.to(config.sourcemaps) || './sourcemaps';
+        this.sourcemaps = this.getContext().to(config.sourcemaps) || './sourcemaps';
     }
 
     private hasInit = false;
 
-    protected async execute(ctx: TransformActivityContext) {
+    getContext(): TransformActivityContext {
+        return super.getContext() as TransformActivityContext;
+    }
+
+    protected async execute() {
         const sourcemaps = require('gulp-sourcemaps');
         if (!sourcemaps) {
             console.error('not found gulp-sourcemaps');
             return;
         }
+        let ctx = this.getContext();
         if (!this.hasInit) {
             ctx.result = ctx.result.pipe(sourcemaps.init());
         } else {

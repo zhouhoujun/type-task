@@ -1,5 +1,4 @@
-import { Registration } from '@ts-ioc/core';
-import { IContext } from './IContext';
+import { Registration, IContainer } from '@ts-ioc/core';
 import { ActivityConfigure } from './ActivityConfigure';
 import { OnActivityInit } from './OnActivityInit';
 import { IActivityContext, GActivityContext } from './IActivityContext';
@@ -53,20 +52,20 @@ export interface IActivity {
     name: string;
 
     /**
-     * task context.
-     *
-     * @type {IContext}
-     * @memberof IActivity
-     */
-    context: IContext;
-
-    /**
      * task execute context.
      *
      * @type {IContext}
      * @memberof IActivity
      */
-    ctx: IActivityContext;
+    getContext(): IActivityContext;
+
+    /**
+     * get ioc container.
+     *
+     * @returns {IContainer}
+     * @memberof IContext
+     */
+    getContainer(): IContainer;
 
     /**
      * context factory.
@@ -74,7 +73,7 @@ export interface IActivity {
      * @type {ContextFactory}
      * @memberof Activity
      */
-    ctxFactory: ContextFactory;
+    getCtxFactory(): ContextFactory;
 
     /**
      * config.
@@ -91,7 +90,7 @@ export interface IActivity {
      * @returns {Promise<any>}
      * @memberof IActivityObject
      */
-    run(ctx?: IActivityContext): Promise<any>;
+    run(ctx?: IActivityContext): Promise<IActivityContext>;
 }
 
 /**
@@ -109,14 +108,14 @@ export interface GActivity<T> extends IActivity {
      * @type {IContext}
      * @memberof IActivity
      */
-    ctx: GActivityContext<T>;
+    getContext(): GActivityContext<T>;
     /**
      * run activity.
      *
      * @param {IActivityContext} [ctx]
-     * @returns {Promise<T>}
-     * @memberof IActivity
+     * @returns {Promise<GActivityContext<T>>}
+     * @memberof GActivity
      */
-    run(ctx?: GActivityContext<T>): Promise<T>;
+    run(ctx?: IActivityContext): Promise<GActivityContext<T>>;
 }
 

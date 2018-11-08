@@ -223,8 +223,8 @@ export class WatchActivity extends NodeActivity implements GActivity<FileChanged
      */
     defaultTranslatorToken: Token<any>;
 
-    protected async execute(ctx: IActivityContext): Promise<void> {
-        return await this.watch(ctx);
+    protected async execute(): Promise<void> {
+        return await this.watch(this.getContext());
     }
 
     async onActivityInit(config: WatchConfigure) {
@@ -239,8 +239,8 @@ export class WatchActivity extends NodeActivity implements GActivity<FileChanged
     }
 
     protected async watch(ctx: IActivityContext) {
-        let watchSrc = await this.context.exec(this, this.src, ctx);
-        let options = await this.context.exec(this, this.options, ctx);
+        let watchSrc = await ctx.exec(this, this.src);
+        let options = await ctx.exec(this, this.options);
         let watcher = chokidar.watch(watchSrc, options);
         let watchBody = this.body || ctx.target;
 

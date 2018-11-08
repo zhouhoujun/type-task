@@ -81,26 +81,27 @@ export class ShellActivity extends NodeActivity implements OnActivityInit {
 
     async onActivityInit(config: ShellActivityConfig) {
         await super.onActivityInit(config);
-        this.shell = this.context.to(config.shell);
-        let args = this.context.to(config.args);
+        this.shell = this.getContext().to(config.shell);
+        let args = this.getContext().to(config.args);
         this.args = isArray(args) ? args : this.formatArgs(args);
-        this.options = this.context.to(config.options);
-        this.allowError = this.context.to(config.allowError);
+        this.options = this.getContext().to(config.options);
+        this.allowError = this.getContext().to(config.allowError);
         if (!isBoolean(this.allowError)) {
             this.allowError = true;
         }
     }
 
-    protected async execute(ctx: NodeActivityContext<any>): Promise<void> {
+    protected async execute(): Promise<void> {
+        let ctx = this.getContext();
         return await Promise.resolve(this.shell)
             .then(cmds => {
                 let options = this.options;
                 if (isString(cmds)) {
-                    return this.execShell(cmds, ctx, options);
+                    return this.execShell(cmds, options);
                 } else if (isArray(cmds)) {
                     let pip = Promise.resolve();
                     cmds.forEach(cmd => {
-                        pip = pip.then(() => this.execShell(cmd, ctx, options));
+                        pip = pip.then(() => this.execShell(cmd, options));
                     });
                     return pip;
                 } else {
@@ -109,7 +110,7 @@ export class ShellActivity extends NodeActivity implements OnActivityInit {
             });
     }
 
-    protected formatShell(shell: string, ctx?: NodeActivityContext<any>): string {
+    protected formatShell(shell: string): string {
         if (this.args && this.args.length) {
             return shell + ' ' + this.args.join(' ');
         }
@@ -144,8 +145,8 @@ export class ShellActivity extends NodeActivity implements OnActivityInit {
         return '';
     }
 
-    protected execShell(cmd: string, ctx: NodeActivityContext<any>, options?: ExecOptions): Promise<any> {
-        cmd = this.formatShell(cmd, ctx);
+    protected execShell(cmd: string, options?: ExecOptions): Promise<any> {
+        cmd = this.formatShell(cmd);
         if (!cmd) {
             return Promise.resolve();
         }

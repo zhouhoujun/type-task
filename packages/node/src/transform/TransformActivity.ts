@@ -47,45 +47,46 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
         }
     }
 
+    getContext(): TransformActivityContext {
+        return super.getContext() as TransformActivityContext;
+    }
+
     /**
      * run task.
      *
-     * @param {TransformActivityContext} ctx
      * @param {IActivity} [execute]
      * @returns {Promise<T>}
      * @memberof Activity
      */
-    protected async execute(ctx: TransformActivityContext) {
-        await this.beforePipe(ctx);
-        await this.pipe(ctx);
-        await this.afterPipe(ctx);
+    protected async execute() {
+        await this.beforePipe();
+        await this.pipe();
+        await this.afterPipe();
     }
 
     /**
      * execute pipe.
      *
      * @protected
-     * @param {TransformActivityContext} ctx
-     * @returns {Promise<ITransform>}
+     * @returns {Promise<void>}
      * @memberof PipeActivity
      */
-    protected async pipe(ctx: TransformActivityContext): Promise<void> {
-        ctx.result = await this.pipeStream(ctx.result, ctx, ...this.pipes);
+    protected async pipe(): Promise<void> {
+        let ctx = this.getContext();
+        ctx.result = await this.pipeStream(ctx.result, ...this.pipes);
     }
 
     /**
      * create activity context.
      *
      * @protected
-     * @param {*} [input]
-     * @returns {TransformActivityContext}
      * @memberof PipeActivity
      */
-    protected verifyCtx(input?: any): TransformActivityContext {
-        if (input instanceof TransformActivityContext) {
-            return input;
+    protected verifyCtx(ctx?: any) {
+        if (ctx instanceof TransformActivityContext) {
+            this._ctx = ctx;
         } else {
-            return super.verifyCtx(input) as TransformActivityContext;
+            this.getContext().setAsResult(ctx);
         }
     }
 
@@ -93,11 +94,10 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      * begin pipe.
      *
      * @protected
-     * @param {TransformActivityContext} ctx
-     * @returns {Promise<ITransform>}
+     * @returns {Promise<void>}
      * @memberof PipeActivity
      */
-    protected async beforePipe(ctx: TransformActivityContext): Promise<void> {
+    protected async beforePipe(): Promise<void> {
 
     }
 
@@ -106,11 +106,10 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      * end pipe.
      *
      * @protected
-     * @param {TransformActivityContext} ctx
-     * @returns {Promise<ITransform>}
+     * @returns {Promise<void>}
      * @memberof PipeActivity
      */
-    protected async afterPipe(ctx: TransformActivityContext): Promise<void> {
+    protected async afterPipe(): Promise<void> {
 
     }
 
@@ -119,18 +118,17 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      *
      * @protected
      * @param {ITransform} stream
-     * @param {TransformActivityContext} ctx
      * @param {...TransformType[]} pipes
      * @returns {Promise<ITransform>}
      * @memberof PipeActivity
      */
-    protected async pipeStream(stream: ITransform, ctx: TransformActivityContext, ...pipes: TransformType[]): Promise<ITransform> {
+    protected async pipeStream(stream: ITransform, ...pipes: TransformType[]): Promise<ITransform> {
         if (pipes.length < 1) {
             return stream;
         }
 
         if (pipes.length === 1) {
-            return await this.executePipe(stream, ctx, pipes[0]);
+            return await this.executePipe(stream, pipes[0]);
         }
 
         let pstream = Promise.resolve(stream);
@@ -138,7 +136,7 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
             if (transform) {
                 pstream = pstream
                     .then(stm => {
-                        return this.executePipe(stm, ctx, transform);
+                        return this.executePipe(stm, transform);
                     });
             }
         });
@@ -154,8 +152,8 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      * @returns {Promise<ITransform>}
      * @memberof PipeComponent
      */
-    protected async executePipe(stream: ITransform, ctx: TransformActivityContext, transform: TransformType, waitend = false): Promise<ITransform> {
-        let next: ITransform = await this.context.exec(this, transform, ctx);
+    protected async executePipe(stream: ITransform, transform: TransformType, waitend = false): Promise<ITransform> {
+        let next: ITransform = await this.getContext().exec(this, transform);
         let piped = false;
         if (isTransform(stream)) {
             if (isTransform(next)) {
@@ -203,7 +201,7 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      * @memberof PipeActivityBuilder
      */
     protected translate(pipes: TransformExpress): Promise<TransformType[]> {
-        let trsfs: TransformConfig[] = this.context.to(pipes);
+        let trsfs: TransformConfig[] = this.getContext().to(pipes);
         if (!trsfs || trsfs.length < 1) {
             return Promise.resolve([]);
         }
@@ -223,7 +221,7 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
         } else if (isActivityType(cfg)) {
             return await this.buildActivity(cfg);
         } else if (isFunction(cfg)) {
-            return await Promise.resolve(cfg(this, this.ctx));
+            return await Promise.resolve(cfg(this, this.getContext()));
         }
 
         if (isPromise(cfg)) {

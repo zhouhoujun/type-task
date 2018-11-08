@@ -76,7 +76,7 @@ export class TestActivity extends NodeActivity {
 
     async onActivityInit(config: TestConfigure) {
         await super.onActivityInit(config);
-        this.options = this.context.to(config.options);
+        this.options = this.getContext().to(config.options);
         if (!isUndefined(config.enable)) {
             this.enable = await this.toExpression(config.enable);
         }
@@ -85,10 +85,10 @@ export class TestActivity extends NodeActivity {
         }
     }
 
-    protected async execute(ctx: IActivityContext): Promise<void> {
-        let test = await this.context.exec(this, this.enable, ctx);
+    protected async execute(): Promise<void> {
+        let test = await this.getContext().exec(this, this.enable);
         if (test !== false && this.framework) {
-            await this.context.exec(this, this.framework, ctx);
+            await this.getContext().exec(this, this.framework);
         }
     }
 }

@@ -1,6 +1,5 @@
-import { TypeMetadata, IClassMethodDecorator, MetadataAdapter, MetadataExtends, createClassDecorator, IClassDecorator } from '@ts-ioc/core';
+import { TypeMetadata, IClassMethodDecorator, MetadataAdapter, MetadataExtends, createClassDecorator, IClassDecorator, isString } from '@ts-ioc/core';
 import { SuiteMetadata } from '../metadata';
-import { isString } from 'util';
 
 
 /**

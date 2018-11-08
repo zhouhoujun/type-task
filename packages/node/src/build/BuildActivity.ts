@@ -1,7 +1,6 @@
 import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, Active, IActivity, ActivityContext, InjectAcitityToken } from '@taskfr/core';
 import { Inject, isBoolean, Token } from '@ts-ioc/core';
 import { WatchActivity, WatchConfigure } from '../activities';
-import { INodeContext, NodeContextToken } from '../core';
 import { BuidActivityContext } from './BuidActivityContext';
 import { BuildHandleConfigure, BuildHandleActivity } from './BuildHandleActivity';
 
@@ -97,9 +96,6 @@ export class BuildActivity extends ChainActivity {
      */
     watch: WatchActivity;
 
-    @Inject(NodeContextToken)
-    context: INodeContext;
-
     /**
      * before build body.
      *
@@ -118,7 +114,7 @@ export class BuildActivity extends ChainActivity {
 
     async onActivityInit(config: BuildConfigure) {
         await super.onActivityInit(config);
-        this.src = this.context.to(config.src);
+        this.src = this.getContext().to(config.src);
         if (config.watch) {
             this.watch = await this.toActivity<Src | boolean, WatchActivity, WatchConfigure>(
                 config.watch,
@@ -150,14 +146,18 @@ export class BuildActivity extends ChainActivity {
      * @returns {Promise<void>}
      * @memberof BuildActivity
      */
-    protected async execOnce(ctx: BuidActivityContext): Promise<void> {
+    protected async execOnce(): Promise<void> {
         if (this.watch) {
             this.watch.body = this;
-            let watchCtx = this.ctxFactory.create();
+            let watchCtx = this.getCtxFactory().create();
             watchCtx.target = this.watch;
             this.watch.run(watchCtx);
         }
-        await this.getInputFiles(ctx);
+        await this.getInputFiles(this.getContext());
+    }
+
+    getContext(): BuidActivityContext {
+        return super.getContext() as BuidActivityContext;
     }
 
     /**
@@ -169,7 +169,7 @@ export class BuildActivity extends ChainActivity {
      */
     protected async getInputFiles(ctx: BuidActivityContext) {
         if (this.src) {
-            ctx.input = await this.context.getFiles(this.src);
+            ctx.input = await this.getContext().getFiles(this.src);
         }
     }
 
@@ -181,31 +181,35 @@ export class BuildActivity extends ChainActivity {
      * @returns {Promise<void>}
      * @memberof BuildActivity
      */
-    protected async execute(ctx: BuidActivityContext): Promise<void> {
+    protected async execute(): Promise<void> {
+        let ctx = this.getContext();
         if (!(this.watch && ctx.target === this.watch)) {
-            await this.execOnce(ctx);
+            await this.execOnce();
         }
-        await this.execBeforeBody(ctx);
-        await super.execute(ctx);
-        await this.execAfterBody(ctx);
+        await this.execBeforeBody();
+        await super.execute();
+        await this.execAfterBody();
 
     }
 
-    protected async execBeforeBody(ctx: BuidActivityContext) {
+    protected async execBeforeBody() {
         if (this.beforeBuildBody) {
-            await this.beforeBuildBody.run(ctx);
+            await this.beforeBuildBody.run(this.getContext());
         }
     }
 
-    protected async execAfterBody(ctx: BuidActivityContext) {
+    protected async execAfterBody() {
         if (this.afterBuildBody) {
-            await this.afterBuildBody.run(ctx);
+            await this.afterBuildBody.run(this.getContext());
         }
     }
 
-    protected verifyCtx(input?: any): BuidActivityContext {
-        let ctx = input instanceof BuidActivityContext ? input : super.verifyCtx(input) as BuidActivityContext;
-        ctx.builder = this;
-        return ctx;
+    protected verifyCtx(ctx?: any) {
+        if (ctx instanceof ActivityContext) {
+            this._ctx = ctx;
+        } else {
+            this.getContext().setAsResult(ctx);
+        }
+        this.getContext().builder = this;
     }
 }

@@ -6,7 +6,6 @@ import { IActivity, ActivityInstance, InjectAcitityToken } from './IActivity';
 import { ActivityConfigure, ActivityType, ExpressionType, isActivityType, Expression } from './ActivityConfigure';
 import { NullActivity } from './Activity';
 import { AssignActivity } from './AssignActivity';
-import { ContextFactory } from './ContextFactory';
 
 
 /**
@@ -41,13 +40,6 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
         if (isString(uuid)) {
             instance.id = uuid;
         }
-
-        let ctxFactory = this.container.resolve(ContextFactory);
-        ctxFactory.setDefaultActivityType(token);
-        if (config.contextType) {
-            ctxFactory.setDefaultContextType(config.contextType);
-        }
-        instance.ctxFactory = ctxFactory;
 
         if (isFunction(instance.onActivityInit)) {
             await Promise.resolve(instance.onActivityInit(config));
@@ -144,7 +136,7 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
         if (isString(result)) {
             rt = result;
         } else {
-            rt = await target.context.exec(target, result);
+            rt = await target.getContext().exec(target, result);
         }
         let config = toConfig(rt);
         if (valify) {

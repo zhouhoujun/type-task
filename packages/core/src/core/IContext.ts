@@ -28,12 +28,6 @@ export class InjectContextToken<T> extends Registration<T> {
 
 
 /**
- * task context token.
- */
-export const ContextToken = new InjectContextToken<IContext>('');
-
-
-/**
  * task context.
  *
  * @export
@@ -41,13 +35,6 @@ export const ContextToken = new InjectContextToken<IContext>('');
  */
 export interface IContext {
 
-  /**
-   * default builder.
-   *
-   * @type {ActivityBuilder}
-   * @memberof IContext
-   */
-  builder: ActivityBuilder;
 
   /**
    * get ioc container.
@@ -56,6 +43,14 @@ export interface IContext {
    * @memberof IContext
    */
   getContainer(): IContainer;
+
+  /**
+   * default builder.
+   *
+   * @type {ActivityBuilder}
+   * @memberof IContext
+   */
+  getBuilder(): ActivityBuilder;
 
   /**
    * get base URL.

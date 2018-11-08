@@ -1,6 +1,7 @@
-import { GActivity, InjectAcitityBuilderToken } from '@taskfr/core';
+import { GActivity, InjectAcitityBuilderToken, IActivityContext } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { Registration } from '@ts-ioc/core';
+import { TransformationContext } from 'typescript';
 
 /**
  * pipe task.
@@ -11,14 +12,7 @@ import { Registration } from '@ts-ioc/core';
  * @template T
  */
 export interface ITransformActivity extends GActivity<ITransform> {
-    /**
-     * pipe task
-     *
-     * @param {any} [data]
-     * @returns {Promise<ITransform>}
-     * @memberof IPipeTask
-     */
-    run(data?: any): Promise<ITransform>;
+
 }
 
 

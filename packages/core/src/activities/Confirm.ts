@@ -32,8 +32,8 @@ export class ConfirmActivity<T> extends Activity<T> {
         this.confirm = await this.toExpression(config.confirm, this);
     }
 
-    protected async execute(ctx?: GActivityContext<T>) {
-        let confirm = this.context.exec(this, this.confirm, ctx);
+    protected async execute() {
+        let confirm = this.getContext().exec(this, this.confirm);
         if (confirm) {
             this.defer.resolve();
         } else {

@@ -6,7 +6,7 @@ import { Files2StreamToken } from './Files2Stream';
 import { src } from 'vinyl-fs';
 import { Stream } from 'stream';
 import { TransformActivity } from './TransformActivity';
-import { NodeActivityContext, NodeContextToken, INodeContext, FileChanged } from '../core';
+import { NodeActivityContext, FileChanged } from '../core';
 
 
 export const TransformActivityContextToken = new InjectActivityContextToken(TransformActivity);
@@ -24,13 +24,13 @@ export class TransformActivityContext extends NodeActivityContext<ITransform> {
 
     sourceMaps: ISourceMapsActivity;
 
-    constructor(@Inject(InputDataToken) input: any, @Inject(NodeContextToken) context: INodeContext) {
-        super(input, context);
+    constructor(@Inject(InputDataToken) input: any) {
+        super(input);
     }
 
     protected getTranslator(input: any): ITranslator {
         if (input instanceof FileChanged) {
-            return this.context.getContainer().get(Files2StreamToken);
+            return this.getContainer().get(Files2StreamToken);
         }
         return null;
     }

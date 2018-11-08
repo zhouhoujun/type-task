@@ -41,12 +41,11 @@ export class ParallelActivity extends ContextActivity {
      * execute parallel.
      *
      * @protected
-     * @param {IActivityContext} ctx
      * @returns {Promise<void>}
      * @memberof ParallelActivity
      */
-    protected async execute(ctx: IActivityContext): Promise<void> {
-        await Promise.all(this.activities.map(task => task.run(ctx)));
+    protected async execute(): Promise<void> {
+        await Promise.all(this.activities.map(task => task.run(this.getContext())));
     }
 
 }

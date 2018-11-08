@@ -28,7 +28,7 @@ export class ClosureActivity extends ShellCompilerActivity {
 
     async onActivityInit(config: ClosureActivityConfig) {
         await super.onActivityInit(config);
-        this.jarPath = this.context.to(config.jarPath);
+        this.jarPath = this.getContext().to(config.jarPath);
         this.shell = this.shell || 'java -jar';
     }
 

@@ -49,14 +49,14 @@ export class ActivityRunner<T> implements IActivityRunner<T> {
     }
 
     async start(data?: any): Promise<T> {
-        let ctx = data instanceof ActivityContext ? data : this.instance.ctxFactory.create(data);
+        let ctx = data instanceof ActivityContext ? data : this.instance.getCtxFactory().create(data);
         return await this.instance.run(ctx)
-            .then(data => {
+            .then(ctx => {
                 this.state = RunState.complete;
                 this.stateChanged.next(this.state);
-                this._resultValue = data;
-                this._result.next(data);
-                return data;
+                this._resultValue = ctx.result;
+                this._result.next(ctx.result);
+                return ctx.result;
             });
     }
 

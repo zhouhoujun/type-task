@@ -1,10 +1,15 @@
-import { Injectable, isNullOrUndefined, Inject } from '@ts-ioc/core';
+import { Injectable, isNullOrUndefined, Inject, IContainer, ContainerToken, isFunction, isPromise, Type, hasOwnClassMetadata, ObjectMap, isClass } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
-import { IContext, ContextToken } from './IContext';
 import { ITranslator } from './Translator';
 import { Activity } from './Activity';
-import { Events } from '@ts-ioc/bootstrap';
+import { Events, AppConfigureToken } from '@ts-ioc/bootstrap';
 import { InjectActivityContextToken, InputDataToken, GActivityContext } from './IActivityContext';
+import { ActivityBuilderToken } from './IActivityBuilder';
+import { ActivityBuilder } from './ActivityBuilder';
+import { Expression, ActivityConfigure } from './ActivityConfigure';
+import { ActivityRunner } from './ActivityRunner';
+import { Task } from '../decorators';
+import { CtxType } from './IContext';
 
 
 
@@ -22,6 +27,12 @@ export const ActivityContextToken = new InjectActivityContextToken(Activity);
  */
 @Injectable(ActivityContextToken)
 export class ActivityContext<T> extends Events implements GActivityContext<T> {
+
+    @Inject(ContainerToken)
+    private _container: IContainer;
+
+    @Inject(ActivityBuilderToken)
+    private _actBuilder: ActivityBuilder;
 
     /**
      * execute data.
@@ -47,9 +58,24 @@ export class ActivityContext<T> extends Events implements GActivityContext<T> {
      */
     target: IActivity;
 
-    constructor(@Inject(InputDataToken) public input: any, @Inject(ContextToken) public context: IContext) {
+    constructor(@Inject(InputDataToken) public input: any) {
         super();
         this.setAsResult(input);
+    }
+
+
+    /**
+     * get ioc container.
+     *
+     * @returns {IContainer}
+     * @memberof IContext
+     */
+    getContainer(): IContainer {
+        return this._container;
+    }
+
+    getBuilder(): ActivityBuilder {
+        return this._actBuilder;
     }
 
     /**
@@ -71,7 +97,7 @@ export class ActivityContext<T> extends Events implements GActivityContext<T> {
 
     setAsResult(data: any) {
         if (!isNullOrUndefined(data)) {
-            data = this.translate(data);
+            data = this.translate(data instanceof ActivityContext ? data.result : data);
         }
         this.result = data;
     }
@@ -86,5 +112,53 @@ export class ActivityContext<T> extends Events implements GActivityContext<T> {
 
     protected getTranslator(input: any): ITranslator {
         return null;
+    }
+
+    getRootPath(): string {
+        let cfg = this.getContainer().get(AppConfigureToken) || {};
+        return cfg.baseURL || '.';
+    }
+
+
+    getEnvArgs(): ObjectMap<any> {
+        return {};
+    }
+
+    to<T>(target: CtxType<T>, config?: ActivityConfigure): T {
+        if (isFunction(target)) {
+            if (isClass(target)) {
+                return target as any;
+            }
+            return target(this, config);
+        } else {
+            return target;
+        }
+    }
+
+    /**
+     * exec activity result.
+     *
+     * @template T
+     * @param {IActivity} target
+     * @param {Expression<T>} result
+     * @returns {Promise<T>}
+     * @memberof IContext
+     */
+    exec<T>(target: IActivity, expression: Expression<T>): Promise<T> {
+        if (isFunction(expression)) {
+            return Promise.resolve(expression(target, this));
+        } else if (isPromise(expression)) {
+            return expression;
+        } else if (expression instanceof Activity) {
+            return expression.run(this).then(ctx => ctx.result);
+        } else if (expression instanceof ActivityRunner) {
+            return expression.start(this);
+        } else {
+            return Promise.resolve(expression as T);
+        }
+    }
+
+    isTask(task: Type<IActivity>): boolean {
+        return hasOwnClassMetadata(Task, task);
     }
 }

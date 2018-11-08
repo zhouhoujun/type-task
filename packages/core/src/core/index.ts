@@ -10,7 +10,6 @@ export * from './Translator';
 export * from './ActivityConfigure';
 
 export * from './IContext';
-export * from './Context';
 export * from './IActivityRunner';
 export * from './ActivityRunner';
 export * from './IActivityContext';

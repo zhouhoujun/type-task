@@ -1,23 +1,19 @@
 import { Express2, ObjectMap } from '@ts-ioc/core';
-import { IContext, InjectContextToken, Src } from '@taskfr/core';
+import { Src, IActivityContext } from '@taskfr/core';
 
 export interface CmdOptions {
     force?: boolean;
     silent?: boolean;
 }
 
-/**
- * node context token.
- */
-export const NodeContextToken = new InjectContextToken<INodeContext>('nodejs');
 
 /**
- * task context.
+ * node activity context.
  *
  * @export
- * @interface INodeContext
+ * @interface INodeActivityContext
  */
-export interface INodeContext extends IContext {
+export interface INodeActivityContext extends IActivityContext {
     /**
      * package file.
      *

@@ -3,7 +3,7 @@ import { IActivityContext } from './IActivityContext';
 import { IHandleActivity, HandleActivity } from './HandleActivity';
 import { ChainConfigure } from './ActivityConfigure';
 import { InjectAcitityToken, IActivity } from './IActivity';
-import { Activity } from './Activity';
+import { Activity, ActivityBase } from './Activity';
 
 
 
@@ -18,10 +18,10 @@ export const ChainActivityToken = new InjectAcitityToken<ChainActivity>('chain')
  *
  * @export
  * @class ChainActivity
- * @extends {Activity<any>}
+ * @extends {ActivityBase}
  */
 @Task(ChainActivityToken)
-export class ChainActivity extends Activity<any> {
+export class ChainActivity extends ActivityBase {
 
     protected handles: IHandleActivity[];
 
@@ -33,8 +33,8 @@ export class ChainActivity extends Activity<any> {
         this.handles = (this.handles || []).filter(act => act instanceof HandleActivity);
     }
 
-    protected async execute(ctx: IActivityContext): Promise<void> {
-        await this.handleRequest(ctx);
+    protected async execute(): Promise<void> {
+        await this.handleRequest(this.getContext());
     }
 
     protected handleRequest(ctx: IActivityContext, next?: () => Promise<any>): Promise<void> {

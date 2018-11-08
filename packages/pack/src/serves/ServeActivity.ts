@@ -42,18 +42,17 @@ export class ServeActivity extends NodeActivity {
 
     async onActivityInit(config: ServeConfigure): Promise<any> {
         await super.onActivityInit(config);
-        this.dirs = await this.context.to(config.dirs);
+        this.dirs = await this.getContext().to(config.dirs);
     }
 
     /**
      * before run sequence.
      *
      * @protected
-     * @param {*} [data]
      * @returns {Promise<void>}
-     * @memberof NodeActivityContext
+     * @memberof ServeActivity
      */
-    protected async execute(ctx: BuidActivityContext): Promise<void> {
+    protected async execute(): Promise<void> {
 
     }
 

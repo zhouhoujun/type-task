@@ -76,8 +76,9 @@ export class DestActivity extends TransformActivity {
         }
     }
 
-    protected async afterPipe(ctx: TransformActivityContext): Promise<void> {
-        await super.afterPipe(ctx);
+    protected async afterPipe(): Promise<void> {
+        await super.afterPipe();
+        let ctx = this.getContext();
         if (ctx.sourceMaps instanceof SourceMapsActivity) {
             await ctx.sourceMaps.run(ctx);
         }
@@ -93,12 +94,12 @@ export class DestActivity extends TransformActivity {
      * @memberof DestActivity
      */
     protected async writeStream(ctx: TransformActivityContext): Promise<void> {
-        let dist = await this.context.exec(this, this.dest, ctx);
+        let dist = await ctx.exec(this, this.dest);
         let destOptions = undefined;
         if (this.destOptions) {
-            destOptions = await this.context.exec(this, this.destOptions, ctx);
+            destOptions = await ctx.exec(this, this.destOptions);
         }
-        dist = this.context.toRootPath(dist);
-        ctx.result = await this.executePipe(ctx.result, ctx, dest(dist, destOptions), true);
+        dist = ctx.toRootPath(dist);
+        ctx.result = await this.executePipe(ctx.result, dest(dist, destOptions), true);
     }
 }

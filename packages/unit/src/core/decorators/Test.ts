@@ -1,6 +1,5 @@
 
-import { IPropertyDecorator, PropertyMetadata, createPropDecorator, MetadataExtends, MetadataAdapter } from '@ts-ioc/core';
-import { isString, isNumber, isUndefined, isBoolean } from 'util';
+import { IPropertyDecorator, PropertyMetadata, createPropDecorator, MetadataExtends, MetadataAdapter, isString, isNumber, isUndefined, isBoolean } from '@ts-ioc/core';
 import { TestMetadata } from '../metadata';
 
 

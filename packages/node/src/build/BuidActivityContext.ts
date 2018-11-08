@@ -1,4 +1,4 @@
-import { NodeActivityContext, NodeContextToken, INodeContext } from '../core';
+import { NodeActivityContext } from '../core';
 import { Inject, Injectable } from '@ts-ioc/core';
 import { InputDataToken, InjectActivityContextToken } from '@taskfr/core';
 import { BuildActivity } from './BuildActivity';
@@ -31,8 +31,8 @@ export class BuidActivityContext extends NodeActivityContext<string[]> {
      */
     builder: BuildActivity;
 
-    constructor(@Inject(InputDataToken) input: any, @Inject(NodeContextToken) context: INodeContext) {
-        super(input, context);
+    constructor(@Inject(InputDataToken) input: any) {
+        super(input);
     }
     /**
      * is completed or not.

@@ -1,6 +1,5 @@
 import { HandleActivity, Active, Task, ExpressionType, IActivity, Expression, HandleConfigure, CtxType, InjectAcitityToken } from '@taskfr/core';
 import { Inject, isRegExp, Token, isToken, isString, isArray, Express, isFunction } from '@ts-ioc/core';
-import { NodeContextToken, INodeContext } from '../core';
 import { BuidActivityContext, BuidActivityContextToken } from './BuidActivityContext';
 import minimatch = require('minimatch');
 import { CompilerActivity } from './CompilerActivity';
@@ -52,14 +51,6 @@ export const BuildHandleToken = new InjectAcitityToken<BuildHandleActivity>('bui
  */
 @Task(BuildHandleToken, BuidActivityContextToken)
 export class BuildHandleActivity extends HandleActivity {
-    /**
-     * override to node context
-     *
-     * @type {IPipeContext}
-     * @memberof NodeActivity
-     */
-    @Inject(NodeContextToken)
-    context: INodeContext;
 
     /**
      * compiler.
@@ -99,28 +90,32 @@ export class BuildHandleActivity extends HandleActivity {
             if (isToken(config.compiler)) {
                 this.compilerToken = config.compiler;
             } else {
-                this.compilerToken = this.context.builder.getType(config.compiler);
+                this.compilerToken = this.getContext().getBuilder().getType(config.compiler);
             }
             this.compiler = await this.buildActivity(config.compiler);
         }
         this.test = await this.toExpression(config.test);
-        this.subDist = this.context.to(config.subDist) || '';
+        this.subDist = this.getContext().to(config.subDist) || '';
+    }
+
+    getContext(): BuidActivityContext {
+        return super.getContext() as BuidActivityContext;
     }
 
     /**
      * handle build via files.
      *
      * @protected
-     * @param {BuidActivityContext} ctx
      * @param {() => Promise<any>} [next]
      * @returns {Promise<void>}
      * @memberof BuildHandleActivity
      */
-    protected async execute(ctx: BuidActivityContext, next?: () => Promise<any>): Promise<void> {
+    protected async execute(next?: () => Promise<any>): Promise<void> {
+        let ctx = this.getContext();
         if (ctx.isCompleted()) {
             return;
         }
-        let test = await this.context.exec(this, this.test, ctx);
+        let test = await ctx.exec(this, this.test);
         let files: string[];
 
         if (isArray(ctx.result)) {
@@ -133,7 +128,7 @@ export class BuildHandleActivity extends HandleActivity {
             }
         }
         if (!files || files.length < 1) {
-            let compCtx = this.ctxFactory.create<CompilerActivityContext>(files, this.compilerToken, CompilerActivity);
+            let compCtx = this.getCtxFactory().create<CompilerActivityContext>(files, this.compilerToken, CompilerActivity);
             compCtx.builder = ctx.builder;
             compCtx.handle = this;
             await this.compile(compCtx);

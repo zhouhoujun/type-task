@@ -1,24 +1,35 @@
-import { Inject, Express } from '@ts-ioc/core';
+import { Inject, Express, ContainerToken, IContainer } from '@ts-ioc/core';
 import { Task } from '../decorators';
 import { IActivity, GActivity, ActivityToken } from './IActivity';
 import { ActivityConfigure, ExpressionType, Expression, ActivityType } from './ActivityConfigure';
-import { ContextToken, IContext } from './IContext';
 import { OnActivityInit } from './OnActivityInit';
 import { ActivityContext } from './ActivityContext';
 import { ContextFactory } from './ContextFactory';
-
-
+import { GActivityContext, IActivityContext } from './IActivityContext';
 
 /**
- * base activity.
+ * activity base.
  *
  * @export
- * @class Activity
- * @implements {GActivity<T>}
- * @template T
+ * @abstract
+ * @class ActivityBase
+ * @implements {IActivity}
+ * @implements {OnActivityInit}
  */
 @Task
-export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
+export abstract class ActivityBase implements IActivity, OnActivityInit  {
+    @Inject(ContainerToken)
+    private container: IContainer;
+
+    protected _ctx: IActivityContext;
+
+    /**
+     * context factory.
+     *
+     * @type {ContextFactory}
+     * @memberof Activity
+     */
+    private _ctxFactory: ContextFactory;
 
     /**
      * workflow instance uuid.
@@ -42,50 +53,69 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      */
     config: ActivityConfigure;
 
+    constructor() {
+
+    }
+
     /**
-     * task context.
+     * get container.
      *
-     * @type {IContext}
-     * @memberof Activity
+     * @returns {IContainer}
+     * @memberof ActivityBase
      */
-    @Inject(ContextToken)
-    context: IContext;
+    getContainer(): IContainer {
+        return this.container;
+    }
+
+
+    /**
+     * get context factory.
+     *
+     * @returns {ContextFactory}
+     * @memberof ActivityBase
+     */
+    getCtxFactory(): ContextFactory {
+        if (!this._ctxFactory) {
+            let ctxFactory = this.getContainer().resolve(ContextFactory);
+            if (this.config && this.config.contextType) {
+                ctxFactory.setDefaultContextType(this.config.contextType);
+            } else {
+                ctxFactory.setDefaultActivityType(this.constructor);
+            }
+            this._ctxFactory = ctxFactory;
+        }
+        return this._ctxFactory;
+    }
 
     /**
      *  activity execute context.
      *
-     * @type {ActivityContext}
+     * @type {IActivityContext}
      * @memberof Activity
      */
-    ctx: ActivityContext<T>;
-
-    /**
-     * context factory.
-     *
-     * @type {ContextFactory}
-     * @memberof Activity
-     */
-    ctxFactory: ContextFactory;
-
-    constructor() {
-
+    getContext(): IActivityContext {
+        if (!this._ctx) {
+            this._ctx = this.getCtxFactory().create();
+        }
+        return this._ctx;
     }
+
 
     async onActivityInit(config: ActivityConfigure) {
         this.config = config;
     }
 
     /**
-     * run task.
+     * run activity.
      *
-     * @param {ActivityContext} [ctx] execute context.
-     * @returns {Promise<T>}
-     * @memberof Activity
+     * @param {IActivityContext} [ctx]
+     * @returns {Promise<IActivityContext>}
+     * @memberof ObjectActivity
      */
-    async run(ctx?: ActivityContext<T>): Promise<any> {
-        this.ctx = this.verifyCtx(ctx);
-        await this.execute(this.ctx);
-        return this.ctx.result;
+    async run(ctx?: IActivityContext): Promise<IActivityContext> {
+        this.verifyCtx(ctx);
+        await this.execute();
+        return this.getContext();
     }
 
     /**
@@ -93,11 +123,10 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      *
      * @protected
      * @abstract
-     * @param {ActivityContext} ctx
      * @returns {Promise<void>}
      * @memberof Activity
      */
-    protected abstract execute(ctx: ActivityContext<T>): Promise<void>;
+    protected abstract execute(): Promise<void>;
 
     /**
      * verify context.
@@ -107,15 +136,16 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
      * @returns {ActivityContext}
      * @memberof Activity
      */
-    protected verifyCtx(ctx?: any): ActivityContext<T> {
-        if (!ctx || !(ctx instanceof ActivityContext)) {
-            ctx = this.ctxFactory.create(ctx);
+    protected verifyCtx(ctx?: any) {
+        if (ctx instanceof ActivityContext) {
+            this._ctx = ctx;
+        } else {
+            this.getContext().setAsResult(ctx);
         }
-        return ctx;
     }
 
     protected toExpression<T>(exptype: ExpressionType<T>, target?: IActivity): Promise<Expression<T>> {
-        return this.context.builder.toExpression(exptype, target || this);
+        return this.getContext().getBuilder().toExpression(exptype, target || this);
     }
 
     protected toActivity<Tr, Ta extends IActivity, TCfg extends ActivityConfigure>(
@@ -124,14 +154,49 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
         toConfig: Express<Tr, TCfg>,
         valify?: Express<TCfg, TCfg>,
         target?: IActivity): Promise<Ta> {
-        return this.context.builder.toActivity<Tr, Ta, TCfg>(exptype, target || this, isRightActivity, toConfig, valify);
+        return this.getContext().getBuilder().toActivity<Tr, Ta, TCfg>(exptype, target || this, isRightActivity, toConfig, valify);
     }
 
     protected buildActivity<T extends IActivity>(config: ActivityType<T>): Promise<T> {
-        return this.context.builder.buildByConfig(config, this.id) as Promise<T>;
+        return this.getContext().getBuilder().buildByConfig(config, this.id) as Promise<T>;
+    }
+}
+
+/**
+ * base activity.
+ *
+ * @export
+ * @class Activity
+ * @implements {GActivity<T>}
+ * @template T
+ */
+@Task
+export abstract class Activity<T> extends ActivityBase implements GActivity<T>, OnActivityInit {
+
+    /**
+     *  activity execute context.
+     *
+     * @type {ActivityContext}
+     * @memberof Activity
+     */
+    getContext(): GActivityContext<T> {
+        return super.getContext();
+    }
+    /**
+     * run task.
+     *
+     * @param {ActivityContext} [ctx] execute context.
+     * @returns {Promise<T>}
+     * @memberof Activity
+     */
+    async run(ctx?: IActivityContext): Promise<GActivityContext<T>> {
+        this.verifyCtx(ctx);
+        await this.execute();
+        return this.getContext();
     }
 
 }
+
 
 /**
  * null activity. do nothing.
@@ -141,9 +206,9 @@ export abstract class Activity<T> implements GActivity<T>, OnActivityInit {
  * @extends {Activity<any>}
  */
 @Task(ActivityToken)
-export class NullActivity extends Activity<any> {
+export class NullActivity extends ActivityBase {
 
-    protected async execute(ctx: ActivityContext<any>): Promise<void> {
+    protected async execute(): Promise<void> {
 
     }
 }
