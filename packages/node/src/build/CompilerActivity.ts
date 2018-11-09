@@ -3,6 +3,7 @@ import { CompilerActivityContext } from './CompilerActivityContext';
 import { ShellActivity } from '../shells';
 import { ExecOptions } from 'child_process';
 import { Task } from '@taskfr/core';
+import { ShellCompilerActivityContext } from './ShellCompilerActivityContext';
 
 /**
  * compiler activity.
@@ -13,16 +14,19 @@ import { Task } from '@taskfr/core';
  * @extends {NodeActivity}
  */
 export abstract class CompilerActivity extends NodeActivity {
+
+    getContext(): CompilerActivityContext {
+        return super.getContext() as CompilerActivityContext;
+    }
     /**
      * execute build activity.
      *
      * @protected
      * @abstract
-     * @param {CompilerActivityContext} ctx
      * @returns {Promise<void>}
      * @memberof NodeActivity
      */
-    protected abstract async execute(ctx: CompilerActivityContext): Promise<void>;
+    protected abstract async execute(): Promise<void>;
 }
 
 
@@ -31,20 +35,24 @@ export abstract class CompilerActivity extends NodeActivity {
  *
  * @export
  * @class ShellCompilerActivity
- * @extends {ShellActivity<CompilerActivityContext>}
+ * @extends {ShellActivity}
  */
 @Task
 export class ShellCompilerActivity extends ShellActivity {
 
-    protected async execute(ctx: CompilerActivityContext): Promise<void> {
-        await super.execute(ctx);
+    getContext(): ShellCompilerActivityContext {
+        return super.getContext() as ShellCompilerActivityContext;
     }
 
-    protected execShell(cmd: string, ctx: CompilerActivityContext, options?: ExecOptions): Promise<any> {
-        return super.execShell(cmd, ctx, options);
+    protected async execute(): Promise<void> {
+        await super.execute();
     }
 
-    protected formatShell(shell: string, ctx?: CompilerActivityContext): string {
-        return super.formatShell(shell, ctx);
+    protected execShell(cmd: string, options?: ExecOptions): Promise<any> {
+        return super.execShell(cmd, options);
+    }
+
+    protected formatShell(shell: string): string {
+        return super.formatShell(shell);
     }
 }

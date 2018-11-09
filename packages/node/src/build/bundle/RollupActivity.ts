@@ -4,7 +4,6 @@ import { Task, Src, CtxType } from '@taskfr/core';
 import { lang, ObjectMap } from '@ts-ioc/core';
 import { RollupDirOptions, RollupFileOptions, rollup } from 'rollup';
 import { ShellCompilerActivity } from '../CompilerActivity';
-import { CompilerActivityContext } from '../CompilerActivityContext';
 
 export interface RollupCmdOptions {
     format: string,
@@ -99,14 +98,14 @@ export class RollupActivity extends ShellCompilerActivity {
         this.shell = this.shell || path.normalize(path.join(this.getContext().getRootPath(), 'node_modules', '.bin', 'rollup'));
     }
 
-    protected async execute(ctx: CompilerActivityContext): Promise<any> {
+    protected async execute(): Promise<any> {
         if (this.rollupDirOptions) {
             return await rollup(this.rollupDirOptions);
         }
         if (this.rollupFileOptions) {
             return await rollup(this.rollupFileOptions);
         }
-        await super.execute(ctx);
+        await super.execute();
     }
 
 

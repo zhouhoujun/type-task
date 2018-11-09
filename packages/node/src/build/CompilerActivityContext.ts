@@ -1,4 +1,4 @@
-import { NodeActivityContext, NodeContextToken, INodeContext } from '../core';
+import { NodeActivityContext } from '../core';
 import { BuildActivity } from './BuildActivity';
 import { Inject, Injectable } from '@ts-ioc/core';
 import { InputDataToken, InjectActivityContextToken } from '@taskfr/core';
@@ -28,8 +28,8 @@ export class CompilerActivityContext extends NodeActivityContext<any> {
     handle: BuildHandleActivity;
     input: string[];
 
-    constructor(@Inject(InputDataToken) input: any, @Inject(NodeContextToken) context: INodeContext) {
-        super(input, context);
+    constructor(@Inject(InputDataToken) input: any) {
+        super(input);
     }
 
 }

@@ -2,7 +2,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { ShellActivityConfig } from '../../shells';
 import { Task, Src, CtxType } from '@taskfr/core';
-import { NodeActivityContext } from '../../core';
 import { ShellCompilerActivity } from '../CompilerActivity';
 
 /**

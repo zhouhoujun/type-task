@@ -2,6 +2,7 @@ import { SrcOptions } from 'vinyl-fs';
 import { Src, Expression, ExpressionType, Task, InjectAcitityToken, ActivityConfigure } from '@taskfr/core';
 import { TransformActivityContext, TransformActivityContextToken } from './TransformActivityContext';
 import { NodeActivity } from '../core';
+import { isArray, isString } from '@ts-ioc/core';
 
 /**
  * source activity token.
@@ -67,7 +68,11 @@ export class SourceActivity extends NodeActivity {
         }
     }
 
-    protected async execute(ctx: TransformActivityContext) {
+    getContext(): TransformActivityContext {
+        return super.getContext() as TransformActivityContext;
+    }
+
+    protected async execute() {
 
     }
 
@@ -75,14 +80,16 @@ export class SourceActivity extends NodeActivity {
      * create activity context.
      *
      * @protected
-     * @param {*} [input]
-     * @returns {TransformActivityContext}
+     * @param {*} [ctx]
      * @memberof PipeActivity
      */
-    protected verifyCtx(input?: any): TransformActivityContext {
-        if (this.src) {
-            return super.verifyCtx(this.src) as TransformActivityContext;
+    protected verifyCtx(ctx?: any) {
+        if (isString(this.src) || (isArray(this.src) && this.src.length)) {
+            this.getContext().setAsResult(ctx);
+        } else if (ctx instanceof TransformActivityContext) {
+            this._ctx = ctx;
+        } else {
+            this.getContext().setAsResult(ctx);
         }
-        return input instanceof TransformActivityContext ? input : super.verifyCtx(input) as TransformActivityContext;
     }
 }
