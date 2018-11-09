@@ -35,42 +35,28 @@ export class PackageActivity extends BuildActivity implements IPackageActivity {
      * @memberof PackageActivity
      */
     clean: CleanActivity;
-    /**
-     * src root pacth.
-     *
-     * @type {string}
-     * @memberof PackageActivity
-     */
-    src: string;
 
     protected async execBeforeBody() {
-        let execute = this.getContainer().resolve(SequenceActivity);
-        execute.name = 'Before build';
+        let ctx = this.getContext();
         if (this.clean) {
-            execute.add(this.clean);
+            await this.clean.run(ctx);
         }
         if (this.test) {
-            execute.add(this.test);
-        }
-        if (this.dest) {
-            execute.add(this.dest);
+            await this.test.run(ctx);
         }
         if (this.beforeBuildBody) {
-            execute.add(this.beforeBuildBody);
+            await this.beforeBuildBody.run(ctx);
         }
-        await execute.run(this.getContext());
     }
 
     protected async execAfterBody() {
-        let execute = this.getContainer().resolve(SequenceActivity);
-        execute.name = 'After build';
+        let ctx = this.getContext();
         if (this.afterBuildBody) {
-            execute.add(this.afterBuildBody);
+            await this.afterBuildBody.run(ctx);
         }
         if (this.dest) {
-            execute.add(this.dest);
+            await this.dest.run(ctx);
         }
-        await execute.run(this.getContext());
     }
 
 }

@@ -1,4 +1,4 @@
-import { Src } from '@taskfr/core';
+import { Src, SequenceActivity } from '@taskfr/core';
 import { BuildActivity, CleanActivity, CleanConfigure, TestActivity, TestConfigure, BuidActivityContext } from '@taskfr/node';
 import { Pack, PackConfigure } from './pack';
 
@@ -69,4 +69,18 @@ export class PackActivity extends BuildActivity {
             await this.test.run(this.getContext());
         }
     }
+
+    protected async execBeforeBody() {
+        let ctx = this.getContext();
+        if (this.clean) {
+            await this.clean.run(ctx);
+        }
+        if (this.test) {
+            await this.test.run(ctx);
+        }
+        if (this.beforeBuildBody) {
+            await this.beforeBuildBody.run(ctx);
+        }
+    }
+
 }
