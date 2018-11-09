@@ -44,10 +44,6 @@ export class ShellCompilerActivity extends ShellActivity {
         return super.getContext() as ShellCompilerActivityContext;
     }
 
-    protected async execute(): Promise<void> {
-        await super.execute();
-    }
-
     protected execShell(cmd: string, options?: ExecOptions): Promise<any> {
         return super.execShell(cmd, options);
     }

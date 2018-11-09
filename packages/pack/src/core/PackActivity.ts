@@ -63,13 +63,6 @@ export class PackActivity extends BuildActivity {
         await super.execOnce();
     }
 
-    protected async execute(): Promise<void> {
-        await super.execute();
-        if (this.test) {
-            await this.test.run(this.getContext());
-        }
-    }
-
     protected async execBeforeBody() {
         let ctx = this.getContext();
         if (this.clean) {

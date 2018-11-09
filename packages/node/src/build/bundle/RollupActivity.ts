@@ -98,14 +98,14 @@ export class RollupActivity extends ShellCompilerActivity {
         this.shell = this.shell || path.normalize(path.join(this.getContext().getRootPath(), 'node_modules', '.bin', 'rollup'));
     }
 
-    protected async execute(): Promise<any> {
+    protected async before(): Promise<any> {
+        await super.before();
         if (this.rollupDirOptions) {
             return await rollup(this.rollupDirOptions);
         }
         if (this.rollupFileOptions) {
             return await rollup(this.rollupFileOptions);
         }
-        await super.execute();
     }
 
 

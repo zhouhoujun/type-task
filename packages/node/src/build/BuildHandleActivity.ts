@@ -115,7 +115,6 @@ export class BuildHandleActivity extends HandleActivity {
         if (!this.test) {
             let compCtx = this.getCtxFactory().create<CompilerActivityContext>(null, this.compilerToken, CompilerActivity);
             await this.compile(compCtx);
-            await next();
         } else {
             if (ctx.isCompleted()) {
                 return;
@@ -138,9 +137,6 @@ export class BuildHandleActivity extends HandleActivity {
                 compCtx.handle = this;
                 await this.compile(compCtx);
                 ctx.complete(files);
-            }
-            if (!ctx.isCompleted()) {
-                await next();
             }
         }
     }

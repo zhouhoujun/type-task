@@ -189,7 +189,7 @@ export class BuildActivity extends ChainActivity {
             await this.execOnce();
         }
         await this.execBeforeBody();
-        await super.execute();
+        await this.handleRequest(this.getContext());
         await this.execAfterBody();
 
     }

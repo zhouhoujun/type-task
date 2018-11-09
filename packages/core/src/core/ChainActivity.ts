@@ -4,6 +4,7 @@ import { IHandleActivity, HandleActivity } from './HandleActivity';
 import { ChainConfigure } from './ActivityConfigure';
 import { InjectAcitityToken, IActivity } from './IActivity';
 import { Activity } from './Activity';
+import { async } from 'rxjs/internal/scheduler/async';
 
 
 
@@ -37,10 +38,19 @@ export class ChainActivity extends Activity {
         await this.handleRequest(this.getContext());
     }
 
-    protected handleRequest(ctx: IActivityContext, next?: () => Promise<any>): Promise<void> {
+    protected handleRequest(ctx: IActivityContext, next?: () => Promise<void>): Promise<void> {
         let index = -1;
         let handles = this.handles.map(act => {
-            return (ctx: IActivityContext, next?: () => Promise<any>) => act.run(ctx, next);
+            return async (ctx: IActivityContext, next?: () => Promise<void>) => {
+                let called = false;
+                await act.run(ctx, () => {
+                    called = true;
+                    return next()
+                });
+                if (!called) {
+                    await next();
+                }
+            };
         });
         return dispatch(0);
         function dispatch(idx: number): Promise<any> {
@@ -48,7 +58,7 @@ export class ChainActivity extends Activity {
                 return Promise.reject('next called mutiple times');
             }
             index = idx;
-            let handle = handles[idx];
+            let handle = idx < handles.length ? handles[idx] : null;
             if (idx === handles.length) {
                 handle = next;
             }
@@ -56,7 +66,7 @@ export class ChainActivity extends Activity {
                 return Promise.resolve();
             }
             try {
-                return handle(ctx, dispatch.bind(null, idx + 1));
+                return Promise.resolve(handle(ctx, dispatch.bind(null, idx + 1)));
             } catch (err) {
                 return Promise.reject(err);
             }
