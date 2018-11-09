@@ -47,7 +47,7 @@ export class ChainActivity extends Activity {
                     called = true;
                     return next()
                 });
-                if (!called) {
+                if (!called && next) {
                     await next();
                 }
             };
