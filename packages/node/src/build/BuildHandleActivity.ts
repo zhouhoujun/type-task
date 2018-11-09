@@ -112,30 +112,36 @@ export class BuildHandleActivity extends HandleActivity {
      */
     protected async execute(next?: () => Promise<any>): Promise<void> {
         let ctx = this.getContext();
-        if (ctx.isCompleted()) {
-            return;
-        }
-        let test = await ctx.exec(this, this.test);
-        let files: string[];
-
-        if (isArray(ctx.result)) {
-            if (isString(test)) {
-                files = ctx.result.filter(f => minimatch(f, test as string));
-            } else if (isFunction(test)) {
-                files = ctx.result.filter(test);
-            } else if (isRegExp(test)) {
-                files = ctx.result.filter(f => (<RegExp>test).test(f));
-            }
-        }
-        if (!files || files.length < 1) {
-            let compCtx = this.getCtxFactory().create<CompilerActivityContext>(files, this.compilerToken, CompilerActivity);
-            compCtx.builder = ctx.builder;
-            compCtx.handle = this;
+        if (!this.test) {
+            let compCtx = this.getCtxFactory().create<CompilerActivityContext>(null, this.compilerToken, CompilerActivity);
             await this.compile(compCtx);
-            ctx.complete(files);
-        }
-        if (!ctx.isCompleted()) {
             await next();
+        } else {
+            if (ctx.isCompleted()) {
+                return;
+            }
+            let test = await ctx.exec(this, this.test);
+            let files: string[];
+
+            if (isArray(ctx.result)) {
+                if (isString(test)) {
+                    files = ctx.result.filter(f => minimatch(f, test as string));
+                } else if (isFunction(test)) {
+                    files = ctx.result.filter(test);
+                } else if (isRegExp(test)) {
+                    files = ctx.result.filter(f => (<RegExp>test).test(f));
+                }
+            }
+            if (!files || files.length < 1) {
+                let compCtx = this.getCtxFactory().create<CompilerActivityContext>(files, this.compilerToken, CompilerActivity);
+                compCtx.builder = ctx.builder;
+                compCtx.handle = this;
+                await this.compile(compCtx);
+                ctx.complete(files);
+            }
+            if (!ctx.isCompleted()) {
+                await next();
+            }
         }
     }
 

@@ -1,5 +1,5 @@
-import { Activity } from './Activity';
+import { ExecuteActivity } from './Activity';
 
-export abstract class ExpressionActivity<T> extends Activity<T> {
+export abstract class ExpressionActivity<T> extends ExecuteActivity<T> {
 
 }

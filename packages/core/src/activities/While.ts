@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, Activity, InjectAcitityToken, Condition, WhileConfigure, IActivityContext, ActivityBase } from '../core';
+import { IActivity, InjectAcitityToken, Condition, WhileConfigure, Activity } from '../core';
 
 
 /**
@@ -15,7 +15,7 @@ export const WhileActivityToken = new InjectAcitityToken<WhileActivity>('while')
  * @extends {Activity}
  */
 @Task(WhileActivityToken)
-export class WhileActivity extends ActivityBase {
+export class WhileActivity extends Activity {
     /**
      * while condition.
      *

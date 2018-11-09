@@ -2,6 +2,7 @@ import { CtxType, ActivityConfigure, InjectAcitityToken, GActivity, Task } from 
 import { ITransform } from './ITransform';
 import { TransformActivityContext, TransformActivityContextToken } from './TransformActivityContext';
 import { NodeActivity } from '../core';
+import { TransformActivity } from './TransformActivity';
 
 /**
  * source map configure
@@ -47,15 +48,23 @@ export const SourceMapsToken = new InjectAcitityToken<ISourceMapsActivity>('sour
 export class SourceMapsActivity extends NodeActivity implements ISourceMapsActivity {
     sourcemaps: string;
 
+    private hasInit = false;
+
     async onActivityInit(config: SourceMapsConfigure) {
         await super.onActivityInit(config);
         this.sourcemaps = this.getContext().to(config.sourcemaps) || './sourcemaps';
     }
 
-    private hasInit = false;
-
     getContext(): TransformActivityContext {
         return super.getContext() as TransformActivityContext;
+    }
+
+    protected verifyCtx(ctx?: any) {
+        if (ctx instanceof TransformActivityContext) {
+            this._ctx = ctx;
+        } else {
+            this.getContext().setAsResult(ctx);
+        }
     }
 
     protected async execute() {

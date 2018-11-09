@@ -1,12 +1,11 @@
-import { Defer } from '@ts-ioc/core';
 import { Task } from '../decorators';
-import { InjectAcitityToken, Activity, Expression, ConfirmConfigure, IActivityContext, GActivityContext } from '../core';
+import { InjectAcitityToken, Expression, ConfirmConfigure, IActivity, Activity } from '../core';
 
 
 /**
  * Confirm activity token.
  */
-export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity<any>>('Confirm');
+export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity>('Confirm');
 
 /**
  * while control activity.
@@ -16,9 +15,7 @@ export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity<any>>
  * @extends {Activity}
  */
 @Task(ConfirmActivityToken)
-export class ConfirmActivity<T> extends Activity<T> {
-
-    defer = new Defer<any>();
+export class ConfirmActivity extends Activity {
     /**
      * Confirm time.
      *
@@ -27,18 +24,24 @@ export class ConfirmActivity<T> extends Activity<T> {
      */
     confirm: Expression<boolean>;
 
+    /**
+     * confirm execute body.
+     *
+     * @type {IActivity}
+     * @memberof ConfirmActivity
+     */
+    body: IActivity;
+
     async onActivityInit(config: ConfirmConfigure): Promise<any> {
         await super.onActivityInit(config);
         this.confirm = await this.toExpression(config.confirm, this);
+        this.body = await this.buildActivity(config.body);
     }
 
     protected async execute() {
         let confirm = this.getContext().exec(this, this.confirm);
         if (confirm) {
-            this.defer.resolve();
-        } else {
-            this.defer.reject();
+            this.body.run(this.getContext());
         }
-        return await this.defer.promise;
     }
 }

@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { InjectAcitityToken, Activity, IActivityContext, ActivityContext } from '../core';
+import { InjectAcitityToken, Activity, ActivityContext } from '../core';
 import { Token, ObjectMap } from '@ts-ioc/core';
 
 /**
@@ -15,7 +15,7 @@ export const InvokeActivityToken = new InjectAcitityToken<InvokeActivity>('invok
  * @extends {Activity}
  */
 @Task(InvokeActivityToken)
-export class InvokeActivity extends Activity<any> {
+export class InvokeActivity extends Activity {
     /**
      * while condition.
      *

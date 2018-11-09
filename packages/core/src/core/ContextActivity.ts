@@ -1,4 +1,4 @@
-import { ActivityBase } from './Activity';
+import { Activity } from './Activity';
 import { IActivityContext } from './IActivityContext';
 import { IActivity } from './IActivity';
 import { Registration, Type } from '@ts-ioc/core';
@@ -41,10 +41,10 @@ export class InjectAfterActivity<T extends IActivity> extends Registration<T> {
  * @export
  * @abstract
  * @class ContextActivity
- * @extends {ActivityBase}
+ * @extends {Activity}
  */
 @Task
-export abstract class ContextActivity extends ActivityBase {
+export abstract class ContextActivity extends Activity {
 
     /**
     * run task.

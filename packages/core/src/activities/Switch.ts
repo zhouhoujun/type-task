@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, Expression, SwitchConfigure, IActivityContext } from '../core';
+import { IActivity, InjectAcitityToken, Activity, Expression, SwitchConfigure } from '../core';
 import { MapSet, isUndefined } from '@ts-ioc/core';
 
 /**
@@ -15,7 +15,7 @@ export const SwitchActivityToken = new InjectAcitityToken<SwitchActivity>('switc
  * @extends {Activity}
  */
 @Task(SwitchActivityToken)
-export class SwitchActivity extends Activity<any> {
+export class SwitchActivity extends Activity {
     /**
      * Switch condition.
      *

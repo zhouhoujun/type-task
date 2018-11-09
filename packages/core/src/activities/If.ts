@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, Condition, IfConfigure, IActivityContext } from '../core';
+import { IActivity, InjectAcitityToken, Activity, Condition, IfConfigure } from '../core';
 
 
 /**
@@ -15,7 +15,7 @@ export const IfActivityToken = new InjectAcitityToken<IfActivity>('if');
  * @extends {Activity}
  */
 @Task(IfActivityToken)
-export class IfActivity extends Activity<any> {
+export class IfActivity extends Activity {
     ifBody: IActivity;
     condition: Condition;
     elseBody?: IActivity;

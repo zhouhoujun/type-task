@@ -2,7 +2,7 @@ import { Src, ExpressionToken, ConfigureType } from '@taskfr/core';
 import { WatchActivity, WatchConfigure, TestActivity, TestConfigure, ITransformConfigure, SourceMapsConfigure, DestConfigure, SourceActivity, SourceConfigure, DestActivity, SourceMapsActivity } from '@taskfr/node';
 import { ObjectMap } from '@ts-ioc/core';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
-import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
+import { UglifyTransformActivity, UglifyConfigure } from './UglifyActivity';
 
 /**
  * dest type.
@@ -61,10 +61,10 @@ export interface AssetConfigure extends ITransformConfigure {
     /**
      * uglify asset activity.
      *
-     * @type {(ExpressionToken<boolean | ObjectMap<any>> | ConfigureType<UglifyActivity, UglifyConfigure>)}
+     * @type {(ExpressionToken<boolean | ObjectMap<any>> | ConfigureType<UglifyTransformActivity, UglifyConfigure>)}
      * @memberof AssetConfigure
      */
-    uglify?: ExpressionToken<boolean | ObjectMap<any>> | ConfigureType<UglifyActivity, UglifyConfigure>;
+    uglify?: ExpressionToken<boolean | ObjectMap<any>> | ConfigureType<UglifyTransformActivity, UglifyConfigure>;
 
     /**
      * create source map or not. default create source map at  `./sourcemaps` for js asset and ts asset.

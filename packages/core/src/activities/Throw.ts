@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { InjectAcitityToken, Activity, Expression, ThrowConfigure, IActivityContext } from '../core';
+import { InjectAcitityToken, Activity, Expression, ThrowConfigure } from '../core';
 /**
  * throw activity token.
  */
@@ -13,7 +13,7 @@ export const ThrowActivityToken = new InjectAcitityToken<ThrowActivity>('throw')
  * @extends {Activity}
  */
 @Task(ThrowActivityToken)
-export class ThrowActivity extends Activity<any> {
+export class ThrowActivity extends Activity {
     /**
      * throw exception error.
      *

@@ -5,6 +5,7 @@ import { TransformActivityContext, TransformActivityContextToken } from './Trans
 import { TransformActivity } from './TransformActivity';
 import { InjectTransformActivityToken } from './ITransformActivity';
 import { ITransformConfigure } from './ITransformConfigure';
+import { isTransform } from './transformTypes';
 
 
 /**
@@ -43,12 +44,12 @@ export interface DestConfigure extends ITransformConfigure {
  * pipe dest activity.
  *
  * @export
- * @class TransformDestActivity
- * @extends {TransformComponent<ITransformDest>}
+ * @class DestActivity
+ * @extends {TransformActivity}
  * @implements {ITransformDest}
  * @implements {OnTaskInit}
  */
-@Task(DestAcitvityToken, TransformActivityContextToken)
+@Task(DestAcitvityToken)
 export class DestActivity extends TransformActivity {
 
     /**

@@ -2,7 +2,7 @@ import { InjectAcitityBuilderToken } from '@taskfr/core';
 import { Registration } from '@ts-ioc/core';
 import { AnnotationsConfigure, AnnotationActivity } from './Annotation';
 import { WatchActivity, ITransformActivity, SourceActivity, DestActivity, SourceMapsActivity } from '@taskfr/node';
-import { UglifyActivity } from './UglifyActivity';
+import { UglifyTransformActivity } from './UglifyActivity';
 
 
 /**
@@ -49,10 +49,10 @@ export interface IAssetActivity extends ITransformActivity {
     /**
      * uglify for asset actvity.
      *
-     * @type {UglifyActivity}
+     * @type {UglifyTransformActivity}
      * @memberof AssetActivity
      */
-    uglify: UglifyActivity;
+    uglify: UglifyTransformActivity;
 
     /**
      * asset annotation.

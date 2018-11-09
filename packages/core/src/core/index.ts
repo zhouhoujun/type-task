@@ -9,7 +9,6 @@ export * from './ExpressionActivity';
 export * from './Translator';
 export * from './ActivityConfigure';
 
-export * from './IContext';
 export * from './IActivityRunner';
 export * from './ActivityRunner';
 export * from './IActivityContext';

@@ -1,6 +1,6 @@
 import { isArray } from '@ts-ioc/core';
 import { WatchActivity, TestActivity, TransformActivity, TransformActivityContext, SourceActivity, DestActivity, SourceMapsActivity } from '@taskfr/node';
-import { UglifyActivity } from './UglifyActivity';
+import { UglifyTransformActivity } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { IAssetActivity, AssetToken } from './IAssetActivity';
 import { Asset } from '../decorators';
@@ -58,10 +58,10 @@ export class AssetActivity extends TransformActivity implements IAssetActivity {
     /**
      * uglify for asset actvity.
      *
-     * @type {UglifyActivity}
+     * @type {UglifyTransformActivity}
      * @memberof AssetActivity
      */
-    uglify: UglifyActivity;
+    uglify: UglifyTransformActivity;
 
     /**
      * asset annotation.

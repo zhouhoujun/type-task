@@ -17,7 +17,7 @@ import { GActivityContext, IActivityContext } from './IActivityContext';
  * @implements {OnActivityInit}
  */
 @Task
-export abstract class ActivityBase implements IActivity, OnActivityInit  {
+export abstract class Activity implements IActivity, OnActivityInit  {
     @Inject(ContainerToken)
     private container: IContainer;
 
@@ -163,7 +163,7 @@ export abstract class ActivityBase implements IActivity, OnActivityInit  {
 }
 
 /**
- * base activity.
+ * execute activity.
  *
  * @export
  * @class Activity
@@ -171,7 +171,7 @@ export abstract class ActivityBase implements IActivity, OnActivityInit  {
  * @template T
  */
 @Task
-export abstract class Activity<T> extends ActivityBase implements GActivity<T>, OnActivityInit {
+export abstract class ExecuteActivity<T> extends Activity implements GActivity<T>, OnActivityInit {
 
     /**
      *  activity execute context.
@@ -203,10 +203,10 @@ export abstract class Activity<T> extends ActivityBase implements GActivity<T>, 
  *
  * @export
  * @class NullActivity
- * @extends {Activity<any>}
+ * @extends {Activity}
  */
 @Task(ActivityToken)
-export class NullActivity extends ActivityBase {
+export class NullActivity extends Activity {
 
     protected async execute(): Promise<void> {
 

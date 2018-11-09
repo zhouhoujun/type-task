@@ -153,13 +153,16 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      * @memberof PipeComponent
      */
     protected async executePipe(stream: ITransform, transform: TransformType, waitend = false): Promise<ITransform> {
-        let next: ITransform = await this.getContext().exec(this, transform);
+        let next: ITransform;
+        let transPipe = await this.getContext().exec(this, transform);
         let piped = false;
         if (isTransform(stream)) {
-            if (isTransform(next)) {
-                if (!next.changeAsOrigin) {
+            if (isTransform(transPipe)) {
+                if (!transPipe.changeAsOrigin) {
                     piped = true;
-                    next = stream.pipe(next);
+                    next = stream.pipe(transPipe);
+                } else {
+                    next = transPipe;
                 }
             } else {
                 next = stream;
@@ -167,12 +170,10 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
         }
 
         if (piped && waitend) {
-            return await new Promise((resolve, reject) => {
+            return await new Promise((r, j) => {
                 next
-                    .once('end', () => {
-                        resolve();
-                    })
-                    .once('error', reject);
+                    .once('end', r)
+                    .once('error', j);
             }).then(() => {
                 next.removeAllListeners('error');
                 next.removeAllListeners('end');

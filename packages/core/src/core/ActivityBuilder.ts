@@ -5,7 +5,6 @@ import { Task } from '../decorators';
 import { IActivity, ActivityInstance, InjectAcitityToken } from './IActivity';
 import { ActivityConfigure, ActivityType, ExpressionType, isActivityType, Expression } from './ActivityConfigure';
 import { NullActivity } from './Activity';
-import { AssignActivity } from './AssignActivity';
 
 
 /**
@@ -96,7 +95,7 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
      */
     async toExpression<T>(exptype: ExpressionType<T>, target: IActivity): Promise<Expression<T>> {
         if (isActivityType(exptype)) {
-            return await this.buildByConfig(exptype, target.id) as AssignActivity<T>;
+            return await this.buildByConfig(exptype, target.id) as Expression<T>;
         } else {
             return exptype as Expression<T>;
         }

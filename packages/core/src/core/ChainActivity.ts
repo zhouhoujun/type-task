@@ -3,7 +3,7 @@ import { IActivityContext } from './IActivityContext';
 import { IHandleActivity, HandleActivity } from './HandleActivity';
 import { ChainConfigure } from './ActivityConfigure';
 import { InjectAcitityToken, IActivity } from './IActivity';
-import { Activity, ActivityBase } from './Activity';
+import { Activity } from './Activity';
 
 
 
@@ -18,10 +18,10 @@ export const ChainActivityToken = new InjectAcitityToken<ChainActivity>('chain')
  *
  * @export
  * @class ChainActivity
- * @extends {ActivityBase}
+ * @extends {Activity}
  */
 @Task(ChainActivityToken)
-export class ChainActivity extends ActivityBase {
+export class ChainActivity extends Activity {
 
     protected handles: IHandleActivity[];
 
@@ -56,7 +56,7 @@ export class ChainActivity extends ActivityBase {
                 return Promise.resolve();
             }
             try {
-                return handle(ctx, dispatch.bind(null, idx + 1));
+                return handle(ctx, () => dispatch(idx + 1));
             } catch (err) {
                 return Promise.reject(err);
             }

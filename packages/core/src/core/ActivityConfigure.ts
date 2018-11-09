@@ -4,7 +4,7 @@ import { ModuleConfig } from '@ts-ioc/bootstrap';
 import { IActivityRunner } from './IActivityRunner';
 import { ExpressionActivity } from './ExpressionActivity';
 import { ActivityRunner } from './ActivityRunner';
-import { IActivityContext, GActivityContext } from './IActivityContext';
+import { IActivityContext } from './IActivityContext';
 import { IHandleActivity } from './HandleActivity';
 
 
@@ -29,12 +29,12 @@ export type AsyncResult<T> = (activity?: IActivity, ctx?: IActivityContext) => P
 /**
  * activity result.
  */
-export type ActivityResult<T> = Promise<T> | AsyncResult<T> | ExpressionActivity<T> | IActivityRunner<T>;
+export type ExecuteResult<T> = Promise<T> | AsyncResult<T> | IActivityRunner<T>;
 
 /**
  * expression.
  */
-export type Expression<T> = T | ActivityResult<T>;
+export type Expression<T> = T | ExecuteResult<T>;
 
 /**
  * condition expression.
@@ -234,7 +234,7 @@ export interface ChainConfigure extends ActivityConfigure {
  * @interface ConfirmConfigure
  * @extends {ActivityConfigure}
  */
-export interface ConfirmConfigure extends ActivityConfigure {
+export interface IConfirmConfigure<T> extends ActivityConfigure {
     /**
      * confirm expression.
      *
@@ -242,8 +242,19 @@ export interface ConfirmConfigure extends ActivityConfigure {
      * @memberof ConfirmConfigure
      */
     confirm: ExpressionType<boolean>;
+
+    /**
+     * target dependence
+     *
+     * @type {T}
+     * @memberof IDependenceConfigure
+     */
+    body: T
 }
 
+export interface ConfirmConfigure extends IConfirmConfigure<Active> {
+
+}
 
 /**
  * Dependence activity configure.

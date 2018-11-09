@@ -2,7 +2,7 @@ import { IActivity, Src, ActivityBuilder, SequenceConfigure, ParallelConfigure, 
 import { isArray, isString, lang, Injectable } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
-import { CleanActivity, CleanConfigure, TestActivity, TestConfigure, DestActivity, DestConfigure, BuildHandleActivity, BuildHandleToken } from '@taskfr/node';
+import { CleanActivity, CleanConfigure, TestActivity, TestConfigure, DestActivity, DestConfigure, BuildHandleToken } from '@taskfr/node';
 import { InjectAssetActivityToken, AssetToken } from './IAssetActivity';
 import { AssetActivity } from './AssetActivity';
 import { AssetConfigure } from './AssetConfigure';
@@ -82,16 +82,15 @@ export class PackageBuilder extends ActivityBuilder {
                         if (!a) {
                             return null;
                         }
-                        return this.buildByConfig({ token: BuildHandleToken }, activity.id)
-                            .then(handle => {
-                                handle.compiler = a;
-                                handle.name = 'handle-' + name;
-                                handle.test = (f) => true;
-                                return handle;
-                            });
+                        let handle = this.container.resolve(BuildHandleToken);
+                        handle.id = activity.id;
+
+                        handle.compiler = a;
+                        handle.name = 'handle-' + name;
+                        return handle;
+
                     })
             }));
-
             activity.use(...assets.filter(a => a));
 
             if (config.clean) {

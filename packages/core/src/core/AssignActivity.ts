@@ -1,4 +1,4 @@
-import { Activity } from './Activity';
+import { ExecuteActivity } from './Activity';
 import { Task } from '../decorators';
 
 
@@ -11,6 +11,6 @@ import { Task } from '../decorators';
  * @template T
  */
 @Task
-export abstract class AssignActivity<T> extends Activity<T> {
+export abstract class AssignActivity<T> extends ExecuteActivity<T> {
 
 }

@@ -31,7 +31,7 @@ export abstract class NodeActivity extends ContextActivity {
     }
 
     protected verifyCtx(ctx?: any) {
-        if (ctx instanceof ActivityContext) {
+        if (ctx instanceof NodeActivityContext) {
             this._ctx = ctx;
         } else {
             this.getContext().setAsResult(ctx);
@@ -101,15 +101,16 @@ export class NodeActivityContext<T> extends ActivityContext<T> implements INodeA
         return process.argv.indexOf(arg) > -1 || process.argv.indexOf('--' + arg) > -1;
     }
 
-    /**
-     * get run tasks.
-     *
-     * @returns {string[]}
-     * @memberof NodeContext
-     */
-    getRunTasks(): string[] {
-        return this.getEnvArgs()._ || ['default'];
-    }
+    // /**
+    //  * get run tasks.
+    //  *
+    //  * @returns {string[]}
+    //  * @memberof NodeContext
+    //  */
+    // getRunTasks(): string[] {
+    //     return this.getEnvArgs()._ || ['default'];
+    // }
+
     /**
      * get root folders.
      *

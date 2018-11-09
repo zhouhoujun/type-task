@@ -1,7 +1,7 @@
 
 import * as uglify from 'gulp-uglify';
-import { Task, Activity, OnActivityInit, ActivityConfigure, CtxType, InjectAcitityToken } from '@taskfr/core';
-import { ITransform, TransformActivityContext } from '@taskfr/node';
+import { Task, OnActivityInit, ActivityConfigure, CtxType, InjectAcitityToken } from '@taskfr/core';
+import { TransformActivity } from '@taskfr/node';
 
 /**
  * uglify activity configure.
@@ -23,7 +23,7 @@ export interface UglifyConfigure extends ActivityConfigure {
 /**
  *  uglify token.
  */
-export const UglifyToken = new InjectAcitityToken<UglifyActivity>('uglify');
+export const UglifyTransformToken = new InjectAcitityToken<UglifyTransformActivity>('uglify-transformToken');
 
 
 /**
@@ -34,8 +34,8 @@ export const UglifyToken = new InjectAcitityToken<UglifyActivity>('uglify');
  * @extends {Activity<ITransform>}
  * @implements {OnActivityInit}
  */
-@Task(UglifyToken)
-export class UglifyActivity extends Activity<ITransform> implements OnActivityInit {
+@Task(UglifyTransformToken)
+export class UglifyTransformActivity extends TransformActivity implements OnActivityInit {
 
     /**
      * uglify options

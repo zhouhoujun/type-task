@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, Expression, IntervalConfigure, IActivityContext } from '../core';
+import { IActivity, InjectAcitityToken, Expression, IntervalConfigure, Activity } from '../core';
 
 
 /**
@@ -15,7 +15,7 @@ export const IntervalActivityToken = new InjectAcitityToken<IntervalActivity>('i
  * @extends {Activity}
  */
 @Task(IntervalActivityToken)
-export class IntervalActivity extends Activity<any> {
+export class IntervalActivity extends Activity {
 
     /**
      * Interval time.

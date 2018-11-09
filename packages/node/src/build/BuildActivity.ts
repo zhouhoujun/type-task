@@ -1,5 +1,5 @@
 import { ChainActivity, Task, ChainConfigure, CtxType, Src, ExpressionToken, ConfigureType, Active, IActivity, ActivityContext, InjectAcitityToken } from '@taskfr/core';
-import { Inject, isBoolean, Token } from '@ts-ioc/core';
+import { isBoolean, Token } from '@ts-ioc/core';
 import { WatchActivity, WatchConfigure } from '../activities';
 import { BuidActivityContext } from './BuidActivityContext';
 import { BuildHandleConfigure, BuildHandleActivity } from './BuildHandleActivity';
@@ -169,7 +169,9 @@ export class BuildActivity extends ChainActivity {
      */
     protected async getInputFiles(ctx: BuidActivityContext) {
         if (this.src) {
-            ctx.input = await this.getContext().getFiles(this.src);
+            let ctx = this.getContext();
+            let src = await ctx.getFiles(this.src);
+            ctx.setAsResult(src);
         }
     }
 

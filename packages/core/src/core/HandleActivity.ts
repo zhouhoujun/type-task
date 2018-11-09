@@ -1,4 +1,4 @@
-import { Activity, ActivityBase } from './Activity';
+import { Activity } from './Activity';
 import { IActivity } from './IActivity';
 import { Task } from '../decorators';
 import { IActivityContext } from './IActivityContext';
@@ -28,11 +28,11 @@ export interface IHandleActivity extends IActivity {
  * @export
  * @abstract
  * @class HandleActivity
- * @extends {ActivityBase}
+ * @extends {Activity}
  * @implements {IHandleActivity}
  */
 @Task
-export abstract class HandleActivity extends ActivityBase implements IHandleActivity {
+export abstract class HandleActivity extends Activity implements IHandleActivity {
 
     /**
      * run context.

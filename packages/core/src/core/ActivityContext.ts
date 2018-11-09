@@ -3,13 +3,12 @@ import { IActivity } from './IActivity';
 import { ITranslator } from './Translator';
 import { Activity } from './Activity';
 import { Events, AppConfigureToken } from '@ts-ioc/bootstrap';
-import { InjectActivityContextToken, InputDataToken, GActivityContext } from './IActivityContext';
+import { InjectActivityContextToken, InputDataToken, GActivityContext, CtxType } from './IActivityContext';
 import { ActivityBuilderToken } from './IActivityBuilder';
 import { ActivityBuilder } from './ActivityBuilder';
 import { Expression, ActivityConfigure } from './ActivityConfigure';
 import { ActivityRunner } from './ActivityRunner';
 import { Task } from '../decorators';
-import { CtxType } from './IContext';
 
 
 
@@ -96,13 +95,13 @@ export class ActivityContext<T> extends Events implements GActivityContext<T> {
     }
 
     setAsResult(data: any) {
-        if (!isNullOrUndefined(data)) {
-            data = this.translate(data instanceof ActivityContext ? data.result : data);
-        }
-        this.result = data;
+        this.result = this.translate(data);
     }
 
     protected translate(data: any): any {
+        if (isNullOrUndefined(data)) {
+            return null;
+        }
         let translator = this.getTranslator(data);
         if (translator) {
             return translator.translate(data);

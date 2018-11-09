@@ -3,7 +3,7 @@ import { WatchActivity, WatchConfigure, TestActivity, TestConfigure, SourceActiv
 import { isBoolean, isString, Injectable } from '@ts-ioc/core';
 import { AssetConfigure } from './AssetConfigure';
 import { AssetActivity } from './AssetActivity';
-import { UglifyActivity, UglifyConfigure } from './UglifyActivity';
+import { UglifyTransformActivity, UglifyConfigure } from './UglifyActivity';
 import { AnnotationActivity, AnnotationsConfigure } from './Annotation';
 import { AssetBuilderToken } from './IAssetActivity';
 
@@ -111,16 +111,16 @@ export class AssetBuilder extends ActivityBuilder {
             }
 
             if (config.uglify) {
-                activity.uglify = await this.toActivity<any, UglifyActivity, UglifyConfigure>(config.uglify, activity,
-                    act => act instanceof UglifyActivity,
+                activity.uglify = await this.toActivity<any, UglifyTransformActivity, UglifyConfigure>(config.uglify, activity,
+                    act => act instanceof UglifyTransformActivity,
                     uglify => {
                         if (isBoolean(uglify)) {
                             if (uglify) {
-                                return { task: UglifyActivity };
+                                return { task: UglifyTransformActivity };
                             }
                             return null;
                         }
-                        return <UglifyConfigure>{ uglifyOptions: uglify, task: UglifyActivity };
+                        return <UglifyConfigure>{ uglifyOptions: uglify, task: UglifyTransformActivity };
                     });
             }
         }

@@ -1,6 +1,6 @@
 import { Defer } from '@ts-ioc/core';
 import { Task } from '../decorators';
-import { InjectAcitityToken, Activity, Expression, DelayConfigure, OnActivityInit, IActivity, IActivityContext, ActivityBase } from '../core';
+import { InjectAcitityToken, Activity, Expression, DelayConfigure, OnActivityInit, IActivity } from '../core';
 
 /**
  * deloy activity token.
@@ -15,7 +15,7 @@ export const DelayActivityToken = new InjectAcitityToken<DelayActivity>('delay')
  * @extends {Activity}
  */
 @Task(DelayActivityToken)
-export class DelayActivity extends ActivityBase implements OnActivityInit {
+export class DelayActivity extends Activity implements OnActivityInit {
 
     /**
      * delay time.

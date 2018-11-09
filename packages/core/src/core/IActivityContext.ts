@@ -1,6 +1,91 @@
-import { InjectToken, Registration, Token } from '@ts-ioc/core';
+import { InjectToken, Registration, Token, IContainer, ObjectMap, Type } from '@ts-ioc/core';
 import { IActivity } from './IActivity';
-import { IContext } from './IContext';
+import { ActivityConfigure, Expression } from './ActivityConfigure';
+import { ActivityBuilder } from './ActivityBuilder';
+
+
+
+
+/**
+ * task context.
+ *
+ * @export
+ * @interface IContext
+ */
+export interface IContext {
+
+
+    /**
+     * get ioc container.
+     *
+     * @returns {IContainer}
+     * @memberof IContext
+     */
+    getContainer(): IContainer;
+
+    /**
+     * default builder.
+     *
+     * @type {ActivityBuilder}
+     * @memberof IContext
+     */
+    getBuilder(): ActivityBuilder;
+
+    /**
+     * get base URL.
+     *
+     * @returns {string}
+     * @memberof IContext
+     */
+    getRootPath(): string;
+
+    /**
+     * get task evn args.
+     *
+     * @returns {ObjectMap<any>}
+     * @memberof IContext
+     */
+    getEnvArgs(): ObjectMap<any>;
+
+    /**
+     *convert to finally type via context.
+     *
+     * @template T
+     * @param {CtxType<T>} target
+     * @param {ActivityConfigure} [config]
+     * @returns {T}
+     * @memberof IContext
+     */
+    to<T>(target: CtxType<T>, config?: ActivityConfigure): T;
+
+    /**
+     * exec activity result.
+     *
+     * @template T
+     * @param {IActivity} target
+     * @param {Expression<T>} expression
+     * @param {ActivityContext} [ctx]
+     * @returns {Promise<T>}
+     * @memberof IContext
+     */
+    exec<T>(target: IActivity, expression: Expression<T>, ctx?: IActivityContext): Promise<T>;
+
+    /**
+     * check is task or not.
+     *
+     * @param {Type<IActivity>} task
+     * @returns {boolean}
+     * @memberof IContext
+     */
+    isTask(task: Type<IActivity>): boolean;
+}
+
+
+/**
+ * context type.
+ */
+export type CtxType<T> = T | ((context?: IContext, config?: ActivityConfigure) => T);
+
 
 /**
  * activity run context.
@@ -49,6 +134,7 @@ export interface IActivityContext extends IContext {
      */
     setAsResult(data: any);
 }
+
 
 /**
  * inpit data token.

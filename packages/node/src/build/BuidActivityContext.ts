@@ -1,5 +1,5 @@
 import { NodeActivityContext } from '../core';
-import { Inject, Injectable } from '@ts-ioc/core';
+import { Inject, Injectable, isArray } from '@ts-ioc/core';
 import { InputDataToken, InjectActivityContextToken } from '@taskfr/core';
 import { BuildActivity } from './BuildActivity';
 
@@ -44,6 +44,13 @@ export class BuidActivityContext extends NodeActivityContext<string[]> {
         return !this.result || this.result.length < 1;
     }
 
+    protected translate(data: any): any {
+        let re = super.translate(data);
+        if (!isArray(re)) {
+            return [];
+        }
+    }
+
     /**
      * set complete files.
      *
@@ -51,7 +58,7 @@ export class BuidActivityContext extends NodeActivityContext<string[]> {
      * @memberof BuidActivityContext
      */
     complete(files: string[]) {
-        this.data = this.result.filter(f => files.indexOf(f) < 0);
+        this.result = this.result.filter(f => files.indexOf(f) < 0);
     }
 
 }

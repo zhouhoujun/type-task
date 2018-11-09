@@ -73,7 +73,11 @@ export class SourceActivity extends NodeActivity {
     }
 
     protected async execute() {
-
+        let ctx = this.getContext();
+        if (this.src) {
+            let src = await ctx.exec(this, this.src);
+            ctx.setAsResult(src);
+        }
     }
 
     /**
@@ -84,9 +88,7 @@ export class SourceActivity extends NodeActivity {
      * @memberof PipeActivity
      */
     protected verifyCtx(ctx?: any) {
-        if (isString(this.src) || (isArray(this.src) && this.src.length)) {
-            this.getContext().setAsResult(ctx);
-        } else if (ctx instanceof TransformActivityContext) {
+        if (ctx instanceof TransformActivityContext) {
             this._ctx = ctx;
         } else {
             this.getContext().setAsResult(ctx);
