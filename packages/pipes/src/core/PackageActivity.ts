@@ -36,11 +36,15 @@ export class PackageActivity extends BuildActivity implements IPackageActivity {
      */
     clean: CleanActivity;
 
+    protected async execOnce(): Promise<void> {
+        if (this.clean) {
+            await this.clean.run(this.getContext());
+        }
+        await super.execOnce();
+    }
+
     protected async execBeforeBody() {
         let ctx = this.getContext();
-        if (this.clean) {
-            await this.clean.run(ctx);
-        }
         if (this.test) {
             await this.test.run(ctx);
         }

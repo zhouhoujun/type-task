@@ -6,11 +6,11 @@ import { PackBuilderToken, PackConfigure } from './pack';
 
 
 /**
- * Asset task builder
+ * pack activity builder
  *
  * @export
- * @class AssetsBuilder
- * @extends {DestTaskBuilder}
+ * @class PackBuilder
+ * @extends {ActivityBuilder}
  */
 @Injectable(PackBuilderToken)
 export class PackBuilder extends ActivityBuilder {
@@ -26,7 +26,9 @@ export class PackBuilder extends ActivityBuilder {
     async buildStrategy(activity: IActivity, config: PackConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof PackActivity) {
-            if (config.clean && !activity.clean) {
+            let srcRoot = activity.src = activity.getContext().to(config.src);
+            activity.dist = activity.getContext().to(config.dist);
+            if (config.clean) {
                 activity.clean = await this.toActivity<Src, CleanActivity, CleanConfigure>(config.clean, activity,
                     act => act instanceof CleanActivity,
                     src => {
@@ -35,7 +37,7 @@ export class PackBuilder extends ActivityBuilder {
                 );
             }
 
-            if (config.test && !activity.test) {
+            if (config.test) {
                 activity.test = await this.toActivity<Src, TestActivity, TestConfigure>(config.test, activity,
                     act => act instanceof TestActivity,
                     src => {
