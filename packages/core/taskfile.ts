@@ -35,6 +35,8 @@ const commonjs = require('rollup-plugin-commonjs');
                 '@ts-ioc/aop',
                 '@ts-ioc/logs',
                 '@ts-ioc/bootstrap',
+                'gulp-sourcemaps',
+                'gulp-typescript',
                 'rxjs',
                 'rxjs/operators'
             ],

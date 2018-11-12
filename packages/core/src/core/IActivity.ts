@@ -41,7 +41,7 @@ export interface IActivity {
      * @type {string}
      * @memberof IActivity
      */
-    id?: string;
+    id: string;
 
     /**
      * activity display name.

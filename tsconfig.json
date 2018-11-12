@@ -16,6 +16,9 @@
       "@taskfr/pipes": [
         "packages/pipes/src"
       ],
+      "@taskfr/pack": [
+        "packages/pack/src"
+      ],
       "@taskfr/platform-server": [
         "packages/platform-server/src"
       ]

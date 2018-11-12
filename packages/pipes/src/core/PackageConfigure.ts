@@ -1,29 +1,24 @@
-import { CtxType, Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, ActivityConfigure, CoreActivityConfigs, GCoreActivityConfigs } from '@taskfr/core';
+import { CtxType, Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, GCoreActivityConfigs } from '@taskfr/core';
 import { ObjectMap, Registration, Token } from '@ts-ioc/core';
 import {
-    AnnotationsConfigure, AssetConfigure, UglifyConfigure, WatchConfigure, DestConfigure,
-    SourceConfigure, ITransformConfigure, DestActivity, BuildHandleConfigure, BuildConfigure,
-    TestConfigure, CleanConfigure, CleanActivity, TestActivity, TsConfigure
+    DestConfigure, DestActivity, BuildConfigure,
+    TestConfigure, CleanConfigure, CleanActivity,
+    TestActivity, BuildConfigures
 } from '@taskfr/build';
-import { ShellActivityConfig, ExecFileActivityConfig } from '@taskfr/node';
-
-type configures = CoreActivityConfigs | AssetConfigure | ITransformConfigure | BuildHandleConfigure | BuildConfigure
-    | TsConfigure | DestConfigure | SourceConfigure | TestConfigure | UglifyConfigure
-    | WatchConfigure | AnnotationsConfigure | CleanConfigure | ShellActivityConfig | ExecFileActivityConfig | PackageConfigure;
 
 
-export type TransformsConfigure = configures | GCoreActivityConfigs<configures>;
+export type PackageConfigures = PackageConfigure | BuildConfigures | GCoreActivityConfigs<PackageConfigure | BuildConfigures>;
 
-export type TransformsActivityType<T extends IActivity> = Token<T> | TransformsConfigure;
+export type PackageActivityType<T extends IActivity> = Token<T> | PackageConfigures;
 
 /**
  * package configure.
  *
  * @export
  * @interface PackageConfigure
- * @extends {SequenceConfigure}
+ * @extends {BuildConfigure}
  */
-export interface PackageConfigure extends ActivityConfigure {
+export interface PackageConfigure extends BuildConfigure {
     /**
      * src root path.
      *
@@ -31,8 +26,6 @@ export interface PackageConfigure extends ActivityConfigure {
      * @memberof PackageConfigure
      */
     src?: CtxType<string>;
-
-
     /**
      * clean task config.
      *
@@ -43,10 +36,10 @@ export interface PackageConfigure extends ActivityConfigure {
     /**
      * assets.
      *
-     * @type {ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, TransformsConfigure>>}
+     * @type {ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, PackageConfigures>>}
      * @memberof PackageConfigure
      */
-    assets?: ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, TransformsConfigure>>;
+    assets?: ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, PackageConfigures>>;
 
     /**
      * test config.
@@ -67,10 +60,10 @@ export interface PackageConfigure extends ActivityConfigure {
     /**
      * package sequence activity.
      *
-     * @type {TransformsActivityType<IActivity>[]}
+     * @type {PackageActivityType<IActivity>[]}
      * @memberof PackageConfigure
      */
-    sequence?: TransformsActivityType<IActivity>[];
+    sequence?: PackageActivityType<IActivity>[];
 
 }
 

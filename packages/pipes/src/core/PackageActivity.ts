@@ -12,7 +12,6 @@ import { Package } from '../decorators';
  */
 @Package(PackageToken)
 export class PackageActivity extends BuildActivity implements IPackageActivity {
-
     /**
      * dest activity.
      *

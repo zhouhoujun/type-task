@@ -1,33 +1,18 @@
-import { ITaskDecorator, createTaskDecorator, ExpressionToken, Src, ConfigureType, IActivity, InjectAcitityBuilderToken } from '@taskfr/core';
-import { BuildConfigure, CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/build';
+import { ITaskDecorator, createTaskDecorator, IActivity, InjectAcitityBuilderToken } from '@taskfr/core';
 import { Registration } from '@ts-ioc/core';
+import { PackConfigure } from '../core/PackConfigure';
+import { IPackActivity } from '../core/IPackActivity';
 
-export interface PackConfigure extends BuildConfigure {
-    /**
-     * clean task config.
-     *
-     * @type {(ExpressionToken<Src> | ConfigureType<CleanActivity, CleanConfigure>)}
-     * @memberof PackConfigure
-     */
-    clean?: ExpressionToken<Src> | ConfigureType<CleanActivity, CleanConfigure>;
 
-    /**
-     * clean task config.
-     *
-     * @type {(ExpressionToken<Src> | ConfigureType<CleanActivity, CleanConfigure>)}
-     * @memberof PackConfigure
-     */
-    test?: ExpressionToken<Src> | ConfigureType<TestActivity, TestConfigure>;
-}
 
 /**
- * package activity.
+ * asset task metadata.
  *
  * @export
- * @interface IPackActivity
- * @extends {IActivity}
+ * @interface PackMetadata
+ * @extends {PackConfigure}
  */
-export interface IPackActivity extends IActivity {
+export interface PackMetadata extends PackConfigure {
 
 }
 

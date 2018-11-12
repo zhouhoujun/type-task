@@ -1,6 +1,6 @@
-import { PipeModule, Package, PackageActivity } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 import { CleanToken, CleanActivity, AssetActivity, Asset, TsCompile } from '@taskfr/build';
+import { Pack, PackActivity, PackModule } from '@taskfr/pack';
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');
 const commonjs = require('rollup-plugin-commonjs');
@@ -86,7 +86,7 @@ export class RollupTs extends AssetActivity {
 }
 
 
-@Package({
+@Pack({
     clean: 'lib',
     assets: {
         ts2015: {
@@ -105,10 +105,10 @@ export class RollupTs extends AssetActivity {
         }
     }
 })
-export class NodeBuilder extends PackageActivity {
+export class PackBuilder extends PackActivity {
 }
 
 
 TaskContainer.create(__dirname)
-    .use(PipeModule)
-    .bootstrap(NodeBuilder);
+    .use(PackModule)
+    .bootstrap(PackBuilder);

@@ -18,7 +18,7 @@ export interface BuildConfigure extends ChainConfigure {
      * @type {CtxType<Src>}
      * @memberof BuildConfigure
      */
-    src: CtxType<Src>;
+    src?: CtxType<Src>;
 
     /**
      * build dist.
@@ -26,7 +26,7 @@ export interface BuildConfigure extends ChainConfigure {
      * @type {CtxType<string>}
      * @memberof BuildConfigure
      */
-    dist: CtxType<string>;
+    dist?: CtxType<string>;
 
     /**
      * handle activities.
@@ -169,7 +169,6 @@ export class BuildActivity extends ChainActivity {
      */
     protected async getInputFiles(ctx: BuidActivityContext) {
         if (this.src) {
-            let ctx = this.getContext();
             let src = await ctx.getFiles(this.src);
             ctx.setAsResult(src);
         }

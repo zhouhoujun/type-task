@@ -80,7 +80,6 @@ export interface IContext {
     isTask(task: Type<IActivity>): boolean;
 }
 
-
 /**
  * context type.
  */

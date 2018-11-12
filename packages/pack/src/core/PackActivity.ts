@@ -1,5 +1,6 @@
 import { BuildActivity, CleanActivity, TestActivity } from '@taskfr/build';
 import { Pack } from '../decorators';
+import { IPackActivity } from './IPackActivity';
 
 
 @Pack({
@@ -13,7 +14,7 @@ import { Pack } from '../decorators';
         }
     ]
 })
-export class PackActivity extends BuildActivity {
+export class PackActivity extends BuildActivity implements IPackActivity {
 
     /**
      * clean activity.
@@ -40,9 +41,6 @@ export class PackActivity extends BuildActivity {
 
     protected async execBeforeBody() {
         let ctx = this.getContext();
-        if (this.clean) {
-            await this.clean.run(ctx);
-        }
         if (this.test) {
             await this.test.run(ctx);
         }
