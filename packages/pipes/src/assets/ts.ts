@@ -1,11 +1,8 @@
-import { Asset } from '../decorators';
-import { AssetConfigure, AssetActivity } from '../core';
 import { isBoolean, ObjectMap, isString } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
 import * as ts from 'gulp-typescript';
 import { CtxType, OnActivityInit } from '@taskfr/core';
-import { AnnotationActivity } from '../core/Annotation';
-import { DestActivity, DestAcitvityToken, TransformActivityContext, ITransform, isTransform } from '@taskfr/node'
+import { DestActivity, DestAcitvityToken, TransformActivityContext, ITransform, isTransform, AnnotationActivity, AssetConfigure, Asset, AssetActivity } from '@taskfr/build';
 
 
 /**

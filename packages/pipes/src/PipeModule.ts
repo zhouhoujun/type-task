@@ -3,6 +3,7 @@ import * as assets from './assets';
 import { DIModule } from '@ts-ioc/bootstrap';
 import { PipeSetup } from './PipeSetup';
 import { NodejsModule } from '@taskfr/node';
+import { BuildModule } from '@taskfr/build';
 
 
 /**
@@ -15,11 +16,13 @@ import { NodejsModule } from '@taskfr/node';
     imports: [
         PipeSetup,
         NodejsModule,
+        BuildModule,
         cores,
         assets
     ],
     exports: [
         NodejsModule,
+        BuildModule,
         cores,
         assets
     ]

@@ -2,10 +2,11 @@ import { IActivity, Src, ActivityBuilder, SequenceConfigure, ParallelConfigure, 
 import { isArray, isString, lang, Injectable } from '@ts-ioc/core';
 import { PackageConfigure, PackageBuilderToken } from './PackageConfigure';
 import { PackageActivity } from './PackageActivity';
-import { CleanActivity, CleanConfigure, TestActivity, TestConfigure, DestActivity, DestConfigure, BuildHandleToken } from '@taskfr/node';
-import { InjectAssetActivityToken, AssetToken } from './IAssetActivity';
-import { AssetActivity } from './AssetActivity';
-import { AssetConfigure } from './AssetConfigure';
+import {
+    InjectAssetActivityToken, AssetToken, AssetActivity, AssetConfigure,
+    CleanActivity, CleanConfigure, TestActivity, TestConfigure, DestActivity,
+    DestConfigure, BuildHandleToken
+} from '@taskfr/build';
 
 
 /**

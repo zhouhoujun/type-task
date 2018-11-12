@@ -1,11 +1,8 @@
-import { CtxType, Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, ActivityConfigure, CoreActivityConfigs, SequenceActivity, SequenceConfigure, ISequenceConfigure, Activity, GCoreActivityConfigs } from '@taskfr/core';
+import { CtxType, Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, ActivityConfigure, CoreActivityConfigs, GCoreActivityConfigs } from '@taskfr/core';
 import { ObjectMap, Registration, Token } from '@ts-ioc/core';
-import { AssetConfigure } from './AssetConfigure';
+import { AnnotationsConfigure, AssetConfigure, UglifyConfigure, WatchConfigure, DestConfigure, SourceConfigure, ITransformConfigure, DestActivity, BuildHandleConfigure, BuildConfigure, TestConfigure, CleanConfigure, CleanActivity, TestActivity } from '@taskfr/build';
 import { TsConfigure } from '../assets';
-import { UglifyConfigure } from './UglifyActivity';
-import { WatchConfigure, DestConfigure, SourceConfigure, ITransformConfigure, DestActivity, BuildHandleConfigure, BuildConfigure } from '@taskfr/node';
-import { AnnotationsConfigure } from './Annotation';
-import { ShellActivityConfig, ExecFileActivityConfig, CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/node';
+import { ShellActivityConfig, ExecFileActivityConfig } from '@taskfr/node';
 
 type configures = CoreActivityConfigs | AssetConfigure | ITransformConfigure | BuildHandleConfigure | BuildConfigure
     | TsConfigure | DestConfigure | SourceConfigure | TestConfigure | UglifyConfigure

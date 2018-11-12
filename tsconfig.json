@@ -10,6 +10,9 @@
       "@taskfr/node": [
         "packages/node/src"
       ],
+      "@taskfr/build": [
+        "packages/build/src"
+      ],
       "@taskfr/pipes": [
         "packages/pipes/src"
       ],

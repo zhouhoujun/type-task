@@ -49,7 +49,9 @@
     "rxjs-compat": "^6.3.2"
   },
   "peerDependencies": {
-    "@taskfr/core": "^2.1.11"
+    "@taskfr/core": "^2.1.11",
+    "@taskfr/node": "^2.1.11",
+    "@taskfr/build": "^2.1.11"
   },
   "directories": {
     "lib": "lib",

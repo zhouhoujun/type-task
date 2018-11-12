@@ -1,6 +1,7 @@
-import { PipeModule, AssetActivity, Asset } from '@taskfr/pipes';
+import { PipeModule } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
 import { INodeActivityContext } from '@taskfr/node';
+import { Asset, AssetActivity } from '@taskfr/build';
 const jeditor = require('gulp-json-editor');
 
 

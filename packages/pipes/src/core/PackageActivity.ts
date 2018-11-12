@@ -1,7 +1,6 @@
-import { CleanActivity, TestActivity, DestActivity, BuildActivity, BuidActivityContext } from '@taskfr/node';
+import { CleanActivity, TestActivity, DestActivity, BuildActivity } from '@taskfr/build';
 import { IPackageActivity, PackageToken } from './PackageConfigure';
 import { Package } from '../decorators';
-import { SequenceActivity } from '@taskfr/core';
 
 
 /**
