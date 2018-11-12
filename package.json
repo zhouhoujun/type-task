@@ -8,22 +8,12 @@
         "reinstall": "npm cache clean && npm install",
         "build": "ts-node -r tsconfig-paths/register taskfile.ts"
     },
-    "keywords": [
-        "task",
-        "task manager",
-        "pipe",
-        "ioc",
-        "aop",
-        "shell",
-        "develop",
-        "tool"
-    ],
+    "keywords": ["task", "task manager", "pipe", "ioc", "aop", "shell", "develop", "tool"],
     "author": "houjun",
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/zhouhoujun/type-task/issues"
     },
-    "registry": "jspm",
     "repository": {
         "type": "git",
         "url": "https://github.com/zhouhoujun/type-task.git"

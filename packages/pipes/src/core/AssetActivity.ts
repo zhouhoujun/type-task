@@ -92,7 +92,9 @@ export class AssetActivity extends TransformActivity implements IAssetActivity {
             await this.test.run(ctx);
         }
         if (!(this.watch && ctx.target === this.watch)) {
-            await this.src.run(ctx);
+            if (this.src) {
+                await this.src.run(ctx);
+            }
             if (this.watch) {
                 this.watch.body = this;
                 let watchCtx = this.getCtxFactory().create();

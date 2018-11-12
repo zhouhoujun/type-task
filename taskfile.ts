@@ -1,10 +1,11 @@
-import { PipeModule, IPipeContext, PipeTask, AssetActivity, PipeActivity } from '@taskfr/pipes';
+import { PipeModule, AssetActivity, Asset } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
+import { INodeActivityContext } from '@taskfr/node';
 const jeditor = require('gulp-json-editor');
 
 
 
-let versionSetting = (ctx: IPipeContext) => {
+let versionSetting = (ctx: INodeActivityContext) => {
     let envArgs = ctx.getEnvArgs();
     return jeditor((json: any) => {
         let version = envArgs['setvs'] || '';
@@ -22,7 +23,7 @@ let versionSetting = (ctx: IPipeContext) => {
     })
 }
 
-let iocVersion = (ctx: IPipeContext) => {
+let iocVersion = (ctx: INodeActivityContext) => {
     return jeditor((json: any) => {
         let version = ctx.getPackage().devDependencies['@ts-ioc/core'];
         if (json.dependencies) {
@@ -36,13 +37,13 @@ let iocVersion = (ctx: IPipeContext) => {
     })
 }
 
-@PipeTask({
+@Asset({
     pipes: [
         {
             src: ['packages/**/package.json', '!node_modules/**/package.json'],
             pipes: [
-                (act: AssetActivity) => versionSetting(act.context),
-                (act: AssetActivity) => iocVersion(act.context)
+                (act: AssetActivity) => versionSetting(act.getContext()),
+                (act: AssetActivity) => iocVersion(act.getContext())
             ],
             dest: 'packages',
             activity: AssetActivity
@@ -50,13 +51,13 @@ let iocVersion = (ctx: IPipeContext) => {
         {
             src: ['package.json'],
             pipes: [
-                (act: AssetActivity) => versionSetting(act.context)
+                (act: AssetActivity) => versionSetting(act.getContext())
             ],
             dest: '.',
             activity: AssetActivity
         },
         {
-            shell: (ctx: IPipeContext) => {
+            shell: (ctx: INodeActivityContext) => {
                 let envArgs = ctx.getEnvArgs();
                 let packages = ctx.getFolders('packages');
                 let cmd = envArgs.deploy ? 'npm publish --access=public' : 'npm run build';

@@ -125,13 +125,4 @@ export class PackageBuilder extends ActivityBuilder {
 
         return activity;
     }
-    /**
-     * get default activity.
-     *
-     * @returns
-     * @memberof PackageBuilder
-     */
-    getDefaultAcitvity() {
-        return PackageActivity;
-    }
 }

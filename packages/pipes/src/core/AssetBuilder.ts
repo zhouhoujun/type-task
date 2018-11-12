@@ -29,11 +29,13 @@ export class AssetBuilder extends ActivityBuilder {
     async buildStrategy(activity: IActivity, config: AssetConfigure): Promise<IActivity> {
         await super.buildStrategy(activity, config);
         if (activity instanceof AssetActivity) {
-            activity.src = await this.toActivity<Src, SourceActivity, SourceConfigure>(config.src, activity,
-                act => act instanceof SourceActivity,
-                src => {
-                    return { src: src, task: SourceActivity };
-                });
+            if (config.src) {
+                activity.src = await this.toActivity<Src, SourceActivity, SourceConfigure>(config.src, activity,
+                    act => act instanceof SourceActivity,
+                    src => {
+                        return { src: src, task: SourceActivity };
+                    });
+            }
 
             if (config.test) {
                 activity.test = await this.toActivity<Src, TestActivity, TestConfigure>(config.test, activity,
@@ -126,16 +128,6 @@ export class AssetBuilder extends ActivityBuilder {
         }
 
         return activity;
-    }
-
-    /**
-     * get default activity.
-     *
-     * @returns
-     * @memberof AssetBuilder
-     */
-    getDefaultAcitvity() {
-        return AssetActivity;
     }
 
     /**

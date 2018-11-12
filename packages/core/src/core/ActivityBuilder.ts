@@ -54,10 +54,6 @@ export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IAc
         return activity;
     }
 
-    getDefaultAcitvity(): Type<IActivity> {
-        return NullActivity;
-    }
-
     getType(config: ActivityConfigure): Token<IActivity> {
         let token = config.activity || config.task || config.token || config.type;
         if (isString(token)) {

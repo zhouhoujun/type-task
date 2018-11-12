@@ -13,7 +13,7 @@ const commonjs = require('rollup-plugin-commonjs');
     src: 'lib/**/*.js',
     sourcemaps: true,
     data: {
-        name: 'core.umd.js',
+        name: 'unit.umd.js',
         input: 'lib/index.js'
     },
     pipes: [
@@ -60,10 +60,10 @@ export class RollupTs extends AssetActivity {
                 RollupTs,
                 {
                     name: 'zip',
-                    src: 'bundles/core.umd.js',
+                    src: 'bundles/unit.umd.js',
                     uglify: true,
                     pipes: [
-                        () => rename('core.umd.min.js'),
+                        () => rename('unit.umd.min.js'),
                     ],
                     dest: 'bundles',
                     task: AssetActivity
@@ -76,7 +76,7 @@ export class RollupTs extends AssetActivity {
                 {
                     src: 'esnext/**/*.js', dest: 'es2015',
                     data: {
-                        name: 'core.js',
+                        name: 'unit.js',
                         input: 'esnext/index.js'
                     },
                     activity: RollupTs
@@ -100,11 +100,11 @@ export class RollupTs extends AssetActivity {
         }
     }
 })
-export class CoreBuilder extends PackageActivity {
+export class UnitBuilder extends PackageActivity {
 }
 
 
 
 TaskContainer.create(__dirname)
     .use(PipeModule)
-    .bootstrap(CoreBuilder);
+    .bootstrap(UnitBuilder);
