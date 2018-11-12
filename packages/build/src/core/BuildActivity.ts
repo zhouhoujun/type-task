@@ -64,6 +64,54 @@ export interface BuildConfigure extends ChainConfigure {
 export const BuildToken = new InjectAcitityToken<BuildActivity>('build');
 
 /**
+ * IBuildActivity
+ *
+ * @export
+ * @interface IBuildActivity
+ * @extends {IActivity}
+ */
+export interface IBuildActivity extends IActivity {
+    /**
+     * build src root.
+     *
+     * @type {Src}
+     * @memberof BuildActivity
+     */
+    src: Src;
+
+    /**
+     * build dist.
+     *
+     * @type {string}
+     * @memberof BuildActivity
+     */
+    dist: string;
+    /**
+     * watch activity. watch the build.
+     *
+     * @type {WatchActivity}
+     * @memberof BuildActivity
+     */
+    watch: WatchActivity;
+
+    /**
+     * before build body.
+     *
+     * @type {IActivity}
+     * @memberof BuildActivity
+     */
+    beforeBuildBody: IActivity;
+
+    /**
+     * do sth, after build completed.
+     *
+     * @type {IActivity}
+     * @memberof BuildActivity
+     */
+    afterBuildBody: IActivity;
+}
+
+/**
  * build activity.
  *
  * @export
@@ -71,7 +119,7 @@ export const BuildToken = new InjectAcitityToken<BuildActivity>('build');
  * @extends {ChainActivity}
  */
 @Task(BuildToken)
-export class BuildActivity extends ChainActivity {
+export class BuildActivity extends ChainActivity implements IBuildActivity {
 
     /**
      * build src root.

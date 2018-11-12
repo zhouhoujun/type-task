@@ -1,4 +1,4 @@
-import { CtxType, ExpressionType, Expression, Task, InjectAcitityToken, ActivityConfigure, IActivity, IActivityContext } from '@taskfr/core';
+import { CtxType, ExpressionType, Expression, Task, InjectAcitityToken, ActivityConfigure, IActivity } from '@taskfr/core';
 import { isUndefined } from '@ts-ioc/core';
 import { NodeActivity } from '@taskfr/node';
 
