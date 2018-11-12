@@ -1,6 +1,7 @@
 import { TaskContainer } from '@taskfr/platform-server';
 import { CleanToken, CleanActivity, AssetActivity, Asset, TsCompile } from '@taskfr/build';
 import { Pack, PackActivity, PackModule } from '@taskfr/pack';
+import { SequenceActivity } from '@taskfr/core';
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');
 const commonjs = require('rollup-plugin-commonjs');

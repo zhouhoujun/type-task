@@ -1,6 +1,7 @@
 import { Src, ExpressionToken, ConfigureType, IActivity, GCoreActivityConfigs, CtxType } from '@taskfr/core';
 import { ObjectMap, Token } from '@ts-ioc/core';
 import { BuildConfigure, TestConfigure, CleanConfigure, CleanActivity, TestActivity, BuildConfigures } from '@taskfr/build';
+import { ServeActivity, ServeConfigure } from '../serves';
 
 /**
  * pack configure.
@@ -53,11 +54,20 @@ export interface PackConfigure extends BuildConfigure {
      */
     test?: ExpressionToken<Src> | ConfigureType<TestActivity, TestConfigure>;
 
+
     /**
-     * package sequence activity.
+     * serve task config.
+     *
+     * @type {(ExpressionToken<Src> | ConfigureType<ServeActivity, ServeConfigure>)}
+     * @memberof PackConfigure
+     */
+    serve?: ExpressionToken<Src> | ConfigureType<ServeActivity, ServeConfigure>;
+
+    /**
+     * pack sequence activity.
      *
      * @type {PackActivityType<IActivity>[]}
-     * @memberof PackConfigure
+     * @memberof PackageConfigure
      */
     sequence?: PackActivityType<IActivity>[];
 

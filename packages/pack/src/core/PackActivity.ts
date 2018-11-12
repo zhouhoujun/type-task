@@ -1,6 +1,7 @@
 import { BuildActivity, CleanActivity, TestActivity } from '@taskfr/build';
 import { Pack } from '../decorators';
 import { IPackActivity } from './IPackActivity';
+import { ServeActivity } from '../serves';
 
 
 @Pack({
@@ -32,6 +33,14 @@ export class PackActivity extends BuildActivity implements IPackActivity {
      */
     test: TestActivity;
 
+    /**
+     * serve activity.
+     *
+     * @type {ServeActivity}
+     * @memberof IPackActivity
+     */
+    serve: ServeActivity;
+
     protected async execOnce(): Promise<void> {
         if (this.clean) {
             await this.clean.run(this.getContext());
@@ -46,6 +55,9 @@ export class PackActivity extends BuildActivity implements IPackActivity {
         }
         if (this.beforeBuildBody) {
             await this.beforeBuildBody.run(ctx);
+        }
+        if (this.serve) {
+            await this.serve.run(ctx);
         }
     }
 

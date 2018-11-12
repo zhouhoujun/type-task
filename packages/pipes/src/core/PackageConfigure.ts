@@ -3,7 +3,7 @@ import { ObjectMap, Registration, Token } from '@ts-ioc/core';
 import {
     DestConfigure, DestActivity, BuildConfigure,
     TestConfigure, CleanConfigure, CleanActivity,
-    TestActivity, BuildConfigures
+    TestActivity, BuildConfigures, IBuildActivity
 } from '@taskfr/build';
 
 
@@ -74,7 +74,7 @@ export interface PackageConfigure extends BuildConfigure {
  * @interface IPackageActivity
  * @extends {IActivity}
  */
-export interface IPackageActivity extends IActivity {
+export interface IPackageActivity extends IBuildActivity {
 
 }
 
