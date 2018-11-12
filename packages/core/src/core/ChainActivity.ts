@@ -4,7 +4,6 @@ import { IHandleActivity, HandleActivity } from './HandleActivity';
 import { ChainConfigure } from './ActivityConfigure';
 import { InjectAcitityToken, IActivity } from './IActivity';
 import { Activity } from './Activity';
-import { async } from 'rxjs/internal/scheduler/async';
 
 
 

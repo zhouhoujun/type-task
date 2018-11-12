@@ -1,24 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "importHelpers": true,
-    "target":"es2017",
-    "baseUrl": ".",
-    "rootDir": "../../packages",
-    "paths": {
-      "@taskfr/core": [
-        "../core/src"
-      ],
-      "@taskfr/node": [
-        "../node/src"
-      ],
-      "@taskfr/pipes": [
-        "../pipes/src"
-      ],
-      "@taskfr/platform-server": [
-        "../platform-server/src"
-      ]
-    }
+    "target":"es2017"
   },
   "exclude": [
     "lib",

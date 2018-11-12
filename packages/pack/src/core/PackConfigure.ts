@@ -1,7 +1,6 @@
-import { Src, ExpressionToken, ConfigureType, IActivity, InjectAcitityBuilderToken, GCoreActivityConfigs } from '@taskfr/core';
-import { ObjectMap, Registration, Token } from '@ts-ioc/core';
+import { Src, ExpressionToken, ConfigureType, IActivity, GCoreActivityConfigs, CtxType } from '@taskfr/core';
+import { ObjectMap, Token } from '@ts-ioc/core';
 import { BuildConfigure, TestConfigure, CleanConfigure, CleanActivity, TestActivity, BuildConfigures } from '@taskfr/build';
-import { IPackActivity } from './IPackActivity';
 
 /**
  * pack configure.
@@ -21,6 +20,14 @@ export type PackActivityType<T extends IActivity> = Token<T> | PackConfigures;
  * @extends {ActivityConfigure}
  */
 export interface PackConfigure extends BuildConfigure {
+
+    /**
+     * src root path.
+     *
+     * @type {CtxType<string>}
+     * @memberof PackageConfigure
+     */
+    src?: CtxType<string>;
 
     /**
      * clean task config.
@@ -55,29 +62,3 @@ export interface PackConfigure extends BuildConfigure {
     sequence?: PackActivityType<IActivity>[];
 
 }
-
-
-/**
- * inject pack token.
- *
- * @export
- * @class InjectPackageToken
- * @extends {Registration<T>}
- * @template T
- */
-export class InjectPackToken<T extends IPackActivity> extends Registration<T> {
-    constructor(desc: string) {
-        super('PackActivity', desc);
-    }
-}
-
-/**
- * pack token
- */
-export const PackToken = new InjectPackToken<IPackActivity>('');
-
-/**
- * pack builder token.
- */
-export const PackBuilderToken = new InjectAcitityBuilderToken<IPackActivity>(PackToken);
-

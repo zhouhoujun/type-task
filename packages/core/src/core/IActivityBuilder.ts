@@ -1,7 +1,7 @@
 import { Token } from '@ts-ioc/core';
 import { IAnnotationBuilder, InjectAnnotationBuilder } from '@ts-ioc/bootstrap';
 import { IActivity } from './IActivity';
-import { ActivityType, ExpressionType, Expression } from './ActivityConfigure';
+import { ActivityType } from './ActivityConfigure';
 import { Activity } from './Activity';
 
 

@@ -15,7 +15,7 @@ const builtins = require('rollup-plugin-node-builtins');
     sourcemaps: true,
     dest: 'es2015',
     data: {
-        name: 'activites.js',
+        name: 'build.js',
         input: 'lib/index.js'
     },
     pipes: [
@@ -82,7 +82,7 @@ export class RollupTs extends AssetActivity {
             sequence: [
                 { clean: 'esnext', activity: CleanToken },
                 { src: 'src/**/*.ts', dest: 'esnext', annotation: true, uglify: false, tsconfig: './tsconfig.es2017.json', activity: TsCompile },
-                { src: 'esnext/**/*.js', data: { name: 'activites.js', input: 'esnext/index.js' }, dest: 'es2017', activity: RollupTs },
+                { src: 'esnext/**/*.js', data: { name: 'build.js', input: 'esnext/index.js' }, dest: 'es2017', activity: RollupTs },
                 { clean: 'esnext', activity: CleanToken }
             ]
         }
