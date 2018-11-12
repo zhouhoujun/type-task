@@ -2,7 +2,7 @@ import { isBoolean, ObjectMap, isString } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
 import * as ts from 'gulp-typescript';
 import { CtxType, OnActivityInit } from '@taskfr/core';
-import { DestActivity, DestAcitvityToken, TransformActivityContext, ITransform, isTransform, AnnotationActivity, AssetConfigure, Asset, AssetActivity } from '@taskfr/build';
+import { AssetConfigure, Asset, AssetActivity, DestActivity, AnnotationActivity, DestAcitvityToken, ITransform, TransformActivityContext, isTransform } from '../core';
 
 
 /**
@@ -33,6 +33,12 @@ export interface TsConfigure extends AssetConfigure {
 @Asset('ts')
 export class TsCompile extends AssetActivity implements OnActivityInit {
 
+    /**
+     * tds dest.
+     *
+     * @type {(DestActivity | boolean)}
+     * @memberof TsCompile
+     */
     tdsDest: DestActivity | boolean;
     /**
      * on task init.

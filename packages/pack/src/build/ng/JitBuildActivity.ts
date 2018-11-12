@@ -1,5 +1,6 @@
-import { BuildActivity } from '@taskfr/node';
-import { Pack } from '../../core';
+import { BuildActivity } from '@taskfr/build';
+import { Pack } from '../../decorators';
+
 
 @Pack({
     name: 'ng-jit',

@@ -1,5 +1,5 @@
 import { ITaskDecorator, createTaskDecorator, ExpressionToken, Src, ConfigureType, IActivity, InjectAcitityBuilderToken } from '@taskfr/core';
-import { BuildConfigure, CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/node';
+import { BuildConfigure, CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/build';
 import { Registration } from '@ts-ioc/core';
 
 export interface PackConfigure extends BuildConfigure {

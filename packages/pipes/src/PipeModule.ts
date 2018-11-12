@@ -1,5 +1,4 @@
 import * as cores from './core';
-import * as assets from './assets';
 import { DIModule } from '@ts-ioc/bootstrap';
 import { PipeSetup } from './PipeSetup';
 import { NodejsModule } from '@taskfr/node';
@@ -17,14 +16,12 @@ import { BuildModule } from '@taskfr/build';
         PipeSetup,
         NodejsModule,
         BuildModule,
-        cores,
-        assets
+        cores
     ],
     exports: [
         NodejsModule,
         BuildModule,
-        cores,
-        assets
+        cores
     ]
 })
 export class PipeModule {

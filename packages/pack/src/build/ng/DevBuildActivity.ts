@@ -1,6 +1,5 @@
-import { Task } from '@taskfr/core';
-import { BuildConfigure } from '@taskfr/node';
-import { PackActivity, Pack } from '../../core';
+import { PackActivity } from '../../core';
+import { Pack } from '../../decorators';
 
 /**
  * dev build activity.

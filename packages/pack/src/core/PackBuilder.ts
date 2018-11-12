@@ -1,8 +1,8 @@
 import { IActivity, Src, ActivityBuilder } from '@taskfr/core';
 import { Injectable } from '@ts-ioc/core';
 import { PackActivity } from './PackActivity';
-import { CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/node';
-import { PackBuilderToken, PackConfigure } from './pack';
+import { CleanActivity, CleanConfigure, TestActivity, TestConfigure } from '@taskfr/build';
+import { PackBuilderToken, PackConfigure } from '../decorators';
 
 
 /**

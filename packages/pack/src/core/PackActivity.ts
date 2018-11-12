@@ -1,6 +1,5 @@
-import { Src, SequenceActivity } from '@taskfr/core';
-import { BuildActivity, CleanActivity, CleanConfigure, TestActivity, TestConfigure, BuidActivityContext } from '@taskfr/node';
-import { Pack, PackConfigure } from './pack';
+import { BuildActivity, CleanActivity, TestActivity } from '@taskfr/build';
+import { Pack } from '../decorators';
 
 
 @Pack({

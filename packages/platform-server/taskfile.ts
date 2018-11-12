@@ -1,6 +1,6 @@
-import { PipeModule, Package, PackageActivity, TsCompile } from '@taskfr/pipes';
+import { PipeModule, Package, PackageActivity } from '@taskfr/pipes';
 import { TaskContainer } from '@taskfr/platform-server';
-import { CleanToken, AssetActivity, Asset } from '@taskfr/build';
+import { CleanToken, AssetActivity, Asset, TsCompile } from '@taskfr/build';
 
 const resolve = require('rollup-plugin-node-resolve');
 const rollupSourcemaps = require('rollup-plugin-sourcemaps');

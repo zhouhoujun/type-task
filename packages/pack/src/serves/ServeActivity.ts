@@ -1,5 +1,5 @@
 import { Task, Src, CtxType, ActivityConfigure } from '@taskfr/core';
-import { NodeActivityContext, NodeActivity, BuidActivityContext } from '@taskfr/node';
+import { NodeActivity } from '@taskfr/node';
 
 
 /**
