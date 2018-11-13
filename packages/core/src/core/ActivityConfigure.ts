@@ -463,7 +463,7 @@ export interface IParallelConfigure<T> extends ActivityConfigure {
      * @type {T[]}
      * @memberof ParallelConfigure
      */
-    parallel: T[];
+    parallel?: T[];
 }
 /**
  * Parallel activity configure.

@@ -1,4 +1,4 @@
-import { Src, ExpressionToken, ConfigureType, IActivity, GCoreActivityConfigs, CtxType } from '@taskfr/core';
+import { Src, ExpressionToken, ConfigureType, IActivity, CtxType, SequenceConfigure, ISequenceConfigure } from '@taskfr/core';
 import { ObjectMap, Token } from '@ts-ioc/core';
 import { BuildConfigure, TestConfigure, CleanConfigure, CleanActivity, TestActivity, BuildConfigures } from '@taskfr/build';
 import { ServeActivity, ServeConfigure } from '../serves';
@@ -6,12 +6,12 @@ import { ServeActivity, ServeConfigure } from '../serves';
 /**
  * pack configure.
  */
-export type PackConfigures = BuildConfigures | PackConfigure | GCoreActivityConfigs<BuildConfigures | PackConfigure>;
+export type PackConfigures<T> = PackConfigure | BuildConfigures<T>;
 
 /**
  * pack activity type, configy.
  */
-export type PackActivityType<T extends IActivity> = Token<T> | PackConfigures;
+export type PackActivityType<T extends IActivity> = Token<T> | PackConfigures<T>;
 
 /**
  * pack configure.
@@ -41,10 +41,10 @@ export interface PackConfigure extends BuildConfigure {
     /**
      * assets.
      *
-     * @type {ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, PackConfigures>>}
+     * @type {ObjectMap<ExpressionToken<Src> | PackConfigures<PackActivityType<IActivity>>>}
      * @memberof PackConfigure
      */
-    assets?: ObjectMap<ExpressionToken<Src> | ConfigureType<IActivity, PackConfigures>>;
+    assets?: ObjectMap<ExpressionToken<Src> | PackConfigures<PackActivityType<IActivity>>>;
 
     /**
      * test config.
@@ -62,13 +62,5 @@ export interface PackConfigure extends BuildConfigure {
      * @memberof PackConfigure
      */
     serve?: ExpressionToken<Src> | ConfigureType<ServeActivity, ServeConfigure>;
-
-    /**
-     * pack sequence activity.
-     *
-     * @type {PackActivityType<IActivity>[]}
-     * @memberof PackageConfigure
-     */
-    sequence?: PackActivityType<IActivity>[];
 
 }
