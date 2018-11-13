@@ -12,3 +12,7 @@ export * from './Throw';
 // export * from './Transition';
 export * from './TryCatch';
 export * from './While';
+
+export * from './ContextActivity';
+export * from './HandleActivity';
+export * from './ChainActivity';

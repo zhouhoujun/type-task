@@ -1,26 +1,5 @@
-import { Activity } from './Activity';
-import { IActivity } from './IActivity';
 import { Task } from '../decorators';
-import { IActivityContext } from './IActivityContext';
-
-/**
- * handle activity interface.
- *
- * @export
- * @interface IHandleActivity
- * @extends {IActivity}
- */
-export interface IHandleActivity extends IActivity {
-    /**
-     * run task.
-     *
-     * @param {IActivityContext} [ctx]
-     * @param {() => Promise<any>} [next]
-     * @returns {Promise<any>}
-     * @memberof IHandleActivity
-     */
-    run(ctx?: IActivityContext, next?: () => Promise<any>): Promise<any>;
-}
+import { Activity, IActivityContext, IHandleActivity } from '../core';
 
 /**
  * handle activity base.

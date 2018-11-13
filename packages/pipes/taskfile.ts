@@ -46,7 +46,8 @@ const builtins = require('rollup-plugin-node-builtins');
                 'minimist', 'gulp-sourcemaps', 'vinyl-fs', 'gulp-mocha', 'del', 'chokidar',
                 'gulp-uglify', 'execa', '@ts-ioc/annotations', 'gulp-typescript',
                 '@taskfr/core',
-                '@taskfr/node'
+                '@taskfr/node',
+                '@taskfr/build'
             ],
             globals: {
                 'reflect-metadata': 'Reflect',

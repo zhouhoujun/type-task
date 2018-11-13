@@ -1,10 +1,6 @@
 import { Task } from '../decorators';
-import { IActivityContext } from './IActivityContext';
-import { IHandleActivity, HandleActivity } from './HandleActivity';
-import { ChainConfigure } from './ActivityConfigure';
-import { InjectAcitityToken, IActivity } from './IActivity';
-import { Activity } from './Activity';
-
+import { IActivityContext, ChainConfigure, InjectAcitityToken, IActivity, Activity, IHandleActivity, IChainActivity } from '../core';
+import { HandleActivity } from './HandleActivity';
 
 
 /**
@@ -21,7 +17,7 @@ export const ChainActivityToken = new InjectAcitityToken<ChainActivity>('chain')
  * @extends {Activity}
  */
 @Task(ChainActivityToken)
-export class ChainActivity extends Activity {
+export class ChainActivity extends Activity implements IChainActivity {
 
     protected handles: IHandleActivity[];
 

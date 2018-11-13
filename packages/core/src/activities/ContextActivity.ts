@@ -1,6 +1,4 @@
-import { Activity } from './Activity';
-import { IActivityContext } from './IActivityContext';
-import { IActivity } from './IActivity';
+import { IActivity, Activity, IActivityContext } from '../core';
 import { Registration, Type } from '@ts-ioc/core';
 import { Task } from '../decorators';
 

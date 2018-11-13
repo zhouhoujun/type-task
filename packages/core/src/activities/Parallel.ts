@@ -1,5 +1,6 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, ParallelConfigure, ActivityType, ContextActivity, } from '../core';
+import { IActivity, InjectAcitityToken, ParallelConfigure, ActivityType, } from '../core';
+import { ContextActivity } from './ContextActivity';
 
 
 

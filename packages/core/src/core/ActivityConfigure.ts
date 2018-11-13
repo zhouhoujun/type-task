@@ -2,10 +2,10 @@ import { IActivity, GActivity } from './IActivity';
 import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
 import { ModuleConfig } from '@ts-ioc/bootstrap';
 import { IActivityRunner } from './IActivityRunner';
-import { ExpressionActivity } from './ExpressionActivity';
 import { ActivityRunner } from './ActivityRunner';
 import { IActivityContext } from './IActivityContext';
-import { IHandleActivity } from './HandleActivity';
+import { IHandleActivity } from './IHandleActivity';
+import { ExpressionActivity } from './ExpressionActivity';
 
 
 /**

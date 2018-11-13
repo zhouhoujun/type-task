@@ -39,15 +39,6 @@ export interface INodeActivityContext extends IActivityContext {
      */
     getEnvArgs(): ObjectMap<any>;
 
-    // /**
-    //  * get run tasks.
-    //  *
-    //  * @returns {string[]}
-    //  * @memberof INodeContext
-    //  */
-    // getRunTasks(): string[];
-
-
     /**
      * get root folders.
      *

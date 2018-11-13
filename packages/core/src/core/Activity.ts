@@ -162,40 +162,6 @@ export abstract class Activity implements IActivity, OnActivityInit  {
     }
 }
 
-/**
- * execute activity.
- *
- * @export
- * @class Activity
- * @implements {GActivity<T>}
- * @template T
- */
-@Task
-export abstract class ExecuteActivity<T> extends Activity implements GActivity<T>, OnActivityInit {
-
-    /**
-     *  activity execute context.
-     *
-     * @type {ActivityContext}
-     * @memberof Activity
-     */
-    getContext(): GActivityContext<T> {
-        return super.getContext();
-    }
-    /**
-     * run task.
-     *
-     * @param {ActivityContext} [ctx] execute context.
-     * @returns {Promise<T>}
-     * @memberof Activity
-     */
-    async run(ctx?: IActivityContext): Promise<GActivityContext<T>> {
-        this.verifyCtx(ctx);
-        await this.execute();
-        return this.getContext();
-    }
-
-}
 
 
 /**

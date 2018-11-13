@@ -1,4 +1,4 @@
-import { ExecuteActivity } from './Activity';
+import { ExecuteActivity } from './ExecuteActivity';
 import { Task } from '../decorators';
 
 

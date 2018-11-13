@@ -48,6 +48,7 @@ const builtins = require('rollup-plugin-node-builtins');
                 'rxjs', 'gulp-uglify', 'execa', '@ts-ioc/annotations', 'gulp-typescript',
                 '@taskfr/core',
                 '@taskfr/node',
+                '@taskfr/build',
                 'rxjs/Observer',
                 'rxjs/util',
                 'rxjs/util/ObjectUnsubscribedError',
