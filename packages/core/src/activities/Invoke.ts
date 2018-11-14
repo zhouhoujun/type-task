@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { InjectAcitityToken, Activity, ActivityContext } from '../core';
+import { InjectAcitityToken, ActivityContext } from '../core';
 import { Token, ObjectMap } from '@ts-ioc/core';
 import { ControlActivity } from './ControlActivity';
 
@@ -41,6 +41,7 @@ export class InvokeActivity extends ControlActivity {
     targetType: Token<any>;
 
     protected async execute(): Promise<any> {
-        return this.getContext().getContainer().invoke(this.targetType, this.target, this.args, { provide: ActivityContext, useValue: this.getContext() });
+        let ctx = this.getContext();
+        return ctx.getContainer().invoke(this.targetType, this.target, this.args, { provide: ActivityContext, useValue: ctx });
     }
 }

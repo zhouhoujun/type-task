@@ -19,8 +19,20 @@ export const ParallelActivityToken = new InjectAcitityToken<ParallelActivity>('p
 @Task(ParallelActivityToken)
 export class ParallelActivity extends ControlActivity {
 
+    /**
+     * activites
+     *
+     * @type {IActivity[]}
+     * @memberof ParallelActivity
+     */
     activities: IActivity[] = [];
 
+    /**
+     * add activity.
+     *
+     * @param {IActivity} activity
+     * @memberof ParallelActivity
+     */
     add(activity: IActivity) {
         this.activities.push(activity);
     }

@@ -30,10 +30,26 @@ export class ChainActivity extends ControlActivity implements IChainActivity {
         this.handles = (this.handles || []).filter(act => act instanceof HandleActivity);
     }
 
+    /**
+     * execute.
+     *
+     * @protected
+     * @returns {Promise<void>}
+     * @memberof ChainActivity
+     */
     protected async execute(): Promise<void> {
         await this.handleRequest(this.getContext());
     }
 
+    /**
+     * handle request.
+     *
+     * @protected
+     * @param {IActivityContext} ctx
+     * @param {() => Promise<void>} [next]
+     * @returns {Promise<void>}
+     * @memberof ChainActivity
+     */
     protected handleRequest(ctx: IActivityContext, next?: () => Promise<void>): Promise<void> {
         let index = -1;
         let handles = this.handles.map(act => {

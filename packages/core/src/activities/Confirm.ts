@@ -6,7 +6,7 @@ import { ControlActivity } from './ControlActivity';
 /**
  * Confirm activity token.
  */
-export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity>('Confirm');
+export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity>('confirm');
 
 /**
  * while control activity.

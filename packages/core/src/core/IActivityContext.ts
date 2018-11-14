@@ -13,7 +13,6 @@ import { ActivityBuilder } from './ActivityBuilder';
  */
 export interface IContext {
 
-
     /**
      * get ioc container.
      *

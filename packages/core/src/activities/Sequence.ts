@@ -17,6 +17,12 @@ export const SequenceActivityToken = new InjectAcitityToken<SequenceActivity>('s
 @Task(SequenceActivityToken)
 export class SequenceActivity extends ControlActivity {
 
+    /**
+     * sequence activites.
+     *
+     * @type {IActivity[]}
+     * @memberof SequenceActivity
+     */
     activities: IActivity[] = [];
 
     async onActivityInit(config: SequenceConfigure): Promise<any> {
@@ -27,6 +33,12 @@ export class SequenceActivity extends ControlActivity {
         }
     }
 
+    /**
+     * add activity.
+     *
+     * @param {IActivity} activity
+     * @memberof SequenceActivity
+     */
     add(activity: IActivity) {
         this.activities.push(activity);
     }

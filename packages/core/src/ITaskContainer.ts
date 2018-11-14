@@ -18,8 +18,21 @@ export const TaskContainerToken = new InjectToken<ITaskContainer>('__TASK_TaskCo
  */
 export interface ITaskContainer extends IApplicationExtends {
 
+    /**
+     * use log.
+     *
+     * @param {Type<any>} logAspect
+     * @returns {this}
+     * @memberof ITaskContainer
+     */
     useLog(logAspect: Type<any>): this;
 
+    /**
+     * get builder.
+     *
+     * @returns {IApplicationBuilder<any>}
+     * @memberof ITaskContainer
+     */
     getBuilder(): IApplicationBuilder<any>;
 
     /**

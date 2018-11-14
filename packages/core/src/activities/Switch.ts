@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, Expression, SwitchConfigure } from '../core';
+import { IActivity, InjectAcitityToken, Expression, SwitchConfigure } from '../core';
 import { MapSet, isUndefined } from '@ts-ioc/core';
 import { ControlActivity } from './ControlActivity';
 

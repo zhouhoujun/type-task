@@ -10,7 +10,6 @@ export * from './Parallel';
 export * from './Sequence';
 export * from './Switch';
 export * from './Throw';
-// export * from './Transition';
 export * from './TryCatch';
 export * from './While';
 

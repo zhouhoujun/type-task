@@ -25,7 +25,7 @@ export class CoreModule {
         container.bindProvider(InputDataToken, null);
         container.use(injectors)
             .use(core)
-            .register(RunAspect)
+            .use(RunAspect)
             .use(activites);
     }
 }

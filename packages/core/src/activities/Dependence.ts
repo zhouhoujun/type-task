@@ -21,7 +21,7 @@ export class InjectDependenceActivity<T extends IActivity> extends Registration<
 /**
  * Dependence activity token.
  */
-export const DependenceActivityToken = new InjectAcitityToken<DependenceActivity>('Dependence');
+export const DependenceActivityToken = new InjectAcitityToken<DependenceActivity>('dependence');
 
 /**
  * dependence activity.

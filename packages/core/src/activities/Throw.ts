@@ -1,5 +1,5 @@
 import { Task } from '../decorators';
-import { InjectAcitityToken, Activity, Expression, ThrowConfigure } from '../core';
+import { InjectAcitityToken, Expression, ThrowConfigure } from '../core';
 import { ControlActivity } from './ControlActivity';
 /**
  * throw activity token.
