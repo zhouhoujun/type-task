@@ -87,7 +87,6 @@ const builtins = require('rollup-plugin-node-builtins');
 export class RollupTs extends AssetActivity {
 }
 
-
 @Pack({
     clean: 'lib',
     src: 'src',
