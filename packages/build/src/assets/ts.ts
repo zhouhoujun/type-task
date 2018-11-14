@@ -2,7 +2,10 @@ import { isBoolean, ObjectMap, isString } from '@ts-ioc/core';
 import { classAnnotations } from '@ts-ioc/annotations';
 import * as ts from 'gulp-typescript';
 import { CtxType, OnActivityInit } from '@taskfr/core';
-import { AssetConfigure, Asset, AssetActivity, DestActivity, AnnotationActivity, DestAcitvityToken, ITransform, TransformActivityContext, isTransform } from '../core';
+import {
+    AssetConfigure, Asset, AssetActivity, DestActivity, AnnotationActivity,
+    DestAcitvityToken, ITransform, TransformActivityContext, isTransform
+} from '../core';
 
 
 /**

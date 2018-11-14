@@ -144,22 +144,23 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
     }
 
     /**
-     * execute pipe.
+     * execute stream pipe.
      *
      * @protected
-     * @param {ITransform} stream
-     * @param {TransformType} transform
+     * @param {ITransform} stream stream pipe from
+     * @param {TransformType} transform steam pipe to.
+     * @param {boolean} [waitend=false] wait pipe end or not.
      * @returns {Promise<ITransform>}
-     * @memberof PipeComponent
+     * @memberof TransformActivity
      */
     protected async executePipe(stream: ITransform, transform: TransformType, waitend = false): Promise<ITransform> {
         let next: ITransform;
         let transPipe = await this.getContext().exec(this, transform);
-        let piped = false;
+        let vaild = false;
         if (isTransform(stream)) {
             if (isTransform(transPipe)) {
                 if (!transPipe.changeAsOrigin) {
-                    piped = true;
+                    vaild = true;
                 } else {
                     next = transPipe;
                 }
@@ -168,7 +169,7 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
             }
         }
 
-        if (piped) {
+        if (vaild) {
             next = stream.pipe(transPipe);
             if (waitend) {
                 return await new Promise((r, j) => {
