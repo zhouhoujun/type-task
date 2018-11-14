@@ -1,4 +1,5 @@
-// export * from './Confirm';
+export * from './ControlActivity';
+export * from './Confirm';
 export * from './Delay';
 export * from './Interval';
 export * from './DoWhile';

@@ -1,5 +1,6 @@
 import { Task } from '../decorators';
-import { Activity, IActivityContext, IHandleActivity } from '../core';
+import { IActivityContext, IHandleActivity } from '../core';
+import { ControlActivity } from './ControlActivity';
 
 /**
  * handle activity base.
@@ -7,11 +8,11 @@ import { Activity, IActivityContext, IHandleActivity } from '../core';
  * @export
  * @abstract
  * @class HandleActivity
- * @extends {Activity}
+ * @extends {ControlActivity}
  * @implements {IHandleActivity}
  */
 @Task
-export abstract class HandleActivity extends Activity implements IHandleActivity {
+export abstract class HandleActivity extends ControlActivity implements IHandleActivity {
 
     /**
      * run context.

@@ -1,5 +1,6 @@
 import { Task } from '../decorators';
-import { InjectAcitityToken, Expression, ConfirmConfigure, IActivity, Activity } from '../core';
+import { InjectAcitityToken, Expression, ConfirmConfigure, IActivity } from '../core';
+import { ControlActivity } from './ControlActivity';
 
 
 /**
@@ -12,10 +13,10 @@ export const ConfirmActivityToken = new InjectAcitityToken<ConfirmActivity>('Con
  *
  * @export
  * @class ConfirmActivity
- * @extends {Activity}
+ * @extends {ControlActivity}
  */
 @Task(ConfirmActivityToken)
-export class ConfirmActivity extends Activity {
+export class ConfirmActivity extends ControlActivity {
     /**
      * Confirm time.
      *

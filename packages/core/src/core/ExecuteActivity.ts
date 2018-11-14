@@ -1,8 +1,8 @@
 import { Task } from '../decorators';
 import { Activity } from './Activity';
-import { GActivity } from './IActivity';
+import { IActivityResult } from './IActivity';
 import { OnActivityInit } from './OnActivityInit';
-import { GActivityContext, IActivityContext } from './IActivityContext';
+import { IActivityContextResult, IActivityContext } from './IActivityContext';
 
 /**
  * execute activity.
@@ -13,7 +13,7 @@ import { GActivityContext, IActivityContext } from './IActivityContext';
  * @template T
  */
 @Task
-export abstract class ExecuteActivity<T> extends Activity implements GActivity<T>, OnActivityInit {
+export abstract class ExecuteActivity<T> extends Activity implements IActivityResult<T>, OnActivityInit {
 
     /**
      *  activity execute context.
@@ -21,7 +21,7 @@ export abstract class ExecuteActivity<T> extends Activity implements GActivity<T
      * @type {ActivityContext}
      * @memberof Activity
      */
-    getContext(): GActivityContext<T> {
+    getContext(): IActivityContextResult<T> {
         return super.getContext();
     }
     /**
@@ -31,7 +31,7 @@ export abstract class ExecuteActivity<T> extends Activity implements GActivity<T
      * @returns {Promise<T>}
      * @memberof Activity
      */
-    async run(ctx?: IActivityContext): Promise<GActivityContext<T>> {
+    async run(ctx?: IActivityContext): Promise<IActivityContextResult<T>> {
         this.verifyCtx(ctx);
         await this.execute();
         return this.getContext();

@@ -1,6 +1,6 @@
 import { Task } from '../decorators';
 import { IActivity, InjectAcitityToken, ParallelConfigure, ActivityType, } from '../core';
-import { ContextActivity } from './ContextActivity';
+import { ControlActivity } from './ControlActivity';
 
 
 
@@ -14,10 +14,10 @@ export const ParallelActivityToken = new InjectAcitityToken<ParallelActivity>('p
  *
  * @export
  * @class ParallelActivity
- * @extends {Activity}
+ * @extends {ControlActivity}
  */
 @Task(ParallelActivityToken)
-export class ParallelActivity extends ContextActivity {
+export class ParallelActivity extends ControlActivity {
 
     activities: IActivity[] = [];
 

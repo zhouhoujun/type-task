@@ -1,5 +1,6 @@
 import { Task } from '../decorators';
 import { IActivity, InjectAcitityToken, Expression, IntervalConfigure, Activity } from '../core';
+import { ControlActivity } from './ControlActivity';
 
 
 /**
@@ -12,10 +13,10 @@ export const IntervalActivityToken = new InjectAcitityToken<IntervalActivity>('i
  *
  * @export
  * @class IntervalActivity
- * @extends {Activity}
+ * @extends {ControlActivity}
  */
 @Task(IntervalActivityToken)
-export class IntervalActivity extends Activity {
+export class IntervalActivity extends ControlActivity {
 
     /**
      * Interval time.
@@ -25,6 +26,12 @@ export class IntervalActivity extends Activity {
      */
     interval: Expression<number>;
 
+    /**
+     * body.
+     *
+     * @type {IActivity}
+     * @memberof IntervalActivity
+     */
     body: IActivity;
 
     async onActivityInit(config: IntervalConfigure): Promise<void> {

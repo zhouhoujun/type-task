@@ -3,6 +3,12 @@ import { Token, IContainer, Inject, ContainerToken, Injectable } from '@ts-ioc/c
 import { ActivityContextToken } from './ActivityContext';
 import { InjectActivityContextToken, InputDataToken, IActivityContext } from './IActivityContext';
 
+/**
+ * context factory.
+ *
+ * @export
+ * @class ContextFactory
+ */
 @Injectable
 export class ContextFactory {
 

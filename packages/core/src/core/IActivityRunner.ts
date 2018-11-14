@@ -1,6 +1,6 @@
 import { ActivityConfigure } from './ActivityConfigure';
 import { Token } from '@ts-ioc/core';
-import { GActivity, IActivity } from './IActivity';
+import { IActivityResult, IActivity } from './IActivity';
 import { Observable } from 'rxjs';
 import { Joinpoint } from '@ts-ioc/aop';
 import { Activity } from './Activity';
@@ -48,7 +48,7 @@ export enum RunState {
  * @export
  * @interface ITaskRunner
  */
-export interface IActivityRunner<T> extends IService<GActivity<T>> {
+export interface IActivityRunner<T> extends IService<IActivityResult<T>> {
 
     /**
      * actvity to run.
@@ -58,15 +58,21 @@ export interface IActivityRunner<T> extends IService<GActivity<T>> {
      */
     readonly activity: Token<IActivity>;
 
+    /**
+     * configure.
+     *
+     * @type {ActivityConfigure}
+     * @memberof IActivityRunner
+     */
     readonly configure: ActivityConfigure;
 
     /**
      * activity instance
      *
-     * @type {GActivity}
+     * @type {IActivityResult}
      * @memberof ITaskRunner
      */
-    readonly instance: GActivity<T>;
+    readonly instance: IActivityResult<T>;
 
     /**
      * current run task data.

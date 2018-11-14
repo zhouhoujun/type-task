@@ -1,4 +1,4 @@
-import { IActivity, GActivity } from './IActivity';
+import { IActivity, IActivityResult } from './IActivity';
 import { Token, isToken, isMetadataObject, isString } from '@ts-ioc/core';
 import { ModuleConfig } from '@ts-ioc/bootstrap';
 import { IActivityRunner } from './IActivityRunner';
@@ -48,7 +48,7 @@ export type ExpressionToken<T> = Expression<T> | Token<ExpressionActivity<T>>;
 /**
  * ActivityResult type
  */
-export type ActivityResultType<T> = Token<GActivity<T>> | Token<any> | IActivityConfigure<T>;
+export type ActivityResultType<T> = Token<IActivityResult<T>> | Token<any> | IActivityConfigure<T>;
 
 /**
  * expression type.
@@ -206,6 +206,13 @@ export interface ActivityConfigure extends IActivityConfigure<IActivity> {
 
 }
 
+/**
+ * handle configure.
+ *
+ * @export
+ * @interface HandleConfigure
+ * @extends {ActivityConfigure}
+ */
 export interface HandleConfigure extends ActivityConfigure {
 
 }
@@ -252,6 +259,13 @@ export interface IConfirmConfigure<T> extends ActivityConfigure {
     body: T
 }
 
+/**
+ * confirm configure.
+ *
+ * @export
+ * @interface ConfirmConfigure
+ * @extends {IConfirmConfigure<Active>}
+ */
 export interface ConfirmConfigure extends IConfirmConfigure<Active> {
 
 }

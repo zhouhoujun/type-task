@@ -1,6 +1,7 @@
 import { IActivity, InjectAcitityToken, DependenceConfigure, Activity } from '../core';
 import { Registration, Type } from '@ts-ioc/core';
 import { Task } from '../decorators';
+import { ControlActivity } from './ControlActivity';
 
 /**
  * dependence activity inject token.
@@ -22,8 +23,15 @@ export class InjectDependenceActivity<T extends IActivity> extends Registration<
  */
 export const DependenceActivityToken = new InjectAcitityToken<DependenceActivity>('Dependence');
 
+/**
+ * dependence activity.
+ *
+ * @export
+ * @class DependenceActivity
+ * @extends {ControlActivity}
+ */
 @Task(DependenceActivityToken)
-export class DependenceActivity extends Activity {
+export class DependenceActivity extends ControlActivity {
 
     /**
      * custom dependence

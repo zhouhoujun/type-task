@@ -5,7 +5,6 @@ import { ActivityBuilder } from './ActivityBuilder';
 
 
 
-
 /**
  * task context.
  *
@@ -134,13 +133,20 @@ export interface IActivityContext extends IContext {
     setAsResult(data: any);
 }
 
-
 /**
  * inpit data token.
  */
 export const InputDataToken = new InjectToken<any>('Context_Inputdata');
 
-export interface GActivityContext<T> extends IActivityContext {
+/**
+ * activity context.
+ *
+ * @export
+ * @interface IActivityContextResult
+ * @extends {IActivityContext}
+ * @template T
+ */
+export interface IActivityContextResult<T> extends IActivityContext {
     /**
      * ge activity execute result.
      *

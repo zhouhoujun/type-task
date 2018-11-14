@@ -1,11 +1,11 @@
 import { Inject, Express, ContainerToken, IContainer } from '@ts-ioc/core';
 import { Task } from '../decorators';
-import { IActivity, GActivity, ActivityToken } from './IActivity';
+import { IActivity, IActivityResult, ActivityToken } from './IActivity';
 import { ActivityConfigure, ExpressionType, Expression, ActivityType } from './ActivityConfigure';
 import { OnActivityInit } from './OnActivityInit';
 import { ActivityContext } from './ActivityContext';
 import { ContextFactory } from './ContextFactory';
-import { GActivityContext, IActivityContext } from './IActivityContext';
+import { IActivityContext } from './IActivityContext';
 
 /**
  * activity base.

@@ -1,4 +1,4 @@
-import { CtxType, ActivityConfigure, InjectAcitityToken, GActivity, Task } from '@taskfr/core';
+import { CtxType, ActivityConfigure, InjectAcitityToken, IActivityResult, Task } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { TransformActivityContext, TransformActivityContextToken } from './TransformActivityContext';
 import { NodeActivity } from '@taskfr/node';
@@ -23,9 +23,9 @@ export interface SourceMapsConfigure extends ActivityConfigure {
  *
  * @export
  * @interface ISourceMapsActivity
- * @extends {GActivity<ITransform>}
+ * @extends {IActivityResult<ITransform>}
  */
-export interface ISourceMapsActivity extends GActivity<ITransform> {
+export interface ISourceMapsActivity extends IActivityResult<ITransform> {
     sourcemaps: string;
 }
 

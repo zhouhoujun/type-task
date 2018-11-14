@@ -12,7 +12,7 @@ export const TryCatchActivityToken = new InjectAcitityToken<TryCatchActivity>('t
  *
  * @export
  * @class TryCatchActivity
- * @extends {Activity}
+ * @extends {ControlActivity}
  */
 @Task(TryCatchActivityToken)
 export class TryCatchActivity extends ChainActivity {

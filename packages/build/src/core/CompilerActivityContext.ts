@@ -5,7 +5,9 @@ import { InputDataToken, InjectActivityContextToken } from '@taskfr/core';
 import { CompilerActivity } from './CompilerActivity';
 import { BuildHandleActivity } from './BuildHandleActivity';
 
-
+/**
+ * compiler context token.
+ */
 export const CompilerContextToken = new InjectActivityContextToken(CompilerActivity);
 
 /**

@@ -1,5 +1,5 @@
 
-import { IActivity, ExpressionType, Src, Expression, InjectAcitityToken, Task, ActivityConfigure, Active, ActivityType, IActivityContext, GActivity } from '@taskfr/core';
+import { IActivity, ExpressionType, Src, Expression, InjectAcitityToken, Task, ActivityConfigure, Active, ActivityType, IActivityContext, IActivityResult } from '@taskfr/core';
 import { Defer, isArray, Token } from '@ts-ioc/core';
 import { fromEventPattern } from 'rxjs';
 import { bufferTime, map } from 'rxjs/operators';
@@ -190,7 +190,7 @@ export interface WatchOptions {
 
 
 @Task(WatchAcitvityToken)
-export class WatchActivity extends NodeActivity implements GActivity<FileChanged> {
+export class WatchActivity extends NodeActivity implements IActivityResult<FileChanged> {
 
     /**
      * watch src.

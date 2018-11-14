@@ -3,7 +3,7 @@ import { IActivity } from './IActivity';
 import { ITranslator } from './Translator';
 import { Activity } from './Activity';
 import { Events, AppConfigureToken } from '@ts-ioc/bootstrap';
-import { InjectActivityContextToken, InputDataToken, GActivityContext, CtxType } from './IActivityContext';
+import { InjectActivityContextToken, InputDataToken, IActivityContextResult, CtxType } from './IActivityContext';
 import { ActivityBuilderToken } from './IActivityBuilder';
 import { ActivityBuilder } from './ActivityBuilder';
 import { Expression, ActivityConfigure } from './ActivityConfigure';
@@ -25,7 +25,7 @@ export const ActivityContextToken = new InjectActivityContextToken(Activity);
  * @implements {IActivityContext<any>}
  */
 @Injectable(ActivityContextToken)
-export class ActivityContext<T> extends Events implements GActivityContext<T> {
+export class ActivityContext<T> extends Events implements IActivityContextResult<T> {
 
     @Inject(ContainerToken)
     private _container: IContainer;

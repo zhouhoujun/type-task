@@ -7,7 +7,7 @@ import { IActivity } from './IActivity';
  * @interface IChainActivity
  * @extends {IActivity}
  */
-export interface IChainActivity  extends IActivity {
+export interface IChainActivity extends IActivity {
 
     /**
      * use activies.

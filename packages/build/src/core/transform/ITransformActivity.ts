@@ -1,4 +1,4 @@
-import { GActivity, InjectAcitityBuilderToken, IActivityContext } from '@taskfr/core';
+import { IActivityResult, InjectAcitityBuilderToken, IActivityContext } from '@taskfr/core';
 import { ITransform } from './ITransform';
 import { Registration } from '@ts-ioc/core';
 import { TransformationContext } from 'typescript';
@@ -8,10 +8,10 @@ import { TransformationContext } from 'typescript';
  *
  * @export
  * @interface IPipeTask
- * @extends {GActivity}
+ * @extends {IActivityResult}
  * @template T
  */
-export interface ITransformActivity extends GActivity<ITransform> {
+export interface ITransformActivity extends IActivityResult<ITransform> {
 
 }
 

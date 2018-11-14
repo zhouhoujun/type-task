@@ -1,5 +1,6 @@
 import { Task } from '../decorators';
-import { IActivity, InjectAcitityToken, Activity, Condition, IfConfigure } from '../core';
+import { IActivity, InjectAcitityToken, Condition, IfConfigure } from '../core';
+import { ControlActivity } from './ControlActivity';
 
 
 /**
@@ -12,12 +13,31 @@ export const IfActivityToken = new InjectAcitityToken<IfActivity>('if');
  *
  * @export
  * @class IfActivity
- * @extends {Activity}
+ * @extends {ControlActivity}
  */
 @Task(IfActivityToken)
-export class IfActivity extends Activity {
-    ifBody: IActivity;
+export class IfActivity extends ControlActivity {
+
+    /**
+     * condition
+     *
+     * @type {Condition}
+     * @memberof IfActivity
+     */
     condition: Condition;
+    /**
+     * if body.
+     *
+     * @type {IActivity}
+     * @memberof IfActivity
+     */
+    ifBody: IActivity;
+    /**
+     * else body.
+     *
+     * @type {IActivity}
+     * @memberof IfActivity
+     */
     elseBody?: IActivity;
 
     async onActivityInit(config: IfConfigure): Promise<any> {
