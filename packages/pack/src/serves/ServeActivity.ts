@@ -55,5 +55,4 @@ export class ServeActivity extends NodeActivity {
     protected async execute(): Promise<void> {
 
     }
-
 }

@@ -144,10 +144,35 @@ export abstract class Activity implements IActivity, OnActivityInit  {
         }
     }
 
+    /**
+     * convert to expression
+     *
+     * @protected
+     * @template T
+     * @param {ExpressionType<T>} exptype
+     * @param {IActivity} [target]
+     * @returns {Promise<Expression<T>>}
+     * @memberof Activity
+     */
     protected toExpression<T>(exptype: ExpressionType<T>, target?: IActivity): Promise<Expression<T>> {
         return this.getContext().getBuilder().toExpression(exptype, target || this);
     }
 
+    /**
+     * convert to activity.
+     *
+     * @protected
+     * @template Tr
+     * @template Ta
+     * @template TCfg
+     * @param {(ExpressionType<Tr> | ActivityType<Ta>)} exptype
+     * @param {Express<any, boolean>} isRightActivity
+     * @param {Express<Tr, TCfg>} toConfig
+     * @param {Express<TCfg, TCfg>} [valify]
+     * @param {IActivity} [target]
+     * @returns {Promise<Ta>}
+     * @memberof Activity
+     */
     protected toActivity<Tr, Ta extends IActivity, TCfg extends ActivityConfigure>(
         exptype: ExpressionType<Tr> | ActivityType<Ta>,
         isRightActivity: Express<any, boolean>,

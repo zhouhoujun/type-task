@@ -90,6 +90,8 @@ export class RollupTs extends AssetActivity {
 
 @Pack({
     clean: 'lib',
+    src: 'src',
+    watch: true,
     assets: {
         ts2015: {
             sequence: [

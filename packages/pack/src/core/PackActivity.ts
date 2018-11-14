@@ -1,4 +1,4 @@
-import { BuildActivity, CleanActivity, TestActivity } from '@taskfr/build';
+import { BuildActivity, CleanActivity, TestActivity, WatchActivity } from '@taskfr/build';
 import { Pack } from '../decorators';
 import { IPackActivity } from './IPackActivity';
 import { ServeActivity } from '../serves';
@@ -32,7 +32,6 @@ export class PackActivity extends BuildActivity implements IPackActivity {
      * @memberof PackActivity
      */
     test: TestActivity;
-
     /**
      * serve activity.
      *

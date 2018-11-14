@@ -2,7 +2,7 @@
 import { IActivity, ExpressionType, Src, Expression, InjectAcitityToken, Task, ActivityConfigure, Active, ActivityType, IActivityContext, IActivityResult } from '@taskfr/core';
 import { Defer, isArray, Token } from '@ts-ioc/core';
 import { fromEventPattern } from 'rxjs';
-import { bufferTime, map } from 'rxjs/operators';
+import { bufferTime, map, filter } from 'rxjs/operators';
 import { FileChanged, NodeActivity, IFileChanged } from '@taskfr/node';
 const chokidar = require('chokidar');
 
@@ -257,7 +257,9 @@ export class WatchActivity extends NodeActivity implements IActivityResult<FileC
             })
             .pipe(
                 bufferTime(300),
+                filter(c => c.length > 0),
                 map(chgs => {
+                    console.log('watch files changed:', chgs);
                     let chg = new FileChanged(watchSrc);
                     chgs.forEach(fc => {
                         if (fc.added) {
