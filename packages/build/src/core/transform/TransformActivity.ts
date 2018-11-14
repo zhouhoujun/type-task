@@ -160,7 +160,6 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
             if (isTransform(transPipe)) {
                 if (!transPipe.changeAsOrigin) {
                     piped = true;
-                    next = stream.pipe(transPipe);
                 } else {
                     next = transPipe;
                 }
@@ -169,28 +168,31 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
             }
         }
 
-        if (piped && waitend) {
-            return await new Promise((r, j) => {
-                next
-                    .once('end', r)
-                    .once('error', j);
-            }).then(() => {
-                next.removeAllListeners('error');
-                next.removeAllListeners('end');
-                return next;
-            }, err => {
-                next.removeAllListeners('error');
-                next.removeAllListeners('end');
-                if (!isUndefined(process)) {
-                    process.exit(1);
-                    return err;
-                } else {
-                    return Promise.reject(new Error(err));
-                }
-            });
-        } else {
-            return next;
+        if (piped) {
+            next = stream.pipe(transPipe);
+            if (waitend) {
+                return await new Promise((r, j) => {
+                    next
+                        .once('end', r)
+                        .once('error', j);
+                }).then(() => {
+                    next.removeAllListeners('error');
+                    next.removeAllListeners('end');
+                    return next;
+                }, err => {
+                    next.removeAllListeners('error');
+                    next.removeAllListeners('end');
+                    if (!isUndefined(process)) {
+                        process.exit(1);
+                        return err;
+                    } else {
+                        return Promise.reject(new Error(err));
+                    }
+                });
+            }
         }
+        return next;
+
     }
 
     /**

@@ -1,6 +1,6 @@
 
 import { IActivity, ExpressionType, Src, Expression, InjectAcitityToken, Task, ActivityConfigure, Active, ActivityType, IActivityContext, IActivityResult } from '@taskfr/core';
-import { Defer, isArray, Token } from '@ts-ioc/core';
+import { Defer, isArray, Token, lang } from '@ts-ioc/core';
 import { fromEventPattern } from 'rxjs';
 import { bufferTime, map, filter } from 'rxjs/operators';
 import { FileChanged, NodeActivity, IFileChanged } from '@taskfr/node';
@@ -224,7 +224,7 @@ export class WatchActivity extends NodeActivity implements IActivityResult<FileC
     defaultTranslatorToken: Token<any>;
 
     protected async execute(): Promise<void> {
-        return await this.watch(this.getContext());
+        await this.watch(this.getContext());
     }
 
     async onActivityInit(config: WatchConfigure) {
@@ -241,7 +241,7 @@ export class WatchActivity extends NodeActivity implements IActivityResult<FileC
     protected async watch(ctx: IActivityContext) {
         let watchSrc = await ctx.exec(this, this.src);
         let options = await ctx.exec(this, this.options);
-        let watcher = chokidar.watch(watchSrc, options);
+        let watcher = chokidar.watch(watchSrc, lang.assign({ ignored: /[\/\\]\./, ignoreInitial: true }, options));
         let watchBody = this.body || ctx.target;
 
         let defer = new Defer();
