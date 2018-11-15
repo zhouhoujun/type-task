@@ -4,7 +4,6 @@ import { ActivityConfigure, Expression } from './ActivityConfigure';
 import { ActivityBuilder } from './ActivityBuilder';
 
 
-
 /**
  * task context.
  *
@@ -164,6 +163,6 @@ export interface IActivityContextResult<T> extends IActivityContext {
  */
 export class InjectActivityContextToken extends Registration<IActivityContext> {
     constructor(type: Token<IActivity>) {
-        super(type, 'AtContext');
+        super(type, 'Activity_Context');
     }
 }

@@ -8,7 +8,6 @@ import { IActivity } from './IActivity';
  * @extends {IActivity}
  */
 export interface IChainActivity extends IActivity {
-
     /**
      * use activies.
      *

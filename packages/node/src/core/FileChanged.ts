@@ -1,5 +1,11 @@
 import { Src } from '@taskfr/core';
 
+/**
+ * file changed.
+ *
+ * @export
+ * @interface IFileChanged
+ */
 export interface IFileChanged {
     added: string[];
     updated: string[];

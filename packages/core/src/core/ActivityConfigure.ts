@@ -74,6 +74,9 @@ export type CoreActivityConfigs = ActivityConfigure | ChainConfigure | Dependenc
  */
 export type ActivityType<T extends IActivity> = Token<T> | CoreActivityConfigs;
 
+/**
+ * active
+ */
 export type Active = ActivityType<IActivity>;
 
 /**

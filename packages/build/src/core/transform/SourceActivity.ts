@@ -1,7 +1,6 @@
-import { SrcOptions } from 'vinyl-fs';
+import { src, SrcOptions } from 'vinyl-fs';
 import { Src, Expression, ExpressionType, Task, InjectAcitityToken, ActivityConfigure } from '@taskfr/core';
-import { TransformActivityContext, TransformActivityContextToken } from './TransformActivityContext';
-import { NodeActivity } from '@taskfr/node';
+import { StreamActivity } from './StreamActivity';
 
 /**
  * source activity token.
@@ -40,8 +39,8 @@ export interface SourceConfigure extends ActivityConfigure {
  * @class SourceActivity
  * @extends {TransformActivity}
  */
-@Task(SourceAcitvityToken, TransformActivityContextToken)
-export class SourceActivity extends NodeActivity {
+@Task(SourceAcitvityToken)
+export class SourceActivity extends StreamActivity {
     /**
      * source
      *
@@ -67,30 +66,12 @@ export class SourceActivity extends NodeActivity {
         }
     }
 
-    getContext(): TransformActivityContext {
-        return super.getContext() as TransformActivityContext;
-    }
-
     protected async execute() {
         let ctx = this.getContext();
         if (this.src) {
-            let src = await ctx.exec(this, this.src);
-            ctx.setAsResult(src);
-        }
-    }
-
-    /**
-     * create activity context.
-     *
-     * @protected
-     * @param {*} [ctx]
-     * @memberof PipeActivity
-     */
-    protected verifyCtx(ctx?: any) {
-        if (ctx instanceof TransformActivityContext) {
-            this._ctx = ctx;
-        } else {
-            this.getContext().setAsResult(ctx);
+            let strSrc = await ctx.exec(this, this.src);
+            let options = await ctx.exec(this, this.srcOptions);
+            ctx.setAsResult(src(strSrc, options || undefined));
         }
     }
 }

@@ -17,6 +17,11 @@ export type PackageConfigures<T> = PackageConfigure | BuildConfigures<T>;
 export type PackageActivityType<T extends IActivity> = Token<T> | PackageConfigures<T>;
 
 /**
+ *  package activity type.
+ */
+export type PackageActive = PackageActivityType<IActivity>;
+
+/**
  * package configure.
  *
  * @export
@@ -41,10 +46,10 @@ export interface PackageConfigure extends BuildConfigure {
     /**
      * assets.
      *
-     * @type {ObjectMap<ExpressionToken<Src> |  PackageConfigures<PackageActivityType<IActivity>>>}
+     * @type {ObjectMap<ExpressionToken<Src> |  PackageConfigures<PackageActive>>}
      * @memberof PackageConfigure
      */
-    assets?: ObjectMap<ExpressionToken<Src> | PackageConfigures<PackageActivityType<IActivity>>>;
+    assets?: ObjectMap<ExpressionToken<Src> | PackageConfigures<PackageActive>>;
 
     /**
      * test config.

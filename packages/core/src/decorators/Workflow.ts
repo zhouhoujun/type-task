@@ -40,7 +40,6 @@ export interface IWorkflowDecorator<T extends WorkflowMetadata> extends IDIModul
      */
     (provide: Registration<any> | symbol | string, builder?: Token<IActivityBuilder>, alias?: string): ClassDecorator;
 
-
     /**
      * task decorator, use to define class as task element.
      *

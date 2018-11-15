@@ -1,16 +1,15 @@
 import { dest, DestOptions } from 'vinyl-fs';
-import { Expression, ExpressionType, Task } from '@taskfr/core';
+import { Expression, ExpressionType, Task, InjectAcitityToken } from '@taskfr/core';
 import { SourceMapsActivity } from './SourceMapsActivity';
-import { TransformActivityContext } from './TransformActivityContext';
+import { TransformContext } from './StreamActivity';
 import { TransformActivity } from './TransformActivity';
-import { InjectTransformActivityToken } from './ITransformActivity';
 import { ITransformConfigure } from './ITransformConfigure';
 
 
 /**
  * dest activity token.
  */
-export const DestAcitvityToken = new InjectTransformActivityToken<DestActivity>('dest');
+export const DestAcitvityToken = new InjectAcitityToken<DestActivity>('dest');
 
 /**
  * dest pipe configure.
@@ -89,11 +88,11 @@ export class DestActivity extends TransformActivity {
      * write dest stream.
      *
      * @protected
-     * @param {TransformActivityContext} ctx
+     * @param {TransformContext} ctx
      * @returns {Promise<ITransform>}
      * @memberof DestActivity
      */
-    protected async writeStream(ctx: TransformActivityContext): Promise<void> {
+    protected async writeStream(ctx: TransformContext): Promise<void> {
         let dist = await ctx.exec(this, this.dest);
         let destOptions = undefined;
         if (this.destOptions) {

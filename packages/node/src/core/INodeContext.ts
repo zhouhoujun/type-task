@@ -1,6 +1,12 @@
 import { Express2, ObjectMap } from '@ts-ioc/core';
 import { Src, IActivityContext } from '@taskfr/core';
 
+/**
+ * cmd options.
+ *
+ * @export
+ * @interface CmdOptions
+ */
 export interface CmdOptions {
     force?: boolean;
     silent?: boolean;

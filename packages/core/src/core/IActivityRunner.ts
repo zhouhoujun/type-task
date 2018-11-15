@@ -49,7 +49,6 @@ export enum RunState {
  * @interface ITaskRunner
  */
 export interface IActivityRunner<T> extends IService<IActivityResult<T>> {
-
     /**
      * actvity to run.
      *

@@ -17,14 +17,40 @@ import { ActivityConfigure, ActivityType, ExpressionType, isActivityType, Expres
 @Injectable(ActivityBuilderToken)
 export class ActivityBuilder extends AnnotationBuilder<IActivity> implements IActivityBuilder {
 
+    /**
+     * build activity.
+     *
+     * @param {Token<IActivity>} token
+     * @param {ActivityConfigure} config
+     * @param {*} [data]
+     * @returns {Promise<IActivity>}
+     * @memberof ActivityBuilder
+     */
     build(token: Token<IActivity>, config: ActivityConfigure, data?: any): Promise<IActivity> {
         return super.build(token, config, data);
     }
 
+    /**
+     * build by config activity.
+     *
+     * @param {ActivityType<any>} activity
+     * @param {*} data
+     * @returns
+     * @memberof ActivityBuilder
+     */
     buildByConfig(activity: ActivityType<any>, data: any) {
         return super.buildByConfig(activity, data);
     }
 
+    /**
+     * create instance.
+     *
+     * @param {Token<IActivity>} token
+     * @param {ActivityConfigure} config
+     * @param {string} uuid
+     * @returns {Promise<IActivity>}
+     * @memberof ActivityBuilder
+     */
     async createInstance(token: Token<IActivity>, config: ActivityConfigure, uuid: string): Promise<IActivity> {
         if (isString(token)) {
             token = this.traslateStrToken(token);

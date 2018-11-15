@@ -1,7 +1,7 @@
 import { CtxType, ActivityConfigure, InjectAcitityToken, IActivityResult, Task } from '@taskfr/core';
 import { ITransform } from './ITransform';
-import { TransformActivityContext, TransformActivityContextToken } from './TransformActivityContext';
-import { NodeActivity } from '@taskfr/node';
+import { TransformContext } from './StreamActivity';
+import { StreamActivity } from './StreamActivity';
 
 
 /**
@@ -44,8 +44,8 @@ export const SourceMapsToken = new InjectAcitityToken<ISourceMapsActivity>('sour
  * @extends {Activity<ITransform>}
  * @implements {OnActivityInit}
  */
-@Task(SourceMapsToken, TransformActivityContextToken)
-export class SourceMapsActivity extends NodeActivity implements ISourceMapsActivity {
+@Task(SourceMapsToken)
+export class SourceMapsActivity extends StreamActivity implements ISourceMapsActivity {
     sourcemaps: string;
 
     private hasInit = false;
@@ -55,18 +55,6 @@ export class SourceMapsActivity extends NodeActivity implements ISourceMapsActiv
         this.sourcemaps = this.getContext().to(config.sourcemaps) || './sourcemaps';
     }
 
-    getContext(): TransformActivityContext {
-        return super.getContext() as TransformActivityContext;
-    }
-
-    protected verifyCtx(ctx?: any) {
-        if (ctx instanceof TransformActivityContext) {
-            this._ctx = ctx;
-        } else {
-            this.getContext().setAsResult(ctx);
-        }
-    }
-
     protected async execute() {
         const sourcemaps = require('gulp-sourcemaps');
         if (!sourcemaps) {
@@ -74,20 +62,16 @@ export class SourceMapsActivity extends NodeActivity implements ISourceMapsActiv
             return;
         }
         let ctx = this.getContext();
-        if (!this.hasInit) {
-            ctx.result = ctx.result.pipe(sourcemaps.init());
-        } else {
-            ctx.result = ctx.result.pipe(sourcemaps.write(this.sourcemaps));
-        }
+        ctx.result = await this.executePipe(ctx.result, this.hasInit ? () => sourcemaps.write(this.sourcemaps) : () => sourcemaps.init());
     }
 
-    async init(ctx: TransformActivityContext) {
+    async init(ctx: TransformContext) {
         this.hasInit = false;
         await this.run(ctx);
         this.hasInit = true;
     }
 
-    async write(ctx: TransformActivityContext) {
+    async write(ctx: TransformContext) {
         if (!this.hasInit) {
             return;
         }

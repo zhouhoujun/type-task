@@ -1,6 +1,6 @@
 import { Inject, Express, ContainerToken, IContainer } from '@ts-ioc/core';
 import { Task } from '../decorators';
-import { IActivity, IActivityResult, ActivityToken } from './IActivity';
+import { IActivity, ActivityToken } from './IActivity';
 import { ActivityConfigure, ExpressionType, Expression, ActivityType } from './ActivityConfigure';
 import { OnActivityInit } from './OnActivityInit';
 import { ActivityContext } from './ActivityContext';

@@ -13,4 +13,7 @@ export interface IWorkflowMetadata {
 
 }
 
+/**
+ * workflow metadata.
+ */
 export type WorkflowMetadata = IWorkflowMetadata & CoreActivityConfigs;

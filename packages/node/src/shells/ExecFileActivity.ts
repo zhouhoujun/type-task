@@ -52,9 +52,32 @@ export interface ExecFileActivityConfig extends ActivityConfigure {
  */
 @Task('execfile')
 export class ExecFileActivity extends NodeActivity {
+    /**
+     * files.
+     *
+     * @type {Src}
+     * @memberof ExecFileActivity
+     */
     files: Src;
+    /**
+     * args.
+     *
+     * @type {string[]}
+     * @memberof ExecFileActivity
+     */
     args?: string[];
+    /**
+     * options.
+     *
+     * @type {execa.Options}
+     * @memberof ExecFileActivity
+     */
     options?: execa.Options;
+    /**
+     * allow error or not.
+     *
+     * @memberof ExecFileActivity
+     */
     allowError = true;
 
     async onActivityInit(config: ExecFileActivityConfig) {

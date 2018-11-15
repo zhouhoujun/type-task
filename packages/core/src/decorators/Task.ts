@@ -4,7 +4,7 @@ import {
 } from '@ts-ioc/core';
 import { ActivityMetadata } from '../metadatas/ActivityMetadata';
 import { IActivityBuilder } from '../core/IActivityBuilder';
-import { IActivityContext } from '../core';
+import { IActivityContext } from '../core/IActivityContext';
 
 /**
  * task decorator, use to define class is a task element.
@@ -23,7 +23,6 @@ export interface ITaskDecorator<T extends ActivityMetadata> extends ITypeDecorat
      * @param {T} [metadata] Activity metadate configure.
      */
     (metadata?: T): ClassDecorator;
-
     /**
      * Activity decorator, use to define class as Activity element.
      *
@@ -32,7 +31,6 @@ export interface ITaskDecorator<T extends ActivityMetadata> extends ITypeDecorat
      * @param {string} [alias] Activity alias name.
      */
     (provide: Registration<any> | symbol | string, alias?: string): ClassDecorator;
-
     /**
      * Activity decorator, use to define class as Activity element.
      *
@@ -52,7 +50,6 @@ export interface ITaskDecorator<T extends ActivityMetadata> extends ITypeDecorat
      * @param {string} [alias]  Activity alias name
      */
     (provide: Registration<any> | symbol | string, ctxType: Token<IActivityContext>, builder: Token<IActivityBuilder>, alias?: string): ClassDecorator;
-
     /**
      * task decorator, use to define class as task element.
      *

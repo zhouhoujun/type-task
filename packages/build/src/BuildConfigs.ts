@@ -3,6 +3,9 @@ import { BuildConfigure, AssetConfigure, ITransformConfigure, DestConfigure, Sou
 import { TsConfigure } from './assets';
 import { ShellActivityConfig, ExecFileActivityConfig } from '@taskfr/node';
 
+/**
+ *  build configure.
+ */
 export type BuildConfigures<T> = GCoreActivityConfigs<T> | AssetConfigure | ITransformConfigure | BuildHandleConfigure | BuildConfigure
 | TsConfigure | DestConfigure | SourceConfigure | TestConfigure | UglifyConfigure
 | WatchConfigure | AnnotationsConfigure | CleanConfigure | ShellActivityConfig | ExecFileActivityConfig;

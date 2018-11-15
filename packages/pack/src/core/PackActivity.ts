@@ -16,7 +16,6 @@ import { ServeActivity } from '../serves';
     ]
 })
 export class PackActivity extends BuildActivity implements IPackActivity {
-
     /**
      * clean activity.
      *
@@ -59,5 +58,4 @@ export class PackActivity extends BuildActivity implements IPackActivity {
             await this.serve.run(ctx);
         }
     }
-
 }

@@ -101,7 +101,6 @@ export interface IActivity {
  * @template T
  */
 export interface IActivityResult<T> extends IActivity {
-
     /**
      * task execute context.
      *

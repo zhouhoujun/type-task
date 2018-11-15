@@ -36,7 +36,6 @@ export interface IActivityBuilder extends IAnnotationBuilder<IActivity> {
      * @memberof IActivityTypeBuilder
      */
     buildByConfig(activity: ActivityType<any>, data: any): Promise<IActivity>;
-
 }
 
 /**

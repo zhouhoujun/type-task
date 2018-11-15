@@ -1,11 +1,10 @@
-import { isUndefined, isPromise, isMetadataObject, assertExp, isFunction } from '@ts-ioc/core';
+import { isPromise, isMetadataObject, assertExp, isFunction } from '@ts-ioc/core';
 import { ITransformActivity, TransformActivityToken } from './ITransformActivity';
 import { ITransform } from './ITransform';
-import { TransformType, isTransform, TransformExpress, TransformConfig } from './transformTypes';
+import { TransformType, TransformExpress, TransformConfig } from './transformTypes';
 import { ITransformConfigure } from './ITransformConfigure';
-import { TransformActivityContext } from './TransformActivityContext';
 import { Task, isActivityRunner, isActivityType } from '@taskfr/core';
-import { NodeActivity } from '@taskfr/node';
+import { StreamActivity } from './StreamActivity';
 
 /**
  * Transform activity.
@@ -15,7 +14,7 @@ import { NodeActivity } from '@taskfr/node';
  * @implements {ITask}
  */
 @Task(TransformActivityToken)
-export class TransformActivity extends NodeActivity implements ITransformActivity {
+export class TransformActivity extends StreamActivity implements ITransformActivity {
 
     /**
      * pipes.
@@ -24,13 +23,6 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
      * @memberof PipeComponent
      */
     pipes: TransformType[];
-    /**
-     * stream merger.
-     *
-     * @type {TransformMerger}
-     * @memberof PipeComponent
-     */
-    merger: TransformType;
 
     /**
      * pipe config.
@@ -45,10 +37,6 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
         if (config.pipes) {
             this.pipes = await this.translate(config.pipes);
         }
-    }
-
-    getContext(): TransformActivityContext {
-        return super.getContext() as TransformActivityContext;
     }
 
     /**
@@ -74,20 +62,6 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
     protected async pipe(): Promise<void> {
         let ctx = this.getContext();
         ctx.result = await this.pipeStream(ctx.result, ...this.pipes);
-    }
-
-    /**
-     * create activity context.
-     *
-     * @protected
-     * @memberof PipeActivity
-     */
-    protected verifyCtx(ctx?: any) {
-        if (ctx instanceof TransformActivityContext) {
-            this._ctx = ctx;
-        } else {
-            this.getContext().setAsResult(ctx);
-        }
     }
 
     /**
@@ -141,59 +115,6 @@ export class TransformActivity extends NodeActivity implements ITransformActivit
             }
         });
         return await pstream;
-    }
-
-    /**
-     * execute stream pipe.
-     *
-     * @protected
-     * @param {ITransform} stream stream pipe from
-     * @param {TransformType} transform steam pipe to.
-     * @param {boolean} [waitend=false] wait pipe end or not.
-     * @returns {Promise<ITransform>}
-     * @memberof TransformActivity
-     */
-    protected async executePipe(stream: ITransform, transform: TransformType, waitend = false): Promise<ITransform> {
-        let next: ITransform;
-        let transPipe = await this.getContext().exec(this, transform);
-        let vaild = false;
-        if (isTransform(stream)) {
-            if (isTransform(transPipe)) {
-                if (!transPipe.changeAsOrigin) {
-                    vaild = true;
-                } else {
-                    next = transPipe;
-                }
-            } else {
-                next = stream;
-            }
-        }
-
-        if (vaild) {
-            next = stream.pipe(transPipe);
-            if (waitend) {
-                return await new Promise((r, j) => {
-                    next
-                        .once('end', r)
-                        .once('error', j);
-                }).then(() => {
-                    next.removeAllListeners('error');
-                    next.removeAllListeners('end');
-                    return next;
-                }, err => {
-                    next.removeAllListeners('error');
-                    next.removeAllListeners('end');
-                    if (!isUndefined(process)) {
-                        process.exit(1);
-                        return err;
-                    } else {
-                        return Promise.reject(new Error(err));
-                    }
-                });
-            }
-        }
-        return next;
-
     }
 
     /**

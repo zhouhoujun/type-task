@@ -4,7 +4,7 @@ import * as ts from 'gulp-typescript';
 import { CtxType, OnActivityInit } from '@taskfr/core';
 import {
     AssetConfigure, Asset, AssetActivity, DestActivity, AnnotationActivity,
-    DestAcitvityToken, ITransform, TransformActivityContext, isTransform
+    DestAcitvityToken, ITransform, TransformContext, isTransform
 } from '../core';
 
 
@@ -116,7 +116,7 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
     protected async executeUglify() {
         if (this.uglify) {
             let ctx = this.getContext();
-            let ugCtx = this.getCtxFactory().create<TransformActivityContext>(ctx.result.js);
+            let ugCtx = this.getCtxFactory().create<TransformContext>(ctx.result.js);
             await this.uglify.run(ugCtx);
             ctx.result.js = ugCtx.result;
         }
@@ -139,14 +139,14 @@ export class TsCompile extends AssetActivity implements OnActivityInit {
         let stream = ctx.result;
         if (this.tdsDest && isTransform(stream.dts)) {
             let dts = isBoolean(this.tdsDest) ? ds : (this.tdsDest || ds);
-            await dts.run(this.getCtxFactory().create<TransformActivityContext>(stream.dts));
+            await dts.run(this.getCtxFactory().create<TransformContext>(stream.dts));
         }
         if (isTransform(stream.js)) {
-            let jsCtx = this.getCtxFactory().create<TransformActivityContext>(stream.js);
+            let jsCtx = this.getCtxFactory().create<TransformContext>(stream.js);
             jsCtx.sourceMaps = ctx.sourceMaps;
             await ds.run(jsCtx);
         } else if (isTransform(stream)) {
-            let newCtx = this.getCtxFactory().create<TransformActivityContext>(stream);
+            let newCtx = this.getCtxFactory().create<TransformContext>(stream);
             newCtx.sourceMaps = ctx.sourceMaps;
             await ds.run(newCtx);
         }

@@ -15,7 +15,6 @@ export const WorkflowBuilderToken = new InjectModuleBuilderToken<IActivity>(Acti
  */
 @Singleton(WorkflowBuilderToken)
 export class DefaultWorkflowBuilder extends ModuleBuilder<IActivity> {
-
     /**
      * bootstrap workflow via activity.
      *
