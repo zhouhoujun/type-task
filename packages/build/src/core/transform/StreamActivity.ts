@@ -89,7 +89,9 @@ export class StreamActivity extends NodeActivity {
 
 }
 
-
+/**
+ *  transform context token.
+ */
 export const TransformContextToken = new InjectActivityContextToken(StreamActivity);
 
 /**
