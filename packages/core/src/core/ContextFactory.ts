@@ -16,6 +16,7 @@ export class ContextFactory {
     container: IContainer;
     private type: Token<IActivity>;
     private ctxType: Token<IActivityContext>;
+
     constructor() {
 
     }

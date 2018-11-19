@@ -39,6 +39,13 @@ export class PackActivity extends BuildActivity implements IPackActivity {
      */
     serve: ServeActivity;
 
+    /**
+     * execute once action.
+     *
+     * @protected
+     * @returns {Promise<void>}
+     * @memberof PackActivity
+     */
     protected async execOnce(): Promise<void> {
         if (this.clean) {
             await this.clean.run(this.getContext());
